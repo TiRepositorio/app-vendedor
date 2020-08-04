@@ -1,0 +1,842 @@
+package apolo.vendedores.com.utilidades
+
+import android.app.AlertDialog
+import android.content.ContentValues
+import android.content.Context
+import android.content.DialogInterface
+import android.database.Cursor
+import android.text.InputType
+import android.view.View
+import android.widget.*
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.R
+import com.google.android.material.navigation.NavigationView
+import java.text.DateFormat
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+
+class FuncionesUtiles {
+
+    //CONSTRUCTORES
+    constructor()
+    constructor(imgTitulo: ImageView?, tvTitulo: TextView?) { //solo titulo
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+    }
+
+    constructor(context: Context,imgTitulo: ImageView?, tvTitulo: TextView?) { //solo titulo con funciones
+        this.context = context
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+    }
+
+    constructor(context: Context){ //funciones
+        this.context = context
+    }
+
+    //titulo y buscador
+    constructor(context: Context,llTitulo:LinearLayout,llBotonVendedor: LinearLayout,llBuscar: LinearLayout,spBuscar: Spinner,etBuscar: EditText,btBuscar:Button){
+        this.context = context
+        llTitulo.visibility = View.GONE
+        llBotonVendedor.visibility = View.GONE
+        llBuscar.visibility = View.VISIBLE
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+    //titulo y buscador separados
+    constructor(context: Context,imgTitulo: ImageView?,tvTitulo: TextView?,spBuscar: Spinner,etBuscar: EditText,btBuscar:Button){
+        this.context = context
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+    //titulo y lista de vendedores
+    constructor(
+        context: Context,
+        imgTitulo: ImageView?,
+        tvTitulo: TextView?,
+        imgAnterior: ImageView?,
+        imgSiguiente: ImageView?,
+        tvVendedor: TextView?,
+        contMenu: DrawerLayout,
+        barraMenu: NavigationView?,
+        llBotonVendedor: LinearLayout
+    ) {
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.imgAnterior = imgAnterior
+        this.imgSiguiente = imgSiguiente
+        this.tvVendedor = tvVendedor
+        this.contMenu = contMenu
+        this.barraMenu = barraMenu
+        tvVendedor!!.setOnClickListener{
+            mostrarMenu()
+        }
+        llBotonVendedor.visibility = View.VISIBLE
+    }
+
+    //titulo, buscador y barra de vendedores
+    constructor(
+        context: Context,
+        imgTitulo: ImageView?,
+        tvTitulo: TextView?,
+        imgAnterior: ImageView?,
+        imgSiguiente: ImageView?,
+        tvVendedor: TextView?,
+        contMenu: DrawerLayout,
+        barraMenu: NavigationView?,
+        llBuscar: LinearLayout?,
+        spBuscar: Spinner?,
+        etBuscar: EditText?,
+        btBuscar: Button?
+    ) {
+        this.context = context
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.imgAnterior = imgAnterior
+        this.imgSiguiente = imgSiguiente
+        this.tvVendedor = tvVendedor
+        this.contMenu = contMenu
+        this.barraMenu = barraMenu
+        this.llBuscar = llBuscar
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        tvVendedor!!.setOnClickListener{
+            mostrarMenu()
+        }
+        llBuscar!!.visibility = View.VISIBLE
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+    //
+    constructor(
+        context: Context,
+        imgTitulo: ImageView?,
+        tvTitulo: TextView?,
+        imgAnterior: ImageView?,
+        imgSiguiente: ImageView?,
+        tvVendedor: TextView?,
+        contMenu: DrawerLayout,
+        barraMenu: NavigationView?,
+        llBuscar: LinearLayout?,
+        spBuscar: Spinner?,
+        etBuscar: EditText?,
+        btBuscar: Button?,
+        llBotonVendedor: LinearLayout,
+        visibilidad: Int
+    ) {
+        this.context = context
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.imgAnterior = imgAnterior
+        this.imgSiguiente = imgSiguiente
+        this.tvVendedor = tvVendedor
+        this.contMenu = contMenu
+        this.barraMenu = barraMenu
+        this.llBuscar = llBuscar
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        tvVendedor!!.setOnClickListener{
+            mostrarMenu()
+        }
+        llBotonVendedor.visibility = visibilidad
+        llBuscar!!.visibility = View.VISIBLE
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+
+    constructor(
+        context: Context,
+        imgTitulo: ImageView?,
+        tvTitulo: TextView?,
+        imgAnterior: ImageView?,
+        imgSiguiente: ImageView?,
+        tvVendedor: TextView?,
+        contMenu: DrawerLayout,
+        barraMenu: NavigationView?,
+        llBuscar: LinearLayout?,
+        spBuscar: Spinner?,
+        etBuscar: EditText?,
+        btBuscar: Button?,
+        llBotonVendedor:LinearLayout
+    ) {
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.imgAnterior = imgAnterior
+        this.imgSiguiente = imgSiguiente
+        this.tvVendedor = tvVendedor
+        this.contMenu = contMenu
+        this.barraMenu = barraMenu
+        this.llBuscar = llBuscar
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        tvVendedor!!.setOnClickListener{
+            mostrarMenu()
+        }
+        llBotonVendedor.visibility = View.GONE
+        barraMenu!!.layoutParams.width = 0
+        llBuscar!!.visibility = View.VISIBLE
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+    constructor(context: Context,imgTitulo:ImageView,tvTitulo:TextView,llBuscar:LinearLayout,spBuscar:Spinner,etBuscar:EditText,btBuscar:Button){
+        this.context = context
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.llBuscar = llBuscar
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        llBuscar!!.visibility = View.VISIBLE
+        etBuscar!!.inputType = 2
+        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0){
+                    etBuscar!!.inputType = 3 //NUMBER
+                } else {
+                    etBuscar!!.inputType = 1 //TEXTO
+                }
+            }
+        }
+    }
+
+
+    //Variables
+    companion object{
+        lateinit var cursor: Cursor
+        val usuario : HashMap<String, String> = HashMap<String,String>()
+        var posicionCabecera: Int = 0
+        var posicionDetalle:  Int = 0
+        var posicionGenerico: Int = 0
+        var listaCabecera: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
+        var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
+        var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
+        val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###.##")
+        val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
+        var formatoGenerico: NumberFormat = NumberFormat.getInstance()
+        var intMarcacion : Int = 0
+        var ultimaVenta : Int = -1
+    }
+
+    //adaptador
+    var llBuscar: LinearLayout? = null
+    var spBuscar: Spinner?  = null
+    var etBuscar: EditText? = null
+    var btBuscar: Button?   = null
+    var imgTitulo: ImageView? = null
+    var tvTitulo: TextView? = null
+    var imgAnterior: ImageView? = null
+    var imgSiguiente: ImageView? = null
+    var tvVendedor : TextView? = null
+    var contMenu: DrawerLayout? = null
+    var barraMenu: NavigationView? = null
+    var context : Context? = null
+    var spinnerAdapter : ArrayAdapter<String>? = null
+    var valoresSpinner: ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
+    var parametros : Array<String> = arrayOf<String>()
+    lateinit var vistas : IntArray
+    lateinit var valores: Array<String>
+    lateinit var subVistas : IntArray
+    lateinit var subValores: Array<String>
+    lateinit var listaVendedores: ArrayList<HashMap<String,String>>
+    var posVend : Int = 0
+
+    //FUNCIONES DE BD
+    fun dato(cursor: Cursor, index:String): String {
+        try {
+            return cursor.getString(cursor.getColumnIndex(index))
+        } catch (e:java.lang.Exception){
+            return ""
+        }
+    }
+    fun datoEntero(cursor: Cursor, index:String): Int{
+        return cursor.getInt(cursor.getColumnIndex(index))
+    }
+    fun datoDecimal(cursor: Cursor, index:String): Double{
+        return cursor.getDouble(cursor.getColumnIndex(index))
+    }
+    fun datoPorcentaje(cursor: Cursor,totalS:String, valorS:String):Double{
+        var total: Double = 0.0
+        var valor: Double = 0.0
+
+        total = cursor.getString(cursor.getColumnIndex(totalS)).replace(".","").replace(",",".").replace("%","").toDouble()
+        valor = cursor.getString(cursor.getColumnIndex(valorS)).replace(".","").replace(",",".").replace("%","").toDouble()
+
+        return (valor*100)/total
+    }
+    fun consultar(sql: String): Cursor{
+        try {
+            cursor = MainActivity.bd!!.rawQuery(sql, null)
+            cursor.moveToFirst()
+            return cursor
+        } catch (e: Exception){
+            var error = e.message
+            return cursor
+        }
+    }
+    fun cargarLista(lista:ArrayList<HashMap<String,String>>,cursor:Cursor){
+        for (i in 0 until cursor.count){
+            val datos : HashMap<String,String> = HashMap<String,String>()
+            for(j in 0 until cursor.columnCount){
+                datos.put(cursor.getColumnName(j),dato(cursor,cursor.getColumnName(j)))
+            }
+            lista.add(datos)
+            cursor.moveToNext()
+        }
+    }
+    fun ejecutar(sql:String,context: Context): Boolean {
+        try {
+            MainActivity.bd!!.execSQL(sql)
+            return true
+        } catch (e : Exception) {
+            var dialogo:AlertDialog.Builder = AlertDialog.Builder(context)
+            dialogo.setMessage(e.message)
+            dialogo.setTitle("ERRROR")
+            dialogo.show()
+            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
+            return false
+        }
+    }
+    fun insertar(tabla:String, valores:ContentValues){
+        try {
+            MainActivity.bd!!.insert(tabla,null,valores)
+            mensaje("Correcto","Insertado correctamente")
+        } catch (e:Exception){
+            mensaje("Error",e.message.toString())
+        }
+    }
+    fun insertar(tabla:String, campos:String, valores:ContentValues){
+        try {
+            MainActivity.bd!!.insert(tabla,campos,valores)
+            mensaje("Correcto","Insertado correctamente")
+        } catch (e:Exception){
+            mensaje("Error",e.message.toString())
+        }
+    }
+    fun actualizar(tabla:String, valores:ContentValues,where:String){
+        try {
+            MainActivity.bd!!.update(tabla,valores,where,null)
+            mensaje("Correcto","Acualizado correctamente")
+        } catch (e:Exception){
+            mensaje("Error",e.message.toString())
+        }
+    }
+    fun addItemSpinner(context: Context,parametro: String, campo:String){
+        parametros = parametro.split("-").toTypedArray()
+        for (i in 0 until parametros.size){
+            var valor : HashMap<String, String> = HashMap<String, String>()
+            valor.put(parametros[i],campo.split("-")[i])
+            valoresSpinner!!.add(valor)
+        }
+        spinnerAdapter = ArrayAdapter<String>(context,R.layout.spinner_adapter,parametros)
+        spBuscar!!.adapter = spinnerAdapter
+    }
+    fun buscar (tabla: String) : Cursor{
+        var sql: String = ""
+        if (spBuscar!!.selectedItemPosition != 0){
+            sql = "SELECT * FROM " + tabla +
+                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
+                    "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+            tvVendedor!!.setText("Todos")
+            return consultar(sql)
+        }
+        sql = "SELECT * FROM " + tabla +
+              " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
+              "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+        tvVendedor!!.setText("Todos")
+        return consultar(sql)
+    }
+    fun buscar (tabla: String, campos:String?,groupBy:String?,orderBy:String?) : Cursor{
+        var sql: String = ""
+        if (spBuscar!!.selectedItemPosition != 0){
+            sql = "SELECT " + campos + " FROM " + tabla +
+                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                                .get(spBuscar!!.selectedItem)!!.split(",")[0].toUpperCase() +
+                    "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+            if (valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                .get(spBuscar!!.selectedItem)!!.split(",").size>1){
+                for(i in 1 until valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                                      .get(spBuscar!!.selectedItem)!!.split(",").size){
+                    sql = sql + " OR " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                                         .get(spBuscar!!.selectedItem)!!.split(",")[i].toUpperCase() +
+                                " LIKE '%" + etBuscar!!.text.toString() + "%' "
+                }
+            }
+        } else {
+            sql = "SELECT " + campos + " FROM " + tabla +
+                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
+                    "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+        }
+        if (!groupBy.equals("")){ sql = sql + " GROUP BY " + groupBy }
+        if (!orderBy.equals("")){ sql = sql + " ORDER BY " + orderBy }
+        tvVendedor!!.setText("Todos")
+        return consultar(sql)
+    }
+    fun buscar (tabla: String, campos:String?,groupBy:String?,orderBy:String?,where:String) : Cursor{
+        var sql: String = ""
+        if (spBuscar!!.selectedItemPosition != 0){
+            sql = "SELECT " + campos + " FROM " + tabla +
+                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                .get(spBuscar!!.selectedItem)!!.split(",")[0].toUpperCase() +
+                    "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+            if (valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                    .get(spBuscar!!.selectedItem)!!.split(",").size>1){
+                for(i in 1 until valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                    .get(spBuscar!!.selectedItem)!!.split(",").size){
+                    sql = sql + " OR " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
+                        .get(spBuscar!!.selectedItem)!!.split(",")[i].toUpperCase() +
+                            " LIKE '%" + etBuscar!!.text.toString() + "%' "
+                }
+            }
+        } else {
+            sql = "SELECT " + campos + " FROM " + tabla +
+                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem).toString().split(",")[0] +
+                    "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
+        }
+        sql += where
+        if (!groupBy.equals("")){ sql = sql + " GROUP BY " + groupBy }
+        if (!orderBy.equals("")){ sql = sql + " ORDER BY " + orderBy }
+//        if (tvVendedor!! != null){
+//            tvVendedor!!.setText("Todos")
+//        }
+        return consultar(sql)
+    }
+
+    //FUNCIONES DE FORMATO DE NUMEROS
+    fun entero(entero: String):String{
+        if (entero.trim().equals("")){
+            return "0"
+        }
+        return formatoNumeroEntero.format(entero.replace(".","").replace("null","0").trim().toInt())
+    }
+    fun entero(entero: Int):String{
+        return formatoNumeroEntero.format(entero)
+    }
+    fun decimal(decimal: String):String{
+        if (decimal.trim().equals("")||decimal.trim().equals("null")){
+            return "0.0"
+        }
+        if (decimal.indexOf(",")>-1){
+            return formatoNumeroDecimal.format(decimal.replace(".","")
+                .replace(",",".")
+                .replace("%","").trim().toDouble()).toString()
+        }
+        return formatoNumeroDecimal.format(decimal.replace(",",".")
+            .replace("%","")
+            .replace("null","")
+            .trim().toDouble()).toString()
+    }
+    fun decimalPunto(decimal: String):String{
+        return decimal(decimal).replace(".","").replace(",",".")
+    }
+    fun numero(decimales: String, numero:String):String{
+        formatoGenerico.minimumFractionDigits = decimales.toInt()
+        formatoGenerico.maximumFractionDigits = decimales.toInt()
+        return formatoGenerico.format(numero.replace(",",".").toDouble())
+    }
+    fun porcentaje(decimal: String):String{
+        return decimal(decimal) + "%"
+    }
+    fun porcentaje(decimal: Double):String{
+        return formatoNumeroDecimal.format(decimal) + "%"
+    }
+    fun inicializaContadores(){
+        posicionCabecera = 0
+        posicionDetalle = 0
+        posicionGenerico = 0
+    }
+    fun fechaHora(fecha:String): Date {
+        val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+        return hourFormat.parse(fecha)
+    }
+    fun fecha(fecha:String): Date {
+        val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return hourFormat.parse(fecha)
+    }
+    fun fechaF(fecha:String): Date {
+        val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return hourFormat.parse(hourFormat.format(fecha))
+    }
+    fun tiempoTranscurrido(fecha1:String,fecha2:String):Int{
+        var diferencia : Long = (fechaHora(fecha2).time/60000) - (fechaHora(fecha1).time / 60000)
+        if (diferencia<0){
+            diferencia = diferencia * (-1)
+        }
+        return diferencia.toInt()
+    }
+
+    //FECHAS
+    fun getDiaDeLaSemana(str_fecha: String?): String? {
+        val formatoDelTexto = SimpleDateFormat("dd/MM/yyyy")
+        var fecha: Date? = null
+        try {
+            fecha = formatoDelTexto.parse(str_fecha)
+            val cal: Calendar = GregorianCalendar.getInstance()
+            cal.setTime(fecha)
+            return getDia(cal.get(Calendar.DAY_OF_WEEK))
+        } catch (ex: java.lang.Exception) {
+        }
+        return "Lunes"
+    }
+    fun getDia(dia:Int):String{
+        when(dia){
+            1 -> return "Domingo"
+            2 -> return "Lunes"
+            3 -> return "Martes"
+            4 -> return "Miercoles"
+            5 -> return "Jueves"
+            6 -> return "Viernes"
+            7 -> return "Sabado"
+            else -> return "No corresponde"
+        }
+    }
+    fun getDiaDeLaSemana(): String {
+        val cal = GregorianCalendar.getInstance()
+        return getDia(cal[Calendar.DAY_OF_WEEK])
+    }
+    fun getMes(mes:String):String{
+        when (mes){
+            "01" -> return "Enero"
+            "02" -> return "Febrero"
+            "03" -> return "Marzo"
+            "04" -> return "Abril"
+            "05" -> return "Mayo"
+            "06" -> return "Junio"
+            "07" -> return "Julio"
+            "08" -> return "Agosto"
+            "09" -> return "Setiembre"
+            "10" -> return "Octubre"
+            "11" -> return "Noviembre"
+            "12" -> return "Diciembre"
+            else -> return "Valor no corresponde"
+        }
+    }
+    fun getMes(mes:Int):String{
+        when (mes){
+            1 -> return "Enero"
+            2 -> return "Febrero"
+            3 -> return "Marzo"
+            4 -> return "Abril"
+            5 -> return "Mayo"
+            6 -> return "Junio"
+            7 -> return "Julio"
+            8 -> return "Agosto"
+            9 -> return "Setiembre"
+            10 -> return "Octubre"
+            11 -> return "Noviembre"
+            12 -> return "Diciembre"
+            else -> return "Valor no corresponde"
+        }
+    }
+    fun getHoraActual(): String? {
+        val calendario = Calendar.getInstance()
+        val hora: Int
+        val minutos: Int
+        val segundos: Int
+        hora = calendario[Calendar.HOUR_OF_DAY]
+        minutos = calendario[Calendar.MINUTE]
+        segundos = calendario[Calendar.SECOND]
+
+        // GUARDAR LA HORA
+        var _hora = ""
+        _hora += if (hora < 10) {
+            "0$hora:"
+        } else {
+            "$hora:"
+        }
+        _hora += if (minutos < 10) {
+            "0$minutos:"
+        } else {
+            "$minutos:"
+        }
+        if (segundos < 10) {
+            _hora += "0$segundos"
+        } else {
+            _hora += segundos
+        }
+        return _hora
+    }
+    fun getFechaActual():String{
+        val dfDate = SimpleDateFormat("dd/MM/yyyy")
+        val cal = Calendar.getInstance()
+        return dfDate.format(cal.getTime()) + ""
+    }
+    fun getFechaHoraActual():String{
+        return getFechaActual() + " " + getHoraActual()
+    }
+    fun fechaRuteo(context:Context):Boolean{
+        var d: Date? = null
+        var d1: Date? = null
+        var cal = Calendar.getInstance()
+        var sql : String = ("SELECT numero MAXIMO, ind_palm, ultima_sincro, RANGO, TIPO_promotor, MIN_FOTO, MAX_FOTO, IND_FOTO, FEC_CARGA_RUTEO, MAX_DESC "
+                + ",version, MAX_DESC_VAR, PER_VENDER, INT_MARCACION  from svm_vendedor_pedido_venta  where COD_promotor ="
+                + "'" + FuncionesUtiles.usuario.get("LOGIN") + "'")
+        var cursor : Cursor = consultar(sql)
+        var fecha : String = ""
+        if (cursor.count>0){
+            try {
+                fecha = dato(cursor,"FEC_CARGA_RUTEO").trim()
+            } catch (e:java.lang.Exception){
+                fecha = ""
+            }
+        }
+        if (fecha.equals("")){
+            mensaje(context, "Atención!","No se ha habilitado este dia para enviar ruteo.")
+            return false
+        }
+        try {
+            d = fecha(fecha)
+            d1 = fechaF(cal.getTime().toString())
+        } catch (e:java.text.ParseException) {
+            e.printStackTrace();
+        }
+
+        var diffInDays : Int = ((d1!!.getTime() - d!!.getTime()) / (1000 * 60 * 60 * 24)) as Int
+
+        if (diffInDays != 0) {
+            mensaje(context, "Atención!","No se ha habilitado este dia para enviar ruteo.")
+            return false
+        }
+        return true
+    }
+
+
+    //MENU
+    fun mostrarMenu(){
+        if (contMenu!!.isDrawerOpen(GravityCompat.START)) {
+            contMenu!!.closeDrawer(GravityCompat.START)
+        } else {
+            contMenu!!.openDrawer(GravityCompat.START)
+        }
+    }
+    fun cargarTitulo(icon:Int,titulo: String){
+        imgTitulo!!.setImageResource(icon)
+        tvTitulo!!.setText(titulo)
+    }
+    fun actualizaVendedor(context: Context){
+        if (posVend == listaVendedores.size){
+            Toast.makeText(context,"Es el ultimo registro",Toast.LENGTH_SHORT).show()
+            posVend--
+        } else {
+            if (posVend == -1){
+                Toast.makeText(context,"Es el primer registro",Toast.LENGTH_SHORT).show()
+                posVend++
+            } else {
+                tvVendedor!!.setText(listaVendedores.get(posVend).get("codigo") + "-" +
+                                     listaVendedores.get(posVend).get("descripcion"))
+                inicializaContadores()
+            }
+        }
+    }
+
+    //DIALOGOS
+    fun mensaje(context: Context,titulo:String,mensaje:String){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        dialogo.setTitle(titulo)
+        dialogo.setMessage(mensaje)
+        dialogo.setPositiveButton("OK",null)
+        dialogo.show()
+    }
+    fun mensaje(titulo:String,mensaje:String){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        dialogo.setTitle(titulo)
+        dialogo.setMessage(mensaje)
+        dialogo.show()
+    }
+    fun getIntervaloMarcacion(): Int {
+        var sql : String =
+            ("SELECT numero MAXIMO, ind_palm, ultima_sincro, RANGO, TIPO_promotor, MIN_FOTO, MAX_FOTO, IND_FOTO, FEC_CARGA_RUTEO, MAX_DESC "
+                    + ",version, MAX_DESC_VAR, PER_VENDER, INT_MARCACION  from svm_vendedor_pedido  where COD_promotor ="
+                    + "'" + usuario.get("LOGIN") + "'")
+        if (consultar(sql).count>0){
+            return datoEntero(consultar(sql),"INT_MARCACION")
+        } else {
+            return 0
+        }
+    }
+    fun dialogoEntrada(et:EditText,context: Context){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        var entrada:EditText = EditText(context)
+        dialogo.setTitle(et.hint)
+        entrada.inputType = InputType.TYPE_CLASS_TEXT
+        dialogo.setView(entrada)
+        entrada.text = et.text
+        dialogo.setPositiveButton("OK", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int ->
+            et.setText(entrada.text)
+        })
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
+    fun dialogoEntrada(et:EditText,context: Context,etAccion:EditText,accion:String){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        var entrada:EditText = EditText(context)
+        dialogo.setTitle(et.hint)
+        entrada.inputType = InputType.TYPE_CLASS_TEXT
+        dialogo.setView(entrada)
+        entrada.text = et.text
+        dialogo.setPositiveButton("OK", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int ->
+            et.setText(entrada.text)
+            etAccion.setText(accion)
+        })
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
+    fun dialogoEntradaNumero(et:EditText,context: Context){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        var entrada:EditText = EditText(context)
+        dialogo.setTitle(et.hint)
+        entrada.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogo.setView(entrada)
+        entrada.text = et.text
+        if (et.text.toString().trim().equals("0")){
+            entrada.setText("")
+        }
+        dialogo.setPositiveButton("OK", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int ->
+            if (entrada.text.trim().equals("") || entrada.text.trim().equals("null") || entrada.text.isEmpty()){
+                entrada.setText("0")
+            }
+            et.setText(entrada.text.toString().toInt().toString())
+        })
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
+
+    //DATOS
+    fun codPersona():String{
+        var sql : String = "SELECT DISTINCT COD_PERSONA FROM svm_vendedor_pedido"
+        var cursor : Cursor = consultar(sql)
+        if (cursor.count < 1){
+            MainActivity.codPersona = ""
+            return ""
+        } else {
+            MainActivity.codPersona = dato(cursor,"COD_PERSONA")
+            return dato(cursor,"COD_PERSONA")
+        }
+    }
+    fun ultimoNroOrden(tabla: String): Int {
+        val cursor: Cursor
+        val sql: String
+        sql = ("SELECT  MAX(id),nro_orden FROM '" + tabla + "' "
+                + "where est_enviO= 'N'")
+        cursor = consultar(sql)
+        var id: String? = ""
+        if (cursor.moveToFirst()) {
+            id = cursor.getString(cursor.getColumnIndex("NRO_ORDEN"))
+            if (id == null) {
+                id = "0"
+            }
+        } else {
+            id = "0"
+        }
+        return id.toInt()
+    }
+    fun recalcularNroOrden(tabla: String,context: Context) {
+        val cursor: Cursor
+        val sql: String
+        var upd: String
+        sql = ("SELECT  id FROM '" + tabla + "' "
+                + "where est_enviO= 'N' ORDER BY id ASC ")
+        cursor = consultar(sql)
+        val nreg = cursor.count
+        cursor.moveToFirst()
+        var cont = 0
+        var id = ""
+        for (i in 0 until nreg) {
+            cont = cont + 1
+            id = cursor.getString(cursor.getColumnIndex("id"))
+            upd = ("UPDATE '" + tabla + "' SET nro_orden = '" + cont + "" + "' "
+                    + "WHERE id=" + id)
+            ejecutar(upd,context)
+            cursor.moveToNext()
+        }
+    }
+
+}
