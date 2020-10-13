@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/td1"
+        android:layout_width="105sp"
+        android:gravity="left|center_vertical"
+        android:text="text1"
+        style="@style/textoTabla"/>
+
+    <TextView
+        android:id="@+id/td2"
+        android:layout_width="65sp"
+        android:gravity="left|center_vertical"
+        style="@style/textoTabla" />
+
+    <TextView
+        android:id="@+id/td3"
+        android:layout_width="180sp"
+        android:gravity="left|center_vertical"
+        android:text="text1"
+        style="@style/textoTabla" />
+
+
+    <TextView
+        android:id="@+id/td4"
+        android:layout_width="75sp"
+        android:gravity="left|center_vertical"
+        android:text="text2"
+        style="@style/textoTabla" />
+
+
+
+    <TextView
+        android:id="@+id/td5"
+        android:layout_width="35sp"
+        android:gravity="left|center_vertical"
+        style="@style/textoTabla" />
+
+
+
+    <TextView
+        android:id="@+id/td6"
+        android:layout_width="85sp"
+        android:gravity="right|center_vertical"
+        style="@style/textoTabla" />
+
+
+    <TextView
+        android:id="@+id/td7"
+        android:layout_width="185sp"
+        android:gravity="left|center_vertical"
+        android:text="text2"
+        android:layout_weight="1"
+        style="@style/textoTabla" />
+
+</LinearLayout>

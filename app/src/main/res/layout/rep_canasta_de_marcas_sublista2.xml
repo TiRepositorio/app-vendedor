@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/llSublista2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs21"
+                    android:layout_width="40dp"
+                    android:text="20"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs22"
+                    android:layout_width="250dp"
+                    android:text="1500"
+                    android:gravity="left"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs23"
+                    android:layout_width="130dp"
+                    android:text="75%"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs24"
+                    android:layout_width="120dp"
+                    android:text="70%"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs25"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs26"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs27"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoSubTabla"
+                    />
+        </LinearLayout>
+
+</LinearLayout>

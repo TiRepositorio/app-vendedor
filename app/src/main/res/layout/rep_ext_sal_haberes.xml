@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvNro"
+            android:layout_width="50dp"
+            android:text="2000"
+            android:textAlignment="center"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvConcepto"
+            android:layout_width="230dp"
+            android:text="1500"
+            android:textAlignment="textStart"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvTotalVenta"
+            android:layout_width="120dp"
+            android:text="75%"
+            android:textAlignment="textEnd"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvTotalComision"
+            android:layout_width="120dp"
+            android:text="70%"
+            android:textAlignment="textEnd"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvMonto"
+            android:layout_width="120dp"
+            android:text="500.000"
+            android:textAlignment="textEnd"
+            style="@style/textoTabla"
+            />
+
+</LinearLayout>

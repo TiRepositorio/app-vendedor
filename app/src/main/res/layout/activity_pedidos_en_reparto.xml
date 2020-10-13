@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/fondoOscuro"
+    android:id="@+id/contMenu"
+    android:fitsSystemWindows="true"
+    tools:context=".informes.PedidosEnReparto"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/barra_vendedores"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#ddd">
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_ruteo_lista"-->
+<!--                android:background="#ddd"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Pedidos en reparto"-->
+<!--                android:textStyle="bold"-->
+<!--                android:background="#ddd"-->
+<!--                android:padding="5dp"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/verdeApoloCabecera">
+
+                    <TextView
+                        style="@style/cabeceraTabla"
+                        android:layout_width="40dp"
+                        />
+
+                    <TextView
+                        style="@style/cabeceraTabla"
+                        android:layout_weight="1"
+                        android:text="Repartidor"
+                        android:gravity="start"/>
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:text="Tel.:"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvPedidosEnReparto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/barraMenu"
+        android:background="#ffffff"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        app:elevation="20dp"
+        app:headerLayout="@layout/menu_supervisores"
+        app:menu="@menu/drawer_menu_vendedores"
+        >
+
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

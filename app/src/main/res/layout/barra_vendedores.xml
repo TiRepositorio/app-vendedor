@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/llBotonVendedores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/fondoCabecera"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/imgVendedor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_usuario_claro"
+                />
+
+            <TextView
+                android:id="@+id/tvVendedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del vendedor"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:textSize="10dp"
+                android:scrollbars="horizontal"
+                android:textColor="@color/textoClaro"/>
+
+            <ImageView
+                android:id="@+id/ibtnAnterior"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_anterior"
+                />
+
+            <ImageView
+                android:id="@+id/ibtnSiguiente"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_siguiente"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/imgTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_generico"
+                android:background="#ddd"/>
+
+            <TextView
+                android:id="@+id/tvTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="APOLO"
+                android:textStyle="bold"
+                android:background="#ddd"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center|center_vertical"
+            android:padding="5dp"
+            android:background="@color/fondoFooter"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="#AAAAAA"
+                android:layout_margin="2dp"
+                android:layout_weight="1.2">
+                <Spinner
+                    android:id="@+id/spBuscar"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_margin="2dp"
+                    app:layout_gravity="center"
+                    style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"/>
+
+            </androidx.gridlayout.widget.GridLayout>
+
+
+            <EditText
+                android:id="@+id/etBuscar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#FFF"
+                android:layout_margin="2dp"
+                android:inputType="number"
+                />
+
+            <Button
+                android:id="@+id/btBuscar"
+                android:text="Buscar"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textSize="10dp"
+                android:layout_margin="0dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

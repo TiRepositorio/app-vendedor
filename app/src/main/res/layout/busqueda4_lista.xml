@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvb1"
+        android:layout_width="80dp"
+        android:text="Codigo"
+        android:gravity="end"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/tvb2"
+        android:layout_width="40dp"
+        android:text="Descripción"
+        android:gravity="end"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/tvb3"
+        android:layout_width="240dp"
+        android:text="Codigo"
+        android:gravity="start"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/tvb4"
+        android:layout_width="120dp"
+        android:text="Descripción"
+        android:gravity="end"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/tvb5"
+        android:layout_width="240dp"
+        android:text="Codigo"
+        android:gravity="start"
+        style="@style/textoSubTabla"/>
+
+
+</LinearLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/llSublista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvs1"
+                    android:layout_width="30dp"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+                <ImageView
+                    android:id="@+id/imgAbrir"
+                    android:layout_width="40sp"
+                    android:src="@drawable/ic_desplegar"
+                    style="@style/textoTabla"
+                    />
+                <ImageView
+                    android:id="@+id/imgCerrar"
+                    android:layout_width="40dp"
+                    android:src="@drawable/ic_ocultar"
+                    android:visibility="gone"
+                    style="@style/textoTabla"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tvs2"
+                    android:layout_width="250dp"
+                    android:text="1500"
+                    android:gravity="left"
+                    style="@style/textoTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs3"
+                    android:layout_width="130dp"
+                    android:text="75%"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs4"
+                    android:layout_width="120dp"
+                    android:text="70%"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs5"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs6"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tvs7"
+                    android:layout_width="120dp"
+                    android:text="500.000"
+                    android:gravity="right"
+                    style="@style/textoTabla"
+                    />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSubTabla2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+                <ListView
+                    android:id="@+id/lvSublista2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="false"
+                    android:nestedScrollingEnabled="true"
+                    />
+        </LinearLayout>
+
+</LinearLayout>

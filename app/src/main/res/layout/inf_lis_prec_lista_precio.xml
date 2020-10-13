@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvd1"
+            android:layout_width="50dp"
+            android:text="Lista"
+            android:gravity="end"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvd2"
+            android:layout_width="match_parent"
+            android:text="Articulo"
+            android:gravity="start"
+            android:layout_weight="1"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvd3"
+            android:layout_width="60dp"
+            android:text="Siglas"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvd4"
+            android:layout_width="120dp"
+            android:text="Precio"
+            android:gravity="end"
+            style="@style/textoSubTabla"
+            />
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/vendVenta"
+            android:icon="@drawable/ic_venta"
+            android:title="Pre-Venta"/>
+        <item
+            android:id="@+id/vendReportes"
+            android:icon="@drawable/ic_dolar"
+            android:title="Reportes"/>
+        <item
+            android:id="@+id/vendInformes"
+            android:icon="@drawable/ic_graficos"
+            android:title="Informes"/>
+        <item
+            android:id="@+id/vendConfigurar"
+            android:icon="@drawable/ic_configurar"
+            android:title="Configurar"/>
+        <item
+            android:id="@+id/vendActualizar"
+            android:icon="@drawable/ic_actualizar"
+            android:title="Actualizar versión"/>
+        <item
+            android:id="@+id/vendSalir"
+            android:icon="@drawable/ic_persona"
+            android:title="Salir"/>
+    </group>
+
+</menu>

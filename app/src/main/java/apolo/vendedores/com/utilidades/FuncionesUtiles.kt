@@ -294,11 +294,13 @@ class FuncionesUtiles {
         lateinit var cursor: Cursor
         val usuario : HashMap<String, String> = HashMap<String,String>()
         var posicionCabecera: Int = 0
-        var posicionDetalle:  Int = 0
+        var posicionDetalle : Int = 0
+        var posicionDetalle2: Int = 0
         var posicionGenerico: Int = 0
         var listaCabecera: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
         var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
         var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
+        var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList<ArrayList<ArrayList<HashMap<String, String>>>>()
         val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###.##")
         val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
         var formatoGenerico: NumberFormat = NumberFormat.getInstance()
@@ -316,6 +318,8 @@ class FuncionesUtiles {
     var imgAnterior: ImageView? = null
     var imgSiguiente: ImageView? = null
     var tvVendedor : TextView? = null
+    var tvSupervisor : TextView? = null
+    var tvGerentes : TextView? = null
     var contMenu: DrawerLayout? = null
     var barraMenu: NavigationView? = null
     var context : Context? = null
@@ -323,11 +327,18 @@ class FuncionesUtiles {
     var valoresSpinner: ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
     var parametros : Array<String> = arrayOf<String>()
     lateinit var vistas : IntArray
+    lateinit var vistasCabecera : IntArray
     lateinit var valores: Array<String>
     lateinit var subVistas : IntArray
     lateinit var subValores: Array<String>
+    lateinit var subVistas2 : IntArray
+    lateinit var subValores2: Array<String>
     lateinit var listaVendedores: ArrayList<HashMap<String,String>>
+    lateinit var listaSupervisores: ArrayList<HashMap<String,String>>
+    lateinit var listaGerentes: ArrayList<HashMap<String,String>>
     var posVend : Int = 0
+    var posSup : Int = 0
+    var posGer : Int = 0
 
     //FUNCIONES DE BD
     fun dato(cursor: Cursor, index:String): String {
@@ -381,7 +392,7 @@ class FuncionesUtiles {
             dialogo.setMessage(e.message)
             dialogo.setTitle("ERRROR")
             dialogo.show()
-            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
+//            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
             return false
         }
     }
@@ -514,6 +525,25 @@ class FuncionesUtiles {
             .replace("null","")
             .trim().toDouble()).toString()
     }
+    fun decimal(decimal: String,cantidad : Int):String{
+        formatoGenerico.minimumFractionDigits = cantidad
+        formatoGenerico.maximumFractionDigits = cantidad
+        if (decimal.trim().equals("")||decimal.trim().equals("null")){
+            return "0.0"
+        }
+        if (decimal.indexOf(",")>-1){
+            return formatoGenerico.format(decimal.replace(".","")
+                .replace(",",".")
+                .replace("%","").trim().toDouble()).toString()
+        }
+        return formatoGenerico.format(decimal.replace(",",".")
+            .replace("%","")
+            .replace("null","")
+            .trim().toDouble()).toString()
+    }
+    fun decimal(decimal: Double):String{
+        return formatoNumeroDecimal.format(decimal)
+    }
     fun decimalPunto(decimal: String):String{
         return decimal(decimal).replace(".","").replace(",",".")
     }
@@ -581,6 +611,9 @@ class FuncionesUtiles {
     fun getDiaDeLaSemana(): String {
         val cal = GregorianCalendar.getInstance()
         return getDia(cal[Calendar.DAY_OF_WEEK])
+    }
+    fun getMes():Int{
+        return getFechaActual().split("/")[1].toInt()
     }
     fun getMes(mes:String):String{
         when (mes){
@@ -658,7 +691,7 @@ class FuncionesUtiles {
         var cal = Calendar.getInstance()
         var sql : String = ("SELECT numero MAXIMO, ind_palm, ultima_sincro, RANGO, TIPO_promotor, MIN_FOTO, MAX_FOTO, IND_FOTO, FEC_CARGA_RUTEO, MAX_DESC "
                 + ",version, MAX_DESC_VAR, PER_VENDER, INT_MARCACION  from svm_vendedor_pedido_venta  where COD_promotor ="
-                + "'" + FuncionesUtiles.usuario.get("LOGIN") + "'")
+                + "'" + usuario.get("LOGIN") + "'")
         var cursor : Cursor = consultar(sql)
         var fecha : String = ""
         if (cursor.count>0){
@@ -715,6 +748,158 @@ class FuncionesUtiles {
                 inicializaContadores()
             }
         }
+    }
+    fun actualizaSupervisor(context: Context){
+        if (posSup == listaSupervisores.size){
+            Toast.makeText(context,"Es el ultimo registro",Toast.LENGTH_SHORT).show()
+            posSup--
+        } else {
+            if (posSup == -1){
+                Toast.makeText(context,"Es el primer registro",Toast.LENGTH_SHORT).show()
+                posSup++
+            } else {
+                tvSupervisor!!.setText(listaSupervisores.get(posSup).get("codigo") + "-" +
+                        listaSupervisores.get(posSup).get("descripcion"))
+                inicializaContadores()
+            }
+        }
+    }
+    fun actualizaGerentes(context: Context){
+        if (posGer == listaGerentes.size){
+            Toast.makeText(context,"Es el ultimo registro",Toast.LENGTH_SHORT).show()
+            posGer--
+        } else {
+            if (posGer == -1){
+                Toast.makeText(context,"Es el primer registro",Toast.LENGTH_SHORT).show()
+                posGer++
+            } else {
+                tvGerentes!!.setText(listaGerentes.get(posGer).get("codigo") + "-" +
+                        listaGerentes.get(posGer).get("descripcion"))
+                inicializaContadores()
+            }
+        }
+    }
+    fun listaVendedores(codVendedor:String, descVendedor:String,tabla: String){
+        var sql = ("SELECT DISTINCT " + codVendedor + "," + descVendedor + " "
+                + " FROM " + tabla
+                + " ORDER BY CAST(" + codVendedor + " AS NUMBER)")
+        cargarVendedores(sql,codVendedor,descVendedor)
+    }
+    fun listaSupervisores(codSupervisor:String, descSupervisor:String,tabla: String){
+        var sql = ("SELECT DISTINCT " + codSupervisor + "," + descSupervisor + " "
+                + " FROM " + tabla
+                + " ORDER BY CAST(" + codSupervisor + " AS NUMBER)")
+        cargarSupervisores(sql,codSupervisor,descSupervisor)
+    }
+    fun listaGerentes(codGerente:String, descGerente:String,tabla: String){
+        var sql = ("SELECT DISTINCT " + codGerente + "," + descGerente + " "
+                + " FROM " + tabla
+                + " ORDER BY CAST(" + codGerente + " AS NUMBER)")
+        cargarGerentes(sql,codGerente,descGerente)
+    }
+    fun listaVendedores(codVendedor:String, descVendedor:String,sql: String,orderBy: String){
+        cargarVendedores(sql,codVendedor,descVendedor)
+    }
+    fun listaSupervisores(codSupervisor:String, descSupervisor:String,sql: String,orderBy: String){
+        cargarSupervisores(sql,codSupervisor,descSupervisor)
+    }
+    fun listaGerentes(codGerentes:String, descGerentes:String,sql: String,orderBy: String){
+        cargarGerentes(sql,codGerentes,descGerentes)
+    }
+    fun cargarVendedores(sql:String, codVendedor:String, descVendedor:String){
+        try {
+            cursor = MainActivity.bd!!.rawQuery(sql, null)
+            cursor.moveToFirst()
+            var codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
+            var descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            tvVendedor!!.text = codigo + "-" + descripcion
+
+        } catch (e : Exception){
+            var error = e.message
+            return
+        }
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Vendedores"
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario.get("NOMBRE")
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario.get("LOGIN")
+        barraMenu!!.menu.clear()
+
+        listaVendedores = ArrayList<HashMap<String,String>>()
+        for (i in 0 until cursor.count){
+            var codigo = dato(cursor,codVendedor)
+            var descripcion = dato(cursor,descVendedor)
+            barraMenu!!.menu.add(codigo + "-" + descripcion).setIcon(R.drawable.ic_usuario)
+            addVendedor(codigo,descripcion)
+            cursor.moveToNext()
+        }
+    }
+    fun cargarSupervisores(sql:String, codVendedor:String, descVendedor:String){
+        try {
+            cursor = MainActivity.bd!!.rawQuery(sql, null)
+            cursor.moveToFirst()
+            var codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
+            var descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            tvSupervisor!!.text = codigo + "-" + descripcion
+        } catch (e : Exception){
+            var error = e.message
+            return
+        }
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Supervisores"
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario.get("NOMBRE")
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario.get("LOGIN")
+        barraMenu!!.menu.clear()
+
+        listaSupervisores = ArrayList<HashMap<String,String>>()
+        for (i in 0 until cursor.count){
+            var codigo = dato(cursor,codVendedor)
+            var descripcion = dato(cursor,descVendedor)
+            barraMenu!!.menu.add(codigo + "-" + descripcion).setIcon(R.drawable.ic_usuario)
+            addSupervisor(codigo,descripcion)
+            cursor.moveToNext()
+        }
+    }
+    fun cargarGerentes(sql:String, codVendedor:String, descVendedor:String){
+        try {
+            cursor = MainActivity.bd!!.rawQuery(sql, null)
+            cursor.moveToFirst()
+            var codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
+            var descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            tvGerentes!!.text = codigo + "-" + descripcion
+
+        } catch (e : Exception){
+            var error = e.message
+            return
+        }
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Gerentes"
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario.get("NOMBRE")
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario.get("LOGIN")
+        barraMenu!!.menu.clear()
+
+        listaGerentes = ArrayList<HashMap<String,String>>()
+        for (i in 0 until cursor.count){
+            var codigo = dato(cursor,codVendedor)
+            var descripcion = dato(cursor,descVendedor)
+            barraMenu!!.menu.add(codigo + "-" + descripcion).setIcon(R.drawable.ic_usuario)
+            addGerentes(codigo,descripcion)
+            cursor.moveToNext()
+        }
+    }
+    fun addVendedor(codigo: String, descripcion:String){
+        var dato : HashMap<String,String> = HashMap<String,String>()
+        dato.put("codigo",codigo)
+        dato.put("descripcion",descripcion)
+        listaVendedores.add(dato)
+    }
+    fun addSupervisor(codigo: String, descripcion:String){
+        var dato : HashMap<String,String> = HashMap<String,String>()
+        dato.put("codigo",codigo)
+        dato.put("descripcion",descripcion)
+        listaSupervisores.add(dato)
+    }
+    fun addGerentes(codigo: String, descripcion:String){
+        var dato : HashMap<String,String> = HashMap<String,String>()
+        dato.put("codigo",codigo)
+        dato.put("descripcion",descripcion)
+        listaGerentes.add(dato)
     }
 
     //DIALOGOS
@@ -837,6 +1022,10 @@ class FuncionesUtiles {
             ejecutar(upd,context)
             cursor.moveToNext()
         }
+    }
+
+    fun toast(context:Context,mensaje:String){
+        Toast.makeText(context,mensaje,Toast.LENGTH_SHORT).show()
     }
 
 }

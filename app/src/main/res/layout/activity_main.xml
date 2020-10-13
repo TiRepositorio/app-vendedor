@@ -11,30 +11,47 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@drawable/fondo">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/verdeApolo"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_margin="20dp"
+            android:text="BIENVENIDO"/>
         <EditText
             android:id="@+id/etCodigoUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:enabled="false"
-            android:layout_margin="10dp"
-            android:editable="false"/>
+            android:hint="Codigo de vendedor"
+            android:inputType="number"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
         <EditText
             android:id="@+id/etNombreUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:enabled="false"
-            android:layout_margin="10dp"
-            android:editable="false"/>
+            android:hint="Nombre"
+            android:inputType="textCapWords"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
+        <EditText
+            android:id="@+id/etVersionUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Version"
+            android:inputType="number"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"/>
         <EditText
             android:id="@+id/accion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:inputType="none"
-            android:editable="false"/>
+            android:inputType="none"/>
         <Button
             android:id="@+id/btComenzar"
             android:layout_width="wrap_content"

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/contMenu"
+    android:fitsSystemWindows="true"
+    tools:context=".informes.RebotesPorCliente"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/fondoOscuro">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/fondoCabecera"
+            >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/barra_vendedores"
+                />
+
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_usuario_claro"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvVendedor"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Nombre del vendedor"-->
+<!--                android:textStyle="bold"-->
+<!--                android:padding="10dp"-->
+<!--                android:textColor="@color/textoClaro"/>-->
+
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center"-->
+<!--            android:background="#ddd">-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_rebote"-->
+<!--                android:background="#ddd"/>-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Rebotes por vendedor"-->
+<!--                android:textStyle="bold"-->
+<!--                android:background="#ddd"-->
+<!--                android:padding="5dp"/>-->
+
+<!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/verdeApoloCabecera">
+
+                        <TextView
+                            android:layout_width="250dp"
+                            android:text="Cliente"
+                            android:gravity="start"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:text="Fecha"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="280dp"
+                            android:text="Tipo Penalidad"
+                            android:gravity="start"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:text="Valor Total"
+                            android:gravity="end"
+                            style="@style/cabeceraTabla"/>
+
+                    </TableRow>
+
+                    <ListView
+                        android:id="@+id/lvRebotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/fondoFooter">
+
+                        <TextView
+                            android:id="@+id/tvCliente"
+                            android:layout_width="250dp"
+                            android:gravity="start"
+                            style="@style/footerTabla"/>
+
+                        <TextView
+                            android:id="@+id/tvFecha"
+                            android:layout_width="100dp"
+                            style="@style/footerTabla"/>
+
+                        <TextView
+                            android:id="@+id/tvPenalidad"
+                            android:layout_width="280dp"
+                            android:text="Total: "
+                            android:gravity="start"
+                            style="@style/footerTabla"/>
+
+                        <TextView
+                            android:id="@+id/tvValor"
+                            android:layout_width="120dp"
+                            android:text="Valor Total"
+                            android:gravity="end"
+                            style="@style/footerTabla"/>
+
+                    </TableRow>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+<!--    <include-->
+<!--        android:id="@+id/vendInclude"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="match_parent"-->
+<!--        dialogo_bonificacion_combo="@dialogo_bonificacion_combo/activity_avance_de_comisiones"-->
+<!--        />-->
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/barraMenu"
+        android:background="#ffffff"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        app:elevation="20dp"
+        app:headerLayout="@layout/menu_supervisores"
+        app:menu="@menu/drawer_menu_vendedores"
+        >
+
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

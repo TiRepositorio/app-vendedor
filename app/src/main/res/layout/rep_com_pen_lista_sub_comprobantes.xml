@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvs1"
+            android:layout_width="130dp"
+            android:text="20"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs2"
+            android:layout_width="150dp"
+            android:text="1500"
+            android:gravity="start"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs3"
+            android:layout_width="130dp"
+            android:text="75%"
+            android:gravity="start"
+            android:textSize="10dp"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs4"
+            android:layout_width="110dp"
+            android:text="70%"
+            android:gravity="end"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs5"
+            android:layout_width="110dp"
+            android:text="500.000"
+            android:gravity="right"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs6"
+            android:layout_width="110dp"
+            android:text="500.000"
+            android:gravity="right"
+            style="@style/textoSubTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvs7"
+            android:layout_width="110dp"
+            android:text="500.000"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            style="@style/textoSubTabla"
+            />
+
+</LinearLayout>

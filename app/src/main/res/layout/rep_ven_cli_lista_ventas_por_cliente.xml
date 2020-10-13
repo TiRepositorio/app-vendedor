@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="80dp"
+            android:text="Codigo"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="200dp"
+            android:text="Cliente"
+            android:gravity="start|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="120dp"
+            android:text="Ciudad"
+            android:gravity="start|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="60dp"
+            android:text="Lista"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="120dp"
+            android:text="Mayor venta"
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="120dp"
+            android:text="Venta"
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="60dp"
+            android:text="Mix"
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv8"
+            android:layout_width="120dp"
+            android:text="Venta"
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv9"
+            android:layout_width="60dp"
+            android:text="Mix"
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv10"
+            android:layout_width="80dp"
+            android:text="Surt. Efi."
+            android:gravity="end|center_vertical"
+            style="@style/textoSubTabla"/>
+
+</LinearLayout>

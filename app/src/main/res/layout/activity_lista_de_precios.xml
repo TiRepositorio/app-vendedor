@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/contMenu"
+    android:fitsSystemWindows="true"
+    tools:context=".informes.ListaDePrecios"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/fondoOscuro">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/barra_vendedores"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:background="@color/fondoFooter">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@color/fondoFooter">
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Cod:"
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdCod"
+                        android:layout_width="50dp"
+                        android:gravity="start"
+                        android:text="Cod:"
+                        style="@style/tvDetalle"/>
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Ref:"
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdRef"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:text="Cod:"
+                        android:layout_weight="1"
+                        style="@style/tvDetalle"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@color/fondoFooter">
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Desc:"
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdDesc"
+                        android:layout_width="50dp"
+                        android:gravity="start"
+                        android:text="Desc:"
+                        android:layout_span="3"
+                        android:layout_weight="1"
+                        style="@style/tvDetalle"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/verdeApoloCabecera">
+
+                        <TextView
+                            android:id="@+id/tv1"
+                            android:layout_width="60dp"
+                            android:text="Codigo"
+                            android:gravity="end"
+                            style="@style/cabeceraSubTabla"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv2"
+                            android:layout_width="280dp"
+                            android:text="Articulo"
+                            android:gravity="start"
+                            style="@style/cabeceraSubTabla"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv3"
+                            android:layout_width="180dp"
+                            android:text="UM - Descripcion"
+                            android:gravity="start"
+                            style="@style/cabeceraSubTabla"
+                            />
+
+                    </TableRow>
+
+                    <ListView
+                        android:id="@+id/lvArticulos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </TableLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.6">
+
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvd1"
+                        android:layout_width="50dp"
+                        android:text="Lista"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvd2"
+                        android:layout_width="match_parent"
+                        android:text="Articulo"
+                        android:gravity="start"
+                        android:layout_weight="1"
+                        style="@style/cabeceraSubTabla"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvd3"
+                        android:layout_width="60dp"
+                        android:text="Siglas"
+                        style="@style/cabeceraSubTabla"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvd4"
+                        android:layout_width="120dp"
+                        android:text="Precio"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"
+                        />
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvPrecios"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </TableLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/barraMenu"
+        android:background="#ffffff"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="start"
+        app:elevation="20dp"
+        app:headerLayout="@layout/menu_cab_vendedores"
+        app:menu="@menu/drawer_menu_vendedores"
+        >
+
+
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

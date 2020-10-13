@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/imgAbrir"
+                android:src="@drawable/ic_desplegar"
+                android:layout_width="40dp"
+                style="@style/textoTablaDesplegable"
+                />
+
+            <ImageView
+                android:id="@+id/imgCerrar"
+                android:src="@drawable/ic_ocultar"
+                android:layout_width="40dp"
+                android:visibility="gone"
+                style="@style/textoTablaDesplegable"
+                />
+
+            <TextView
+                android:id="@+id/tv1"
+                style="@style/textoTablaDesplegable"
+                android:layout_weight="1"
+                android:text="Repartidor"
+                android:gravity="start"/>
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="120dp"
+                android:text="Tel.:"
+                android:gravity="end"
+                style="@style/textoTablaDesplegable"
+                />
+
+        </TableRow>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSubTabla"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:visibility="gone">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/verdeApoloCabecera" >
+
+                    <TextView
+                        android:text="Planilla"
+                        android:layout_width="80dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Fec. Planilla"
+                        android:layout_width="100dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Nro. Compr."
+                        android:layout_width="100dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Fec. Compr."
+                        android:layout_width="100dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Cliente"
+                        android:layout_width="100dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Cliente"
+                        android:layout_width="250dp"
+                        android:gravity="start"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Total"
+                        android:layout_width="130dp"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Estado"
+                        android:layout_width="130dp"
+                        android:gravity="start"
+                        style="@style/cabeceraSubTabla"/>
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvSubtabla"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:scrollbars="vertical"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

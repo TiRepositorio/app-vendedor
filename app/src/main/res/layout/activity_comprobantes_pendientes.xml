@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".reportes.ComprobantesPendientes">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#ddd">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dolar"
+                android:background="#ddd"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comprobantes pendientes a emitir"
+                android:textStyle="bold"
+                android:background="#ddd"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/verdeApolo">
+
+                        <TextView
+                            android:layout_width="30dp"
+                            android:textAlignment="center"
+                            android:textSize="12dp"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:text="Periodo"
+                            android:textAlignment="center"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="200dp"
+                            android:text="Concepto"
+                            android:textAlignment="textStart"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Exenta"
+                            android:textAlignment="textEnd"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Gravada"
+                            android:textAlignment="textEnd"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="IVA"
+                            android:textAlignment="textEnd"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Monto"
+                            android:textAlignment="textEnd"
+                            style="@style/cabeceraTabla"/>
+
+                    </TableRow>
+
+                    <ListView
+                        android:id="@+id/lvComprobantesPendientes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                </TableLayout>
+
+            </HorizontalScrollView>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verdeApolo">
+
+                <TextView
+                    android:id="@+id/tvCanCliTotalPorcCump"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Las facturas deben ser emitidas por mes y por concepto"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="#940000"
+                    android:textAlignment="center"
+                    android:textSize="12dp"
+                    android:padding="15dp"/>
+
+            </TableRow>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

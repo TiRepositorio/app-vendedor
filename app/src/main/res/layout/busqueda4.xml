@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondoOscuro">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:background="@color/fondoFooter">
+
+        <EditText
+            android:id="@+id/etBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#FFF"
+            android:layout_weight="1"
+            android:layout_marginRight="2dp"/>
+
+        <ImageButton
+            android:id="@+id/imgBuscar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="#99FFFFFF"
+            android:src="@drawable/ic_buscar"
+            android:layout_marginLeft="3dp"/>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp"
+            >
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:text="Codigo"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:layout_width="240dp"
+                    android:text="Cliente"
+                    android:gravity="start"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:text="Codigo"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:layout_width="240dp"
+                    android:text="Vendedor"
+                    android:gravity="start"
+                    style="@style/cabeceraSubTabla"/>
+
+            </TableRow>
+
+            <ListView
+                android:id="@+id/lvBuscar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/fondoFooter"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btSeleccionar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccionar"/>
+
+    </LinearLayout>
+
+</LinearLayout>

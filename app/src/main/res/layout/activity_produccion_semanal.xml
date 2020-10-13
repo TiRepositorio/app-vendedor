@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".reportes.ProduccionSemanal"
+    android:background="#08080C"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#ddd">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dolar"
+                android:background="#ddd"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Produccion semanal"
+                android:textStyle="bold"
+                android:background="#ddd"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1.5"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="10dp"
+                    android:text="Semana"
+                    style="@style/cabeceraTabla" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Periodo"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Total Producción"
+                    android:layout_weight="1.2"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:gravity="end|center_vertical"
+                    style="@style/cabeceraTabla"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <ListView
+                    android:id="@+id/lvProduccionSemanalCabecera"
+                    android:layout_height="match_parent"
+                    android:layout_weight="@android:integer/config_longAnimTime" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Total:"
+                    android:layout_weight="1.3"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:id="@+id/tvCabeceraTotalVenta"
+                    android:layout_width="match_parent"
+                    android:text="0 Gs."
+                    android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:id="@+id/tvCabeceraTotalProduccion"
+                    android:layout_width="match_parent"
+                    android:text="0 Gs."
+                    android:layout_weight="1"
+                    android:gravity="end|center_vertical"
+                    style="@style/cabeceraTabla"/>
+
+            </TableRow>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#ddd">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dolar_tach"
+                android:layout_weight="0.05"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Resumen"
+                android:textStyle="bold"
+                android:background="#ddd"
+                android:padding="10dp"
+                android:layout_weight="2"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dolar_tach"
+                android:layout_weight="0.05"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.9">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Cant."
+                    android:layout_weight="1"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Tot. Cli."
+                    android:layout_weight="0.95"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Monto por cliente"
+                    android:layout_weight="0.75"
+                    android:gravity="end|center_vertical"
+                    style="@style/cabeceraTabla"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Subtotal"
+                    android:layout_weight="0.85"
+                    android:gravity="end|center_vertical"
+                    style="@style/cabeceraTabla"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+
+                <ListView
+                    android:id="@+id/lvProduccionSemanalDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </TableRow>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

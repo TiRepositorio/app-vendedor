@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Base64
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapPrimitive
@@ -42,7 +43,7 @@ class ConexionWS {
         var request: SoapObject = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
         request.addProperty("password", "#edsystem@polo")
-        request.addProperty("codVendedor", FuncionesUtiles.usuario.get("LOGIN"))
+        request.addProperty("codVendedor", codVendedor)
         request.addProperty("version", MainActivity.version)
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
@@ -71,7 +72,6 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE,METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", "1")
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario.get("LOGIN"))
             solicitud.addProperty("codPersona", FuncionesUtiles.usuario.get("COD_PERSONA"))
         } catch (e : Exception){
@@ -84,7 +84,7 @@ class ConexionWS {
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
-            if (!(resultado.indexOf("01*")==-1)){
+            if (!(resultado.indexOf("01*")>-1)){
                 return false
             }
         } catch (e : Exception){
@@ -98,15 +98,14 @@ class ConexionWS {
     fun obtenerArchivos(): Boolean{
         val NAMESPACE   : String = "http://edsystem/servidor"
         val URL         : String = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
-        val METHOD_NAME : String = "ObtieneArchivosPromotor"
-        val SOAP_ACTION : String = "http://edsystem/servidor/ObtieneArchivosPromotor"
+        val METHOD_NAME : String = "ObtieneArchivosVendedor"
+        val SOAP_ACTION : String = "http://edsystem/servidor/ObtieneArchivosVendedor"
         lateinit var solicitud : SoapObject
         lateinit var resultado : Vector<SoapPrimitive>
         try {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", "1")
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario.get("LOGIN"))
         } catch (e : Exception){
             return false
@@ -345,7 +344,7 @@ class ConexionWS {
             resultado = sp.toString()
             var fos: FileOutputStream? = null
 //            fos = FileOutputStream("/sdcard/apolo_02.apk")
-            fos = FileOutputStream(MainActivity.nombre)
+            fos = FileOutputStream(MainActivity2.nombre)
             fos.write(Base64.decode(resultado.toString().toByteArray(),0))
             fos.close()
         } catch (e: java.lang.Exception) {

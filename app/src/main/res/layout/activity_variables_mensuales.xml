@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#08080C"
+    android:foregroundGravity="top|left|bottom|right"
+    tools:context=".reportes.AvanceDeComisiones">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llBotonVendedores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/fondoCabecera"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_usuario_claro"
+                />
+
+            <TextView
+                android:id="@+id/tvVendedor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del vendedor"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textColor="@color/textoClaro"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ddd"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
+                android:src="@drawable/ic_dolar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
+                android:padding="5dp"
+                android:text="Cobertura Mensual"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:text="Tot. Clientes"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:text="Cli. Positiv."
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:text="% Cob."
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:text="% Objetivo"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:text="Premios"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Monto a percibir"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+
+                    </TableRow>
+
+                    <ListView
+                        android:id="@+id/lvCoberturaMensual"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        />
+
+                </TableLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ddd"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
+                android:src="@drawable/ic_dolar" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
+                android:padding="5dp"
+                android:text="Cuota por unidad de negocio"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#cc85C229">
+
+                        <TextView
+                            android:layout_width="150dp"
+                            android:text="Unid. Negocio"
+                            style="@style/cabeceraTabla"/>
+
+                        <TextView
+                            android:layout_width="190dp"
+                            android:text="Periodo"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:text="%Cuota"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:text="%Logrado"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:text="Cuota"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Venta"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                        <TextView
+                            android:layout_width="130dp"
+                            android:text="Monto a percibir"
+                            android:gravity="end|center_vertical"
+                            style="@style/cabeceraTabla" />
+
+                    </TableRow>
+
+                        <ListView
+                            android:id="@+id/lvCuotaPorUnidadDeNegocio"
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1" />
+
+                </TableLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

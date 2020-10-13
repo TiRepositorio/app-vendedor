@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_weight="1"
+        android:text="Marca"
+        android:textAlignment="center"
+        style="@style/textoTabla"
+        />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_weight="1"
+        android:text="Marca"
+        android:textAlignment="center"
+        style="@style/textoTabla"
+        />
+
+    <TextView
+        android:id="@+id/tv3"
+        android:text="Total Venta"
+        android:layout_weight="0.75"
+        android:textAlignment="textEnd"
+        style="@style/textoTabla"
+        />
+
+    <TextView
+        android:id="@+id/tv4"
+        android:text="Total Venta"
+        android:layout_weight="0.85"
+        android:textAlignment="textEnd"
+        style="@style/textoTabla"
+        />
+
+</LinearLayout>

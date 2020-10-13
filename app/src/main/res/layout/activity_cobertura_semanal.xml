@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".reportes.CoberturaSemanal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#ddd">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_dolar"
+            android:background="#ddd"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cobertura Semanal"
+            android:textStyle="bold"
+            android:background="#ddd"
+            android:padding="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:text="Vendedor (Cod-Descripcion)"
+                android:textAlignment="textStart"
+                android:layout_weight="0.5"
+                style="@style/cabeceraTabla"/>
+
+            <TextView
+                android:text="Comision"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                style="@style/cabeceraTabla"/>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+                <ListView
+                    android:id="@+id/lvVendCoberturaSemanal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+        </TableRow>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/verdeApoloCabecera" >
+
+                    <TextView
+                    android:text="Semana"
+                    android:layout_width="100dp"
+                    style="@style/cabeceraTabla"/>
+
+                    <TextView
+                        android:text="Cli. Ventas"
+                        android:layout_width="100dp"
+                        style="@style/cabeceraTabla"/>
+
+                    <TextView
+                        android:text="Tot. Clientes"
+                        android:layout_width="100dp"
+                        style="@style/cabeceraTabla"/>
+
+                    <TextView
+                        android:text="Cumplimiento"
+                        android:layout_width="100dp"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"/>
+
+                    <TextView
+                        android:text="Periodo"
+                        android:layout_width="150dp"
+                        style="@style/cabeceraTabla"/>
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvVendCoberturaSemanalDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

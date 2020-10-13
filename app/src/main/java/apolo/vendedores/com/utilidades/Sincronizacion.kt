@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -12,11 +13,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import kotlinx.android.synthetic.main.activity_sincronizacion.*
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.text.DecimalFormat
 import java.util.*
 
 class Sincronizacion : AppCompatActivity() {
@@ -26,6 +29,9 @@ class Sincronizacion : AppCompatActivity() {
     companion object{
         var tipoSinc: String = "T"
         lateinit var context: Context
+        var primeraVez = false
+        var contador = 0
+        var nf = DecimalFormat("000")
     }
 
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
@@ -63,7 +69,7 @@ class Sincronizacion : AppCompatActivity() {
         @SuppressLint("WrongThread")
         override fun doInBackground(vararg p0: Void?): Void? {
             imeiBD = MainActivity.conexionWS.procesaVersion(FuncionesUtiles.usuario.get("LOGIN").toString())
-            if (imeiBD.indexOf("Unable to resolve host") > -1) {
+            if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1) {
                 progressDialog.dismiss()
                 runOnUiThread(Runnable {
                     Toast.makeText(context,"Verifique su conexion a internet y vuelva a intentarlo",Toast.LENGTH_SHORT).show()
@@ -94,14 +100,24 @@ class Sincronizacion : AppCompatActivity() {
             }
             if (tipoSinc.equals("T")){
 //                MainActivity.funcion.ejecutar("update svm_vendedor_pedido set ULTIMA_VEZ = '" + MainActivity.funcion.getFechaActual() + "'",this@Sincronizacion)
-                if(MainActivity.conexionWS.generaArchivos()){
-                    imeiBD = imeiBD + "\n\nError al generar archivos"
+                if(!MainActivity.conexionWS.generaArchivos()){
+                    runOnUiThread(Runnable {
+                        imeiBD = imeiBD + "\n\nError al generar archivos"
+                        tvImei.text = "\n\nError al generar archivos"
+                        Toast.makeText(this@Sincronizacion, "Error al generar archivos", Toast.LENGTH_SHORT).show()
+                    })
                 }
                 if (Build.VERSION.SDK_INT >= 26){
                     progressDialog.setMessage("Obteniendo Archivos")
                 }
                 if(!MainActivity.conexionWS.obtenerArchivos()){
-                    imeiBD = imeiBD + "\n\nError al obtener archivos"
+                    runOnUiThread(Runnable {
+                        if (tvImei.text.toString().indexOf("Espere")>-1){
+                            imeiBD = imeiBD + "\n\nError al obtener archivos"
+                            tvImei.text = "\n\nError al obtener archivos"
+                            Toast.makeText(this@Sincronizacion, "Error al obtener archivos", Toast.LENGTH_SHORT).show()
+                        }
+                    })
                 }
             }
             return null
@@ -160,7 +176,7 @@ class Sincronizacion : AppCompatActivity() {
                 try {
 
                     //Leer el archivo desde la direccion asignada
-                    var archivo     : File              = File("/data/data/apolo.promotor.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
+                    var archivo     : File              = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
                     var leeArchivo  : FileReader        = FileReader(archivo)
                     var buffer      : BufferedReader    = BufferedReader(leeArchivo)
                     var sql         : String            = listaSQLCreateTable[i]
@@ -180,20 +196,20 @@ class Sincronizacion : AppCompatActivity() {
                         linea = buffer.readLine()
                     }
 
-                    archivo     = File("/data/data/apolo.promotor.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
+                    archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
                     leeArchivo  = FileReader(archivo)
                     buffer      = BufferedReader(leeArchivo)
 
                     //Extrae valor de los campo e inserta a la BD
                     linea = buffer.readLine()
                     var cont : Int = 0
+                    runOnUiThread(Runnable {
+                        tvImei.text = tvImei.text.toString() + "\n${nf.format(i)} - " + listaSQLCreateTable[i].split(" ")[5]
+                    })
                     while (linea != null){
-                        runOnUiThread(Runnable {
-                            tvImei.text = tvImei.text.toString() + "\n" + listaSQLCreateTable[i].split(" ")[5]
-                        })
                         var valores : ArrayList<String> = linea.split("|") as ArrayList<String>
                         var values  : ContentValues  = ContentValues()
-                        for (j in 0 until valores.size){
+                        for (j in 0 until listaCampos.get(i).size){
                             if (valores[j].toString().equals("null")||valores[j].toString().equals("")||valores[j].toString().isEmpty()){
                                 values.put(listaCampos.get(i)[j], " ")
                             } else {
@@ -254,6 +270,11 @@ class Sincronizacion : AppCompatActivity() {
     }
 
     fun cerrar(view: View) {
+        if (primeraVez){
+            startActivity(Intent(this,MainActivity2::class.java))
+            primeraVez = false
+        }
+
         finish()
     }
 
@@ -267,13 +288,11 @@ class Sincronizacion : AppCompatActivity() {
 
     fun validaVersion(versionUsuario:String,versionSistema:String, versionEstado:String):Boolean{
         if (!FuncionesUtiles.usuario.get("VERSION").equals(versionUsuario)){
-                tvImei.setText("Version de usuario no corresponde.")
-                btFinalizar.visibility = View.VISIBLE
+                tvImei.setText("Version de usuario no corresponde.$versionUsuario")
             return false
         }
         if (!versionSistema.equals(MainActivity.version)){
             tvImei.setText("Debe actualizar su version para sincronizar.")
-            btFinalizar.visibility = View.VISIBLE
             return false
         }
         if (versionEstado.equals("I")){
