@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/llBotonesCab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llBotonGerentes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/fondoCabecera"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_usuario_claro"
+                />
+
+            <TextView
+                android:id="@+id/tvGerente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Gerente"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:textSize="10dp"
+                android:scrollbars="horizontal"
+                android:textColor="@color/textoClaro"/>
+
+            <ImageView
+                android:id="@+id/ibtnAnteriorGer"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_anterior"
+                />
+
+            <ImageView
+                android:id="@+id/ibtnSiguienteGer"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_siguiente"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBotonSupervisores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/fondoCabecera"
+            >
+
+            <ImageView
+                android:id="@+id/imgSupervisor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_usuario_claro"
+                />
+
+            <TextView
+                android:id="@+id/tvSupervisor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del supervisor"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:textSize="10dp"
+                android:scrollbars="horizontal"
+                android:textColor="@color/textoClaro"/>
+
+            <ImageView
+                android:id="@+id/ibtnAnteriorSup"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_anterior"
+                />
+
+            <ImageView
+                android:id="@+id/ibtnSiguienteSup"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_siguiente"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
