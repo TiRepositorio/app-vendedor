@@ -10,7 +10,7 @@
             android:gravity="start|center_vertical"
             style="@style/textoSubTabla"/>
         <TextView
-            android:id="@+id/tv2"
+            android:id="@+id/tv1"
             android:layout_weight="2"
             android:text="Día"
             style="@style/textoSubTabla"/>

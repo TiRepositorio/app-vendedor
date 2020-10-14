@@ -41,14 +41,6 @@
 
                     <TextView
                         android:id="@+id/tv1"
-                        android:layout_width="60dp"
-                        android:text="Sup."
-                        android:gravity="end"
-                        style="@style/cabeceraTabla"
-                        />
-
-                    <TextView
-                        android:id="@+id/tv2"
                         android:layout_width="70dp"
                         android:text="Cod."
                         android:gravity="end"
@@ -56,7 +48,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/tv3"
+                        android:id="@+id/tv2"
                         android:layout_width="match_parent"
                         android:text="Descripcion"
                         android:layout_weight="1"

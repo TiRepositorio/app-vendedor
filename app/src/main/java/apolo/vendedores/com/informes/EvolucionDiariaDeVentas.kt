@@ -64,7 +64,7 @@ class EvolucionDiariaDeVentas : AppCompatActivity() {
                           "CANT_POSIT"      ,"COBERTURA"        ,"EF_VISITA"        ,
                           "DIA_TRAB"        ,"PUNTAJE"          ,"SURTIDO_EF"
                          )
-        vistas = intArrayOf( R.id.tv1 ,R.id.tv2 ,R.id.tv3 ,R.id.tv4 ,R.id.tv5 ,R.id.tv6 ,
+        vistas = intArrayOf( R.id.tv1 ,R.id.tv1 ,R.id.tv3 ,R.id.tv4 ,R.id.tv5 ,R.id.tv6 ,
                              R.id.tv7 ,R.id.tv8 ,R.id.tv9 ,R.id.tv10,R.id.tv11,R.id.tv12,
                              R.id.tv13,R.id.tv14,R.id.tv15,R.id.tv16,R.id.tv17,R.id.tv18)
        val adapter: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,

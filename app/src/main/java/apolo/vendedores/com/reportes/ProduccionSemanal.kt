@@ -129,7 +129,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     fun mostrarCabecera(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
         funcion.valores = arrayOf("SEMANA","PERIODO","MONTO_VIATICO")
         val adapterCabecera: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
             FuncionesUtiles.listaCabecera,
@@ -150,7 +150,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     fun mostrarDetalle(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4)
         funcion.valores = arrayOf("SEMANA","CANTIDAD","MONTO_TOTAL","PERIODO")
         val adapterDetalle: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,

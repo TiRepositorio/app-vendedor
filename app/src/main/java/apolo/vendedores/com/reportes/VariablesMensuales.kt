@@ -135,7 +135,7 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun mostrarCoberturaMensual(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6)
         funcion.valores = arrayOf("TOT_CLIEN_ASIG","CANT_POSIT","PORC_COB","PORC_LOGRO","PREMIOS","MONTO_A_COBRAR")
         val adapterCoberturaMensual: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
             FuncionesUtiles.listaCabecera,
@@ -191,7 +191,7 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun mostrarCuotaPorUnidadDeNegocio(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7)
         funcion.valores = arrayOf("UNIDAD_DE_NEGOCIO","PERIODO","PORC_ALC_PREMIO","PORC_PREMIO","MONTO_CUOTA","MONTO_VENTA","MONTO_A_COBRAR")
         val adapterCuotaPorUnidadDeNegocios: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,

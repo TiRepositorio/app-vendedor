@@ -44,7 +44,7 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun mostrar(){
         FuncionesUtiles.posicionCabecera = 0
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
         funcion.valores = arrayOf("DESC_CLIENTE","DIA","FECHA")
         lvRuteoSemanal.adapter = Adapter.AdapterGenericoCabecera(this
                                                                 ,FuncionesUtiles.listaCabecera

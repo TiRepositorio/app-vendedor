@@ -103,6 +103,9 @@
             android:name=".ventas.Promotores"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".ventas.ListaClientes"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />
     </application>

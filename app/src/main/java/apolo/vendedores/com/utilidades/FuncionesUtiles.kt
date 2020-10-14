@@ -511,6 +511,15 @@ class FuncionesUtiles {
     fun entero(entero: Int):String{
         return formatoNumeroEntero.format(entero)
     }
+    fun enteroCliente(entero: String):String{
+        if (entero.trim().equals("")){
+            return "0"
+        }
+        if (entero.trim().indexOf(".")>-1){
+            return "0"
+        }
+        return formatoNumeroEntero.format(entero.replace(".","").replace("null","0").trim().toInt())
+    }
     fun decimal(decimal: String):String{
         if (decimal.trim().equals("")||decimal.trim().equals("null")){
             return "0.0"

@@ -61,7 +61,7 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     fun mostrarArticulo(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
         funcion.valores = arrayOf("COD_ARTICULO", "DESC_ARTICULO", "REFERENCIA")
         var adapter: Adapter.AdapterGenericoCabecera =
             Adapter.AdapterGenericoCabecera(this

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/contMenu"
+    android:fitsSystemWindows="true"
+    tools:context=".ventas.ListaClientes"
+    android:background="@color/fondoOscuro"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:background="@color/fondoOscuro">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/barra_vendedores"
+                />
+            <EditText
+                android:id="@+id/accion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="@color/textoClaro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <CheckBox
+                android:id="@+id/cbRuteoDelDia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ruteo del dia"/>
+            <CheckBox
+                android:id="@+id/cbNoAtendidos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="No atendidos"/>
+            <CheckBox
+                android:id="@+id/cbTodos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Todos"/>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv1"
+                        android:layout_width="50dp"
+                        style="@style/cabeceraTabla"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv2"
+                        android:layout_width="50dp"
+                        style="@style/cabeceraTabla"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv3"
+                        android:layout_width="70dp"
+                        android:text="Cliente"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv4"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv5"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv6"
+                        android:layout_width="220dp"
+                        android:text="Descripcion"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv7"
+                        android:layout_width="220dp"
+                        android:text="Subcliente"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv8"
+                        android:layout_width="150dp"
+                        android:text="Ciudad"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv9"
+                        android:layout_width="300dp"
+                        android:text="Direccion"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv10"
+                        android:layout_width="130dp"
+                        android:text="RUC"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv11"
+                        android:layout_width="150dp"
+                        android:text="Zona"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv12"
+                        android:layout_width="150dp"
+                        android:text="Telefono"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv13"
+                        android:layout_width="100dp"
+                        android:text="Condicion"
+                        android:gravity="start"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv14"
+                        android:layout_width="180dp"
+                        android:text="Lim. Credito"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv15"
+                        android:layout_width="150dp"
+                        android:text="Deuda"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv16"
+                        android:layout_width="150dp"
+                        android:text="Saldo"
+                        android:gravity="end"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:id="@+id/tv17"
+                        android:layout_width="150dp"
+                        android:text="F. Visita"
+                        style="@style/cabeceraTabla"
+                        />
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvClientes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="2dp"
+        android:background="@color/textoClaro"
+        android:gravity="center_vertical">
+        <Button
+            android:id="@+id/btDeuda"
+            android:text="Deuda de clientes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:textColor="@color/textoClaro"
+            android:background="@color/verdeOscuro"/>
+        <Button
+            android:id="@+id/btES"
+            android:text="Consultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:background="@color/quantum_deeporange900"
+            android:textColor="@color/textoClaro"
+            android:visibility="gone"/>
+        <ImageButton
+            android:id="@+id/ibtnMapa"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mapa_ruteo"/>
+        <Button
+            android:id="@+id/btSD"
+            android:text="SD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:background="@color/azulMarino"
+            android:textColor="@color/textoClaro"/>
+        <Button
+            android:id="@+id/btJustificarNoVenta"
+            android:text="Justificar no venta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:background="@color/fondoFooter"
+            android:textColor="@color/textoClaro"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="2dp"
+        android:background="@color/textoClaro"
+        android:gravity="center_vertical">
+        <Button
+            android:id="@+id/btModificar"
+            android:text="Modificar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:textColor="@color/textoClaro"
+            android:background="@color/verdeOscuro"/>
+        <Button
+            android:id="@+id/btVender"
+            android:text="Vender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textSize="12dp"
+            android:background="@color/fondoFooter"
+            android:textColor="@color/textoClaro"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

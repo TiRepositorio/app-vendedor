@@ -126,7 +126,7 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun mostrarCabecera(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
         funcion.valores = arrayOf("CATEGORIA","TOTAL","COMISION")
 
         val adapterCabecera: Adapter.AdapterGenericoCabecera =
@@ -146,7 +146,7 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun mostrarDetalle(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1)
         funcion.valores = arrayOf("MARCA","TOTAL")
         val adapterDetalle: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,R.layout.inf_comision_detalle,funcion.vistas,funcion.valores

@@ -68,7 +68,7 @@ class CoberturaSemanal : AppCompatActivity() {
 
     fun mostrarCabecera(){
         valores = arrayOf("DESC_VENDEDOR","MONTO_A_COBRAR")
-        vistas = intArrayOf(R.id.tv1,R.id.tv2)
+        vistas = intArrayOf(R.id.tv1,R.id.tv1)
         val adapterCabecera: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
                                                                                 FuncionesUtiles.listaCabecera,
                                                                                 R.layout.rep_cob_sem_lista_cobertura_semanal_cabecera,
@@ -119,7 +119,7 @@ class CoberturaSemanal : AppCompatActivity() {
 
     fun mostrarDetalle(){
         valores = arrayOf("SEMANA","CLIENT_VENTAS","TOT_CLIENTES","PORC_COBERTURA","PERIODO")
-        vistas = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5)
+        vistas = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4,R.id.tv5)
         val adapterDetalle: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,
             R.layout.rep_cob_sem_lista_cobertura_semanal_detalle,

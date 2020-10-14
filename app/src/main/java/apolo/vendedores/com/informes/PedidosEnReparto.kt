@@ -96,7 +96,7 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     fun mostrar(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1)
         funcion.valores = arrayOf("DESC_REPARTIDOR" ,"TEL_REPARTIDOR")
         funcion.subVistas  = intArrayOf(R.id.tvs1,R.id.tvs2,R.id.tvs3,R.id.tvs4,R.id.tvs5,R.id.tvs6,R.id.tvs7,R.id.tvs8)
         funcion.subValores = arrayOf("NRO_PLANILLA"     , "FEC_PLANILLA"    , "NRO_COMPROBANTE" ,

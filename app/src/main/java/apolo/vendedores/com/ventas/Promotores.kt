@@ -47,13 +47,11 @@ class Promotores : AppCompatActivity() {
     }
 
     fun buscar(){
-        var campos = "DISTINCT '',a.COD_VENDEDOR, a.DESC_VENDEDOR "
+        var campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
         var groupBy = ""
         var orderBy = "a.COD_VENDEDOR"
-        var tabla = " svm_cliente_vendedor a, svm_vendedor_pedido b "
-        var where = ( "         and (a.COD_VENDEDOR = b.cod_vendedor "
-                         +   "         and b.ind_palm = 'N'"
-                         +   "         and b.per_vender = 'S') ")
+        var tabla = " svm_cliente_vendedor a "
+        var where = ("")
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()
     }
@@ -62,7 +60,6 @@ class Promotores : AppCompatActivity() {
         lista = ArrayList<HashMap<String,String>>()
         for (i in 0 until cursor.count){
             datos = HashMap<String,String>()
-            datos.put("COD_SUPERVISOR",funcion.dato(cursor,"COD_SUPERVISOR"))
             datos.put("COD_VENDEDOR",funcion.dato(cursor,"COD_VENDEDOR"))
             datos.put("DESC_VENDEDOR",funcion.dato(cursor,"DESC_VENDEDOR"))
             lista.add(datos)
@@ -71,8 +68,8 @@ class Promotores : AppCompatActivity() {
     }
 
     fun mostrar(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
-        funcion.valores = arrayOf("COD_SUPERVISOR", "COD_VENDEDOR", "DESC_VENDEDOR")
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
+        funcion.valores = arrayOf("COD_VENDEDOR", "DESC_VENDEDOR")
         var adapter: Adapter.AdapterGenericoCabecera =
             Adapter.AdapterGenericoCabecera(this
                 ,lista
@@ -108,11 +105,11 @@ class Promotores : AppCompatActivity() {
         }
 
 
-        if(indPalm.equals("N") && perVender.equals("S")){
+        if(indPalm.equals("S") && perVender.equals("S")){
 //            Pedidos.nuevo = true
 //            Pedidos.maximo = funcion.datoEntero(cursor,"MAXIMO")
-//            ListaClientes.codVendedor = lista.get(posicion).get("COD_VENDEDOR").toString()
-//            startActivity(Intent(this, ListaClientes::class.java))
+            ListaClientes.codVendedor = lista.get(posicion).get("COD_VENDEDOR").toString()
+            startActivity(Intent(this, ListaClientes::class.java))
         }else{
             funcion.mensaje(this,"Atención!","No posee permiso para vender en esta cartera!")
         }

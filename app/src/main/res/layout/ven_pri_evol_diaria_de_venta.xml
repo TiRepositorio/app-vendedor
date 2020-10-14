@@ -33,7 +33,7 @@
                         android:gravity="end" />
 
                     <TextView
-                        android:id="@+id/tv2"
+                        android:id="@+id/tv1"
                         style="@style/cabeceraSubTabla"
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"

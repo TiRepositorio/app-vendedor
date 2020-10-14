@@ -72,7 +72,7 @@ class SeguimientoDeVisitas : AppCompatActivity(){
     }
 
     fun mostrarPeriodo() {
-        funcion.vistas = intArrayOf(R.id.tv1, R.id.tv2)
+        funcion.vistas = intArrayOf(R.id.tv1, R.id.tv1)
         funcion.valores = arrayOf("SEMANA", "PERIODO")
         var adapter: Adapter.AdapterGenericoCabecera =
             Adapter.AdapterGenericoCabecera(

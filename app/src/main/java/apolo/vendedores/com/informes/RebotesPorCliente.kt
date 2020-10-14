@@ -78,7 +78,7 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     fun mostrar(){
         funcion.valores = arrayOf("CODIGO","FECHA", "DESC_PENALIDAD","MONTO_TOTAL")
-        funcion.vistas = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4)
+        funcion.vistas = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4)
         val adapter: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
                                                                                         FuncionesUtiles.listaCabecera,
                                                                                         R.layout.inf_reb_vend_lista_rebotes,

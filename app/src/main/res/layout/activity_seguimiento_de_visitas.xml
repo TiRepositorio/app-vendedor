@@ -48,7 +48,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv2"
+                    android:id="@+id/tv1"
                     android:layout_weight="1"
                     android:text="Periodo"
                     style="@style/cabeceraTabla"

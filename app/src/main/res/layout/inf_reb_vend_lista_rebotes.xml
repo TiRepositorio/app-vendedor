@@ -14,7 +14,7 @@
             style="@style/textoTabla"/>
 
         <TextView
-            android:id="@+id/tv2"
+            android:id="@+id/tv1"
             android:layout_width="100dp"
             style="@style/textoTabla"/>
 
