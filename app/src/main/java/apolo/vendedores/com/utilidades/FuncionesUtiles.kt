@@ -299,6 +299,7 @@ class FuncionesUtiles {
         var posicionGenerico: Int = 0
         var listaCabecera: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
         var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
+        var listaDetalle2: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
         var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
         var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList<ArrayList<ArrayList<HashMap<String, String>>>>()
         val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###.##")

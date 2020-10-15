@@ -205,6 +205,73 @@ class Adapter{
 
     }
 
+    class AdapterGenericoDetalle2(private val context: Context,
+                                 private val dataSource: ArrayList<HashMap<String, String>>,
+                                 private val molde: Int,
+                                 private val vistas:IntArray,
+                                 private val valores:Array<String>) : BaseAdapter()
+    {
+
+        private val inflater: LayoutInflater
+                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(molde, parent, false)
+
+            for (i in 0 until vistas.size){
+                rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
+            }
+
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (FuncionesUtiles.posicionDetalle2 == position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
+
+            return rowView
+        }
+
+        fun getTotalEntero(parametro : String):Int{
+
+            var totalValor: Int = 0
+
+            for (i in 0 until dataSource.size) {
+                totalValor = totalValor + Integer.parseInt(dataSource.get(i).get(parametro).toString().replace(".","",false))
+            }
+
+            return totalValor
+        }
+
+        fun getTotalDecimal():Double{
+
+            var totalPorcCump: Double = 0.0
+
+            for (i in 0 until dataSource.size) {
+                totalPorcCump = totalPorcCump + dataSource.get(i).get("PORC_CUMP").toString().replace(".","").replace(",",".").replace("%","").toDouble()
+            }
+
+            return totalPorcCump/dataSource.size
+        }
+
+    }
+
     class AdapterBusqueda(private val context: Context,
                           private val dataSource: ArrayList<HashMap<String, String>>,
                           private val molde: Int,

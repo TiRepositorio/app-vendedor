@@ -175,15 +175,15 @@ class ListaClientes : AppCompatActivity() {
 
     fun deuda(){
         if (FuncionesUtiles.listaDetalle.size > 0){
-//            DeudaDeClientes.codCliente = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_CLIENTE").toString()
-//            DeudaDeClientes.codSubcliente = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_SUBCLIENTE").toString()
-//            if (FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("TOT_DEUDA").equals("0")){
-//                funcion.mensaje(this,"Atención!","El cliente no tiene deudas.")
-//                return
-//            }
-//            DeudaDeClientes.venta = true
-//            var deuda : Intent = Intent(this,DeudaDeClientes::class.java)
-//            startActivity(deuda)
+            Deuda.codigo = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_CLIENTE").toString() + "-" +
+                           FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_SUBCLIENTE").toString()
+            Deuda.nombre = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("DESC_CLIENTE").toString()
+            if (FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("TOT_DEUDA").equals("0")){
+                funcion.mensaje(this,"Atención!","El cliente no tiene deudas.")
+                return
+            }
+            var deuda : Intent = Intent(this,Deuda::class.java)
+            startActivity(deuda)
         }
     }
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="100dp"
+            android:text="Fec. Emision"
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="100dp"
+            android:text="Fec. Venc."
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="70dp"
+            android:text="Atraso"
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="70dp"
+            android:text="Tipo"
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="100dp"
+            android:text="Numero"
+            android:gravity="end"
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="120dp"
+            android:text="Saldo"
+            android:gravity="end"
+            style="@style/textoTabla"/>
+
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="120dp"
+            android:text="Condicion"
+            android:layout_gravity="start"
+            android:layout_weight="1"
+            style="@style/textoTabla"/>
+
+</LinearLayout>

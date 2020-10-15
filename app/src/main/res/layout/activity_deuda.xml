@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro"
+    tools:context=".ventas.Deuda">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvCodigo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Codigo"
+            android:padding="10dp"
+            android:textColor="@color/textoClaro"/>
+        <TextView
+            android:id="@+id/tvDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="nombre"
+            android:layout_weight="1"
+            android:textColor="@color/textoClaro"/>
+
+        <TextView
+            android:id="@+id/tvCerrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="X"
+            android:textStyle="bold"
+            android:textColor="@color/textoClaro"
+            android:background="@color/fondoFooter"/>
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="100dp"
+                    android:text="Fec. Emision"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv2"
+                    android:layout_width="100dp"
+                    android:text="Fec. Venc."
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="70dp"
+                    android:text="Atraso"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv4"
+                    android:layout_width="70dp"
+                    android:text="Tipo"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv5"
+                    android:layout_width="100dp"
+                    android:text="Numero"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv6"
+                    android:layout_width="120dp"
+                    android:text="Saldo"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:id="@+id/tv7"
+                    android:layout_width="120dp"
+                    android:text="Condicion"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    style="@style/cabeceraSubTabla"/>
+
+            </TableRow>
+
+            <ListView
+                android:id="@+id/lvSubDeuda"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/fondoFooter">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc."
+                    android:gravity="end"
+                    android:textSize="9dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp"/>
+                <TextView
+                    android:id="@+id/tvTVenc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:gravity="end"
+                    android:layout_weight="0.5"
+                    android:textSize="10dp"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Tot.:"
+                    android:textSize="9dp"
+                    android:gravity="end"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp"/>
+                <TextView
+                    android:id="@+id/tvNVenc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:textSize="10dp"
+                    android:gravity="end"
+                    android:layout_weight="0.5"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="A Venc."
+                    android:gravity="end"
+                    android:textSize="9dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp"/>
+                <TextView
+                    android:id="@+id/tvTAVenc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:gravity="end"
+                    android:layout_weight="0.5"
+                    android:textSize="10dp"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Tot.:"
+                    android:gravity="end"
+                    android:textSize="9dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp" />
+                <TextView
+                    android:id="@+id/tvNAVenc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:gravity="end"
+                    android:layout_weight="0.5"
+                    android:textSize="10dp"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Cant."
+                    android:gravity="end"
+                    android:textSize="9dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp"/>
+                <TextView
+                    android:id="@+id/tvTCant"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:gravity="end"
+                    android:layout_weight="0.5"
+                    android:textSize="10dp"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Tot.:"
+                    android:textSize="9dp"
+                    android:gravity="end"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:layout_margin="5dp"/>
+                <TextView
+                    android:id="@+id/tvNCant"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="Venc.:"
+                    android:gravity="end"
+                    android:textSize="10dp"
+                    android:layout_weight="0.5"
+                    android:layout_margin="5dp"
+                    android:background="#FFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

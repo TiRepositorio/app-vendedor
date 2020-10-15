@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="120dp"
+            android:text="Codigo"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="120dp"
+            android:text=""
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="60dp"
+            android:text="Desc. Cliente"
+            android:gravity="start"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="80dp"
+            android:text="Sub-Cliente"
+            android:gravity="start"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="120dp"
+            android:text="Deuda"
+            android:gravity="end"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv6"
+            android:layout_width="120dp"
+            android:text="Vendedor"
+            android:gravity="end"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tv7"
+            android:layout_width="60dp"
+            android:text="Vendedor"
+            android:gravity="start"
+            android:layout_weight="1"
+            style="@style/textoTabla"
+            />
+
+</LinearLayout>

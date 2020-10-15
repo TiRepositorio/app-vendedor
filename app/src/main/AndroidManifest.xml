@@ -106,6 +106,12 @@
             android:name=".ventas.ListaClientes"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".ventas.DeudaDeClientes"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".ventas.Deuda"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />
     </application>

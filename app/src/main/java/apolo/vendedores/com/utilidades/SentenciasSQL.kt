@@ -83,7 +83,7 @@ class SentenciasSQL {
                     + " COD_CLIENTE TEXT                    , COD_SUBCLIENTE TEXT , FEC_EMISION TEXT    ,"
                     + " FEC_VENCIMIENTO NUMBER              , TIP_DOCUMENTO TEXT  , NRO_DOCUMENTO TEXT  ,"
                     + " SALDO_CUOTA TEXT                    , DIA_ATRAZO TEXT     , ABREVIATURA TEXT    ,"
-                    + " DESC_VENDEDOR TEXT)")
+                    + " DESC_VENDEDOR TEXT                  )")
             return sql
         }
 
