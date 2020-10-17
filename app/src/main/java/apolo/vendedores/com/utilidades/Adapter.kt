@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.imgCerrar
 import kotlinx.android.synthetic.main.rep_canasta_de_marcas.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_debitos.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_haberes.view.*
+import kotlinx.android.synthetic.main.ven_lista_sd_detalles.view.*
 import java.lang.Exception
 import java.text.DecimalFormat
 
@@ -349,19 +350,19 @@ class Adapter{
                 rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
             }
 
-//            rowView.imgEliminar.setOnClickListener{
-//                etAccion.setText(accion)
-//            }
+            rowView.imgEliminar.setOnClickListener{
+                etAccion.setText(accion)
+            }
 //
-//            if (position%2==0){
-//                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
-//            } else {
-//                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
-//            }
-//
-//            if (SolicitudDevolucion.posDetalles == position){
-//                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
-//            }
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (apolo.vendedores.com.ventas.sd.SolicitudDevolucion.posDetalles == position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
 
             return rowView
         }

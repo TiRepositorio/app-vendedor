@@ -81,8 +81,6 @@ class DeudaDeClientes : AppCompatActivity(), NavigationView.OnNavigationItemSele
             funcion.actualizaVendedor(this)
             cargarTodo()
             mostrar()
-//            cargaDetalle()
-//            mostrarDetalle()
         }
     }
 

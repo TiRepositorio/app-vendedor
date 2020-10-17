@@ -248,8 +248,8 @@ class ConexionWS {
     fun procesaEnviaSolicitudSD(codRepartidor:String,cabecera:String,detalle:String) : String{
         val NAMESPACE   : String = "http://edsystem/servidor"
         val URL         : String = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
-        val METHOD_NAME : String = "ProcesaAutorizaSDProm"
-        val SOAP_ACTION : String = "http://edsystem/servidor/ProcesaAutorizaSDProm"
+        val METHOD_NAME : String = "ProcesaAutorizaSDVend"
+        val SOAP_ACTION : String = "http://edsystem/servidor/ProcesaAutorizaSDVend"
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
@@ -315,6 +315,41 @@ class ConexionWS {
         }
         return resultado
     }
+
+    //Enviar datos modificados del cliente
+    fun procesaActualizaDatosClienteFinal(codVendedor: String?, clientes: String, FotoFachada: String?): String? {
+        val METHOD_NAME = "ProcesaActualizaClienteFinal"
+        val SOAP_ACTION = "http://edsystem/servidor/ProcesaActualizaClienteFinal"
+        var solicitud: SoapObject? = null
+        var resultado: String? = null
+        try {
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
+            solicitud.addProperty("usuario", "edsystem")
+            solicitud.addProperty("password", "#edsystem@polo")
+            solicitud.addProperty("vcodVendedor", codVendedor)
+            solicitud.addProperty("vclientes", clientes.replace("''", " ").replace("'", ""))
+            solicitud.addProperty("vfoto_fachada", FotoFachada)
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(solicitud)
+        val transporte = HttpTransportSE(URL, 240000)
+        try {
+            transporte.call(SOAP_ACTION, envelope)
+            val sp = envelope.response as SoapPrimitive
+            resultado = sp.toString()
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        return resultado
+    }
+
 
     fun obtieneInstalador(): Boolean {
         val NAMESPACE = "http://edsystem/servidor"

@@ -63,8 +63,8 @@ class SentenciasSQL {
             sql = "CREATE TABLE IF NOT EXISTS svm_condicion_venta" +
                     " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_CONDICION_VENTA TEXT," +
                     " DESCRIPCION TEXT                     , TIPO_CONDICION TEXT, ABREVIATURA TEXT        ," +
-                    " DIAS_INICIAL TEXT                    , PORC_DESC TEXT     , MONTO_MIN_DESC TEXT);";
-            return sql;
+                    " DIAS_INICIAL TEXT                    , PORC_DESC TEXT     , MONTO_MIN_DESC TEXT);"
+            return sql
         }
 
         fun createTableSvmUltimaVentaCliente(): String {
@@ -116,7 +116,7 @@ class SentenciasSQL {
         }
 
         fun createTableSvmStArticulos(): String {
-            sql = ("CREATE TABLE IF NOT EXISTS svm_st_articulos"
+            return ("CREATE TABLE IF NOT EXISTS svm_st_articulos"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA  TEXT , COD_ARTICULO TEXT, DESC_ARTICULO TEXT,"
                     + " COD_UNIDAD_REL TEXT                  , REFERENCIA TEXT   , MULT NUMBER      , DIV  NUMBER       ,"
                     + " COD_IVA TEXT                         , PORC_IVA TEXT     , COD_LINEA TEXT   , COD_FAMILIA TEXT  ,"
@@ -124,7 +124,6 @@ class SentenciasSQL {
                     + " CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_st_articulos(COD_ARTICULO) ;"
                     + " CREATE INDEX IF NOT EXISTS IND_DESC_ARTICULO ON svm_st_articulos(DESC_ARTICULO) ;"
                     + " CREATE INDEX IF NOT EXISTS IND_COD_BARRA ON svm_st_articulos(COD_BARRA) ;")
-            return sql
         }
 
         fun createTableSvmPromArticulosTarCred(): String {
@@ -606,21 +605,21 @@ class SentenciasSQL {
 
         fun listaSQLCreateTable(): Vector<String> {
             var lista : Vector<String> = Vector<String>()
-            lista.add(0, createTableSvm_fotos_cab())
-            lista.add(1, createTableSvm_fotos_det())
-            lista.add(2, createTableSvm_modifica_catastro())
-            lista.add(3, createTableSvmPedidosCab())
-            lista.add(4, createTableSvmPedidosDet())
-            lista.add(5, createTableSvm_imagenes_det())
-            lista.add(6, createTableSvm_fotos_cab())
-            lista.add(7, createTableSvm_fotos_det())
-            lista.add(8, createTableStvCategoriaPalm())
-            lista.add(9, createTableSpmRetornoComentario())
-            lista.add(10, createTableSvmDiasTomaFotoCliente())
-            lista.add(11, createTableVt_marcacion_ubicacion())
-            lista.add(12, createTableSvm_solicitud_dev_cab())
-            lista.add(13, createTableSvm_solicitud_dev_det())
-            lista.add(14, "PRAGMA automatic_index = true")
+            lista.add(0, createTableSvm_modifica_catastro())
+            lista.add(1, createTableSvm_solicitud_dev_det())
+            lista.add(2, createTableSvm_solicitud_dev_cab())
+//            lista.add(3, createTableSvmPedidosCab())
+//            lista.add(4, createTableSvmPedidosDet())
+//            lista.add(5, createTableSvm_imagenes_det())
+//            lista.add(6, createTableSvm_fotos_cab())
+//            lista.add(7, createTableSvm_fotos_det())
+//            lista.add(8, createTableStvCategoriaPalm())
+//            lista.add(9, createTableSpmRetornoComentario())
+//            lista.add(10, createTableSvmDiasTomaFotoCliente())
+//            lista.add(11, createTableVt_marcacion_ubicacion())
+//            lista.add(12, createTableSvm_fotos_cab())
+//            lista.add(13, createTableSvm_fotos_det())
+//            lista.add(14, "PRAGMA automatic_index = true")
 //            lista.add(15, "")
 //            lista.add(16, "")
 //            lista.add(17, "")

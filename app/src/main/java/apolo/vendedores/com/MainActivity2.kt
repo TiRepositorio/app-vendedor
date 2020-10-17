@@ -136,7 +136,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     fun crearTablas(){
         for (i in 0 until SentenciasSQL.listaSQLCreateTable().size){
-//            funcion.ejecutar(SentenciasSQL.listaSQLCreateTable().get(i),this)
+            funcion.ejecutar(SentenciasSQL.listaSQLCreateTable().get(i),this)
         }
     }
 

@@ -28,7 +28,7 @@ class Deuda : AppCompatActivity() {
         inicializar()
     }
 
-    fun inicializar(){
+    private fun inicializar(){
         tvCodigo.text = codigo
         tvDescripcion.text = nombre
         cargar()
@@ -38,8 +38,8 @@ class Deuda : AppCompatActivity() {
         cantTotal()
     }
 
-    fun cargar(){
-        var sql : String = (("select COD_EMPRESA, COD_VENDEDOR   , COD_CLIENTE  , COD_SUBCLIENTE, "
+    private fun cargar(){
+        val sql : String = (("select COD_EMPRESA, COD_VENDEDOR   , COD_CLIENTE  , COD_SUBCLIENTE, "
                 + " FEC_EMISION, FEC_VENCIMIENTO, TIP_DOCUMENTO, NRO_DOCUMENTO ,"
                 + " SALDO_CUOTA, DIA_ATRAZO     , ABREVIATURA"
                 + " from svm_deuda_cliente "
@@ -53,16 +53,16 @@ class Deuda : AppCompatActivity() {
     }
 
     fun cargarLista(cursor:Cursor){
-        FuncionesUtiles.listaDetalle2 = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaDetalle2 = ArrayList()
         for (i in 0 until cursor.count){
-            var datos : HashMap<String,String> = HashMap<String, String>()
-            datos.put("FEC_EMISION", funcion.dato(cursor,"FEC_EMISION"))
-            datos.put("FEC_VENCIMIENTO", funcion.dato(cursor,"FEC_VENCIMIENTO"))
-            datos.put("DIA_ATRAZO", funcion.dato(cursor,"DIA_ATRAZO"))
-            datos.put("TIP_DOCUMENTO", funcion.dato(cursor,"TIP_DOCUMENTO"))
-            datos.put("NRO_DOCUMENTO", funcion.dato(cursor,"NRO_DOCUMENTO"))
-            datos.put("SALDO_CUOTA", funcion.entero(funcion.dato(cursor,"SALDO_CUOTA")))
-            datos.put("ABREVIATURA", funcion.dato(cursor,"ABREVIATURA"))
+            val datos : HashMap<String,String> = HashMap()
+            datos["FEC_EMISION"] = funcion.dato(cursor,"FEC_EMISION")
+            datos["FEC_VENCIMIENTO"] = funcion.dato(cursor,"FEC_VENCIMIENTO")
+            datos["DIA_ATRAZO"] = funcion.dato(cursor,"DIA_ATRAZO")
+            datos["TIP_DOCUMENTO"] = funcion.dato(cursor,"TIP_DOCUMENTO")
+            datos["NRO_DOCUMENTO"] = funcion.dato(cursor,"NRO_DOCUMENTO")
+            datos["SALDO_CUOTA"] = funcion.entero(funcion.dato(cursor,"SALDO_CUOTA"))
+            datos["ABREVIATURA"] = funcion.dato(cursor,"ABREVIATURA")
             FuncionesUtiles.listaDetalle2.add(datos)
             cursor.moveToNext()
         }
@@ -73,14 +73,14 @@ class Deuda : AppCompatActivity() {
         funcion.subValores = arrayOf("FEC_EMISION"      , "FEC_VENCIMIENTO"  , "DIA_ATRAZO" ,
                                      "TIP_DOCUMENTO"    , "NRO_DOCUMENTO"    , "SALDO_CUOTA",
                                      "ABREVIATURA")
-        var adapter:Adapter.AdapterGenericoDetalle2 =
+        val adapter:Adapter.AdapterGenericoDetalle2 =
                     Adapter.AdapterGenericoDetalle2(this
                                                     ,FuncionesUtiles.listaDetalle2
                                                     ,R.layout.ven_deu_cli_lista_sub_lista
                                                     ,funcion.subVistas
                                                     ,funcion.subValores)
         lvSubDeuda.adapter = adapter
-        lvSubDeuda.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvSubDeuda.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionDetalle2 = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvSubDeuda.invalidateViews()
@@ -88,8 +88,8 @@ class Deuda : AppCompatActivity() {
 
     }
 
-    fun vencido(){
-        var sql : String = ("SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT "
+    private fun vencido(){
+        val sql : String = ("SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT "
                 + "   FROM svm_deuda_cliente "
                 + "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'"
 //                + "    AND COD_VENDEDOR   = '" + codVen + "'"
@@ -98,8 +98,8 @@ class Deuda : AppCompatActivity() {
         cargarFooter(tvTVenc,tvNVenc,funcion.consultar(sql))
     }
 
-    fun aVencer(){
-        var sql : String = "SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT " +
+    private fun aVencer(){
+        val sql : String = "SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT " +
                            "  FROM svm_deuda_cliente " +
                            "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'" +
 //                           "    AND COD_VENDEDOR   = '" + codVen + "'" +
@@ -108,8 +108,8 @@ class Deuda : AppCompatActivity() {
         cargarFooter(tvTAVenc,tvNAVenc,funcion.consultar(sql))
     }
 
-    fun cantTotal(){
-        var sql : String = "SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT " +
+    private fun cantTotal(){
+        val sql : String = "SELECT IFNULL(CAST(SUM(CAST(SALDO_CUOTA AS NUMBER)) AS TEXT),'0') AS DEUDA, COUNT(*) AS CANT " +
                            "  FROM svm_deuda_cliente " +
                            "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'" +
 //                           "    AND COD_VENDEDOR   = '" + codVen + "'" +
@@ -117,10 +117,10 @@ class Deuda : AppCompatActivity() {
         cargarFooter(tvTCant,tvNCant,funcion.consultar(sql))
     }
 
-    fun cargarFooter(cantidad: TextView, total:TextView, cursor:Cursor){
+    private fun cargarFooter(cantidad: TextView, total:TextView, cursor:Cursor){
         if(cursor.count > 0){
-            cantidad.setText(funcion.dato(cursor,"CANT"))
-            total.setText(funcion.entero(funcion.dato(cursor,"DEUDA")))
+            cantidad.text = funcion.dato(cursor,"CANT")
+            total.text = funcion.entero(funcion.dato(cursor,"DEUDA"))
         } else {
             cantidad.setText(0)
             total.setText(0)

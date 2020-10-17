@@ -134,7 +134,7 @@ class ListaClientes : AppCompatActivity() {
                                      R.id.tv7 ,R.id.tv8 ,R.id.tv9 ,R.id.tv10,R.id.tv11,R.id.tv12,
                                      R.id.tv13,R.id.tv14,R.id.tv15,R.id.tv16,R.id.tv17 )
         funcion.valores = arrayOf("TIP_CAUSAL"      , "CATEGORIA"       ,"COD_CLIENTE"      , "COD_SUBCLIENTE"  , "TIP_CLIENTE"    ,
-                                  "DESC_CLIENTE"    , "DESC_SUBCLIENTE" ,"desc_ciudad"      , "DIRECCION"       , "RUC"            ,
+                                  "DESC_CLIENTE"    , "DESC_SUBCLIENTE" ,"DESC_CIUDAD"      , "DIRECCION"       , "RUC"            ,
                                   "DESC_ZONA"       , "TELEFONO"        ,"DESC_CONDICION"   , "LIMITE_CREDITO"  , "TOT_DEUDA"      ,
                                   "SALDO"           , "FEC_VISITA"      )
         var adapter: Adapter.AdapterGenericoDetalle =
@@ -148,29 +148,24 @@ class ListaClientes : AppCompatActivity() {
             FuncionesUtiles.posicionDetalle  = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvClientes.invalidateViews()
-            codCliente = FuncionesUtiles.listaDetalle.get(position).get("COD_CLIENTE").toString()
-            codSubcliente = FuncionesUtiles.listaDetalle.get(position).get("COD_SUBCLIENTE").toString()
-            descCliente = FuncionesUtiles.listaDetalle.get(position).get("DESC_SUBCLIENTE").toString()
-            tipCliente = FuncionesUtiles.listaDetalle.get(position).get("TIP_CLIENTE").toString()
-            indEspecial = FuncionesUtiles.listaDetalle.get(position).get("IND_ESP").toString()
-            tipCondicion = FuncionesUtiles.listaDetalle.get(position).get("TIPO_CONDICION").toString()
-            codCondicion = FuncionesUtiles.listaDetalle.get(position).get("COD_CONDICION").toString()
-            diasInicial = FuncionesUtiles.listaDetalle.get(position).get("DIAS_INICIAL").toString()
-            indDirecta = FuncionesUtiles.listaDetalle.get(position).get("IND_DIRECTA").toString()
-            codSucursalCliente = FuncionesUtiles.listaDetalle.get(position).get("COD_SUCURSAL").toString()
+            cargarDatos(position)
         }
         if (FuncionesUtiles.listaDetalle.size>0){
-            codCliente = FuncionesUtiles.listaDetalle.get(0).get("COD_CLIENTE").toString()
-            codSubcliente = FuncionesUtiles.listaDetalle.get(0).get("COD_SUBCLIENTE").toString()
-            descCliente = FuncionesUtiles.listaDetalle.get(0).get("DESC_SUBCLIENTE").toString()
-            tipCliente = FuncionesUtiles.listaDetalle.get(0).get("TIP_CLIENTE").toString()
-            indEspecial = FuncionesUtiles.listaDetalle.get(0).get("IND_ESP").toString()
-            tipCondicion = FuncionesUtiles.listaDetalle.get(0).get("TIPO_CONDICION").toString()
-            codCondicion = FuncionesUtiles.listaDetalle.get(0).get("COD_CONDICION").toString()
-            diasInicial = FuncionesUtiles.listaDetalle.get(0).get("DIAS_INICIAL").toString()
-            indDirecta = FuncionesUtiles.listaDetalle.get(0).get("IND_DIRECTA").toString()
-            codSucursalCliente = FuncionesUtiles.listaDetalle.get(0).get("COD_SUCURSAL").toString()
+            cargarDatos(0)
         }
+    }
+
+    private fun cargarDatos(posicion : Int){
+        codCliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_CLIENTE").toString()
+        codSubcliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_SUBCLIENTE").toString()
+        descCliente = FuncionesUtiles.listaDetalle.get(posicion).get("DESC_SUBCLIENTE").toString()
+        tipCliente = FuncionesUtiles.listaDetalle.get(posicion).get("TIP_CLIENTE").toString()
+        indEspecial = FuncionesUtiles.listaDetalle.get(posicion).get("IND_ESP").toString()
+        tipCondicion = FuncionesUtiles.listaDetalle.get(posicion).get("TIPO_CONDICION").toString()
+        codCondicion = FuncionesUtiles.listaDetalle.get(posicion).get("COD_CONDICION").toString()
+        diasInicial = FuncionesUtiles.listaDetalle.get(posicion).get("DIAS_INICIAL").toString()
+        indDirecta = FuncionesUtiles.listaDetalle.get(posicion).get("IND_DIRECTA").toString()
+        codSucursalCliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_SUCURSAL").toString()
     }
 
     fun deuda(){
@@ -236,10 +231,8 @@ class ListaClientes : AppCompatActivity() {
 
     fun modificar(){
         if (FuncionesUtiles.listaDetalle.size==0){return}
-//        ModificarCliente.codCliente = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_CLIENTE").toString()
-//        ModificarCliente.codSubcliente = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_SUBCLIENTE").toString()
-//        var modifcar : Intent = Intent(this,ModificarCliente::class.java)
-//        startActivity(modifcar)
+        var modifcar : Intent = Intent(this,ModificarCliente::class.java)
+        startActivity(modifcar)
     }
 
     fun vender(){
@@ -249,8 +242,8 @@ class ListaClientes : AppCompatActivity() {
     }
 
     fun sd(){
-//        var sd : Intent = Intent(this,SolicitudDevolucion::class.java)
-//        startActivity(sd)
+        var sd : Intent = Intent(this,apolo.vendedores.com.ventas.sd.SolicitudDevolucion::class.java)
+        startActivity(sd)
     }
 
 }
