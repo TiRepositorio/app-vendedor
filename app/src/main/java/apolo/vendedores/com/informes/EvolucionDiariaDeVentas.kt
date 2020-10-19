@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_evolucion_diaria_de_ventas.*
 class EvolucionDiariaDeVentas : AppCompatActivity() {
 
     companion object{
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
         lateinit var vistas: IntArray
         lateinit var valores: Array<String>
@@ -30,14 +30,14 @@ class EvolucionDiariaDeVentas : AppCompatActivity() {
         inicializarElementos()
     }
 
-    fun inicializarElementos(){
+    private fun inicializarElementos(){
         funcion = FuncionesUtiles(this)
         cargar()
         mostrar()
     }
 
-    fun cargar(){
-        var sql = ("SELECT COD_EMPRESA  , COD_VENDEDOR	    , DESC_VENDEDOR, PEDIDO_2_ATRAS, PEDIDO_1_ATRAS,"
+    private fun cargar(){
+        val sql = ("SELECT COD_EMPRESA  , COD_VENDEDOR	    , DESC_VENDEDOR, PEDIDO_2_ATRAS, PEDIDO_1_ATRAS,"
                     + "           TOTAL_PEDIDOS, TOTAL_FACT  	    , META_VENTA   , META_LOGRADA  , PROY_VENTA    ,"
                     + "		      TOTAL_REBOTE , TOTAL_DEVOLUCION   , CANT_CLIENTES, CANT_POSIT    , EF_VISITA 	   ,"
                     + "		      DIA_TRAB	   , PUNTAJE			, SURTIDO_EF   , "
@@ -47,13 +47,23 @@ class EvolucionDiariaDeVentas : AppCompatActivity() {
             cursor = funcion.consultar(sql)
             cursor.moveToFirst()
         } catch (e : Exception){
-            var error = e.message
+            e.message
             return
         }
 
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaCabecera = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaCabecera,funcion.consultar(sql))
-
+        for (i in 0 until FuncionesUtiles.listaCabecera.size){
+            FuncionesUtiles.listaCabecera[i]["PEDIDO_1_ATRAS"]   = funcion.entero(FuncionesUtiles.listaCabecera[i]["PEDIDO_1_ATRAS"].toString())
+            FuncionesUtiles.listaCabecera[i]["PEDIDO_2_ATRAS"]   = funcion.entero(FuncionesUtiles.listaCabecera[i]["PEDIDO_2_ATRAS"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_PEDIDOS"]    = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_PEDIDOS"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_FACT"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_FACT"].toString())
+            FuncionesUtiles.listaCabecera[i]["META_VENTA"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["META_VENTA"].toString())
+            FuncionesUtiles.listaCabecera[i]["META_LOGRADA"]     = funcion.entero(FuncionesUtiles.listaCabecera[i]["META_LOGRADA"].toString())
+            FuncionesUtiles.listaCabecera[i]["PROY_VENTA"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["PROY_VENTA"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"]     = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"] = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"].toString())
+        }
     }
 
     fun mostrar(){
@@ -71,7 +81,7 @@ class EvolucionDiariaDeVentas : AppCompatActivity() {
            FuncionesUtiles.listaCabecera, R.layout.inf_evo_dia_lista_evolucion,vistas,valores)
 
         lvEvolucionDiariaDeVentas.adapter = adapter
-        lvEvolucionDiariaDeVentas.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvEvolucionDiariaDeVentas.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionCabecera = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvEvolucionDiariaDeVentas.invalidateViews()

@@ -17,34 +17,28 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class FuncionesDispositivo {
+class FuncionesDispositivo(var context: Context) {
 
-    constructor(context: Context){
-        this.context = context
-        this.funcion = FuncionesUtiles(context)
-    }
-
-    var context : Context
-    val funcion : FuncionesUtiles
+    val funcion : FuncionesUtiles = FuncionesUtiles(context)
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun modoAvion():Boolean{
         var valor : Int = 0
         valor = Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0)
-        if (valor != 0){
+        return if (valor != 0){
             Toast.makeText(context,"Debe desactivar el modo avion", Toast.LENGTH_LONG).show()
-            return false
+            false
         } else {
-            return true
+            true
         }
     }
 
     fun zonaHoraria(): Boolean {
         val nowUtc = Date()
-        val AmericaAsuncion: TimeZone = TimeZone.getTimeZone("America/Asuncion")
-        val nowAmericaAsuncion: Calendar = Calendar.getInstance(AmericaAsuncion)
+        val americaAsuncion: TimeZone = TimeZone.getTimeZone("America/Asuncion")
+        val nowAmericaAsuncion: Calendar = Calendar.getInstance(americaAsuncion)
         val df: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
-        val phone_date_time: String = df.format(Calendar.getInstance().getTime())
+        val phoneDateTime: String = df.format(Calendar.getInstance().getTime())
         val zone_time = (java.lang.String.format(
             "%02d",
             nowAmericaAsuncion
@@ -68,7 +62,7 @@ class FuncionesDispositivo {
                 + "/"
                 + java.lang.String.format("%02d", nowAmericaAsuncion.get(Calendar.YEAR)))
         val zone_date_time = "$zone_date $zone_time"
-        return if (phone_date_time != zone_date_time) {
+        return if (phoneDateTime != zone_date_time) {
             Toast.makeText(
                 context,
                 "La zona horaria no coincide con America/Asuncion",

@@ -2,11 +2,10 @@ package apolo.vendedores.com.informes
 
 import android.database.Cursor
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.AdapterView
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
@@ -27,7 +26,7 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     companion object{
         var funcion : FuncionesUtiles = FuncionesUtiles()
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
 
@@ -49,8 +48,8 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mostrar()
     }
 
-    fun cargar(){
-        var sql = ("SELECT /*COD_VENDEDOR,*/CODIGO, DESC_PENALIDAD, MONTO_TOTAL, FECHA/*, NOM_VENDEDOR, DESC_SUPERVISOR*/ "
+    private fun cargar(){
+        val sql = ("SELECT /*COD_VENDEDOR,*/CODIGO, DESC_PENALIDAD, MONTO_TOTAL, FECHA/*, NOM_VENDEDOR, DESC_SUPERVISOR*/ "
                         + "  FROM svm_rebotes_por_cliente  "
 //                        + " WHERE  "
 //                        + "       COD_VENDEDOR = '" + tvVendedor.text.toString().split("-")[0] + "'   AND "
@@ -60,17 +59,17 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
                         + "substr(FECHA,1,2)) DESC")
 
         cursor = funcion.consultar(sql)
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String, String>>()
+        FuncionesUtiles.listaCabecera = ArrayList()
 
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
+            datos = HashMap()
 //            datos.put("COD_VENDEDOR",cursor.getString(cursor.getColumnIndex("COD_VENDEDOR")))
-            datos.put("CODIGO",cursor.getString(cursor.getColumnIndex("CODIGO")))
-            datos.put("DESC_PENALIDAD",cursor.getString(cursor.getColumnIndex("DESC_PENALIDAD")))
-            datos.put("FECHA",cursor.getString(cursor.getColumnIndex("FECHA")))
+            datos["CODIGO"] = cursor.getString(cursor.getColumnIndex("CODIGO"))
+            datos["DESC_PENALIDAD"] = cursor.getString(cursor.getColumnIndex("DESC_PENALIDAD"))
+            datos["FECHA"] = cursor.getString(cursor.getColumnIndex("FECHA"))
 //            datos.put("NOM_VENDEDOR",cursor.getString(cursor.getColumnIndex("NOM_VENDEDOR")))
 //            datos.put("DESC_SUPERVISOR",cursor.getString(cursor.getColumnIndex("DESC_SUPERVISOR")))
-            datos.put("MONTO_TOTAL",funcion.entero(cursor.getString(cursor.getColumnIndex("MONTO_TOTAL"))))
+            datos["MONTO_TOTAL"] = funcion.entero(cursor.getString(cursor.getColumnIndex("MONTO_TOTAL")))
             FuncionesUtiles.listaCabecera.add(datos)
             cursor.moveToNext()
         }
@@ -85,14 +84,14 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
                                                                                         funcion.vistas,funcion.valores)
         lvRebotes.adapter = adapter
         tvValor.text = funcion.entero(adapter.getTotalEntero("MONTO_TOTAL"))
-        lvRebotes.setOnItemClickListener(AdapterView.OnItemClickListener { adapterView, view, position, l ->
+        lvRebotes.setOnItemClickListener { _, view, position, _ ->
             FuncionesUtiles.posicionCabecera = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvRebotes.invalidateViews()
-        })
+        }
     }
 
-    fun actualizarDatos(imageView: ImageView){
+    private fun actualizarDatos(imageView: ImageView){
         imageView.setOnClickListener{
             if (imageView.id==ibtnAnterior.id){
                 funcion.posVend--

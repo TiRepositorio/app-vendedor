@@ -8,18 +8,12 @@ import android.widget.ListView
 import apolo.vendedores.com.R
 import apolo.vendedores.com.informes.EvolucionDiariaDeVentas
 
-class ConsultasInicio {
+class ConsultasInicio(var context: Context) {
 
-    constructor(context:Context){
-        this.context = context
-        funcion = FuncionesUtiles(context)
-    }
-
-    var context : Context
-    var funcion : FuncionesUtiles
+    var funcion : FuncionesUtiles = FuncionesUtiles(context)
 
     fun evolucionDiariaDeVenta(lista:ListView){
-        var sql = ("SELECT COD_EMPRESA  , COD_VENDEDOR	    , DESC_VENDEDOR, PEDIDO_2_ATRAS, PEDIDO_1_ATRAS,"
+        val sql = ("SELECT COD_EMPRESA  , COD_VENDEDOR	    , DESC_VENDEDOR, PEDIDO_2_ATRAS, PEDIDO_1_ATRAS,"
                 + "           TOTAL_PEDIDOS, TOTAL_FACT  	    , META_VENTA   , META_LOGRADA  , PROY_VENTA    ,"
                 + "		      TOTAL_REBOTE , TOTAL_DEVOLUCION   , CANT_CLIENTES, CANT_POSIT    , EF_VISITA 	   ,"
                 + "		      DIA_TRAB	   , PUNTAJE			, SURTIDO_EF   , "
@@ -29,11 +23,10 @@ class ConsultasInicio {
             EvolucionDiariaDeVentas.cursor = funcion.consultar(sql)
             EvolucionDiariaDeVentas.cursor.moveToFirst()
         } catch (e : Exception){
-            var error = e.message
             return
         }
 
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaCabecera = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaCabecera,funcion.consultar(sql))
         mostrar(lista)
     }
@@ -47,7 +40,7 @@ class ConsultasInicio {
             "DIA_TRAB"        ,"PUNTAJE"          ,"SURTIDO_EF"
         )
         EvolucionDiariaDeVentas.vistas = intArrayOf( R.id.tv1 ,
-            R.id.tv1 ,
+            R.id.tv2 ,
             R.id.tv3 ,
             R.id.tv4 ,
             R.id.tv5 ,
@@ -71,7 +64,7 @@ class ConsultasInicio {
         )
 
         lvEvolucionDiariaDeVentas.adapter = adapter
-        lvEvolucionDiariaDeVentas.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvEvolucionDiariaDeVentas.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionCabecera = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvEvolucionDiariaDeVentas.invalidateViews()

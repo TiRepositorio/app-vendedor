@@ -1,5 +1,6 @@
 package apolo.vendedores.com.reportes
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import android.os.Bundle
 import android.view.MenuItem
@@ -21,24 +22,23 @@ import java.text.DecimalFormat
 class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object{
-        var posicionSeleccionadoCanastaDeMarcas: Int = 0
         var subPosicionSeleccionadoCanastaDeMarcas: Int = 0
         var subPosicionSeleccionadoCanastaDeMarcas2: Int = 0
-        var listaVentasPorMarca: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var sublistaVentasPorMarca: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var sublistasVentasPorMarcas: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
-        var sublistasVentasPorMarcas2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> = ArrayList<ArrayList<ArrayList<HashMap<String, String>>>>()
-        var sub1 : ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var sub2 :  ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var listaVentasPorMarca: ArrayList<HashMap<String, String>> = ArrayList()
+        var sublistaVentasPorMarca: ArrayList<HashMap<String, String>> = ArrayList()
+        var sublistasVentasPorMarcas: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
+        var sublistasVentasPorMarcas2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> = ArrayList()
+        var sub1 : ArrayList<HashMap<String, String>> = ArrayList()
+        var sub2 :  ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
 
-    val formatNumeroEntero : DecimalFormat = DecimalFormat("###,###,##0.##")
-    val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
+    private val formatNumeroEntero : DecimalFormat = DecimalFormat("###,###,##0.##")
+    private val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
-    var codSupervisor = ""
-    var desSupervisor = ""
+    private var codSupervisor = ""
+    private var desSupervisor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +70,15 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         mostrarVentaPorMarcas()
     }
 
-    fun validacion(){
-        if (tvVendedor!!.text.toString().equals("Nombre del vendedor")){
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
             funcion.toast(this, "No hay datos para mostrar.")
             finish()
         }
     }
 
-    fun cargarCodigos(){
+    @SuppressLint("SetTextI18n")
+    private fun cargarCodigos(){
         try {
             codSupervisor = tvVendedor.text!!.toString().split("-")[0]
             desSupervisor = tvVendedor.text!!.toString().split("-")[1]
@@ -92,7 +93,8 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 //        funcion.mensaje(this,codSupervisor,desSupervisor)
     }
 
-    fun cargarVentasPorClientes(){
+    @SuppressLint("Recycle")
+    private fun cargarVentasPorClientes(){
 
         cargarCodigos()
 
@@ -101,86 +103,60 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                             +   " from svm_metas_punto_por_linea "
                             +   " group by DESC_GTE_MARKETIN ")
 
-/*        var sql : String = ("SELECT COD_UNID_NEGOCIO	                                , "
-//                        + "         DESC_UNI_NEGOCIO		                            , "
-//                        + " 	    SUM(CAST(VALOR_CANASTA AS NUMBER)) AS VALOR_CANASTA	, "
-//                        + "         SUM(CAST(VENTAS AS NUMBER)) AS VENTAS               , "
-//                        + "         SUM(CAST(CUOTA AS NUMBER)) AS CUOTA			        , "
-//                        + "         SUM(CAST(PORC_CUMP AS NUMBER)) AS PORC_CUMP         , "
-//                        + "			SUM(CAST(MONTO_A_COBRAR AS NUMBER)) AS MONTO_A_COBRAR "
-//                        + "   FROM svm_metas_punto_por_linea "
-//                        + "  WHERE COD_SUPERVISOR  = '$codSupervisor' "
-//                        + "    AND DESC_SUPERVISOR = '$desSupervisor' "
-//                        + "  GROUP BY COD_UNID_NEGOCIO, DESC_UNI_NEGOCIO "
-//                        + "  ORDER BY COD_UNID_NEGOCIO ASC, DESC_UNI_NEGOCIO ASC ")*/
-
         try {
             cursor = MainActivity.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
         } catch (e: Exception){
-            var error = e.message
             e.printStackTrace()
             return
         }
 
-        listaVentasPorMarca = ArrayList<HashMap<String, String>>()
+        listaVentasPorMarca = ArrayList()
 
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
-            datos.put("DESC_GTE_MARKETIN", cursor.getString(cursor.getColumnIndex("DESC_GTE_MARKETIN")))
-            datos.put("DESC_MODULO", cursor.getString(cursor.getColumnIndex("DESC_MODULO")))
-            datos.put("MAYOR_VENTA", formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("MAYOR_VENTA")).replace(",", ".").toDouble()))
-            datos.put("VENTA_MES1", formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES1")).replace(",", ".").toDouble()))
-            datos.put("VENTA_MES2", formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES2")).replace(",", ".").toDouble()))
-            datos.put("META", formatNumeroEntero.format(Integer.parseInt(cursor.getString(cursor.getColumnIndex("META")).replace(",", "."))))
-            datos.put("PORC", formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC")))
+            datos = HashMap()
+            datos["DESC_GTE_MARKETIN"] = cursor.getString(cursor.getColumnIndex("DESC_GTE_MARKETIN"))
+            datos["DESC_MODULO"] = cursor.getString(cursor.getColumnIndex("DESC_MODULO"))
+            datos["MAYOR_VENTA"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("MAYOR_VENTA")).replace(",", ".").toDouble())
+            datos["VENTA_MES1"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES1")).replace(",", ".").toDouble())
+            datos["VENTA_MES2"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES2")).replace(",", ".").toDouble())
+            datos["META"] = formatNumeroEntero.format(Integer.parseInt(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".")))
+            datos["PORC"] = formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC"))
             listaVentasPorMarca.add(datos)
             cursor.moveToNext()
         }
 
-        sublistasVentasPorMarcas = ArrayList<ArrayList<HashMap<String, String>>>()
+        sublistasVentasPorMarcas = ArrayList()
 
         for (i in 0 until listaVentasPorMarca.size){
             sql = ("select DESC_MODULO  	  , SUM(MAYOR_VENTA) AS MAYOR_VENTA     , SUM(VENTA_MES1) AS VENTA_MES1 , SUM(VENTA_MES2) AS VENTA_MES2     ,"
                     + " SUM(META) AS META  	  , SUM(MES_1) AS MES_1		            , SUM(MES_2) AS MES_2           , SUM((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC 			 "
                     + " from svm_metas_punto_por_linea "
-                    + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca.get(i).get("DESC_GTE_MARKETIN")}'"
+                    + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}'"
                     + " GROUP BY DESC_MODULO   "
                     + " Order By cast(ifnull(ORD_GTE_MARK,0) as double), cast(ifnull(NRO_ORD_MAG,0) as double), cast(ifnull(ORD_CATEGORIA,0) as double)")
 
-/*            sql = ("SELECT COD_MARCA	                                    , "
-//                    + "    DESC_MARCA	                                    , "
-//                    + "    IFNULL(VALOR_CANASTA, '0') AS VALOR_CANASTA      , "
-//                    + "    IFNULL(VENTAS, '0') AS VENTAS                    , "
-//                    + "    IFNULL(CUOTA, '0') AS CUOTA			            , "
-//                    + "    IFNULL(PORC_CUMP, '0') AS PORC_CUMP              , "
-//                    + "	   IFNULL(MONTO_A_COBRAR, '0') AS MONTO_A_COBRAR      "
-//                    + "   FROM svm_metas_punto_por_linea "
-//                    + "  WHERE COD_UNID_NEGOCIO = '" + listaVentasPorMarca.get(i).get("COD_UNID_NEGOCIO") + "' "
-//                    + "    AND COD_SUPERVISOR  = '$codSupervisor' "
-//                    + "    AND DESC_SUPERVISOR = '$desSupervisor' "
-//                    + "  ORDER BY COD_MARCA ASC, DESC_MARCA ASC ")*/
             try {
                 cursor = MainActivity.bd!!.rawQuery(sql, null)
                 cursor.moveToFirst()
             } catch (e: Exception){
-                var error = e.message
+                e.message
                 e.printStackTrace()
                 return
             }
 
-            sublistaVentasPorMarca = ArrayList<HashMap<String, String>>()
+            sublistaVentasPorMarca = ArrayList()
 
             for (j in 0 until cursor.count){
-                datos = HashMap<String, String>()
-                datos.put("DESC_MODULO", cursor.getString(cursor.getColumnIndex("DESC_MODULO")))
-                datos.put("MAYOR_VENTA", cursor.getString(cursor.getColumnIndex("MAYOR_VENTA")))
-                datos.put("VENTA_MES1", formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES1")))
-                datos.put("VENTA_MES2", formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES2")))
-                datos.put("META", formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".").replace("null", "0").replace(" ", "0").toInt()))
-                datos.put("PORC", formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC")))
-                datos.put("MES_1", cursor.getString(cursor.getColumnIndex("MES_1")))
-                datos.put("MES_2", cursor.getString(cursor.getColumnIndex("MES_2")))
+                datos = HashMap()
+                datos["DESC_MODULO"] = cursor.getString(cursor.getColumnIndex("DESC_MODULO"))
+                datos["MAYOR_VENTA"] = cursor.getString(cursor.getColumnIndex("MAYOR_VENTA"))
+                datos["VENTA_MES1"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES1"))
+                datos["VENTA_MES2"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES2"))
+                datos["META"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".").replace("null", "0").replace(" ", "0").toInt())
+                datos["PORC"] = formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC"))
+                datos["MES_1"] = cursor.getString(cursor.getColumnIndex("MES_1"))
+                datos["MES_2"] = cursor.getString(cursor.getColumnIndex("MES_2"))
                 sublistaVentasPorMarca.add(datos)
                     
                 cursor.moveToNext()
@@ -188,32 +164,32 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
             sublistasVentasPorMarcas.add(sublistaVentasPorMarca)
         }
-        sublistasVentasPorMarcas2 = ArrayList<ArrayList<ArrayList<HashMap<String,String>>>>()
+        sublistasVentasPorMarcas2 = ArrayList()
         for (i in 0 until listaVentasPorMarca.size){
-            sub2 = ArrayList<ArrayList<HashMap<String,String>>>()
-            for (j in 0 until sublistasVentasPorMarcas.get(i).size){
+            sub2 = ArrayList()
+            for (j in 0 until sublistasVentasPorMarcas[i].size){
 
                 sql = ("select DESC_SUPERVISOR , DESC_VENDEDOR, DESC_GTE_MARKETIN ,"
                         + "DESC_MODULO  	  , COD_CATEGORIA, DESC_CATEGORIA       ,"
                         + "MAYOR_VENTA     , VENTA_MES1   , VENTA_MES2        ,"
                         + "META  	   	  , MES_1		 , MES_2 , META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC 			 "
                         + " from svm_metas_punto_por_linea "
-                        + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca.get(i).get("DESC_GTE_MARKETIN")}' "
-                        + "   and DESC_MODULO       = '${sublistasVentasPorMarcas.get(i).get(j).get("DESC_MODULO")}' "
+                        + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}' "
+                        + "   and DESC_MODULO       = '${sublistasVentasPorMarcas[i][j]["DESC_MODULO"]}' "
                         + " Order By cast(ifnull(ORD_GTE_MARK,0) as double), cast(ifnull(NRO_ORD_MAG,0) as double), cast(ifnull(ORD_CATEGORIA,0) as double)")
                 cursor =funcion.consultar(sql)
-                sub1 = ArrayList<HashMap<String,String>>()
+                sub1 = ArrayList()
                 for (k in 0 until cursor.count){
-                    datos = HashMap<String, String>()
-                    datos.put("COD_CATEGORIA", cursor.getString(cursor.getColumnIndex("COD_CATEGORIA")))
-                    datos.put("DESC_CATEGORIA", cursor.getString(cursor.getColumnIndex("DESC_CATEGORIA")))
-                    datos.put("MAYOR_VENTA", cursor.getString(cursor.getColumnIndex("MAYOR_VENTA")))
-                    datos.put("VENTA_MES1", formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES1")))
-                    datos.put("VENTA_MES2", formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES2")))
-                    datos.put("META", formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".").replace("null", "0").replace(" ", "0").toInt()))
-                    datos.put("PORC", formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC")))
-                    datos.put("MES_1", cursor.getString(cursor.getColumnIndex("MES_1")))
-                    datos.put("MES_2", cursor.getString(cursor.getColumnIndex("MES_2")))
+                    datos = HashMap()
+                    datos["COD_CATEGORIA"] = cursor.getString(cursor.getColumnIndex("COD_CATEGORIA"))
+                    datos["DESC_CATEGORIA"] = cursor.getString(cursor.getColumnIndex("DESC_CATEGORIA"))
+                    datos["MAYOR_VENTA"] = cursor.getString(cursor.getColumnIndex("MAYOR_VENTA"))
+                    datos["VENTA_MES1"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES1"))
+                    datos["VENTA_MES2"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES2"))
+                    datos["META"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".").replace("null", "0").replace(" ", "0").toInt())
+                    datos["PORC"] = formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC"))
+                    datos["MES_1"] = cursor.getString(cursor.getColumnIndex("MES_1"))
+                    datos["MES_2"] = cursor.getString(cursor.getColumnIndex("MES_2"))
                     sub1.add(datos)
 
                     cursor.moveToNext()
@@ -225,7 +201,8 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         return
     }
 
-    fun mostrarVentaPorMarcas(){
+    @SuppressLint("SetTextI18n")
+    private fun mostrarVentaPorMarcas(){
         funcion.vistas     = intArrayOf(R.id.tv1, R.id.tv1, R.id.tv3, R.id.tv4, R.id.tv5, R.id.tv6,R.id.tv7)
         funcion.valores    = arrayOf("", "DESC_GTE_MARKETIN", "MAYOR_VENTA", "VENTA_MES1", "VENTA_MES2", "META","PORC")
         funcion.subVistas  = intArrayOf(R.id.tvs1, R.id.tvs2, R.id.tvs3, R.id.tvs4, R.id.tvs5, R.id.tvs6,R.id.tvs7)
@@ -252,21 +229,21 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             R.layout.rep_canasta_de_marcas_sublista2
         )
         lvCanastaDeMarcas.adapter = adapterCanastaDeMarcas
-        lvCanastaDeMarcas.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvCanastaDeMarcas.setOnItemClickListener { _: ViewGroup, _: View, _: Int, _: Long ->
             subPosicionSeleccionadoCanastaDeMarcas = 0
             subPosicionSeleccionadoCanastaDeMarcas2 = 0
             FuncionesUtiles.posicionDetalle  = 0
             FuncionesUtiles.posicionDetalle2 = 0
             lvCanastaDeMarcas.invalidateViews()
         }
-        tvCanCliTotalValorDeLaCanasta.setText(funcion.entero(adapterCanastaDeMarcas.getTotalEntero("MAYOR_VENTA").toString()))
-        tvCanCliTotalVentas.setText(funcion.entero(adapterCanastaDeMarcas.getTotalEntero("VENTA_MES1").toString()))
-        tvCanCliTotalMetas.setText(funcion.entero(adapterCanastaDeMarcas.getTotalEntero("VENTA_MES2").toString()))
-        tvCanCliTotalPorcCump.setText(funcion.decimal(adapterCanastaDeMarcas.getTotalDecimal("PORC")) + "%")
-        tvCanCliTotalTotalPercibir.setText(funcion.entero(adapterCanastaDeMarcas.getTotalEntero("META").toString()))
+        tvCanCliTotalValorDeLaCanasta.text = funcion.entero(adapterCanastaDeMarcas.getTotalEntero("MAYOR_VENTA").toString())
+        tvCanCliTotalVentas.text = funcion.entero(adapterCanastaDeMarcas.getTotalEntero("VENTA_MES1").toString())
+        tvCanCliTotalMetas.text = funcion.entero(adapterCanastaDeMarcas.getTotalEntero("VENTA_MES2").toString())
+        tvCanCliTotalPorcCump.text = funcion.decimal(adapterCanastaDeMarcas.getTotalDecimal("PORC")) + "%"
+        tvCanCliTotalTotalPercibir.text = funcion.entero(adapterCanastaDeMarcas.getTotalEntero("META").toString())
     }
 
-    fun actualizarDatos(imageView: ImageView){
+    private fun actualizarDatos(imageView: ImageView){
         imageView.setOnClickListener{
             if (imageView.id==ibtnAnterior.id){
                 funcion.posVend--

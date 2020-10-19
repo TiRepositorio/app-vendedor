@@ -47,8 +47,8 @@ class EstadoDePedidos : Activity(), NavigationView.OnNavigationItemSelectedListe
         mostrar()
     }
 
-    fun cargar(){
-        lista = ArrayList<HashMap<String,String>>()
+    private fun cargar(){
+        lista = ArrayList()
         try {
             val sql = ("select COD_EMPRESA	, NRO_PEDIDO    	, FEC_COMPROBANTE ,"
                     + "COD_CLIENTE	|| '-' || COD_SUBCLIENTE AS CLIENTE , NOM_SUBCLIENTE  ,"
@@ -57,12 +57,10 @@ class EstadoDePedidos : Activity(), NavigationView.OnNavigationItemSelectedListe
                     + " Order By  Cast (NRO_PEDIDO as double) ")
             cursor = funcion.consultar(sql)
         } catch (e: Exception) {
-            var err = e.message
-            err = "" + err
         }
         funcion.cargarLista(lista,cursor)
         for (i in 0 until lista.size){
-            lista.get(i).put("TOT_COMPROBANTE",funcion.entero(lista.get(i).get("TOT_COMPROBANTE")!!))
+            lista[i]["TOT_COMPROBANTE"] = funcion.entero(lista[i]["TOT_COMPROBANTE"]!!)
         }
     }
 
@@ -73,13 +71,13 @@ class EstadoDePedidos : Activity(), NavigationView.OnNavigationItemSelectedListe
         funcion.vistas  = intArrayOf(R.id.td1, R.id.td2, R.id.td3, R.id.td4, R.id.td5, R.id.td6, R.id.td7)
         adapter = Adapter.AdapterGenericoCabecera(this,lista,R.layout.inf_est_ped_lista_estado_de_pedidos,funcion.vistas,funcion.valores)
         lvEstadoDePedidos.adapter = adapter
-        lvEstadoDePedidos.setOnItemClickListener { parent, view, position, id ->
+        lvEstadoDePedidos.setOnItemClickListener { _, _, position, _ ->
             FuncionesUtiles.posicionCabecera = position
             lvEstadoDePedidos.invalidateViews()
         }
     }
 
-    fun actualizarDatos(imageView: ImageView){
+    private fun actualizarDatos(imageView: ImageView){
         imageView.setOnClickListener{
             if (imageView.id==ibtnAnterior.id){
                 funcion.posVend--

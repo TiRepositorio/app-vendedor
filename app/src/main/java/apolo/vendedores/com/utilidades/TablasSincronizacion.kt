@@ -9,7 +9,7 @@ class TablasSincronizacion {
 //    var tablasInformes : TablasInformes = TablasInformes()
 
     fun listaSQLCreateTables(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+        val lista : Vector<String> = Vector()
         lista.add(0 , SentenciasSQL.createTableSvmArticulosPrecios())
         lista.add(1 , SentenciasSQL.createTableClienteListPrec())
         lista.add(2 , SentenciasSQL.createTableSvmClienteVendedor())
@@ -65,7 +65,7 @@ class TablasSincronizacion {
     }
 
     fun listaCamposSincronizacion(): Vector<Vector<String>> {
-        var lista : Vector<Vector<String>> = Vector<Vector<String>>()
+        val lista : Vector<Vector<String>> = Vector()
         lista.add(0 ,camposTablaSvmArticulosPrecios())
         lista.add(1 ,camposTablaSvmClienteListPrec())
         lista.add(2 ,camposTablaSvmClienteVendedor())
@@ -99,11 +99,11 @@ class TablasSincronizacion {
         lista.add(30,camposTablaSvmListadoPedidos())
         lista.add(31,camposTablaSvmDiasTomaFotoCliente())
         lista.add(32,camposTablaSvmSegVisitasSemanal())
-        lista.add(33,camposTablaCcvMOtivoSolTarjCred())
+        lista.add(33,camposTablaCcvMotivoSolTarjCred())
         lista.add(34,camposTablaSvmPromocionesArtCab())
         lista.add(35,camposTablaSvmPromocionesArtDet())
         lista.add(36,camposTablaSvmMensajeConclusion())
-        lista.add(37,camposTablaSvm_surtido_eficiente())
+        lista.add(37,camposTablaSvmSurtidoEficiente())
         lista.add(38,camposTablaSvmLiqPremiosVend())
         lista.add(39,camposTablaSvmProduccionSemanalVend())
         lista.add(40,camposTablaSvmRuteoSemanalClienteVend())
@@ -117,8 +117,8 @@ class TablasSincronizacion {
         return lista
     }
 
-    fun camposTablaSvmArticulosPrecios(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmArticulosPrecios(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_VENDEDOR")
         lista.add(2,"MODULO")
@@ -140,8 +140,8 @@ class TablasSincronizacion {
         lista.add(18,"PORC_DESCUENTO")
         return lista
     }
-    fun camposTablaSvmClienteListPrec(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmClienteListPrec(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -153,8 +153,8 @@ class TablasSincronizacion {
         lista.add(8,"DECIMALES")
         return lista
     }
-    fun camposTablaSvmClienteVendedor(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmClienteVendedor(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -200,8 +200,8 @@ class TablasSincronizacion {
         lista.add(42,"DIAS_INICIAL")
         return lista
     }
-    fun camposTablaSvmCondicionVenta(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCondicionVenta(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CONDICION_VENTA")
         lista.add(2,"DESCRIPCION")
@@ -212,8 +212,8 @@ class TablasSincronizacion {
         lista.add(7,"PORC_DESC")
         return lista
     }
-    fun camposTablaSvmStArticulos(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmStArticulos(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_ARTICULO")
         lista.add(2,"DESC_ARTICULO")
@@ -231,8 +231,8 @@ class TablasSincronizacion {
         lista.add(14,"IND_BASICO")
         return lista
     }
-    fun camposTablaSvmUltimaVentaCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmUltimaVentaCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_VENDEDOR")
@@ -247,8 +247,8 @@ class TablasSincronizacion {
         lista.add(11,"DECIMALES")
         return lista
     }
-    fun camposTablaSvmVendedorPedido(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmVendedorPedido(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_VENDEDOR")
         lista.add(2,"IND_PALM")
@@ -284,8 +284,8 @@ class TablasSincronizacion {
 //        lista.add(29,"ultima_sincro")
         return lista
     }
-    fun camposTablaSvmDeudaCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmDeudaCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -298,8 +298,8 @@ class TablasSincronizacion {
         lista.add(9,"SALDO_CUOTA")
         return lista
     }
-    fun camposTablaSvmPromArticulosTarCred(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPromArticulosTarCred(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"NRO_PROMOCION")
         lista.add(2,"COD_CONDICION_VENTA")
@@ -310,8 +310,8 @@ class TablasSincronizacion {
         lista.add(7,"COMENTARIO")
         return lista
     }
-    fun camposTablaSvmMetasPuntoPorLinea(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmMetasPuntoPorLinea(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"DESC_VENDEDOR")
         lista.add(2,"COD_CATEGORIA")
@@ -331,8 +331,8 @@ class TablasSincronizacion {
         lista.add(16,"ORD_CATEGORIA")
         return lista
     }
-    fun camposTablaSvmMetasPuntoPorCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmMetasPuntoPorCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"DESC_VENDEDOR")
         lista.add(2,"CODIGO")
@@ -352,8 +352,8 @@ class TablasSincronizacion {
         lista.add(16,"MES_2")
         return lista
     }
-    fun camposTablaSvmPedidosSinStockRep(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPedidosSinStockRep(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"ORIGEN")
         lista.add(2,"DESC_DEPOSITO")
@@ -372,8 +372,8 @@ class TablasSincronizacion {
         lista.add(15,"DESC_MOTIVO")
         return lista
     }
-    fun camposTablaSvmNegociacionVenta(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmNegociacionVenta(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"FEC_COMPROBANTE")
         lista.add(2,"COD_CLIENTE")
@@ -394,8 +394,8 @@ class TablasSincronizacion {
         lista.add(17,"OBSERVACION")
         return lista
     }
-    fun camposTablaSvmPedidosEnReparto(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPedidosEnReparto(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"NRO_PLANILLA")
         lista.add(2,"DESC_REPARTIDOR")
@@ -413,8 +413,8 @@ class TablasSincronizacion {
         lista.add(14,"TOT_COMPROBANTE")
         return lista
     }
-    fun camposTablaSvmRebotesPorCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmRebotesPorCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"CODIGO")
         lista.add(2,"DESC_PENALIDAD")
@@ -422,8 +422,8 @@ class TablasSincronizacion {
         lista.add(4,"FECHA")
         return lista
     }
-    fun camposTablaSvmCiudades(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCiudades(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_PAIS")
         lista.add(1,"DESC_PAIS")
         lista.add(2,"COD_DEPARTAMENTO")
@@ -433,24 +433,24 @@ class TablasSincronizacion {
         lista.add(6,"FRECUENCIA")
         return lista
     }
-    fun camposTablaSvmTablaVisitas(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmTablaVisitas(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"CODIGO")
         lista.add(2,"DESCRIPCION")
         lista.add(3,"FRECUENCIA")
         return lista
     }
-    fun camposTablaSvmTipoCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmTipoCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"CODIGO")
         lista.add(1,"COD_SUBTIPO")
         lista.add(2,"DESC_CANAL_VENTA")
         lista.add(3,"DESCRIPCION")
         return lista
     }
-    fun camposTablaSvmCondicionVentaCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCondicionVentaCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CONDICION_VENTA")
         lista.add(2,"DESCRIPCION")
@@ -459,15 +459,15 @@ class TablasSincronizacion {
         lista.add(5,"DIAS_INICIAL")
         return lista
     }
-    fun camposTablaSvmPreciosFijos(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPreciosFijos(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_LISTA_PRECIO")
         lista.add(2,"DESC_LISTA_PRECIO")
         return lista
     }
-    fun camposTablaSvmLiqComisionVendedor(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmLiqComisionVendedor(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_CONCEPTO")
         lista.add(1,"DESC_CONCEPTO")
         lista.add(2,"MONTO")
@@ -481,8 +481,8 @@ class TablasSincronizacion {
         lista.add(10,"COMENT")
         return lista
     }
-    fun camposTablaSvmModuloComisionVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmModuloComisionVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_CONCEPTO")
         lista.add(1,"DESC_CONCEPTO")
         lista.add(2,"DESC_MODULO")
@@ -493,8 +493,8 @@ class TablasSincronizacion {
         lista.add(7,"TOT_COMISION")
         return lista
     }
-    fun camposTablaSvmDiasVisitaCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmDiasVisitaCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_CLIENTE")
         lista.add(1,"DESC_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -503,16 +503,16 @@ class TablasSincronizacion {
         lista.add(5,"DESC_VISITA_ACTUAL")
         return lista
     }
-    fun camposTablaSvmCondVentaVendedor(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCondVentaVendedor(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_LISTA_PRECIO")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
         lista.add(3,"COD_CONDICION_VENTA")
         return lista
     }
-    fun camposTablaSvmEvolDiariaVenta(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmEvolDiariaVenta(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_VENDEDOR")
         lista.add(2,"DESC_VENDEDOR")
@@ -533,8 +533,8 @@ class TablasSincronizacion {
         lista.add(17,"SURTIDO_EF")
         return lista
     }
-    fun camposTablaSvmVtvPreciosFijosMod(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmVtvPreciosFijosMod(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_ARTICULO")
         lista.add(2,"DESC_ARTICULO")
@@ -548,8 +548,8 @@ class TablasSincronizacion {
         lista.add(10,"TIPO")
         return lista
     }
-    fun camposTablaStvCategoriaPalm(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaStvCategoriaPalm(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CATEGORIA")
         lista.add(2,"DESC_CATEGORIA")
@@ -560,8 +560,8 @@ class TablasSincronizacion {
         lista.add(7,"COD_TIP_CLIENTE")
         return lista
     }
-    fun camposTablaSvmRetornoComentario(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmRetornoComentario(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"FEC_ENTRADA")
         lista.add(2,"FEC_SALIDA")
@@ -575,16 +575,16 @@ class TablasSincronizacion {
         lista.add(10,"COMENTARIO_SUPERVISOR")
         return lista
     }
-    fun camposTablaSpmMotivoNoVenta(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSpmMotivoNoVenta(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_MOTIVO")
         lista.add(2,"CIERRA")
         lista.add(3,"DESC_MOTIVO")
         return lista
     }
-    fun camposTablaSvmPromocionesPorPerfiles(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPromocionesPorPerfiles(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"TIP_CLIENTE")
         lista.add(2,"NRO_PROMOCION")
@@ -595,8 +595,8 @@ class TablasSincronizacion {
         lista.add(7,"COD_ARTICULO")
         return lista
     }
-    fun camposTablaSvmListadoPedidos(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmListadoPedidos(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"NRO_PEDIDO")
         lista.add(2,"FEC_COMPROBANTE")
@@ -609,16 +609,16 @@ class TablasSincronizacion {
         lista.add(9,"OBSERVACIONES")
         return lista
     }
-    fun camposTablaSvmDiasTomaFotoCliente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmDiasTomaFotoCliente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_TIP_CLIENTE")
         lista.add(2,"FEC_INICIO")
         lista.add(3,"FEC_FIN")
         return lista
     }
-    fun camposTablaSvmSegVisitasSemanal(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmSegVisitasSemanal(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"FEC_MOVIMIENTO")
         lista.add(2,"FEC_INICIO")
@@ -631,15 +631,15 @@ class TablasSincronizacion {
         lista.add(9,"PORC")
         return lista
     }
-    fun camposTablaCcvMOtivoSolTarjCred(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaCcvMotivoSolTarjCred(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_MOTIVO")
         lista.add(1,"IND_FOTO")
         lista.add(2,"DESC_MOTIVO")
         return lista
     }
-    fun camposTablaSvmPromocionesArtCab(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPromocionesArtCab(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"NRO_PROMOCION")
         lista.add(2,"COD_UNID_NEGOCIO")
@@ -661,8 +661,8 @@ class TablasSincronizacion {
         lista.add(18,"CANT_VENTA")
         return lista
     }
-    fun camposTablaSvmPromocionesArtDet(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmPromocionesArtDet(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"NRO_PROMOCION")
         lista.add(2,"COD_UNID_NEGOCIO")
@@ -678,15 +678,15 @@ class TablasSincronizacion {
         lista.add(12,"PRECIO_RS")
         return lista
     }
-    fun camposTablaSvmMensajeConclusion(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmMensajeConclusion(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"IND_LOGRADO")
         lista.add(2,"RESULTADO")
         return lista
     }
-    fun camposTablaSvm_surtido_eficiente(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmSurtidoEficiente(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -695,8 +695,8 @@ class TablasSincronizacion {
         lista.add(5,"TIP_SURTIDO")
         return lista
     }
-    fun camposTablaSvmLiqPremiosVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmLiqPremiosVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"TIP_COM")
         lista.add(2,"COD_MARCA")
@@ -711,8 +711,8 @@ class TablasSincronizacion {
         lista.add(11,"CLIENTES_VISITADOS")
         return lista
     }
-    fun camposTablaSvmProduccionSemanalVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmProduccionSemanalVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"CANTIDAD")
         lista.add(2,"SEMANA")
@@ -722,8 +722,8 @@ class TablasSincronizacion {
         lista.add(6,"PERIODO")
         return lista
     }
-    fun camposTablaSvmRuteoSemanalClienteVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmRuteoSemanalClienteVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_CLIENTE")
         lista.add(2,"COD_SUBCLIENTE")
@@ -732,16 +732,16 @@ class TablasSincronizacion {
         lista.add(5,"FEC_VISITA")
         return lista
     }
-    fun camposTablaSvmCoberturaVisVendedores(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCoberturaVisVendedores(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_GRUPO")
         lista.add(1,"PORC_DESDE")
         lista.add(2,"PORC_HASTA")
         lista.add(3,"PORC_COM")
         return lista
     }
-    fun camposTablaRhvLiquidacionFuerzaVenta(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaRhvLiquidacionFuerzaVenta(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"FEC_COMPROBANTE")
         lista.add(2,"OBSERVACION")
@@ -753,15 +753,15 @@ class TablasSincronizacion {
         lista.add(8,"TOT_COMPROBANTE")
         return lista
     }
-    fun camposTablaSvmVtMotivosSodDev(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmVtMotivosSodDev(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_MOTIVO")
         lista.add(2,"DESC_MOTIVO")
         return lista
     }
-    fun camposTablaFvvLiqCuotaXUndNegVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaFvvLiqCuotaXUndNegVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_UNID_NEGOCIO")
         lista.add(2,"DESC_UNID_NEGOCIO")
@@ -774,8 +774,8 @@ class TablasSincronizacion {
         lista.add(9,"MONTO_A_COBRAR")
         return lista
     }
-    fun camposTablaSvmCoberturaMensualVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaSvmCoberturaMensualVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"TOT_CLI_CART")
         lista.add(2,"CANT_POSIT")
@@ -787,8 +787,8 @@ class TablasSincronizacion {
         lista.add(8,"MONTO_A_COBRAR")
         return lista
     }
-    fun camposTablaFvvCobSemanalVend(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
+    private fun camposTablaFvvCobSemanalVend(): Vector<String> {
+        val lista : Vector<String> = Vector()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"SEMANA")
         lista.add(2,"TOT_CLIENTES")
@@ -799,40 +799,40 @@ class TablasSincronizacion {
         return lista
     }
 
-    fun camposTablaS(): Vector<String> {
-        var lista : Vector<String> = Vector<String>()
-        lista.add(0,"")
-        lista.add(1,"")
-        lista.add(2,"")
-        lista.add(3,"")
-        lista.add(4,"")
-        lista.add(5,"")
-        lista.add(6,"")
-        lista.add(7,"")
-        lista.add(8,"")
-        lista.add(9,"")
-        lista.add(10,"")
-        lista.add(11,"")
-        lista.add(12,"")
-        lista.add(13,"")
-        lista.add(14,"")
-        lista.add(15,"")
-        lista.add(16,"")
-        lista.add(17,"")
-        lista.add(18,"")
-        lista.add(19,"")
-        lista.add(20,"")
-        lista.add(21,"")
-        lista.add(22,"")
-        lista.add(23,"")
-        lista.add(24,"")
-        lista.add(25,"")
-        lista.add(26,"")
-        lista.add(27,"")
-        lista.add(28,"")
-        lista.add(29,"")
-        return lista
-    }
+//    fun camposTablaS(): Vector<String> {
+//        var lista : Vector<String> = Vector()
+//        lista.add(0,"")
+//        lista.add(1,"")
+//        lista.add(2,"")
+//        lista.add(3,"")
+//        lista.add(4,"")
+//        lista.add(5,"")
+//        lista.add(6,"")
+//        lista.add(7,"")
+//        lista.add(8,"")
+//        lista.add(9,"")
+//        lista.add(10,"")
+//        lista.add(11,"")
+//        lista.add(12,"")
+//        lista.add(13,"")
+//        lista.add(14,"")
+//        lista.add(15,"")
+//        lista.add(16,"")
+//        lista.add(17,"")
+//        lista.add(18,"")
+//        lista.add(19,"")
+//        lista.add(20,"")
+//        lista.add(21,"")
+//        lista.add(22,"")
+//        lista.add(23,"")
+//        lista.add(24,"")
+//        lista.add(25,"")
+//        lista.add(26,"")
+//        lista.add(27,"")
+//        lista.add(28,"")
+//        lista.add(29,"")
+//        return lista
+//    }
 
 
 }

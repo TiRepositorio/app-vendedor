@@ -31,13 +31,13 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cargarDatos()
     }
 
-    fun cargarDatos(){
-        var sql = ("SELECT COD_CLIENTE || ' - ' || DESC_CLIENTE AS DESC_CLIENTE "
+    private fun cargarDatos(){
+        val sql = ("SELECT COD_CLIENTE || ' - ' || DESC_CLIENTE AS DESC_CLIENTE "
                        + "      , DIA            "
                        + "      , FEC_VISITA AS FECHA     "
                        + "   FROM svm_ruteo_semanal_cliente_vend "
                        + "  ORDER BY DATE(substr(FECHA,7,4)||'-'||substr(FECHA,4,2) || '-' || substr(FECHA,1,2))")
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaCabecera = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaCabecera,funcion.consultar(sql))
         mostrar()
     }
@@ -51,7 +51,7 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                                                 ,R.layout.inf_rut_sem_lista_ruteo_semanal
                                                                 ,funcion.vistas
                                                                 ,funcion.valores)
-        lvRuteoSemanal.setOnItemClickListener { parent, view, position, id ->
+        lvRuteoSemanal.setOnItemClickListener { _, _, position, _ ->
             FuncionesUtiles.posicionCabecera = position
             lvRuteoSemanal.invalidateViews()
         }
@@ -60,7 +60,7 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
         FuncionesUtiles.posicionCabecera = 0
         if (funcion.barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text == "Gerentes"){
-            tvGerente.setText(menuItem.title.toString())
+            tvGerente.text = menuItem.title.toString()
             funcion.listaSupervisores("COD_SUPERVISOR",
                 "DESC_SUPERVISOR",
                 "SELECT DISTINCT COD_SUPERVISOR, DESC_SUPERVISOR FROM sgm_deuda_cliente " +
@@ -71,15 +71,15 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         "WHERE COD_SUPERVISOR = '${tvSupervisor.text.split("-")[0]}'","COD_VENDEDOR")
         }
         if (funcion.barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text == "Supervisores"){
-            tvSupervisor.setText(menuItem.title.toString())
+            tvSupervisor.text = menuItem.title.toString()
             funcion.listaVendedores("COD_VENDEDOR",
                 "DESC_VENDEDOR",
                 "SELECT DISTINCT COD_VENDEDOR, DESC_VENDEDOR FROM sgm_deuda_cliente " +
                         "WHERE COD_SUPERVISOR = '${tvSupervisor.text.split("-")[0]}'","COD_VENDEDOR")
         }
         if (funcion.barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text == "Vendedores"
-            && menuItem.title.toString().split("-")[0].toString().trim().length>3){
-            tvVendedor.setText(menuItem.title.toString())
+            && menuItem.title.toString().split("-")[0].trim().length>3){
+            tvVendedor.text = menuItem.title.toString()
         }
         cargarDatos()
         mostrar()

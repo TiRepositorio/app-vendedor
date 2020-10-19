@@ -14,7 +14,6 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
-import apolo.vendedores.com.ventas.Deuda
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_deuda_de_clientes.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -63,7 +62,7 @@ class DeudaDeClientes : AppCompatActivity(), NavigationView.OnNavigationItemSele
             funcion.addItemSpinner(this,"Codigo-Nombre","COD_CLIENTE-DESC_CLIENTE,DESC_SUBCLIENTE")
             tvVendedor.setOnClickListener { funcion.mostrarMenu() }
         } else {
-            funcion.cargarTitulo(R.drawable.ic_dolar_tach, codCliente + "-" + codSubcliente + "-" + descSubcliente)
+            funcion.cargarTitulo(R.drawable.ic_dolar_tach, "$codCliente-$codSubcliente-$descSubcliente")
         }
         cargarTodo()
         mostrar()

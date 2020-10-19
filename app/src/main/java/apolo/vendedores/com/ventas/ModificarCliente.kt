@@ -161,7 +161,7 @@ class ModificarCliente : AppCompatActivity() {
         EnviarModificacion.codCliente = codCliente
         EnviarModificacion.codSubcliente = codSubcliente
         EnviarModificacion.accion = accion
-        var enviarModificacion : EnviarModificacion = EnviarModificacion()
+        val enviarModificacion = EnviarModificacion()
         enviarModificacion.enviar()
     }
 

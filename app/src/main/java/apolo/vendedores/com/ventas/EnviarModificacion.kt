@@ -74,8 +74,7 @@ class EnviarModificacion {
                     enviarDatos().execute()
                     return
                 } catch (e: Exception) {
-                    var err = e.message
-//                    err = err + ""
+                    e.message
                 }
             } else {
                 enviarDatos().execute()

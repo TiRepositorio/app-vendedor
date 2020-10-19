@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_configurar_usuario.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,10 +23,9 @@ class MainActivity : AppCompatActivity() {
         var codPersona : String = ""
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         lateinit var funcion : FuncionesUtiles
-        val version : String = "60"
+        const val version : String = "60"
         var nombre : String = ""
         lateinit var etAccion : EditText
-        var rooteado : Boolean = false
         lateinit var dispositivo : FuncionesDispositivo
         lateinit var telMgr : TelephonyManager
     }
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             funcion.mensaje(this,"","Todos los campos son obligatorios")
             return
         }
-        var dialogo = DialogoAutorizacion(this)
+        val dialogo = DialogoAutorizacion(this)
         dialogo.dialogoAutorizacion("comenzar",accion)
     }
 
@@ -72,20 +71,19 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun crearTablas(){
+    private fun crearTablas(){
         for (i in 0 until SentenciasSQL.listaSQLCreateTable().size){
-            funcion.ejecutar(SentenciasSQL.listaSQLCreateTable().get(i),this)
+            funcion.ejecutar(SentenciasSQL.listaSQLCreateTable()[i],this)
         }
     }
 
-    fun cargarUsuarioInicial():Boolean{
+    private fun cargarUsuarioInicial():Boolean{
         lateinit var cursor : Cursor
 
         try {
             funcion.ejecutar(SentenciasSQL.createTableUsuarios(),this)
             cursor = funcion.consultar("SELECT * FROM usuarios")
         } catch(e:Exception){
-            var error = e.message
             return false
         }
 
@@ -93,19 +91,19 @@ class MainActivity : AppCompatActivity() {
             cursor.moveToLast()
             etNombreUsuario.setText(cursor.getString(cursor.getColumnIndex("NOMBRE")))
             etCodigoUsuario.setText(cursor.getString(cursor.getColumnIndex("LOGIN")))
-            FuncionesUtiles.usuario.put("NOMBRE", cursor.getString(cursor.getColumnIndex("NOMBRE")))
-            FuncionesUtiles.usuario.put("LOGIN", cursor.getString(cursor.getColumnIndex("LOGIN")))
-            FuncionesUtiles.usuario.put("TIPO", cursor.getString(cursor.getColumnIndex("TIPO")))
-            FuncionesUtiles.usuario.put("ACTIVO", cursor.getString(cursor.getColumnIndex("ACTIVO")))
-            FuncionesUtiles.usuario.put("COD_EMPRESA", cursor.getString(cursor.getColumnIndex("COD_EMPRESA")))
-            FuncionesUtiles.usuario.put("VERSION", cursor.getString(cursor.getColumnIndex("VERSION")))
-            FuncionesUtiles.usuario.put("COD_PERSONA", " ")
-            FuncionesUtiles.usuario.put("CONF","S")
+            FuncionesUtiles.usuario["NOMBRE"] = cursor.getString(cursor.getColumnIndex("NOMBRE"))
+            FuncionesUtiles.usuario["LOGIN"] = cursor.getString(cursor.getColumnIndex("LOGIN"))
+            FuncionesUtiles.usuario["TIPO"] = cursor.getString(cursor.getColumnIndex("TIPO"))
+            FuncionesUtiles.usuario["ACTIVO"] = cursor.getString(cursor.getColumnIndex("ACTIVO"))
+            FuncionesUtiles.usuario["COD_EMPRESA"] = cursor.getString(cursor.getColumnIndex("COD_EMPRESA"))
+            FuncionesUtiles.usuario["VERSION"] = cursor.getString(cursor.getColumnIndex("VERSION"))
+            FuncionesUtiles.usuario["COD_PERSONA"] = " "
+            FuncionesUtiles.usuario["CONF"] = "S"
             startActivity(Intent(this,MainActivity2::class.java))
             finish()
             return true
         } else {
-            FuncionesUtiles.usuario.put("CONF","N")
+            FuncionesUtiles.usuario["CONF"] = "N"
             return false
         }
     }
@@ -117,42 +115,32 @@ class MainActivity : AppCompatActivity() {
                         ", VERSION = '" + etUsuVersion.text.toString().trim() + "' " +
                         "    WHERE LOGIN = '" + etUsuCodigo.text.toString().trim() + "' "  ,this)
             } catch (e : java.lang.Exception) {
-                var error = e.message
-                error = error + ""
             }
         } else {
-            FuncionesUtiles.usuario.put("NOMBRE",etNombreUsuario.text.toString().trim())
-            FuncionesUtiles.usuario.put("LOGIN",etCodigoUsuario.text.toString().trim())
-            FuncionesUtiles.usuario.put("VERSION",etVersionUsuario.text.toString().trim())
-            FuncionesUtiles.usuario.put("TIPO","U")
-            FuncionesUtiles.usuario.put("ACTIVO","S")
-            FuncionesUtiles.usuario.put("COD_EMPRESA","1")
-            FuncionesUtiles.usuario.put("CONF","S")
+            FuncionesUtiles.usuario["NOMBRE"] = etNombreUsuario.text.toString().trim()
+            FuncionesUtiles.usuario["LOGIN"] = etCodigoUsuario.text.toString().trim()
+            FuncionesUtiles.usuario["VERSION"] = etVersionUsuario.text.toString().trim()
+            FuncionesUtiles.usuario["TIPO"] = "U"
+            FuncionesUtiles.usuario["ACTIVO"] = "S"
+            FuncionesUtiles.usuario["COD_EMPRESA"] = "1"
+            FuncionesUtiles.usuario["CONF"] = "S"
             Sincronizacion.tipoSinc = "T"
             Sincronizacion.primeraVez = true
-            var menu2 = Intent(this, Sincronizacion::class.java)
+            val menu2 = Intent(this, Sincronizacion::class.java)
             startActivity(menu2)
             finish()
         }
     }
 
-    fun usuarioGuardado():Boolean{
-        try {
-            var cursor = funcion.consultar("SELECT * FROM usuarios")
+    private fun usuarioGuardado():Boolean{
+        return try {
+            val cursor = funcion.consultar("SELECT * FROM usuarios")
             cursor.moveToLast()
-            if (cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")).equals(etUsuCodigo.text.toString().trim())){
-                return true
-            } else {
-                return false
-            }
+            cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")) == etUsuCodigo.text.toString().trim()
         } catch (e : java.lang.Exception) {
-            var error = e.message
-            return false
+            e.message
+            false
         }
-    }
-
-    fun mostrarImei(){
-        funcion.mensaje(this,"IMEI", dispositivo.imei(telMgr))
     }
 
 }

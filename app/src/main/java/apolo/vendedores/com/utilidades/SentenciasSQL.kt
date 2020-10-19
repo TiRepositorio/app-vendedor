@@ -19,12 +19,12 @@ class SentenciasSQL {
 
         fun insertUsuario(usuario: HashMap<String, String>):String{
             sql = "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION/*, MIN_FOTOS, MAX_FOTOS*/ ) VALUES " +
-                    "('" +  usuario.get("NOMBRE")       + "'," +
-                     "'" +  usuario.get("LOGIN")         + "'," +
-                     "'" +  usuario.get("TIPO")         + "'," +
-                     "'" +  usuario.get("ACTIVO")         + "'," +
+                    "('" + usuario["NOMBRE"] + "'," +
+                     "'" + usuario["LOGIN"] + "'," +
+                     "'" + usuario["TIPO"] + "'," +
+                     "'" + usuario["ACTIVO"] + "'," +
                      "'1'," +
-                     "'" +  usuario.get("VERSION")      + "'" +
+                     "'" + usuario["VERSION"] + "'" +
 //                     "'" +  usuario.get("MIN_FOTOS")         + "'," +
 //                     "'" +  usuario.get("MAX_FOTOS")         + "' " +
                      ")"

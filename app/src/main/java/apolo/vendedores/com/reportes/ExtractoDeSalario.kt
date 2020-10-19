@@ -1,17 +1,14 @@
 package apolo.vendedores.com.reportes
 
 import android.database.Cursor
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
-import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.activity_extracto_de_salarios.*
-import java.lang.Exception
 import java.text.DecimalFormat
 
 class ExtractoDeSalario : AppCompatActivity() {
@@ -19,16 +16,16 @@ class ExtractoDeSalario : AppCompatActivity() {
     companion object{
         var posicionHaberes: Int = 0
         var posicionDebitos     :  Int = 0
-        var listaHaberes: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var listaDebitos:  ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var listaHaberes: ArrayList<HashMap<String, String>> = ArrayList()
+        var listaDebitos:  ArrayList<HashMap<String, String>> = ArrayList()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
         lateinit var funcion: FuncionesUtiles
     }
 
-    val formatoNumeroEntero : DecimalFormat = DecimalFormat("###,###,###.##")
-    val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
-    var totalHaberes: Int = 0
+    private val formatoNumeroEntero : DecimalFormat = DecimalFormat("###,###,###.##")
+//    val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
+private var totalHaberes: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +34,7 @@ class ExtractoDeSalario : AppCompatActivity() {
         inicializaElementos()
     }
 
-    fun inicializaElementos(){
+    private fun inicializaElementos(){
         funcion = FuncionesUtiles(this)
         cargarHaberes()
         mostrarHaberes()
@@ -45,8 +42,8 @@ class ExtractoDeSalario : AppCompatActivity() {
         mostrarDebitos()
     }
 
-    fun cargarHaberes(){
-        var sql : String = ("select NRO_ORDEN        , FEC_HASTA     , COD_CONCEPTO  , "
+    private fun cargarHaberes(){
+        val sql : String = ("select NRO_ORDEN        , FEC_HASTA     , COD_CONCEPTO  , "
                          +  "       DESC_CONCEPTO    , MONTO         , DECIMALES     , "
                          +  "       '0' AS TOT_VENTAS, '0' AS MONTO_COMISION            "
                          +  "  from svm_liq_comision_vendedor "
@@ -54,37 +51,35 @@ class ExtractoDeSalario : AppCompatActivity() {
                          +  " ORDER BY Cast(NRO_ORDEN as double)")
 
         try {
-            cursor = MainActivity.bd!!.rawQuery(sql, null)
-            cursor.moveToFirst()
+            cursor = funcion.consultar(sql)
         } catch (e : Exception){
-            var error = e.message
+            e.message
             e.printStackTrace()
             return
         }
 
-        listaHaberes = ArrayList<HashMap<String, String>>()
+        listaHaberes = ArrayList()
 
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
-            datos.put("NRO_ORDEN",cursor.getString(cursor.getColumnIndex("NRO_ORDEN")))
-            datos.put("DESC_CONCEPTO",cursor.getString(cursor.getColumnIndex("DESC_CONCEPTO")))
-            datos.put("TOT_VENTAS",cursor.getString(cursor.getColumnIndex("TOT_VENTAS")))
-            datos.put("MONTO_COMISION",cursor.getString(cursor.getColumnIndex("MONTO_COMISION")))
-            datos.put("MONTO",formatoNumeroEntero.format(Integer.parseInt(
-                              cursor.getString(cursor.getColumnIndex("MONTO")).replace(",", "."))))
+            datos = HashMap()
+            datos["NRO_ORDEN"] = cursor.getString(cursor.getColumnIndex("NRO_ORDEN"))
+            datos["DESC_CONCEPTO"] = cursor.getString(cursor.getColumnIndex("DESC_CONCEPTO"))
+            datos["TOT_VENTAS"] = cursor.getString(cursor.getColumnIndex("TOT_VENTAS"))
+            datos["MONTO_COMISION"] = cursor.getString(cursor.getColumnIndex("MONTO_COMISION"))
+            datos["MONTO"] = formatoNumeroEntero.format(Integer.parseInt(
+                cursor.getString(cursor.getColumnIndex("MONTO")).replace(",", ".")))
             listaHaberes.add(datos)
             cursor.moveToNext()
         }
     }
 
-    fun mostrarHaberes(){
+    private fun mostrarHaberes(){
         val adapterHaberes = Adapter.ExtractoDeSalarioHaberes(this,
             listaHaberes
         )
         lvHaberes.adapter = adapterHaberes
-        lvHaberes.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvHaberes.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->
             posicionHaberes = position
-            view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvHaberes.invalidateViews()
         }
         tvHabTotalVenta.text = formatoNumeroEntero.format(adapterHaberes.getTotalVenta())
@@ -94,8 +89,8 @@ class ExtractoDeSalario : AppCompatActivity() {
 
     }
 
-    fun cargarDebitos(){
-        var sql : String = ("select MIN(Cast(NRO_ORDEN as number)) NRO_ORDEN,"
+    private fun cargarDebitos(){
+        val sql : String = ("select MIN(Cast(NRO_ORDEN as number)) NRO_ORDEN,"
                 + " COD_CONCEPTO, DESC_CONCEPTO, NRO_CUOTA, "
                 + " SUM(Cast(MONTO as number)) MONTO, DECIMALES,"
                 + " COUNT(id) CANT "
@@ -105,38 +100,36 @@ class ExtractoDeSalario : AppCompatActivity() {
                 + " ORDER BY NRO_ORDEN")
 
         try {
-            cursor = MainActivity.bd!!.rawQuery(sql, null)
+            cursor = funcion.consultar(sql)
             cursor.moveToFirst()
         } catch (e : Exception){
-            var error = e.message
             e.printStackTrace()
             return
         }
 
-        listaDebitos = ArrayList<HashMap<String, String>>()
+        listaDebitos = ArrayList()
 
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
-            datos.put("NRO_ORDEN",(i+1).toString())
-            datos.put("DESC_CONCEPTO",cursor.getString(cursor.getColumnIndex("DESC_CONCEPTO")))
-            datos.put("NRO_CUOTA",formatoNumeroEntero.format(Integer.parseInt(
-                cursor.getString(cursor.getColumnIndex("NRO_CUOTA")).replace(",", "."))))
-            var cadena = cursor.getString(cursor.getColumnIndex("MONTO"))
-            datos.put("MONTO",formatoNumeroEntero.format(Integer.parseInt(
-                cursor.getString(cursor.getColumnIndex("MONTO")).replace(",", "."))))
+            datos = HashMap()
+            datos["NRO_ORDEN"] = (i+1).toString()
+            datos["DESC_CONCEPTO"] = cursor.getString(cursor.getColumnIndex("DESC_CONCEPTO"))
+            datos["NRO_CUOTA"] = formatoNumeroEntero.format(Integer.parseInt(
+                cursor.getString(cursor.getColumnIndex("NRO_CUOTA")).replace(",", ".")))
+            cursor.getString(cursor.getColumnIndex("MONTO"))
+            datos["MONTO"] = formatoNumeroEntero.format(Integer.parseInt(
+                cursor.getString(cursor.getColumnIndex("MONTO")).replace(",", ".")))
             listaDebitos.add(datos)
             cursor.moveToNext()
         }
     }
 
-    fun mostrarDebitos(){
+    private fun mostrarDebitos(){
         val adapterDebitos: Adapter.ExtractoDeSalarioDebitos = Adapter.ExtractoDeSalarioDebitos(this,
             listaDebitos, totalHaberes
         )
         lvDebitos.adapter = adapterDebitos
-        lvDebitos.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvDebitos.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->
             posicionDebitos = position
-            view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvDebitos.invalidateViews()
         }
         tvDebTotalMontoDebito.text = formatoNumeroEntero.format(adapterDebitos.getTotalMonto())

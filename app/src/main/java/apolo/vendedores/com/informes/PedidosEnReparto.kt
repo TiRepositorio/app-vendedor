@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package apolo.vendedores.com.informes
 
 import android.database.Cursor
@@ -23,7 +25,7 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     companion object{
         var funcion : FuncionesUtiles = FuncionesUtiles()
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
 
@@ -45,22 +47,22 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
         mostrar()
     }
 
-    fun cargar(){
+    private fun cargar(){
         var sql = "SELECT DISTINCT DESC_REPARTIDOR ,TEL_REPARTIDOR " +
                          "  FROM svm_pedidos_en_reparto " +
 //                         " WHERE " +
 //                         "       COD_VENDEDOR   = '" + this.tvVendedor.text.toString().split("-")[0] + "'        AND" +
                          " ORDER BY DESC_REPARTIDOR ASC"
-        cursor = funcion!!.consultar(sql)
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String, String>>()
+        cursor = funcion.consultar(sql)
+        FuncionesUtiles.listaCabecera = ArrayList()
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
-            datos.put("DESC_REPARTIDOR",funcion!!.dato(cursor,"DESC_REPARTIDOR"))
-            datos.put("TEL_REPARTIDOR",funcion!!.dato(cursor,"TEL_REPARTIDOR"))
+            datos = HashMap()
+            datos["DESC_REPARTIDOR"] = funcion.dato(cursor,"DESC_REPARTIDOR")
+            datos["TEL_REPARTIDOR"] = funcion.dato(cursor,"TEL_REPARTIDOR")
             FuncionesUtiles.listaCabecera.add(datos)
             cursor.moveToNext()
         }
-        FuncionesUtiles.subListaDetalle = ArrayList<ArrayList<HashMap<String,String>>>()
+        FuncionesUtiles.subListaDetalle = ArrayList()
         for(i in 0 until FuncionesUtiles.listaCabecera.size){
             sql = ("select COD_EMPRESA     , NRO_PLANILLA    , DESC_REPARTIDOR ,"
                     + "TEL_REPARTIDOR  , FEC_PLANILLA    ,"
@@ -72,22 +74,22 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     + "  FROM svm_pedidos_en_reparto  "
                     + " WHERE "
 //                    + "       COD_VENDEDOR   = '" + this.tvVendedor.text.toString().split("-")[0] + "'        AND"
-                    + "       DESC_REPARTIDOR= '" + FuncionesUtiles.listaCabecera.get(i).get("DESC_REPARTIDOR") + "'    "
+                    + "       DESC_REPARTIDOR= '" + FuncionesUtiles.listaCabecera[i]["DESC_REPARTIDOR"] + "'    "
                     + " Order By DESC_REPARTIDOR, Cast (NRO_PLANILLA as double) ")
 
             cursor = funcion.consultar(sql)
-            FuncionesUtiles.listaDetalle = ArrayList<HashMap<String,String>>()
+            FuncionesUtiles.listaDetalle = ArrayList()
 
-            for (i in 0 until cursor.count){
-                datos = HashMap<String, String>()
-                datos.put("NRO_PLANILLA"    , funcion.dato(cursor,"NRO_PLANILLA"))
-                datos.put("FEC_PLANILLA"    , funcion.dato(cursor,"FEC_PLANILLA"))
-                datos.put("NRO_COMPROBANTE" , funcion.dato(cursor,"NRO_COMPROBANTE"))
-                datos.put("FEC_COMPROBANTE" , funcion.dato(cursor,"FEC_COMPROBANTE"))
-                datos.put("COD_CLIENTE"     , funcion.dato(cursor,"COD_CLIENTE")+"-"+funcion.dato(cursor,"COD_SUBCLIENTE"))
-                datos.put("NOM_SUBCLIENTE"  , funcion.dato(cursor,"NOM_SUBCLIENTE"))
-                datos.put("ESTADO"          , funcion.dato(cursor,"ESTADO"))
-                datos.put("TOT_COMPROBANTE" , funcion.entero(funcion.dato(cursor,"TOT_COMPROBANTE"))+funcion.dato(cursor,"SIGLAS"))
+            for (i : Int in 0 until cursor.count){
+                datos = HashMap()
+                datos["NRO_PLANILLA"] = funcion.dato(cursor,"NRO_PLANILLA")
+                datos["FEC_PLANILLA"] = funcion.dato(cursor,"FEC_PLANILLA")
+                datos["NRO_COMPROBANTE"] = funcion.dato(cursor,"NRO_COMPROBANTE")
+                datos["FEC_COMPROBANTE"] = funcion.dato(cursor,"FEC_COMPROBANTE")
+                datos["COD_CLIENTE"] = funcion.dato(cursor,"COD_CLIENTE")+"-"+funcion.dato(cursor,"COD_SUBCLIENTE")
+                datos["NOM_SUBCLIENTE"] = funcion.dato(cursor,"NOM_SUBCLIENTE")
+                datos["ESTADO"] = funcion.dato(cursor,"ESTADO")
+                datos["TOT_COMPROBANTE"] = funcion.entero(funcion.dato(cursor,"TOT_COMPROBANTE"))+funcion.dato(cursor,"SIGLAS")
                 FuncionesUtiles.listaDetalle.add(datos)
                 cursor.moveToNext()
             }
@@ -120,7 +122,7 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     }
 
-    fun actualizarDatos(imageView: ImageView){
+    private fun actualizarDatos(imageView: ImageView){
         imageView.setOnClickListener{
             if (imageView.id==ibtnAnterior.id){
                 funcion.posVend--

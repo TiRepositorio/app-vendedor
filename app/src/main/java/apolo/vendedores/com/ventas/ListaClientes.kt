@@ -20,7 +20,6 @@ import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.activity_lista_clientes.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
-
 class ListaClientes : AppCompatActivity() {
 
     companion object{

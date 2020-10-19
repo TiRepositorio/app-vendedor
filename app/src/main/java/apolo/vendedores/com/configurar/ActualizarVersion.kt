@@ -1,6 +1,5 @@
 package apolo.vendedores.com.configurar
 
-import android.annotation.SuppressLint
 import android.app.ActionBar
 import android.app.Dialog
 import android.content.Context
@@ -15,7 +14,6 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.ConexionWS
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
-
 
 class ActualizarVersion {
 
@@ -43,11 +41,7 @@ class ActualizarVersion {
 
     private class DescargarInstalador : AsyncTask<Void?, Void?, Void?>() {
         override fun onPreExecute() {
-//            try {
-//                dialogoDescarga.dismiss()
-//            } catch (e: Exception) {
-//            }
-            miDialogo = MyProgressDialog.show(context, null, null)
+            miDialogo = MyProgressDialog.show(context, null)
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
@@ -60,8 +54,7 @@ class ActualizarVersion {
                 }
                 null
             } catch (e: Exception) {
-                var err = e.message
-                err = err + ""
+                e.message.toString()
                 MainActivity2.funcion.mensaje(context,"Error al conectar","Intente otra vez o llame al Soporte Informatico de la empresa!")
                 null
             }
@@ -72,7 +65,7 @@ class ActualizarVersion {
             var mensaje: String
             if (estado) {
                 mensaje = "El sistema será actualizado por una nueva versión!!"
-                var dialogoAccion = DialogoAutorizacion(context)
+                val dialogoAccion = DialogoAutorizacion(context)
                 dialogoAccion.dialogoAccion("ACTUALIZAR",MainActivity2.etAccion,mensaje,"Atención!","OK")
             } else {
                 mensaje = "Fallo al bajar la actualización!!\n"
@@ -84,23 +77,20 @@ class ActualizarVersion {
 
     private class DialogoDescarga : AsyncTask<Void?, Void?, Void?>() {
         override fun onPreExecute() {}
-        @SuppressLint("WrongThread")
         override fun doInBackground(vararg params: Void?): Void? {
             try {
-                var th = Thread(Runnable {
-                    progressBar.setProgress(0)
+                val th = Thread(Runnable {
+                    progressBar.progress = 0
                     var c = 0
-                    var pr = 0
+                    var pr: Int
                     val tot = 5 * 1024 * 1024.toDouble()
                     while (c == 0) {
                         try {
-                            if (!miDialogo.isShowing()) {
+                            if (!miDialogo.isShowing) {
                                 c = 1
                                 dialogoDescarga.dismiss()
-                                null
                             }
                         } catch (e: Exception) {
-                            null
                         }
 
                         urx = TrafficStats.getUidRxBytes(uid).toFloat()
@@ -113,8 +103,8 @@ class ActualizarVersion {
                 th.start()
                 return null
             } catch (e: Exception) {
-                var err = e.message
-                err = err + ""
+                var err : String = e.message.toString()
+                err += ""
                 MainActivity2.funcion.mensaje(context,"Error", err)
                 return null
             }
@@ -129,8 +119,8 @@ class ActualizarVersion {
             @JvmOverloads
             fun show(
                 context: Context?,
-                title: CharSequence?, message: CharSequence?,
-                indeterminate: Boolean = false, cancelable: Boolean = false,
+                title: CharSequence?,
+                cancelable: Boolean = false,
                 cancelListener: DialogInterface.OnCancelListener? =
                     null
             ): MyProgressDialog {

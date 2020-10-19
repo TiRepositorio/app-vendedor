@@ -1,7 +1,5 @@
 package apolo.vendedores.com.informes
 
-//import kotlinx.android.synthetic.main.activity_ventas_por_cliente.barraMenu
-//import kotlinx.android.synthetic.main.activity_ventas_por_cliente.contMenu
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -25,7 +23,7 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     companion object{
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var funcion : FuncionesUtiles
     }
 
@@ -48,7 +46,7 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         btBuscar.setOnClickListener{buscar()}
     }
 
-    fun cargarArticulo(){
+    private fun cargarArticulo(){
         val sql = ("select distinct a.COD_ARTICULO, a.DESC_ARTICULO, a.REFERENCIA "
                 + " from svm_articulos_precios a "
                 + " inner join svm_precios_fijos b on a.cod_lista_precio = b.cod_lista_precio "
@@ -60,59 +58,60 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         buscar()
     }
 
-    fun mostrarArticulo(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
+    private fun mostrarArticulo(){
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
         funcion.valores = arrayOf("COD_ARTICULO", "DESC_ARTICULO", "REFERENCIA")
-        var adapter: Adapter.AdapterGenericoCabecera =
+        val adapter: Adapter.AdapterGenericoCabecera =
             Adapter.AdapterGenericoCabecera(this
                                             ,FuncionesUtiles.listaCabecera
                                             ,R.layout.inf_lis_prec_lista_articulo
                                             ,funcion.vistas
                                             ,funcion.valores)
         lvArticulos.adapter = adapter
-        lvArticulos.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvArticulos.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionCabecera = position
             FuncionesUtiles.posicionDetalle  = 0
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvArticulos.invalidateViews()
             cargarPrecios()
             mostrarPrecio()
-            tvdCod.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("COD_ARTICULO"))
-            tvdRef.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("REFERENCIA"))
-            tvdDesc.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("DESC_ARTICULO"))
+            tvdCod.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_ARTICULO"]
+            tvdRef.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["REFERENCIA"]
+            tvdDesc.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["DESC_ARTICULO"]
         }
-        tvdCod.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("COD_ARTICULO"))
-        tvdRef.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("REFERENCIA"))
-        tvdDesc.setText(FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("DESC_ARTICULO"))
+        tvdCod.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_ARTICULO"]
+        tvdRef.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["REFERENCIA"]
+        tvdDesc.text = FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["DESC_ARTICULO"]
     }
 
-    fun cargarPrecios(){
+    private fun cargarPrecios(){
         val sql =
             ("select a.COD_LISTA_PRECIO, b.DESC_LISTA_PRECIO, a.PREC_CAJA, a.PREC_UNID, 'GS.' SIGLAS  "
                     + " from svm_articulos_precios a "
                     + " left join svm_precios_fijos b on a.cod_lista_precio = b.cod_lista_precio "
-                    + " where COD_ARTICULO = '" + FuncionesUtiles.listaCabecera.get(FuncionesUtiles.posicionCabecera).get("COD_ARTICULO") + "' "
+                    + " where COD_ARTICULO = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_ARTICULO"] + "' "
                     + " ORDER BY Cast (a.COD_LISTA_PRECIO as double)")
-        FuncionesUtiles.listaDetalle = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaDetalle = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaDetalle,funcion.consultar(sql))
         for (i in 0 until FuncionesUtiles.listaDetalle.size){
             try{
-                FuncionesUtiles.listaDetalle.get(i).put("PREC_CAJA",funcion.entero(FuncionesUtiles.listaDetalle.get(i).get("PREC_CAJA").toString()))
+                FuncionesUtiles.listaDetalle[i]["PREC_CAJA"] =
+                    funcion.entero(FuncionesUtiles.listaDetalle[i]["PREC_CAJA"].toString())
             } catch (e : Exception){}
         }
     }
 
-    fun mostrarPrecio(){
+    private fun mostrarPrecio(){
         funcion.subVistas  = intArrayOf(R.id.tvd1,R.id.tvd2,R.id.tvd3,R.id.tvd4)
         funcion.subValores = arrayOf("COD_LISTA_PRECIO", "DESC_LISTA_PRECIO", "SIGLAS","PREC_CAJA")
-        var adapter: Adapter.AdapterGenericoDetalle =
+        val adapter: Adapter.AdapterGenericoDetalle =
             Adapter.AdapterGenericoDetalle(this
                 ,FuncionesUtiles.listaDetalle
                 ,R.layout.inf_lis_prec_lista_precio
                 ,funcion.subVistas
                 ,funcion.subValores)
         lvPrecios.adapter = adapter
-        lvPrecios.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvPrecios.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionDetalle = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvPrecios.invalidateViews()
@@ -120,10 +119,10 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     fun buscar(){
-        var campos = "DISTINCT COD_ARTICULO, DESC_ARTICULO, REFERENCIA "
-        var groupBy = ""
-        var orderBy = "DESC_ARTICULO"
-        FuncionesUtiles.listaCabecera = ArrayList<HashMap<String,String>>()
+        val campos = "DISTINCT COD_ARTICULO, DESC_ARTICULO, REFERENCIA "
+        val groupBy = ""
+        val orderBy = "DESC_ARTICULO"
+        FuncionesUtiles.listaCabecera = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaCabecera,funcion.buscar("lista_de_articulos",campos,groupBy,orderBy))
         FuncionesUtiles.posicionCabecera = 0
         FuncionesUtiles.posicionDetalle  = 0

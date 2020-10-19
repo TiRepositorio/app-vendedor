@@ -1,33 +1,29 @@
 package apolo.vendedores.com.reportes
 
 import android.database.Cursor
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
-import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.activity_comprobantes_pendientes.*
 import java.text.DecimalFormat
 
-
-
 class ComprobantesPendientes : AppCompatActivity() {
 
     companion object{
-        var posicionSeleccionadoComprobantes: Int = 0
         var subPosicionSeleccionadoComprobantes: Int = 0
-        var listaComprobantes: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var sublistaComprobantes: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var subListasComprobantes: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var listaComprobantes: ArrayList<HashMap<String, String>> = ArrayList()
+        var sublistaComprobantes: ArrayList<HashMap<String, String>> = ArrayList()
+        var subListasComprobantes: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
 
-    val formatNumeroEntero : DecimalFormat = DecimalFormat("###,###,##0.##")
-    val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
+    private val formatNumeroEntero : DecimalFormat = DecimalFormat("###,###,##0.##")
+//    val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
     val funcion = FuncionesUtiles(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +38,7 @@ class ComprobantesPendientes : AppCompatActivity() {
         mostrarComprobantesPendientes()
     }
 
-    fun cargarComprobantesPendientes(){
+    private fun cargarComprobantesPendientes(){
 
         var sql : String = (" SELECT TIP_COMPROBANTE_REF                          , "
                 + "        SUBSTR(FEC_COMPROBANTE,4,7) AS PERIODO       , "
@@ -55,35 +51,34 @@ class ComprobantesPendientes : AppCompatActivity() {
                 + "  GROUP BY TIP_COMPROBANTE_REF,SUBSTR(FEC_COMPROBANTE,4,7), DESCRIPCION ")
 
         try {
-            cursor = MainActivity.bd!!.rawQuery(sql, null)
-            cursor.moveToFirst()
+            cursor = funcion.consultar(sql)
         } catch (e : Exception){
-            var error = e.message
+            e.message
             return
         }
 
-        listaComprobantes= ArrayList<HashMap<String, String>>()
+        listaComprobantes= ArrayList()
 
         for (i in 0 until cursor.count){
-            datos = HashMap<String, String>()
-            datos.put("TIP_COMPROBANTE_REF",cursor.getString(cursor.getColumnIndex("TIP_COMPROBANTE_REF")))
-            datos.put("PERIODO",cursor.getString(cursor.getColumnIndex("PERIODO")))
-            datos.put("DESCRIPCION",cursor.getString(cursor.getColumnIndex("DESCRIPCION")))
-            datos.put("TOT_EXENTA",formatNumeroEntero.format(
-                cursor.getString(cursor.getColumnIndex("TOT_EXENTA")).replace(",", ".").replace("null", "").toDouble()))
-            datos.put("TOT_GRAVADA",formatNumeroEntero.format(
-                cursor.getString(cursor.getColumnIndex("TOT_GRAVADA")).replace(",", ".").replace("null", "").toDouble()))
-            datos.put("TOT_IVA",formatNumeroEntero.format(
-                cursor.getString(cursor.getColumnIndex("TOT_IVA")).replace(",", ".").replace("null", "").toDouble()))
-            datos.put("TOT_COMPROBANTE",formatNumeroEntero.format(Integer.parseInt(
-                cursor.getString(cursor.getColumnIndex("TOT_COMPROBANTE")).replace(",", "."))))
+            datos = HashMap()
+            datos["TIP_COMPROBANTE_REF"] = cursor.getString(cursor.getColumnIndex("TIP_COMPROBANTE_REF"))
+            datos["PERIODO"] = cursor.getString(cursor.getColumnIndex("PERIODO"))
+            datos["DESCRIPCION"] = cursor.getString(cursor.getColumnIndex("DESCRIPCION"))
+            datos["TOT_EXENTA"] = formatNumeroEntero.format(
+                cursor.getString(cursor.getColumnIndex("TOT_EXENTA")).replace(",", ".").replace("null", "").toDouble())
+            datos["TOT_GRAVADA"] = formatNumeroEntero.format(
+                cursor.getString(cursor.getColumnIndex("TOT_GRAVADA")).replace(",", ".").replace("null", "").toDouble())
+            datos["TOT_IVA"] = formatNumeroEntero.format(
+                cursor.getString(cursor.getColumnIndex("TOT_IVA")).replace(",", ".").replace("null", "").toDouble())
+            datos["TOT_COMPROBANTE"] = formatNumeroEntero.format(Integer.parseInt(
+                cursor.getString(cursor.getColumnIndex("TOT_COMPROBANTE")).replace(",", ".")))
             listaComprobantes.add(datos)
             cursor.moveToNext()
         }
 
-        subListasComprobantes = ArrayList<ArrayList<HashMap<String, String>>>()
+        subListasComprobantes = ArrayList()
 
-        for (i in 0 until listaComprobantes.size){
+        for (i : Int in 0 until listaComprobantes.size){
             sql = (" SELECT TIP_COMPROBANTE_REF, "
                     + "        FEC_COMPROBANTE    , "
                     + "        OBSERVACION        , "
@@ -93,33 +88,33 @@ class ComprobantesPendientes : AppCompatActivity() {
                     + "        TOT_IVA            , "
                     + "        TOT_COMPROBANTE      "
                     + " FROM   svm_liquidacion_fuerza_venta"
-                    + " WHERE  TIP_COMPROBANTE_REF         = '" + listaComprobantes.get(i).get("TIP_COMPROBANTE_REF") + "'"
-                    + "   AND  SUBSTR(FEC_COMPROBANTE,4,7) = '" + listaComprobantes.get(i).get("PERIODO") + "'"
+                    + " WHERE  TIP_COMPROBANTE_REF         = '" + listaComprobantes[i]["TIP_COMPROBANTE_REF"] + "'"
+                    + "   AND  SUBSTR(FEC_COMPROBANTE,4,7) = '" + listaComprobantes[i]["PERIODO"] + "'"
                     + " ORDER BY FEC_COMPROBANTE DESC")
             try {
-                cursor = MainActivity.bd!!.rawQuery(sql, null)
+                cursor = funcion.consultar(sql)
                 cursor.moveToFirst()
             } catch (e : Exception){
-                var error = e.message
+                e.message
                 return
             }
 
-            sublistaComprobantes = ArrayList<HashMap<String, String>>()
+            sublistaComprobantes = ArrayList()
 
-            for (j in 0 until cursor.count){
-                datos = HashMap<String, String>()
-                datos.put("TIP_COMPROBANTE_REF",cursor.getString(cursor.getColumnIndex("TIP_COMPROBANTE_REF")))
-                datos.put("FEC_COMPROBANTE",cursor.getString(cursor.getColumnIndex("FEC_COMPROBANTE")))
-                datos.put("OBSERVACION",cursor.getString(cursor.getColumnIndex("OBSERVACION")))
-                datos.put("DESCRIPCION",cursor.getString(cursor.getColumnIndex("DESCRIPCION")))
-                datos.put("TOT_EXENTA",formatNumeroEntero.format(
-                    cursor.getString(cursor.getColumnIndex("TOT_EXENTA")).replace(",", ".").replace("null", "0").toInt()))
-                datos.put("TOT_GRAVADA",formatNumeroEntero.format(
-                    cursor.getString(cursor.getColumnIndex("TOT_GRAVADA")).replace(",", ".").replace("null", "0").toInt()))
-                datos.put("TOT_IVA",formatNumeroEntero.format(
-                    cursor.getString(cursor.getColumnIndex("TOT_IVA")).replace(",", ".").replace("null", "0").toInt()))
-                datos.put("TOT_COMPROBANTE",formatNumeroEntero.format(Integer.parseInt(
-                    cursor.getString(cursor.getColumnIndex("TOT_COMPROBANTE")).replace(",", ".").replace("null", "0"))))
+            for (j : Int in 0 until cursor.count){
+                datos = HashMap()
+                datos["TIP_COMPROBANTE_REF"] = cursor.getString(cursor.getColumnIndex("TIP_COMPROBANTE_REF"))
+                datos["FEC_COMPROBANTE"] = cursor.getString(cursor.getColumnIndex("FEC_COMPROBANTE"))
+                datos["OBSERVACION"] = cursor.getString(cursor.getColumnIndex("OBSERVACION"))
+                datos["DESCRIPCION"] = cursor.getString(cursor.getColumnIndex("DESCRIPCION"))
+                datos["TOT_EXENTA"] = formatNumeroEntero.format(
+                    cursor.getString(cursor.getColumnIndex("TOT_EXENTA")).replace(",", ".").replace("null", "0").toInt())
+                datos["TOT_GRAVADA"] = formatNumeroEntero.format(
+                    cursor.getString(cursor.getColumnIndex("TOT_GRAVADA")).replace(",", ".").replace("null", "0").toInt())
+                datos["TOT_IVA"] = formatNumeroEntero.format(
+                    cursor.getString(cursor.getColumnIndex("TOT_IVA")).replace(",", ".").replace("null", "0").toInt())
+                datos["TOT_COMPROBANTE"] = formatNumeroEntero.format(Integer.parseInt(
+                    cursor.getString(cursor.getColumnIndex("TOT_COMPROBANTE")).replace(",", ".").replace("null", "0")))
                 sublistaComprobantes.add(datos)
                 cursor.moveToNext()
             }
@@ -128,7 +123,7 @@ class ComprobantesPendientes : AppCompatActivity() {
 
     }
 
-    fun mostrarComprobantesPendientes(){
+    private fun mostrarComprobantesPendientes(){
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6)
         funcion.valores = arrayOf("PERIODO","DESCRIPCION","TOT_EXENTA","TOT_GRAVADA","TOT_IVA","TOT_COMPROBANTE")
         funcion.subVistas = intArrayOf(R.id.tvs1,R.id.tvs2,R.id.tvs3,R.id.tvs4,R.id.tvs5,R.id.tvs6,R.id.tvs7)
@@ -142,7 +137,7 @@ class ComprobantesPendientes : AppCompatActivity() {
             R.id.lvSubComprobantesPendientes,R.id.llCompSubCabecera
         )
         lvComprobantesPendientes.adapter = adapterComprobantesPendientes
-        lvComprobantesPendientes.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvComprobantesPendientes.setOnItemClickListener { _: ViewGroup, _: View, _: Int, _: Long ->
             subPosicionSeleccionadoComprobantes = 0
         }
 

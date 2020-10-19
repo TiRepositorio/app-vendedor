@@ -44,7 +44,7 @@ class EnviarSD {
                 + "  WHERE GRABADO_CAB = 'N'  "
                 + "    AND COD_CLIENTE    = '" + codCliente + "' "
                 + "    AND COD_SUBCLIENTE = '" + codSubcliente + "' "
-                + "    AND NRO_PLANILLA   = '" + FuncionesUtiles.usuario["LOGIN"] + "' "
+                + "    AND NRO_PLANILLA   = '" + ListaClientes.codVendedor + "' "
                 + "    AND EST_ENVIO	   = 'N' "
                 + "  GROUP BY COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,"
                 + "		   COD_CLIENTE,COD_SUBCLIENTE,FECHA ")
@@ -57,7 +57,7 @@ class EnviarSD {
                 val valores = ContentValues()
                 valores.put("COD_EMPRESA", funcion.dato(cursor,"COD_EMPRESA"))
                 valores.put("NRO_PLANILLA",funcion.dato(cursor,"NRO_PLANILLA"))
-                valores.put("COD_VENDEDOR", FuncionesUtiles.usuario["LOGIN"])
+                valores.put("COD_VENDEDOR", ListaClientes.codVendedor)
                 valores.put("NRO_REGISTRO_REF", "0")
                 valores.put("COD_CLIENTE", funcion.dato(cursor,"COD_CLIENTE"))
                 valores.put("COD_SUBCLIENTE",funcion.dato(cursor,"COD_SUBCLIENTE"))
@@ -78,7 +78,7 @@ class EnviarSD {
                         + " NRO_REGISTRO_REF 	 = '$xid' "
                         + " where COD_CLIENTE    = '$codCliente'"
                         + " and COD_SUBCLIENTE 	 = '$codSubcliente'"
-                        + " and NRO_PLANILLA   	 = '${FuncionesUtiles.usuario["LOGIN"]}'"
+                        + " and NRO_PLANILLA   	 = '${ListaClientes.codVendedor}'"
                         + " and NRO_REGISTRO_REF ='0' ")
                 funcion.ejecutar(sql, context)
                 MainActivity.bd!!.setTransactionSuccessful()
@@ -96,7 +96,7 @@ class EnviarSD {
                 +  "  FROM svm_solicitud_dev_cab "
                 +  " WHERE COD_CLIENTE  	= '$codCliente' "
                 +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
-                +  "   AND NRO_PLANILLA 	= '${FuncionesUtiles.usuario["LOGIN"]}' "
+                +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                 +  "   AND EST_ENVIO		= 'N' ")
     }
 
@@ -107,7 +107,7 @@ class EnviarSD {
                        + "   FROM svm_solicitud_dev_det "
                        + "  WHERE COD_CLIENTE  	 = '$codCliente' "
                        + "    AND COD_SUBCLIENTE = '$codSubcliente' "
-                       + "    AND NRO_PLANILLA 	 = '${FuncionesUtiles.usuario["LOGIN"]}' "
+                       + "    AND NRO_PLANILLA 	 = '${ListaClientes.codVendedor}' "
                        + "    AND EST_ENVIO		 = 'N' ")
     }
 
@@ -141,7 +141,7 @@ class EnviarSD {
         registros = cursor.count
     }
 
-    fun cargarDetalle(cursor: Cursor){
+    private fun cargarDetalle(cursor: Cursor){
         cadena2 = "INSERT ALL"
         val detalle = (" INTO vt_solicitud_det_prov ("
                 + "cod_empresa			,"
@@ -161,26 +161,26 @@ class EnviarSD {
                 + " VALUES(")
         for (i in 0 until cursor.count) {
             //aca
-            var codEmpresa : String = "1"
-            var nroPlanilla : String = FuncionesUtiles.usuario.get("LOGIN").toString()
-            var codRepartidor : String = "1"
-            var nroRegistroRef : String = funcion.dato(cursor,"NRO_REGISTRO_REF")
-            var codArticulo : String = funcion.dato(cursor,"COD_ARTICULO")
-            var codUnidadMedida : String = funcion.dato(cursor,"COD_UNIDAD_REL")
-            var cantidad = funcion.dato(cursor,"CANTIDAD").trim()
-            var codMotivo =
-                if (funcion.dato(cursor,"COD_PENALIDAD").trim().equals("")) {
+            val codEmpresa = "1"
+            val nroPlanilla : String = ListaClientes.codVendedor
+            val codRepartidor = "1"
+            val nroRegistroRef : String = funcion.dato(cursor,"NRO_REGISTRO_REF")
+            val codArticulo : String = funcion.dato(cursor,"COD_ARTICULO")
+            val codUnidadMedida : String = funcion.dato(cursor,"COD_UNIDAD_REL")
+            val cantidad = funcion.dato(cursor,"CANTIDAD").trim()
+            val codMotivo =
+                if (funcion.dato(cursor,"COD_PENALIDAD").trim() == "") {
                     "01"
                 } else {
                     funcion.dato(cursor,"COD_PENALIDAD").trim()
                 }
             //			monto			= cursor2.getString(cursor2.getColumnIndex("PAGO")).replace(",", "").replace(".", "").trim();
-            var codVendedor = ListaClientes.codVendedor
+            val codVendedor = ListaClientes.codVendedor
             cadena2 += "$detalle'$codEmpresa','$nroPlanilla','$codRepartidor"
             cadena2 += "','$nroRegistroRef','$codCliente','$codSubcliente"
             cadena2 += "','$codArticulo','$codUnidadMedida','$cantidad"
             cadena2 += "','$codMotivo', 0 ,'$codVendedor"
-            cadena2 += "','" + FuncionesUtiles.usuario.get("LOGIN") + "','" + FuncionesUtiles.usuario.get("COD_PERSONA") + "')"
+            cadena2 += "','" + ListaClientes.codVendedor + "','" + FuncionesUtiles.usuario["COD_PERSONA"] + "')"
             cursor.moveToNext()
         }
 
@@ -218,14 +218,14 @@ class EnviarSD {
                     var sql : String = ("UPDATE svm_solicitud_dev_det set EST_ENVIO = 'S' "
                             +  " WHERE COD_CLIENTE  	= '$codCliente' "
                             +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
-                            +  "   AND NRO_PLANILLA 	= '${FuncionesUtiles.usuario["LOGIN"]}' "
+                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND EST_ENVIO 		= 'N' ")
                     funcion.ejecutar(sql, context)
 
                     sql = ("UPDATE svm_solicitud_dev_cab set EST_ENVIO = 'S' "
                             +  " WHERE COD_CLIENTE  	= '$codCliente' "
                             +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
-                            +  "   AND NRO_PLANILLA 	= '${FuncionesUtiles.usuario["LOGIN"]}' "
+                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND EST_ENVIO 		= 'N' ")
                     funcion.ejecutar(sql, context)
 //                    funcion.mensaje(context,"Operación existosa!", respuesta)

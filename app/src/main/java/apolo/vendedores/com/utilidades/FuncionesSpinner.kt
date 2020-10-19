@@ -7,19 +7,21 @@ import android.widget.Spinner
 import apolo.vendedores.com.R
 import java.lang.Exception
 
-class FuncionesSpinner(var context: Context, var spinner: Spinner) {
+class FuncionesSpinner(var context: Context, private var spinner: Spinner) {
 
-    var valores : ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
-    var funcion : FuncionesUtiles
-    var options : Array<String> = arrayOf<String>()
+    var valores : ArrayList<HashMap<String,String>> = ArrayList()
+    private var funcion : FuncionesUtiles = FuncionesUtiles(context)
+    private var options : Array<String> = arrayOf()
 
     fun sql(campos:String,tabla:String,where:String,whereOpcional:String,group:String,order:String):String{
         var sql : String = "SELECT " + campos +
                 "  FROM " + tabla +
                 " WHERE " + where
-        if (!whereOpcional.trim().equals("")){ sql += whereOpcional }
-        if (!group.trim().equals("")){ sql += " GROUP BY " + group }
-        if (!order.trim().equals("")){ sql += " ORDER BY " + order }
+        if (whereOpcional.trim() != ""){ sql += whereOpcional }
+        if (group.trim() != ""){ sql += " GROUP BY $group"
+        }
+        if (order.trim() != ""){ sql += " ORDER BY $order"
+        }
 
         return sql
     }
@@ -28,14 +30,14 @@ class FuncionesSpinner(var context: Context, var spinner: Spinner) {
         cargarSpinner(cargarDatos(funcion.consultar(sql(campos,tabla,where,whereOpcional,group,order)),campo,pref))
     }
 
-    fun cargarDatos(cursor:Cursor,campo:String,pref:String):Array<String>?{
-        valores = ArrayList<HashMap<String,String>>()
+    private fun cargarDatos(cursor:Cursor, campo:String, pref:String):Array<String>?{
+        valores = ArrayList()
         var opcion : String = pref
         for (i in 0 until cursor.count){
-            var valor : HashMap<String,String> = HashMap<String,String>()
+            val valor : HashMap<String,String> = HashMap()
             for (j in 0 until cursor.columnCount){
                 try {
-                    valor.put(cursor.getColumnName(j).toString(),funcion.dato(cursor,cursor.getColumnName(j)))
+                    valor[cursor.getColumnName(j).toString()] = funcion.dato(cursor,cursor.getColumnName(j))
                 } catch (e:Exception){
                     e.printStackTrace()
                 }
@@ -51,26 +53,23 @@ class FuncionesSpinner(var context: Context, var spinner: Spinner) {
         return opcion.split("|").toTypedArray()
     }
 
-    fun cargarSpinner(opciones:Array<String>?){
+    private fun cargarSpinner(opciones:Array<String>?){
         if (opciones.isNullOrEmpty()){return}
-        var spinnerAdapter : ArrayAdapter<String>? = ArrayAdapter<String>(context,R.layout.spinner_adapter,opciones)
+        val spinnerAdapter : ArrayAdapter<String>? = ArrayAdapter(context,R.layout.spinner_adapter,opciones)
         spinner.adapter = spinnerAdapter
     }
 
     fun getDato(key:String):String{
-        return valores.get(spinner.selectedItemPosition).get(key).toString()
+        return valores[spinner.selectedItemPosition][key].toString()
     }
 
     fun getIndex(key:String,valor:String):Int{
         for (i in 0 until valores.size) {
-            if (valores.get(i).get(key).equals(valor)){
+            if (valores[i][key].equals(valor)){
                 return i
             }
         }
         return 0
     }
 
-    init {
-        this.funcion = FuncionesUtiles(context)
-    }
 }
