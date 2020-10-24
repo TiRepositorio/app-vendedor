@@ -480,7 +480,7 @@ class SentenciasSQL {
 
 
         //NO SINCRONIZADOS
-        fun createTableVt_marcacion_ubicacion(): String {
+        fun createTableVtMarcacionUbicacion(): String {
             sql = "CREATE TABLE IF NOT EXISTS vt_marcacion_ubicacion" +
                     " (id INTEGER PRIMARY KEY AUTOINCREMENT , COD_EMPRESA TEXT      , FECHA TEXT        , COD_PROMOTOR TEXT, " +
                     "  COD_CLIENTE TEXT   				    , COD_SUBCLIENTE TEXT   , TIPO TEXT  	    , ESTADO TEXT      , " +
@@ -510,14 +510,13 @@ class SentenciasSQL {
             return sql
         }
 
-        fun createTableSvm_modifica_catastro(): String {
-            sql = ("CREATE TABLE IF NOT EXISTS svm_modifica_catastro"
+        fun createTableSvmModificaCatastro(): String {
+            return  ("CREATE TABLE IF NOT EXISTS svm_modifica_catastro "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT	, COD_CLIENTE TEXT		,"
                     + " COD_SUBCLIENTE TEXT					 , TELEFONO1 TEXT	, TELEFONO2 TEXT		,"
                     + " DIRECCION TEXT						 , CERCA_DE TEXT	, LATITUD TEXT			,"
                     + " LONGITUD TEXT						 , ESTADO TEXT		, FECHA TEXT		    ,"
                     + " FOTO_FACHADA BLOB		 			 , TIPO TEXT)")
-            return sql
         }
 
         fun createTableSvmPedidosCab(): String {
@@ -600,28 +599,35 @@ class SentenciasSQL {
                     + " FECHA TEXT	)")
             return sql
         }
-
+        fun createTableVtMarcacionVisita(): String? {
+            return ("CREATE TABLE IF NOT EXISTS vt_marcacion_visita "
+                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_SUCURSAL TEXT, "
+                    + " COD_CLIENTE TEXT					, COD_SUBCLIENTE TEXT, COD_VENDEDOR TEXT, "
+                    + " COD_MOTIVO TEXT  					, OBSERVACION TEXT   , FECHA TEXT	    , "
+                    + " LATITUD TEXT	  					, LONGITUD TEXT		 , ESTADO TEXT	    ,"
+                    + " HORA_ALTA TEXT		)")
+        }
 
 
         fun listaSQLCreateTable(): Vector<String> {
             var lista : Vector<String> = Vector<String>()
-            lista.add(0, createTableSvm_modifica_catastro())
+            lista.add(0, createTableSvmModificaCatastro())
             lista.add(1, createTableSvm_solicitud_dev_det())
             lista.add(2, createTableSvm_solicitud_dev_cab())
-//            lista.add(3, createTableSvmPedidosCab())
-//            lista.add(4, createTableSvmPedidosDet())
-//            lista.add(5, createTableSvm_imagenes_det())
+            lista.add(3, createTableVtMarcacionUbicacion())
+            lista.add(4, createTableVtMarcacionVisita())
+//            lista.add(5createTableVtMarcacionVisita, createTableSvm_imagenes_det())
 //            lista.add(6, createTableSvm_fotos_cab())
 //            lista.add(7, createTableSvm_fotos_det())
 //            lista.add(8, createTableStvCategoriaPalm())
 //            lista.add(9, createTableSpmRetornoComentario())
 //            lista.add(10, createTableSvmDiasTomaFotoCliente())
-//            lista.add(11, createTableVt_marcacion_ubicacion())
+//            lista.add(11, )
 //            lista.add(12, createTableSvm_fotos_cab())
 //            lista.add(13, createTableSvm_fotos_det())
 //            lista.add(14, "PRAGMA automatic_index = true")
-//            lista.add(15, "")
-//            lista.add(16, "")
+//            lista.add(15, createTableSvmPedidosCab())
+//            lista.add(16, createTableSvmPedidosDet())
 //            lista.add(17, "")
 //            lista.add(18, "")
 //            lista.add(19, "")

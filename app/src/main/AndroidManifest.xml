@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="apolo.vendedores.com">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,14 +18,15 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Vendedores"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".informes.CorteDeStock"></activity>
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity android:name=".informes.CorteDeStock" />
         <activity android:name=".informes.EstadoDePedidos" />
 
         <provider
@@ -117,9 +121,22 @@
         <activity
             android:name=".ventas.sd.SolicitudDevolucion"
             android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".ventas.asistencia.Marcacion"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />
+
+
+        <activity
+            android:name=".utilidades.Mapa"
+            android:label="@string/title_activity_maps" />
+
+        <!--Datos para abrir el mapa-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCKcfr0aHwMZPPau7HD291NbPT3dWo9K3g" />
     </application>
 
 </manifest>

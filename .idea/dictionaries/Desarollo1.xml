@@ -8,14 +8,18 @@
       <w>aceptar</w>
       <w>acerca</w>
       <w>acion</w>
+      <w>activada</w>
+      <w>activar</w>
       <w>activo</w>
       <w>actualiza</w>
       <w>actualizacion</w>
       <w>actualización</w>
       <w>actualizado</w>
       <w>actualizar</w>
+      <w>adaptador</w>
       <w>agregar</w>
       <w>almacenamiento</w>
+      <w>aplicacion</w>
       <w>apolo</w>
       <w>archivo</w>
       <w>archivos</w>
@@ -30,32 +34,39 @@
       <w>atrazo</w>
       <w>autoriza</w>
       <w>autorizacion</w>
+      <w>autorización</w>
       <w>auxiliar</w>
       <w>avance</w>
       <w>avion</w>
       <w>bajar</w>
       <w>barra</w>
       <w>basico</w>
+      <w>bloqueado</w>
       <w>borrar</w>
       <w>boton</w>
       <w>botones</w>
       <w>buscar</w>
       <w>busqueda</w>
       <w>cabecera</w>
+      <w>cadena</w>
       <w>caducado</w>
       <w>caja</w>
+      <w>calcula</w>
       <w>cancelar</w>
       <w>cantidad</w>
       <w>carga</w>
       <w>cargar</w>
       <w>catastar</w>
+      <w>catastro</w>
       <w>categoria</w>
+      <w>celular</w>
       <w>cerca</w>
       <w>cerrar</w>
       <w>chave</w>
       <w>cierra</w>
       <w>ciudad</w>
       <w>ciudades</w>
+      <w>claro</w>
       <w>clave</w>
       <w>claves</w>
       <w>clien</w>
@@ -66,26 +77,34 @@
       <w>codigo</w>
       <w>codigos</w>
       <w>columnas</w>
+      <w>combinado</w>
       <w>coment</w>
       <w>comentario</w>
       <w>comenzar</w>
       <w>comision</w>
       <w>comisiones</w>
+      <w>comprobando</w>
       <w>comprobante</w>
       <w>comprobantes</w>
+      <w>comprobar</w>
       <w>concepto</w>
       <w>condicion</w>
       <w>conectar</w>
       <w>conexion</w>
+      <w>conexión</w>
       <w>configurado</w>
       <w>configurar</w>
+      <w>confirmar</w>
       <w>consultando</w>
       <w>consultar</w>
       <w>consultas</w>
       <w>contador</w>
+      <w>contadores</w>
       <w>contenido</w>
       <w>continuar</w>
       <w>contraclave</w>
+      <w>coordenadas</w>
+      <w>correctamente</w>
       <w>correcto</w>
       <w>corresponde</w>
       <w>corte</w>
@@ -112,10 +131,13 @@
       <w>desde</w>
       <w>desea</w>
       <w>deseas</w>
+      <w>deshabilitar</w>
+      <w>desmarcar</w>
       <w>desplegable</w>
       <w>detalle</w>
       <w>detalles</w>
       <w>deuda</w>
+      <w>deudas</w>
       <w>devolucion</w>
       <w>devolución</w>
       <w>dialogo</w>
@@ -124,6 +146,7 @@
       <w>directa</w>
       <w>disponibilidad</w>
       <w>dispositivo</w>
+      <w>distancia</w>
       <w>documento</w>
       <w>edsystem</w>
       <w>eficiente</w>
@@ -133,10 +156,12 @@
       <w>emision</w>
       <w>emitir</w>
       <w>empresa</w>
+      <w>encontrada</w>
       <w>encuentra</w>
       <w>entero</w>
       <w>entrada</w>
       <w>envia</w>
+      <w>enviada</w>
       <w>enviado</w>
       <w>enviados</w>
       <w>enviando</w>
@@ -148,12 +173,14 @@
       <w>este</w>
       <w>evol</w>
       <w>evolucion</w>
+      <w>excecute</w>
       <w>exenta</w>
       <w>existe</w>
       <w>existencia</w>
       <w>exito</w>
       <w>extracto</w>
       <w>extrae</w>
+      <w>extraer</w>
       <w>fachada</w>
       <w>fallo</w>
       <w>familia</w>
@@ -176,12 +203,17 @@
       <w>grabado</w>
       <w>gravada</w>
       <w>grupo</w>
+      <w>guarda</w>
       <w>guardado</w>
+      <w>guardar</w>
+      <w>guardo</w>
       <w>haberes</w>
+      <w>habilitar</w>
       <w>hasta</w>
       <w>horaria</w>
       <w>icono</w>
       <w>ifnull</w>
+      <w>imagenes</w>
       <w>imei</w>
       <w>inactivo</w>
       <w>incorrecta</w>
@@ -193,12 +225,19 @@
       <w>inicializar</w>
       <w>inicio</w>
       <w>inserta</w>
+      <w>insertado</w>
+      <w>insertar</w>
       <w>instalador</w>
       <w>intenta</w>
+      <w>intentar</w>
       <w>intentarlo</w>
       <w>intente</w>
       <w>interno</w>
+      <w>justificacion</w>
+      <w>justificar</w>
       <w>kotlinx</w>
+      <w>lapso</w>
+      <w>lati</w>
       <w>latitud</w>
       <w>limite</w>
       <w>lineas</w>
@@ -206,22 +245,31 @@
       <w>lista</w>
       <w>listado</w>
       <w>llame</w>
+      <w>lngs</w>
       <w>logistica</w>
       <w>lograda</w>
       <w>logrado</w>
       <w>logro</w>
       <w>longitud</w>
+      <w>mapa</w>
       <w>marca</w>
       <w>marcacion</w>
       <w>marcaciones</w>
+      <w>marcación</w>
+      <w>marcado</w>
       <w>marcar</w>
       <w>marcas</w>
+      <w>marino</w>
       <w>marketin</w>
       <w>medida</w>
       <w>mensaje</w>
       <w>mensual</w>
       <w>mensuales</w>
+      <w>milis</w>
       <w>minima</w>
+      <w>minimo</w>
+      <w>modifcar</w>
+      <w>modifica</w>
       <w>modificacion</w>
       <w>modificados</w>
       <w>modificar</w>
@@ -241,9 +289,12 @@
       <w>negociacion</w>
       <w>negocio</w>
       <w>negocios</w>
+      <w>ninguna</w>
       <w>nombre</w>
+      <w>nopositivado</w>
       <w>nota</w>
       <w>nueva</w>
+      <w>nuevo</w>
       <w>numerico</w>
       <w>numero</w>
       <w>numeros</w>
@@ -258,24 +309,30 @@
       <w>operadora</w>
       <w>orden</w>
       <w>origen</w>
+      <w>oscuro</w>
       <w>otorg</w>
       <w>otra</w>
       <w>pago</w>
       <w>pais</w>
       <w>parametro</w>
+      <w>pbar</w>
       <w>pedido</w>
       <w>pedidos</w>
       <w>penalidad</w>
+      <w>pendiente</w>
       <w>pendientes</w>
       <w>perderán</w>
       <w>perfiles</w>
       <w>periodo</w>
+      <w>permanecer</w>
       <w>permiso</w>
       <w>permitida</w>
       <w>planilla</w>
       <w>porc</w>
+      <w>porcentaje</w>
       <w>posee</w>
       <w>posicion</w>
+      <w>positivacion</w>
       <w>positivados</w>
       <w>prec</w>
       <w>precio</w>
@@ -284,6 +341,7 @@
       <w>premios</w>
       <w>premiso</w>
       <w>prepara</w>
+      <w>presencia</w>
       <w>presencial</w>
       <w>primera</w>
       <w>probar</w>
@@ -296,14 +354,19 @@
       <w>promociones</w>
       <w>promotor</w>
       <w>proy</w>
+      <w>prueba</w>
+      <w>pudo</w>
+      <w>puede</w>
       <w>puntaje</w>
       <w>punto</w>
       <w>puntuacion</w>
       <w>rango</w>
       <w>rastreo</w>
+      <w>realizada</w>
       <w>realizar</w>
       <w>rebote</w>
       <w>rebotes</w>
+      <w>recargar</w>
       <w>referencia</w>
       <w>refrescar</w>
       <w>registro</w>
@@ -332,12 +395,16 @@
       <w>servidor</w>
       <w>será</w>
       <w>siglas</w>
+      <w>simulada</w>
+      <w>simuladas</w>
       <w>sinc</w>
       <w>sincornizacion</w>
       <w>sincro</w>
       <w>sincronizacion</w>
+      <w>sincronizados</w>
       <w>sincronizando</w>
       <w>sincronizar</w>
+      <w>sind</w>
       <w>sistema</w>
       <w>solic</w>
       <w>solicita</w>
@@ -357,8 +424,12 @@
       <w>targ</w>
       <w>tarj</w>
       <w>telefono</w>
+      <w>teléfono</w>
+      <w>texto</w>
       <w>textview</w>
       <w>tiempo</w>
+      <w>tiene</w>
+      <w>tierra</w>
       <w>tipo</w>
       <w>titulo</w>
       <w>todos</w>
@@ -366,11 +437,15 @@
       <w>traer</w>
       <w>transcurrido</w>
       <w>transporte</w>
+      <w>ubicacion</w>
+      <w>ubicaciones</w>
+      <w>ubicación</w>
       <w>ubicar</w>
       <w>ultima</w>
       <w>unid</w>
       <w>unidad</w>
       <w>unitario</w>
+      <w>unknow</w>
       <w>usuario</w>
       <w>usuarios</w>
       <w>utiles</w>

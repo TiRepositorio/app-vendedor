@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Base64
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
+import apolo.vendedores.com.ventas.ListaClientes
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapPrimitive
@@ -325,7 +326,6 @@ class ConexionWS {
         return resultado
     }
 
-
     fun obtieneInstalador(): Boolean {
         METHOD_NAME = "ProcesaInstaladorGestores"
         SOAP_ACTION = "http://edsystem/servidor/ProcesaInstaladorGestores"
@@ -357,6 +357,40 @@ class ConexionWS {
             return false
         }
         return true
+    }
+
+    fun procesaNoVenta(noVenta: String, codVendedor: String): String {
+        METHOD_NAME = "ProcesaNoVenta"
+        SOAP_ACTION = "http://edsystem/servidor/ProcesaNoVenta"
+        val request: SoapObject
+        try {
+            request = SoapObject(NAMESPACE, METHOD_NAME)
+            request.addProperty("usuario", "edsystem")
+            request.addProperty("password", "#edsystem@polo")
+            request.addProperty("vcodEmpresa", "1")
+            request.addProperty("vcodVendedor", codVendedor)
+            request.addProperty("nopositivado", noVenta)
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(request)
+        val transporte = HttpTransportSE(URL)
+        var res = ""
+        res = try {
+            transporte.call(SOAP_ACTION, envelope)
+            val resultadoXml = envelope.response as SoapPrimitive
+            resultadoXml.toString()
+        } catch (e: java.lang.Exception) {
+            e.message.toString()
+        }
+        if (res.contains("unique constraint (INV")) {
+            res = "01*Ya se guardo la justificacion"
+        }
+        return res
     }
 
 }

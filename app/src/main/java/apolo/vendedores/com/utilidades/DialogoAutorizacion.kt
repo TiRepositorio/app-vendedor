@@ -1,10 +1,16 @@
 package apolo.vendedores.com.utilidades
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.text.InputType
+import android.widget.Button
 import android.widget.EditText
+import apolo.vendedores.com.R
+import kotlinx.android.synthetic.main.menu_cliente.*
+import kotlinx.android.synthetic.main.menu_cliente_texto.*
+import java.lang.Exception
 
 class DialogoAutorizacion(var context: Context) {
 
@@ -30,6 +36,7 @@ class DialogoAutorizacion(var context: Context) {
                     funcion.mensaje(context,"Correcto","La clave fue aceptada")
                 } else {
                     funcion.mensaje(context,"Error","La clave no es valida")
+                    cargaAcion.setText("no$accion")
                 }
             }
         }
@@ -77,6 +84,46 @@ class DialogoAutorizacion(var context: Context) {
         }
         dialogo.setNegativeButton(botonCancelar) { _: DialogInterface, _: Int ->
             cargaAcion.setText(accionCancelar)
+        }
+        dialogo.setCancelable(true)
+        dialogo.show()
+    }
+
+    fun dialogoMapa(accion:String, cargaAcion : EditText){
+        var dialogo : Dialog = Dialog(context)
+        try {
+            dialogo.setContentView(R.layout.menu_cliente)
+        } catch (e: Exception){
+            dialogo.setContentView(R.layout.menu_cliente_texto)
+            var cliente : Button = dialogo.btCliente as Button
+            dialogo.btCliente.setOnClickListener{
+                cargaAcion.setText("cliente")
+                dialogo.dismiss()
+            }
+            dialogo.btRuteo.setOnClickListener{
+                cargaAcion.setText("ruteo")
+                dialogo.dismiss()
+            }
+            dialogo.setCancelable(true)
+            dialogo.show()
+            dialogo.show()
+            return
+        }
+        dialogo.ibtnCliente.setOnClickListener{
+            cargaAcion.setText("cliente")
+            dialogo.dismiss()
+        }
+        dialogo.ibtnRuteo.setOnClickListener{
+            cargaAcion.setText("ruteo")
+            dialogo.dismiss()
+        }
+        dialogo.imgCliente.setOnClickListener{
+            cargaAcion.setText("cliente")
+            dialogo.dismiss()
+        }
+        dialogo.imgRuteo.setOnClickListener{
+            cargaAcion.setText("ruteo")
+            dialogo.dismiss()
         }
         dialogo.setCancelable(true)
         dialogo.show()

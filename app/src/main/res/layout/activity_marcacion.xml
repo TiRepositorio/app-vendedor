@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+		android:background="@color/fondoOscuro">
+        
+        <LinearLayout 
+     	    android:layout_width="fill_parent"
+     	    android:layout_height="wrap_content"
+     	    android:gravity="center_vertical"
+     	    android:orientation="horizontal">
+          
+     	    <TextView 
+     	        android:layout_width="match_parent"
+     	        android:layout_height="wrap_content"
+				android:layout_weight="3"
+     	        android:text="Cliente:"
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	    <TextView 
+     	        android:id="@+id/tvCliente"
+     	        android:layout_width="match_parent"
+     	        android:layout_height="wrap_content"
+				android:layout_weight="1"
+     	        android:text=" "
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	</LinearLayout>
+     	
+        <LinearLayout 
+     	    android:layout_width="fill_parent"
+     	    android:layout_height="wrap_content"
+     	    android:gravity="center_vertical|center_horizontal"
+     	    android:orientation="horizontal">
+          
+     	    <TextView 
+     	        android:layout_width="fill_parent"
+     	        android:layout_height="wrap_content"
+     	        android:text="Tiempo min.:"
+				android:layout_weight="1"
+				android:textSize="10dp"
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	    <TextView 
+     	        android:id="@+id/tvTiempoMin"
+     	        android:layout_width="fill_parent"
+     	        android:layout_height="wrap_content"
+     	        android:layout_weight="1"
+				android:textSize="10dp"
+     	        android:text=" "
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	    <TextView 
+     	        android:layout_width="fill_parent"
+     	        android:layout_height="wrap_content"
+     	        android:text="Tiempo max.:"
+				android:layout_weight="1"
+				android:textSize="10dp"
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	    <TextView 
+     	        android:id="@+id/tvTiempoMax"
+     	        android:layout_width="fill_parent"
+     	        android:layout_height="wrap_content"
+     	        android:layout_weight="1"
+				android:textSize="10dp"
+     	        android:text=" "
+				style="@style/textoCuadriculaOscura"/>
+     	    
+     	</LinearLayout>
+        
+        <LinearLayout 
+     	    android:layout_width="fill_parent"
+     	    android:layout_height="wrap_content"
+     	    android:gravity="center_vertical|center_horizontal"
+     	    android:orientation="horizontal">
+          
+     	    <ImageButton 
+     	        android:layout_width="wrap_content"
+     	        android:layout_height="wrap_content"
+     	        android:src="@drawable/ic_agregar"
+     	        android:id="@+id/ibtnAgregar"/>
+     	    
+     	    <ImageButton 
+     	        android:layout_width="wrap_content"
+     	        android:layout_height="wrap_content"
+     	        android:src="@drawable/ic_borrar"
+     	        android:id="@+id/ibtnEliminar"/>
+     	    
+     	</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+			android:gravity="center_horizontal">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:background="@color/verdeApoloCabecera" >
+
+				<TextView
+					android:layout_width="150sp"
+					android:text="Fecha"
+					android:layout_weight="1"
+					style="@style/cabeceraSubTabla"/>
+
+				<TextView
+					android:layout_width="80sp"
+					android:text="Tipo"
+					style="@style/cabeceraSubTabla"/>
+
+				<TextView
+					android:layout_width="80sp"
+					android:text="Estado"
+					style="@style/cabeceraSubTabla" />
+		</LinearLayout>
+
+			<ListView
+				android:id="@+id/lvListaMarcaciones"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:divider="@null"
+				android:dividerHeight="0dp"
+				android:paddingTop="1dip"
+				android:scrollbars="none" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/bottom_bar"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/verdeOscuro"
+                android:textColor="#fffafa"
+                android:text="Enviar" />
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/fondoFooter"
+                android:textColor="#fffafa"
+                android:text="Cancelar" />
+        </LinearLayout>
+
+		<EditText
+			android:id="@+id/accion"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:inputType="none"/>
+    </LinearLayout>
+
+</RelativeLayout>

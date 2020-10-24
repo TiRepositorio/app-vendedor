@@ -1,29 +1,35 @@
 package apolo.vendedores.com.ventas
 
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
-//import apolo.vendedores.com.informes.DeudaDeClientes
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
-//import apolo.vendedores.com.utilidades.Mapa
-//import apolo.vendedores.com.ventas.sd.SolicitudDevolucion
+import apolo.vendedores.com.ventas.asistencia.Marcacion
+import apolo.vendedores.com.utilidades.Mapa
+import apolo.vendedores.com.ventas.justificacion.NoVenta
 import kotlinx.android.synthetic.main.activity_lista_clientes.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
 class ListaClientes : AppCompatActivity() {
 
     companion object{
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var funcion : FuncionesUtiles
         var codVendedor : String = ""
         var codCliente : String = ""
@@ -36,13 +42,26 @@ class ListaClientes : AppCompatActivity() {
         var diasInicial : String = ""
         var codSucursalCliente : String = ""
         var indDirecta : String = ""
-        var lista : ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
+        var estado  : String = ""
+        var latitud : String = ""
+        var longitud: String = ""
+        var lista : ArrayList<HashMap<String,String>> = ArrayList()
+        var indPresencial = "N"
+        var claveAutorizacion = ""
+        lateinit var etAccion: EditText
     }
 
+
+    private lateinit var lm : LocationManager
+    private lateinit var telMgr : TelephonyManager
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_clientes)
 
+        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         //solo con titulo
         funcion = FuncionesUtiles(imgTitulo,tvTitulo)
         funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,llBuscar,spBuscar,etBuscar,btBuscar)
@@ -50,6 +69,7 @@ class ListaClientes : AppCompatActivity() {
         inicializarElementos()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializarElementos(){
         funcion.addItemSpinner(this,"Codigo-Nombre-Ciudad","COD_CLIENTE-DESC_SUBCLIENTE-desc_ciudad")
         funcion.inicializaContadores()
@@ -59,6 +79,8 @@ class ListaClientes : AppCompatActivity() {
         ibtnMapa.setOnClickListener{mapa()}
         inicializaETAccion(accion)
         btModificar.setOnClickListener{modificar()}
+        btEntradaSalida.setOnClickListener { entradaSalida() }
+        btJustificarNoVenta.setOnClickListener { noVenta() }
         btSD.setOnClickListener{sd()}
         btVender.setOnClickListener{vender()}
         buscarRuteo()
@@ -68,18 +90,17 @@ class ListaClientes : AppCompatActivity() {
     }
 
     fun buscar(condicion:String){
-        var campos = " * "
-        var groupBy = ""
-        var orderBy = "COD_CLIENTE"
-        var tabla = " svm_cliente_vendedor "
-        var fecha = funcion.getFechaActual()
+        val campos = " * "
+        val groupBy = ""
+        val orderBy = "COD_CLIENTE"
+        val tabla = " svm_cliente_vendedor "
 //        var where = " AND COD_VENDEDOR = '" + codVendedor +
-        var where = " AND COD_VENDEDOR = '" + codVendedor + "' $condicion "
+        val where = " AND COD_VENDEDOR = '$codVendedor' $condicion "
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()
     }
 
-    fun buscarRuteo(){
+    private fun buscarRuteo(){
         cbTodos.isChecked = false
         cbNoAtendidos.isChecked = false
         if (cbRuteoDelDia.isChecked){
@@ -89,7 +110,7 @@ class ListaClientes : AppCompatActivity() {
         }
     }
 
-    fun buscarBloqueado(){
+    private fun buscarBloqueado(){
         cbRuteoDelDia.isChecked = false
         cbTodos.isChecked = false
         if (cbNoAtendidos.isChecked){
@@ -99,7 +120,7 @@ class ListaClientes : AppCompatActivity() {
         }
     }
 
-    fun buscarTodo(){
+    private fun buscarTodo(){
         cbRuteoDelDia.isChecked = false
         cbNoAtendidos.isChecked = false
         if (cbTodos.isChecked){
@@ -110,19 +131,19 @@ class ListaClientes : AppCompatActivity() {
     }
 
     fun cargarLista(cursor: Cursor){
-        FuncionesUtiles.listaDetalle = ArrayList<HashMap<String,String>>()
+        FuncionesUtiles.listaDetalle = ArrayList()
         for (i in 0 until cursor.count){
-            datos = HashMap<String,String>()
+            datos = HashMap()
             for (j in 0 until cursor.columnCount){
                 try {
-                    datos.put(cursor.getColumnName(j),funcion.dato(cursor,cursor.getColumnName(j)))
+                    datos[cursor.getColumnName(j)] = funcion.dato(cursor,cursor.getColumnName(j))
                 } catch (e:Exception){
                     e.printStackTrace()
                 }
             }
-            datos.put("LIMITE_CREDITO",funcion.enteroCliente(datos.get("LIMITE_CREDITO").toString()))
-            datos.put("TOT_DEUDA",funcion.enteroCliente(datos.get("TOT_DEUDA").toString()))
-            datos.put("SALDO",funcion.enteroCliente(datos.get("SALDO").toString()))
+            datos["LIMITE_CREDITO"] = funcion.enteroCliente(datos["LIMITE_CREDITO"].toString())
+            datos["TOT_DEUDA"] = funcion.enteroCliente(datos["TOT_DEUDA"].toString())
+            datos["SALDO"] = funcion.enteroCliente(datos["SALDO"].toString())
             FuncionesUtiles.listaDetalle.add(datos)
             cursor.moveToNext()
         }
@@ -136,14 +157,14 @@ class ListaClientes : AppCompatActivity() {
                                   "DESC_CLIENTE"    , "DESC_SUBCLIENTE" ,"DESC_CIUDAD"      , "DIRECCION"       , "RUC"            ,
                                   "DESC_ZONA"       , "TELEFONO"        ,"DESC_CONDICION"   , "LIMITE_CREDITO"  , "TOT_DEUDA"      ,
                                   "SALDO"           , "FEC_VISITA"      )
-        var adapter: Adapter.AdapterGenericoDetalle =
+        val adapter: Adapter.AdapterGenericoDetalle =
             Adapter.AdapterGenericoDetalle(this
                 ,FuncionesUtiles.listaDetalle
                 ,R.layout.ven_cli_lista_clientes
                 ,funcion.vistas
                 ,funcion.valores)
         lvClientes.adapter = adapter
-        lvClientes.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvClientes.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionDetalle  = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvClientes.invalidateViews()
@@ -155,59 +176,75 @@ class ListaClientes : AppCompatActivity() {
     }
 
     private fun cargarDatos(posicion : Int){
-        codCliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_CLIENTE").toString()
-        codSubcliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_SUBCLIENTE").toString()
-        descCliente = FuncionesUtiles.listaDetalle.get(posicion).get("DESC_SUBCLIENTE").toString()
-        tipCliente = FuncionesUtiles.listaDetalle.get(posicion).get("TIP_CLIENTE").toString()
-        indEspecial = FuncionesUtiles.listaDetalle.get(posicion).get("IND_ESP").toString()
-        tipCondicion = FuncionesUtiles.listaDetalle.get(posicion).get("TIPO_CONDICION").toString()
-        codCondicion = FuncionesUtiles.listaDetalle.get(posicion).get("COD_CONDICION").toString()
-        diasInicial = FuncionesUtiles.listaDetalle.get(posicion).get("DIAS_INICIAL").toString()
-        indDirecta = FuncionesUtiles.listaDetalle.get(posicion).get("IND_DIRECTA").toString()
-        codSucursalCliente = FuncionesUtiles.listaDetalle.get(posicion).get("COD_SUCURSAL").toString()
+        codCliente          = FuncionesUtiles.listaDetalle[posicion]["COD_CLIENTE"].toString()
+        codSubcliente       = FuncionesUtiles.listaDetalle[posicion]["COD_SUBCLIENTE"].toString()
+        descCliente         = FuncionesUtiles.listaDetalle[posicion]["DESC_SUBCLIENTE"].toString()
+        tipCliente          = FuncionesUtiles.listaDetalle[posicion]["TIP_CLIENTE"].toString()
+        indEspecial         = FuncionesUtiles.listaDetalle[posicion]["IND_ESP"].toString()
+        tipCondicion        = FuncionesUtiles.listaDetalle[posicion]["TIPO_CONDICION"].toString()
+        codCondicion        = FuncionesUtiles.listaDetalle[posicion]["COD_CONDICION"].toString()
+        diasInicial         = FuncionesUtiles.listaDetalle[posicion]["DIAS_INICIAL"].toString()
+        indDirecta          = FuncionesUtiles.listaDetalle[posicion]["IND_DIRECTA"].toString()
+        codSucursalCliente  = FuncionesUtiles.listaDetalle[posicion]["COD_SUCURSAL"].toString()
+        estado              = FuncionesUtiles.listaDetalle[posicion]["ESTADO"].toString()
+        latitud             = FuncionesUtiles.listaDetalle[posicion]["LATITUD"].toString()
+        longitud            = FuncionesUtiles.listaDetalle[posicion]["LONGITUD"].toString()
     }
 
-    fun deuda(){
+    private fun deuda(){
         if (FuncionesUtiles.listaDetalle.size > 0){
-            Deuda.codigo = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_CLIENTE").toString() + "-" +
-                           FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("COD_SUBCLIENTE").toString()
-            Deuda.nombre = FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("DESC_CLIENTE").toString()
-            if (FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle).get("TOT_DEUDA").equals("0")){
+            Deuda.codigo = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_CLIENTE"].toString() + "-" +
+                           FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_SUBCLIENTE"].toString()
+            Deuda.nombre = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["DESC_CLIENTE"].toString()
+            if (FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TOT_DEUDA"].equals("0")){
                 funcion.mensaje(this,"Atención!","El cliente no tiene deudas.")
                 return
             }
-            var deuda : Intent = Intent(this,Deuda::class.java)
+            val deuda = Intent(this,Deuda::class.java)
             startActivity(deuda)
         }
     }
 
     fun verCliente(){
-//        Mapa.lista = ArrayList<HashMap<String,String>>()
-//        Mapa.lista.add(FuncionesUtiles.listaDetalle.get(FuncionesUtiles.posicionDetalle))
-//        Mapa.modificarCliente = false
-//        var intent : Intent = Intent(this,Mapa::class.java)
-//        startActivity(intent)
+        Mapa.lista = ArrayList()
+        Mapa.lista.add(FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle])
+        Mapa.modificarCliente = false
+        val intent = Intent(this,Mapa::class.java)
+        startActivity(intent)
     }
 
     fun verRuteo(){
-//        Mapa.lista = ArrayList<HashMap<String,String>>()
-//        Mapa.lista = FuncionesUtiles.listaDetalle
-//        Mapa.modificarCliente = false
-//        var intent : Intent = Intent(this,Mapa::class.java)
-//        startActivity(intent)
+        Mapa.lista = ArrayList()
+        Mapa.lista = FuncionesUtiles.listaDetalle
+        Mapa.modificarCliente = false
+        val intent = Intent(this,Mapa::class.java)
+        startActivity(intent)
     }
 
-    fun inicializaETAccion(etAccion: EditText){
-        etAccion.addTextChangedListener(object : TextWatcher {
+    private fun inicializaETAccion(et: EditText){
+        etAccion = et
+        et.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (etAccion.text.toString().equals("cliente")){
+                if (et.text.toString() == "cliente"){
                     verCliente()
                     accion.setText("")
                     return
                 }
-                if (etAccion.text.toString().trim().equals("ruteo")){
+                if (et.text.toString().trim() == "ruteo"){
                     verRuteo()
                     accion.setText("")
+                    return
+                }
+                if (et.text.toString().trim() == "abrirUbicacion"){
+                    abrirUbicacion()
+                    return
+                }
+                if (et.text.toString().trim() == "abrirMapa") {
+                    startActivity(Intent(this@ListaClientes, Mapa::class.java))
+                    return
+                }
+                if (et.text.toString().trim() == "recargar") {
+                    buscar("")
                     return
                 }
             }
@@ -223,26 +260,51 @@ class ListaClientes : AppCompatActivity() {
         })
     }
 
-    fun mapa(){
-//        var dialogo : DialogoAutorizacion = DialogoAutorizacion(this)
-//        dialogo.dialogoMapa("",accion)
+    private fun mapa(){
+        val dialogo = DialogoAutorizacion(this)
+        dialogo.dialogoMapa("",accion)
     }
 
-    fun modificar(){
+    private fun modificar(){
         if (FuncionesUtiles.listaDetalle.size==0){return}
-        var modifcar : Intent = Intent(this,ModificarCliente::class.java)
+        val modifcar = Intent(this,ModificarCliente::class.java)
         startActivity(modifcar)
     }
 
-    fun vender(){
+    private fun vender(){
 //        Pedidos.nuevo = true
 //        var vender : Intent = Intent(this,Pedidos::class.java)
 //        startActivity(vender)
     }
 
-    fun sd(){
-        var sd : Intent = Intent(this,apolo.vendedores.com.ventas.sd.SolicitudDevolucion::class.java)
+    private fun sd(){
+        val sd = Intent(this,apolo.vendedores.com.ventas.sd.SolicitudDevolucion::class.java)
         startActivity(sd)
     }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun noVenta(){
+        NoVenta.etAccion = accion
+        NoVenta.context = this
+        val noVenta = NoVenta(codCliente, codSubcliente, lm, telMgr, latitud, longitud)
+        noVenta.cargarDialogo()
+    }
+
+    private fun entradaSalida(){
+        Marcacion.latitud       = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["LATITUD"].toString()
+        Marcacion.longitud      = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["LONGITUD"].toString()
+        Marcacion.codCliente    = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_CLIENTE"].toString()
+        Marcacion.codSubcliente = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_SUBCLIENTE"].toString()
+        Marcacion.descCliente   = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["DESC_CLIENTE"].toString()
+        Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MIN"].toString()
+        Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MAX"].toString()
+        startActivity(Intent(this,Marcacion::class.java))
+    }
+
+    private fun abrirUbicacion(){
+        val configurarUbicacion = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivity(configurarUbicacion)
+    }
+
 
 }

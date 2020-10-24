@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvCodCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cod. Cliente"
+                style="@style/tvOscuro"/>
+
+            <TextView
+                android:id="@+id/tvDescCliente"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5sp"
+                android:layout_weight="1"
+                android:text="Nom. Cliente"
+                style="@style/tvOscuro" />
+
+            <Button
+                android:id="@+id/btnVolver"
+                android:layout_width="40sp"
+                android:layout_height="30sp"
+                android:background="@color/fondoFooter"
+                android:text="X" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="ENTRADA"
+            style="@style/tvOscuro" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/chkEntrada"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/textoClaro"
+                android:textColor="@color/fondoOscuro"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="SALIDA"
+            style="@style/tvOscuro" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/chkSalida"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/textoClaro"
+                android:textColor="@color/fondoOscuro" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

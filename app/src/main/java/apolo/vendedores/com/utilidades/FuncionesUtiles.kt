@@ -365,42 +365,42 @@ class FuncionesUtiles {
         return (valor*100)/total
     }
     fun consultar(sql: String): Cursor{
-        try {
+        return try {
             cursor = MainActivity.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
-            return cursor
+            cursor
         } catch (e: Exception){
             var error = e.message
-            return cursor
+            cursor
         }
     }
     fun cargarLista(lista:ArrayList<HashMap<String,String>>,cursor:Cursor){
         for (i in 0 until cursor.count){
-            val datos : HashMap<String,String> = HashMap<String,String>()
+            val datos : HashMap<String,String> = HashMap()
             for(j in 0 until cursor.columnCount){
-                datos.put(cursor.getColumnName(j),dato(cursor,cursor.getColumnName(j)))
+                datos[cursor.getColumnName(j)] = dato(cursor,cursor.getColumnName(j))
             }
             lista.add(datos)
             cursor.moveToNext()
         }
     }
     fun ejecutar(sql:String,context: Context): Boolean {
-        try {
+        return try {
             MainActivity.bd!!.execSQL(sql)
-            return true
+            true
         } catch (e : Exception) {
             var dialogo:AlertDialog.Builder = AlertDialog.Builder(context)
             dialogo.setMessage(e.message)
-            dialogo.setTitle("ERRROR")
+            dialogo.setTitle("ERROR")
             dialogo.show()
-//            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
-            return false
+    //            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
+            false
         }
     }
     fun insertar(tabla:String, valores:ContentValues){
         try {
             MainActivity.bd!!.insert(tabla,null,valores)
-            mensaje("Correcto","Insertado correctamente")
+//            mensaje("Correcto","Insertado correctamente")
         } catch (e:Exception){
             mensaje("Error",e.message.toString())
         }
@@ -408,7 +408,7 @@ class FuncionesUtiles {
     fun insertar(tabla:String, campos:String, valores:ContentValues){
         try {
             MainActivity.bd!!.insert(tabla,campos,valores)
-            mensaje("Correcto","Insertado correctamente")
+//            mensaje("Correcto","Insertado correctamente")
         } catch (e:Exception){
             mensaje("Error",e.message.toString())
         }
@@ -453,12 +453,9 @@ class FuncionesUtiles {
                     " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
                                 .get(spBuscar!!.selectedItem)!!.split(",")[0].toUpperCase() +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
-            if (valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
-                .get(spBuscar!!.selectedItem)!!.split(",").size>1){
-                for(i in 1 until valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
-                                      .get(spBuscar!!.selectedItem)!!.split(",").size){
-                    sql = sql + " OR " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition)
-                                         .get(spBuscar!!.selectedItem)!!.split(",")[i].toUpperCase() +
+            if (valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size>1){
+                for(i in 1 until valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size){
+                    sql = "$sql OR " + valoresSpinner!![spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[i].toUpperCase() +
                                 " LIKE '%" + etBuscar!!.text.toString() + "%' "
                 }
             }
@@ -467,9 +464,9 @@ class FuncionesUtiles {
                     " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
         }
-        if (!groupBy.equals("")){ sql = sql + " GROUP BY " + groupBy }
-        if (!orderBy.equals("")){ sql = sql + " ORDER BY " + orderBy }
-        tvVendedor!!.setText("Todos")
+        if (!groupBy.equals("")){ sql = "$sql GROUP BY $groupBy" }
+        if (!orderBy.equals("")){ sql = "$sql ORDER BY $orderBy" }
+        tvVendedor!!.text = "Todos"
         return consultar(sql)
     }
     fun buscar (tabla: String, campos:String?,groupBy:String?,orderBy:String?,where:String) : Cursor{
@@ -588,7 +585,7 @@ class FuncionesUtiles {
     fun tiempoTranscurrido(fecha1:String,fecha2:String):Int{
         var diferencia : Long = (fechaHora(fecha2).time/60000) - (fechaHora(fecha1).time / 60000)
         if (diferencia<0){
-            diferencia = diferencia * (-1)
+            diferencia *= (-1)
         }
         return diferencia.toInt()
     }
@@ -935,6 +932,14 @@ class FuncionesUtiles {
             return datoEntero(consultar(sql),"INT_MARCACION")
         } else {
             return 0
+        }
+    }
+    fun getRangoDistancia(): Int {
+        var sql = "SELECT RANGO from svm_vendedor_pedido  where COD_VENDEDOR = '${usuario["LOGIN"]}'"
+        return if (consultar(sql).count>0){
+            datoEntero(consultar(sql),"RANGO")
+        } else {
+            0
         }
     }
     fun dialogoEntrada(et:EditText,context: Context){
