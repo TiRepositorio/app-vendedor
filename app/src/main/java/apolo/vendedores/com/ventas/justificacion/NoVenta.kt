@@ -23,7 +23,7 @@ import kotlin.math.roundToInt
 
 @Suppress("NAME_SHADOWING")
 class NoVenta(private val codCliente: String, private val codSubcliente:String,
-              private val lm:LocationManager, private val telMgr: TelephonyManager,
+              private val lm:LocationManager?, private val telMgr: TelephonyManager?,
               private val latitud:String, private val longitud: String) {
 
     companion object{
@@ -31,6 +31,9 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         lateinit var etAccion : EditText
         var resultado = ""
         var noVenta  = ""
+        var modificacion = false
+        var editable = false
+        var nuevo = true
         var id = ""
         fun actualizaEstadoEnvioMarcacion(idMarcacion: String) {
             var idMarcacion = idMarcacion
@@ -61,8 +64,13 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun cargarDialogo(){
-        if (!validacion("Abrir")){
-            return
+        if (lm != null) {
+            if (verificaMarcacionCliente()){
+                return
+            }
+            if (!validacion("Abrir")) {
+                return
+            }
         }
 
         marcarNoVenta()
@@ -71,14 +79,14 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun validacion(trigger:String) : Boolean {
-        ubicacion.obtenerUbicacion(lm)
-        if (!ubicacion.validaUbicacionSimulada(lm)) { return false }
+        ubicacion.obtenerUbicacion(lm!!)
+        if (!ubicacion.validaUbicacionSimulada(lm!!)) { return false }
         if (!dispositivo.horaAutomatica()) { return false }
         if (!dispositivo.modoAvion()){ return false }
         if (!dispositivo.zonaHoraria()){ return false }
         if (!dispositivo.fechaCorrecta()){ return false }
-        if (!dispositivo.tarjetaSim(telMgr)){ return false }
-        if (!ubicacion.ubicacionActivada(lm)){
+        if (!dispositivo.tarjetaSim(telMgr!!)){ return false }
+        if (!ubicacion.ubicacionActivada(lm!!)){
             ubicacion.latitud  = ""
             ubicacion.longitud = ""
             etAccion.setText("abrirUbicacion")
@@ -119,7 +127,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     private fun verificaMarcacionCliente(): Boolean {
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 				"
                 + "  from vt_marcacion_ubicacion             			"
-                + " where TIPO           IN ('E','S')                 	"
+                + " where TIPO           IN ('E')                 	"
                 + "   and COD_CLIENTE    = '" + codCliente + "' "
                 + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
                 + "   and FECHA          = '${funcion.getFechaActual()}'}"
@@ -190,56 +198,62 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
                 conSpinner.adapter = adapter
                 conSpinner.setSelection(0)
-                alertMotivos.setPositiveButton("Enviar") { _, _ ->
-                    val horaAlta: String = funcion.getHoraActual()!!
-                    guardaMarcacionVisita(
-                        "1",
-                        ListaClientes.codSucursalCliente,
-                        codCliente,
-                        codSubcliente,
-                        ListaClientes.codVendedor,
-                        listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
-                        observacion.text.toString(),
-                        fecha.substring(0, 10),
-                        ubicacion.latitud,
-                        ubicacion.longitud,
-                        horaAlta
-                    )
-                    noVenta = "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
-                            "'" + codCliente + "'," + "'" + codSubcliente + "'," + "'" + ListaClientes.codVendedor + "'," +
-                            "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
-                            "'" + observacion.text.toString() + "'," + "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
-                            "to_date('" + fecha.substring(0, 10) +
-                            " " + horaAlta + "','dd/MM/yyyy hh24:mi:ss')," +
-                            "'" + ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
-                    if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
-                          cerrarSalidaCliente()
-                        }
-                    }
-                    EnviarPositivacion2().execute()
-                }
-                alertMotivos.setNeutralButton("Guardar") { _, _ ->
-                    val horaAlta: String = funcion.getHoraActual()!!
-                    guardaMarcacionVisita(
-                        "1",
-                        ListaClientes.codSucursalCliente,
-                        ListaClientes.codCliente,
-                        ListaClientes.codSubcliente,
-                        ListaClientes.codVendedor,
-                        listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
-                        observacion.text.toString(),
-                        fecha.substring(0, 10),
-                        ubicacion.latitud,
-                        ubicacion.longitud,
-                        horaAlta
-                    )
-                    if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                if (modificacion && editable){
+                    alertMotivos.setPositiveButton("Enviar") { _, _ ->
+                        val horaAlta: String = funcion.getHoraActual()!!
+                        guardaMarcacionVisita(
+                            "1",
+                            ListaClientes.codSucursalCliente,
+                            codCliente,
+                            codSubcliente,
+                            ListaClientes.codVendedor,
+                            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
+                            observacion.text.toString(),
+                            fecha.substring(0, 10),
+                            ubicacion.latitud,
+                            ubicacion.longitud,
+                            horaAlta
+                        )
+                        noVenta = "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                                "'" + codCliente + "'," + "'" + codSubcliente + "'," + "'" + ListaClientes.codVendedor + "'," +
+                                "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
+                                "'" + observacion.text.toString() + "'," + "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
+                                "to_date('" + fecha.substring(0, 10) +
+                                " " + horaAlta + "','dd/MM/yyyy hh24:mi:ss')," +
+                                "'" + ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
+                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
+                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
                                 cerrarSalidaCliente()
+                            }
                         }
+                        EnviarPositivacion2().execute()
                     }
-                    Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
+                }
+                if (modificacion && editable) {
+                    alertMotivos.setNeutralButton("Guardar") { _, _ ->
+                        val horaAlta: String = funcion.getHoraActual()!!
+                        guardaMarcacionVisita(
+                            "1",
+                            ListaClientes.codSucursalCliente,
+                            ListaClientes.codCliente,
+                            ListaClientes.codSubcliente,
+                            ListaClientes.codVendedor,
+                            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
+                            observacion.text.toString(),
+                            fecha.substring(0, 10),
+                            ubicacion.latitud,
+                            ubicacion.longitud,
+                            horaAlta
+                        )
+                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString()
+                                .trim() != ""
+                        ) {
+                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                                cerrarSalidaCliente()
+                            }
+                        }
+                        Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
+                    }
                 }
                 alertMotivos.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
                 val motivos: AlertDialog = alertMotivos.create()
@@ -284,6 +298,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             observacion.setText(observacion2)
             observacion.width = 60
             observacion.setLines(3)
+            observacion.isEnabled = modificacion && editable
             val layout = LinearLayout(context)
             layout.orientation = LinearLayout.VERTICAL
             layout.addView(conSpinner)
@@ -298,55 +313,61 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             conSpinner.adapter = adapter
             conSpinner.setSelection(1)
             conSpinner.setSelection(positionMotivo)
-            alertMotivos.setPositiveButton("OK") { dialog, _ ->
-                if (consultar) {
-                    dialog.cancel()
-                } else {
-                    noVenta =
-                        "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
-                                "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
-                                "'" + ListaClientes.codVendedor + "'," +
-                                "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
-                                "'" + observacion.text.toString() + "'," +
-                                "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
-                                "to_date('" + fecha.substring(0, 10) + " " +
-                                horaAlta + "','dd/MM/yyyy hh24:mi:ss')," + "'" +
-                                ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
-                    if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+            conSpinner.isEnabled = nuevo
+            if (modificacion && editable) {
+                alertMotivos.setPositiveButton("OK") { dialog, _ ->
+                    if (consultar) {
+                        dialog.cancel()
+                    } else {
+                        noVenta =
+                            "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                                    "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
+                                    "'" + ListaClientes.codVendedor + "'," +
+                                    "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
+                                    "'" + observacion.text.toString() + "'," +
+                                    "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
+                                    "to_date('" + fecha.substring(0, 10) + " " +
+                                    horaAlta + "','dd/MM/yyyy hh24:mi:ss')," + "'" +
+                                    ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
+                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString()
+                                .trim() != ""
+                        ) {
+                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
                                 cerrarSalidaCliente()
+                            }
                         }
-                    }
                         EnviarPositivacion2().execute()
+                    }
                 }
             }
-            if (!consultar)
-            {
+            if (!consultar) {
+                if (modificacion && editable) {
                 alertMotivos.setNeutralButton("Guardar") { _, _ ->
-                    try {
-                        actualizaMarcacionVisita(
-                            "1",
-                            ListaClientes.codSucursalCliente,
-                            codCliente,
-                            codSubcliente,
-                            ListaClientes.codVendedor,
-                            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
-                            observacion.text.toString(),
-                            fecha.substring(0, 10),
-                            ubicacion.latitud,
-                            ubicacion.longitud,
-                            id
-                        )
-                    } catch (e: Exception) {
-                        val err = e.message
-                        Toast.makeText(context, err, Toast.LENGTH_LONG).show()
-                    }
-                    if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
-                          cerrarSalidaCliente()
+                        try {
+                            actualizaMarcacionVisita(
+                                "1",
+                                ListaClientes.codSucursalCliente,
+                                codCliente,
+                                codSubcliente,
+                                ListaClientes.codVendedor,
+                                listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
+                                observacion.text.toString(),
+                                fecha.substring(0, 10),
+                                ubicacion.latitud,
+                                ubicacion.longitud,
+                                id
+                            )
+                        } catch (e: Exception) {
+                            val err = e.message
+                            Toast.makeText(context, err, Toast.LENGTH_LONG).show()
                         }
+                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
+                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                              cerrarSalidaCliente()
+                            }
+                        }
+                        Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
                     }
-                    Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
                 }
             } else
             {
@@ -362,25 +383,25 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
     }
 
-    private fun guardaMarcacionVisita(cod_empresa: String, cod_sucursal: String,
-                                      cod_cliente: String, cod_subcliente: String,
-                                      cod_vendedor: String, cod_motivo: String,
+    private fun guardaMarcacionVisita(codEmpresa: String, codSucursal: String,
+                                      codCliente: String, codSubcliente: String,
+                                      codVendedor: String, codMotivo: String,
                                       observacion: String, fecha: String,
                                       latitud: String, longitud: String,
-                                      hora_alta: String) {
+                                      horaAlta: String) {
         val cv = ContentValues()
-        cv.put("COD_EMPRESA", cod_empresa)
-        cv.put("COD_SUCURSAL", cod_sucursal)
-        cv.put("COD_CLIENTE", cod_cliente)
-        cv.put("COD_SUBCLIENTE", cod_subcliente)
-        cv.put("COD_VENDEDOR", cod_vendedor)
-        cv.put("COD_MOTIVO", cod_motivo)
+        cv.put("COD_EMPRESA", codEmpresa)
+        cv.put("COD_SUCURSAL", codSucursal)
+        cv.put("COD_CLIENTE", codCliente)
+        cv.put("COD_SUBCLIENTE", codSubcliente)
+        cv.put("COD_VENDEDOR", codVendedor)
+        cv.put("COD_MOTIVO", codMotivo)
         cv.put("OBSERVACION", observacion)
         cv.put("FECHA", fecha)
         cv.put("LATITUD", latitud)
         cv.put("LONGITUD", longitud)
         cv.put("ESTADO", "P")
-        cv.put("HORA_ALTA", hora_alta)
+        cv.put("HORA_ALTA", horaAlta)
         MainActivity2.bd!!.insert("vt_marcacion_visita", null, cv)
     }
 

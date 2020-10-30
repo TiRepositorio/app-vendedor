@@ -46,7 +46,8 @@ class DialogoMenu(var context: Context) {
     fun venta():ArrayList<ItemAbrir>{
         val lista:ArrayList<ItemAbrir> = ArrayList()
         lista.add(item((R.drawable.ic_venta).toString(),"Realizar venta",Intent(context,apolo.vendedores.com.ventas.Promotores::class.java)))
-        lista.add(item((R.drawable.ic_buscar).toString(),"Consultar",Intent(context,VentanaAuxiliar::class.java)))
+        lista.add(item((R.drawable.ic_buscar).toString(),"Datos de clientes",Intent(context,apolo.vendedores.com.ventas.ConsultaDatosDeCliente::class.java)))
+        lista.add(item((R.drawable.ic_buscar).toString(),"Clientes no visitados",Intent(context,apolo.vendedores.com.ventas.ConsultaClientesNoPositivados::class.java)))
         lista.add(item((R.drawable.ic_catastrar).toString(),"Catastar",Intent(context,VentanaAuxiliar::class.java)))
         lista.add(item((R.drawable.ic_reunion).toString(),"Marcar reunión",Intent(context,VentanaAuxiliar::class.java)))
         lista.add(item((R.drawable.ic_calendario).toString(),"Modificar día de visita",Intent(context,VentanaAuxiliar::class.java)))

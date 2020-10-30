@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro"
+    tools:context=".ventas.Promociones">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/barra_vendedores"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/textoClaro">
+        <EditText
+            android:id="@+id/accionPromocion"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:inputType="none"
+            android:editable="false"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/textoClaro">
+        <CheckBox
+            android:id="@+id/cbBonificacion"
+            android:text="Bonificación"
+            android:layout_weight="1"
+            android:textSize="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buscarPromociones"/>
+        <CheckBox
+            android:id="@+id/cbMonto"
+            android:text="Desc. Monto"
+            android:layout_weight="1"
+            android:textSize="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buscarPromociones"/>
+        <CheckBox
+            android:id="@+id/cbCantidad"
+            android:text="Desc. Cant."
+            android:layout_weight="1"
+            android:textSize="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buscarPromociones"/>
+        <CheckBox
+            android:id="@+id/cbCombo"
+            android:text="Combo"
+            android:layout_weight="1"
+            android:textSize="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buscarPromociones"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_weight="1.5"
+                android:text="Vigencia"
+                style="@style/cabeceraSubTabla"/>
+            <TextView
+                android:layout_weight="1"
+                android:text="Descripción"
+                android:gravity="start|center_vertical"
+                style="@style/cabeceraSubTabla"/>
+            <TextView
+                android:layout_weight="1.7"
+                android:text="Nro."
+                android:gravity="end|center_vertical"
+                style="@style/cabeceraSubTabla"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvPromocionCabecera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_height="100dp"
+                android:gravity="start|center_vertical"
+                android:id="@+id/tvComentario"
+                android:background="@color/textoClaro"
+                style="@style/textoTabla"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cargar"
+            android:onClick="cargarPromocion"/>
+    </LinearLayout>
+</LinearLayout>

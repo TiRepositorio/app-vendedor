@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="60dp"
+            android:gravity="end|center_vertical"
+            android:text="Codigo"
+            style="@style/textoSubTabla" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="190dp"
+            android:gravity="start|center_vertical"
+            android:text="Descripción"
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="50dp"
+            android:gravity="end|center_vertical"
+            android:text="Cant."
+            style="@style/textoSubTabla"/>
+        <TextView
+            android:id="@+id/tv4"
+            android:layout_width="100dp"
+            android:gravity="end|center_vertical"
+            android:text="P. Unitario"
+            style="@style/textoSubTabla"/>
+
+        <TextView
+            android:id="@+id/tv5"
+            android:layout_width="120dp"
+            android:gravity="end|center_vertical"
+            android:text="Total"
+            style="@style/textoSubTabla"/>
+
+    </TableRow>
+
+</LinearLayout>
+

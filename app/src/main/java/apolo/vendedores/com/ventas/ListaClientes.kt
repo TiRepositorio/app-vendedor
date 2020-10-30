@@ -267,14 +267,14 @@ class ListaClientes : AppCompatActivity() {
 
     private fun modificar(){
         if (FuncionesUtiles.listaDetalle.size==0){return}
+        ModificarCliente.editable = true
         val modifcar = Intent(this,ModificarCliente::class.java)
         startActivity(modifcar)
     }
 
     private fun vender(){
-//        Pedidos.nuevo = true
-//        var vender : Intent = Intent(this,Pedidos::class.java)
-//        startActivity(vender)
+        Pedidos.nuevo = true
+        startActivity(Intent(this,Pedidos::class.java))
     }
 
     private fun sd(){
@@ -284,6 +284,9 @@ class ListaClientes : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun noVenta(){
+        NoVenta.modificacion = true
+        NoVenta.editable = true
+        NoVenta.nuevo = true
         NoVenta.etAccion = accion
         NoVenta.context = this
         val noVenta = NoVenta(codCliente, codSubcliente, lm, telMgr, latitud, longitud)

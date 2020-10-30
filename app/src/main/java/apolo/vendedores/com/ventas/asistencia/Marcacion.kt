@@ -28,7 +28,6 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
-
 class Marcacion : AppCompatActivity() {
     companion object{
         lateinit var latitud : String
@@ -59,7 +58,7 @@ class Marcacion : AppCompatActivity() {
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (!validacion("Abrir")){
-//            finish()
+            finish()
         }
         inicializaElementos()
         cargarMarcaciones()
@@ -101,12 +100,12 @@ class Marcacion : AppCompatActivity() {
                 ubicacion.longitud.toDouble(),
                 longitud.toDouble()) * 1000
             if (distanciaCliente > funcion.getRangoDistancia()) {
-                if (trigger.trim() == "Abrir"){
-//                    funcion.mensaje(this,"Error","La ventana no se va a abrir.")
-                    return false
-                }
                 if(verificaMarcacionCliente()){
                     funcion.toast(this,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
+                    if (trigger.trim() == "Abrir"){
+//                    funcion.mensaje(this,"Error","La ventana no se va a abrir.")
+                        return false
+                    }
                     val autorizacion = DialogoAutorizacion(this)
                         autorizacion.dialogoAutorizacion(trigger,accion)
                 }else{

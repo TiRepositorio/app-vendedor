@@ -97,7 +97,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         evolucionDiaria()
         nav_view_menu.setNavigationItemSelectedListener(this)
-
+//        funcion.ejecutar("drop table if exists vt_pedidos_det",this)
+//        funcion.ejecutar("drop table if exists vt_pedidos_cab",this)
     }
 
     @SuppressLint("SetTextI18n")
@@ -127,10 +128,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         } else {
             FuncionesUtiles.usuario["CONF"] = "N"
             if (nav_view_menu.headerCount>0) {
-                nav_view_menu.getHeaderView(0).findViewById<TextView>(R.id.tvNombreVend)
-                    .text = "Ingrese el nombre del promotor"
-                nav_view_menu.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoVend)
-                    .text = "12345"
+                nav_view_menu.getHeaderView(0).findViewById<TextView>(R.id.tvNombreVend).text = "Ingrese el nombre del promotor"
+                nav_view_menu.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoVend).text = "12345"
             }
             return false
         }

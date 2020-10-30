@@ -1,5 +1,6 @@
 package apolo.vendedores.com.utilidades
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -128,5 +129,34 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.setCancelable(true)
         dialogo.show()
     }
+
+    fun dialogoAutorizacion(accion:String, noAccion: String, cargaAcion : EditText, mensaje:String){
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+//        var claveTemp : String = "54127854"
+        val claveTemp : String = claves.generaClave()
+        dialogo.setTitle("Solicitar autorizacion")
+
+        dialogo.setMessage("$mensaje \n$claveTemp")
+        val contraClave = EditText(context)
+        contraClave.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogo.setView(contraClave)
+        dialogo.setPositiveButton("OK") { _: DialogInterface, _: Int ->
+            if (contraClave.text.isEmpty()||contraClave.text.length != 8){
+                cargaAcion.setText("$noAccion*${contraClave.text}*")
+                funcion.mensaje("Error","Clave incorrecta")
+            } else {
+                if (contraClave.text.toString().trim() == claves.contraClave(claveTemp).trim()){
+                    cargaAcion.setText("$accion*${contraClave.text}*")
+                    funcion.mensaje("Correcto","La clave fue aceptada")
+                } else {
+                    cargaAcion.setText("$noAccion*${contraClave.text}*")
+                    funcion.mensaje("Error","La clave no es valida")
+                }
+            }
+        }
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
+
 
 }

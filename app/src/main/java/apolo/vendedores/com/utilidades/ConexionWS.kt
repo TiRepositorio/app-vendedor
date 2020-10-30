@@ -7,7 +7,6 @@ import android.os.Build
 import android.util.Base64
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
-import apolo.vendedores.com.ventas.ListaClientes
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapPrimitive
@@ -28,15 +27,14 @@ class ConexionWS {
         private var SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
 
-    fun setMethodName(name : String) {
+    private fun setMethodName(name : String) {
         METHOD_NAME = name
         SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
 
     fun procesaVersion(codVendedor: String):String{
         lateinit var resultado: String
-        METHOD_NAME = "ProcesaVersionVendedorAct"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaVersionVendedorAct"
+        setMethodName("ProcesaVersionVendedorAct")
 
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
@@ -60,8 +58,7 @@ class ConexionWS {
     }
 
     fun generaArchivos()  : Boolean{
-        METHOD_NAME = "GeneraArchivosVendedor_Act"
-        SOAP_ACTION = "http://edsystem/servidor/GeneraArchivosVendedor_Act"
+        setMethodName("GeneraArchivosVendedor_Act")
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
         try {
@@ -92,8 +89,7 @@ class ConexionWS {
 
     @TargetApi(Build.VERSION_CODES.O)
     fun obtenerArchivos(): Boolean{
-        METHOD_NAME = "ObtieneArchivosVendedor"
-        SOAP_ACTION = "http://edsystem/servidor/ObtieneArchivosVendedor"
+        setMethodName("ObtieneArchivosVendedor")
         lateinit var solicitud : SoapObject
         lateinit var resultado : Vector<SoapPrimitive>
         try {
@@ -169,8 +165,7 @@ class ConexionWS {
 
     //enviar marcaciones
     fun procesaMarcacionAsistencia(codVendedor: String,vMarcaciones:String) : String{
-        METHOD_NAME = "ProcesaMarcacionProm"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaMarcacionProm"
+        setMethodName("ProcesaMarcacionProm")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
@@ -199,8 +194,7 @@ class ConexionWS {
         return resultado
     }
     fun procesaMarcacionAsistenciaAct(codVendedor: String,vMarcaciones:String) : String{
-        METHOD_NAME = "ProcesaMarcacionAsistenciaAct"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaMarcacionAsistenciaAct"
+        setMethodName("ProcesaMarcacionAsistenciaAct")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
@@ -230,8 +224,7 @@ class ConexionWS {
     }
 
     fun procesaEnviaSolicitudSD(codRepartidor:String,cabecera:String,detalle:String) : String{
-        METHOD_NAME = "ProcesaAutorizaSDVend"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaAutorizaSDVend"
+        setMethodName("ProcesaAutorizaSDVend")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
@@ -262,8 +255,7 @@ class ConexionWS {
     }
 
     fun procesaEnviaNuevaUbicacionCliente( codVendedor: String, codCliente:String, imagenFachada:String) : String{
-        METHOD_NAME = "ProcesaActualizaClienteFinal"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaActualizaClienteFinal"
+        setMethodName("ProcesaActualizaClienteFinal")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
@@ -294,8 +286,7 @@ class ConexionWS {
 
     //Enviar datos modificados del cliente
     fun procesaActualizaDatosClienteFinal(codVendedor: String?, clientes: String, FotoFachada: String?): String? {
-        METHOD_NAME = "ProcesaActualizaClienteFinal"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaActualizaClienteFinal"
+        setMethodName("ProcesaActualizaClienteFinal")
         val solicitud: SoapObject?
         val resultado: String?
         try {
@@ -327,8 +318,7 @@ class ConexionWS {
     }
 
     fun obtieneInstalador(): Boolean {
-        METHOD_NAME = "ProcesaInstaladorGestores"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaInstaladorGestores"
+        setMethodName("ProcesaInstaladorGestores")
         val request: SoapObject?
         val vers = "05"
 
@@ -360,8 +350,7 @@ class ConexionWS {
     }
 
     fun procesaNoVenta(noVenta: String, codVendedor: String): String {
-        METHOD_NAME = "ProcesaNoVenta"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaNoVenta"
+        setMethodName("ProcesaNoVenta")
         val request: SoapObject
         try {
             request = SoapObject(NAMESPACE, METHOD_NAME)
@@ -379,7 +368,7 @@ class ConexionWS {
         envelope.dotNet = false
         envelope.setOutputSoapObject(request)
         val transporte = HttpTransportSE(URL)
-        var res = ""
+        var res: String
         res = try {
             transporte.call(SOAP_ACTION, envelope)
             val resultadoXml = envelope.response as SoapPrimitive
@@ -391,6 +380,35 @@ class ConexionWS {
             res = "01*Ya se guardo la justificacion"
         }
         return res
+    }
+
+    fun enviarPedido(cabecera:String,detalle:String,nroComprobante:String,codVendedor: String): String? {
+        setMethodName("ProcesaPedido")
+        val request = SoapObject(NAMESPACE, METHOD_NAME)
+        request.addProperty("usuario", "edsystem")
+        request.addProperty("password", "#edsystem@polo")
+        request.addProperty("codEmpresa", "1")
+        request.addProperty("tipComprobante", "PRO")
+        request.addProperty("serComprobante", codVendedor)
+        request.addProperty("nroComprobante", nroComprobante)
+        request.addProperty("cabecera", cabecera)
+        request.addProperty("detalle", detalle)
+        val envelope = SoapSerializationEnvelope(
+            SoapEnvelope.VER11
+        )
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(request)
+        val transporte = HttpTransportSE(URL, 240000)
+        val res: String
+        try {
+            transporte.call(SOAP_ACTION, envelope)
+            val resultadoXml = envelope.response as SoapPrimitive
+            res = resultadoXml.toString()
+            resultado = res
+        } catch (e: java.lang.Exception) {
+            resultado = e.message.toString()
+        }
+        return resultado
     }
 
 }

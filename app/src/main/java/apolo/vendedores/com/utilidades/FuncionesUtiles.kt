@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.database.Cursor
 import android.text.InputType
+import android.text.method.DigitsKeyListener
 import android.view.View
 import android.widget.*
 import androidx.core.view.GravityCompat
@@ -356,8 +357,8 @@ class FuncionesUtiles {
         return cursor.getDouble(cursor.getColumnIndex(index))
     }
     fun datoPorcentaje(cursor: Cursor,totalS:String, valorS:String):Double{
-        var total: Double = 0.0
-        var valor: Double = 0.0
+        var total = 0.0
+        var valor = 0.0
 
         total = cursor.getString(cursor.getColumnIndex(totalS)).replace(".","").replace(",",".").replace("%","").toDouble()
         valor = cursor.getString(cursor.getColumnIndex(valorS)).replace(".","").replace(",",".").replace("%","").toDouble()
@@ -498,6 +499,26 @@ class FuncionesUtiles {
 //        }
         return consultar(sql)
     }
+    fun ultPedidoVenta(codVendedor: String):Int{
+        val sql : String = ("SELECT NUMERO MAXIMO FROM svm_vendedor_pedido  WHERE COD_VENDEDOR = '${codVendedor}'")
+        return datoEntero(consultar(sql),"MAXIMO")
+    }
+    fun cargarDatos(cursor: Cursor):ArrayList<HashMap<String,String>>{
+        var lista = ArrayList<HashMap<String,String>>()
+        for (i in 0 until cursor.count){
+            var dato : HashMap<String,String> = HashMap<String,String>()
+            for (j in 0 until cursor.columnCount){
+                try {dato.put(cursor.getColumnName(j),dato(cursor,cursor.getColumnName(j)))} catch (e:Exception){}
+            }
+            lista.add(dato)
+            cursor.moveToNext()
+        }
+        return lista
+    }
+    fun minVenta(codVendedor: String):Double{
+        val sql : String = ("SELECT * FROM svm_vendedor_pedido WHERE COD_VENDEDOR = '${codVendedor}'")
+        return datoDecimal(consultar(sql),"MIN_VENTA")
+    }
 
     //FUNCIONES DE FORMATO DE NUMEROS
     fun entero(entero: String):String{
@@ -508,6 +529,9 @@ class FuncionesUtiles {
     }
     fun entero(entero: Int):String{
         return formatoNumeroEntero.format(entero)
+    }
+    fun aEntero(numero:String):Int{
+        return numero.replace(".","").toInt()
     }
     fun enteroCliente(entero: String):String{
         if (entero.trim().equals("")){
@@ -942,6 +966,14 @@ class FuncionesUtiles {
             0
         }
     }
+    fun getIndPalm(codVendedor:String): String {
+        val sql = "SELECT IND_PALM from svm_vendedor_pedido  WHERE COD_VENDEDOR = '${codVendedor}'"
+        return if (consultar(sql).count>0){
+            dato(consultar(sql),"IND_PALM")
+        } else {
+            "N"
+        }
+    }
     fun dialogoEntrada(et:EditText,context: Context){
         var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         var entrada:EditText = EditText(context)
@@ -988,6 +1020,27 @@ class FuncionesUtiles {
         dialogo.setCancelable(false)
         dialogo.show()
     }
+    fun dialogoEntradaNumeroDecimal(et:EditText,context: Context){
+        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        var entrada:EditText = EditText(context)
+        dialogo.setTitle(et.hint)
+        dialogo.setView(entrada)
+//        entrada.inputType = InputType.TYPE_CLASS_PHONE
+        entrada.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
+        entrada.keyListener = DigitsKeyListener.getInstance(false,true)
+        entrada.text = et.text
+        if (et.text.toString().trim().equals("0")){
+            entrada.setText("")
+        }
+        dialogo.setPositiveButton("OK", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int ->
+            if (entrada.text.trim().equals("") || entrada.text.trim().equals("null") || entrada.text.isEmpty()){
+                entrada.setText("0.0")
+            }
+            et.setText(decimal(entrada.text.toString().replace(",",".")))
+        })
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
 
     //DATOS
     fun codPersona():String{
@@ -1001,11 +1054,17 @@ class FuncionesUtiles {
             return dato(cursor,"COD_PERSONA")
         }
     }
+    fun maxDescuento():Double{
+        val sql : String = ("SELECT NUMERO MAXIMO, IND_PALM, ULTIMA_SINCRO, RANGO, MIN_FOTOS, "
+                +  "       MAX_FOTOS, IND_FOTO, "
+                +  "       VERSION, PER_VENDER  "
+                +  "  FROM svm_vendedor_pedido WHERE COD_SUPERVISOR = '${FuncionesUtiles.usuario.get("PASS")}'")
+        return datoDecimal(consultar(sql),"IND_PALM")
+    }
     fun ultimoNroOrden(tabla: String): Int {
         val cursor: Cursor
-        val sql: String
-        sql = ("SELECT  MAX(id),nro_orden FROM '" + tabla + "' "
-                + "where est_enviO= 'N'")
+        val sql: String = ("SELECT  MAX(id),nro_orden FROM '" + tabla + "' "
+                + "where est_envio= 'N'")
         cursor = consultar(sql)
         var id: String? = ""
         if (cursor.moveToFirst()) {
@@ -1020,10 +1079,9 @@ class FuncionesUtiles {
     }
     fun recalcularNroOrden(tabla: String,context: Context) {
         val cursor: Cursor
-        val sql: String
         var upd: String
-        sql = ("SELECT  id FROM '" + tabla + "' "
-                + "where est_enviO= 'N' ORDER BY id ASC ")
+        val sql: String = ("SELECT  id FROM '" + tabla + "' "
+                + "where est_envio= 'N' ORDER BY id ASC ")
         cursor = consultar(sql)
         val nreg = cursor.count
         cursor.moveToFirst()
@@ -1043,4 +1101,5 @@ class FuncionesUtiles {
         Toast.makeText(context,mensaje,Toast.LENGTH_SHORT).show()
     }
 
+    //DIALOGOS DE ENTRADA DE DATOS
 }

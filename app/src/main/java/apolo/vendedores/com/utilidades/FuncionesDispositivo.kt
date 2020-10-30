@@ -1,11 +1,13 @@
 package apolo.vendedores.com.utilidades
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
-import android.provider.Settings
+import android.provider.Settings.Global
+import android.provider.Settings.System
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.widget.Toast
@@ -16,15 +18,13 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class FuncionesDispositivo(var context: Context) {
 
     val funcion : FuncionesUtiles = FuncionesUtiles(context)
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun modoAvion():Boolean{
-        var valor : Int = 0
-        valor = Settings.Global.getInt(context.contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0)
+        val valor : Int = Global.getInt(context.contentResolver, Global.AIRPLANE_MODE_ON, 0)
         return if (valor != 0){
             Toast.makeText(context,"Debe desactivar el modo avion", Toast.LENGTH_LONG).show()
             false
@@ -33,51 +33,33 @@ class FuncionesDispositivo(var context: Context) {
         }
     }
 
+    @SuppressLint("DefaultLocale", "SimpleDateFormat")
     fun zonaHoraria(): Boolean {
-        val nowUtc = Date()
         val americaAsuncion: TimeZone = TimeZone.getTimeZone("America/Asuncion")
         val nowAmericaAsuncion: Calendar = Calendar.getInstance(americaAsuncion)
         val df: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm")
-        val phoneDateTime: String = df.format(Calendar.getInstance().getTime())
-        val zone_time = (java.lang.String.format(
-            "%02d",
-            nowAmericaAsuncion
-                .get(Calendar.HOUR_OF_DAY)
-        ) + ":"
-                + java.lang.String.format(
-            "%02d",
-            nowAmericaAsuncion
-                .get(Calendar.MINUTE)
-        ))
-        val zone_date = (java.lang.String.format(
-            "%02d",
-            nowAmericaAsuncion
-                .get(Calendar.DAY_OF_MONTH)
-        ) + "/"
-                + java.lang.String.format(
-            "%02d",
-            nowAmericaAsuncion
-                .get(Calendar.MONTH) + 1
-        )
+        val phoneDateTime: String = df.format(Calendar.getInstance().time)
+        val zoneTime = (java.lang.String.format("%02d", nowAmericaAsuncion.get(Calendar.HOUR_OF_DAY)) + ":" + java.lang.String.format("%02d", nowAmericaAsuncion.get(Calendar.MINUTE)))
+        val zoneDate = (java.lang.String.format("%02d", nowAmericaAsuncion
+                .get(Calendar.DAY_OF_MONTH)) + "/"
+                + java.lang.String.format("%02d", nowAmericaAsuncion
+                .get(Calendar.MONTH) + 1)
                 + "/"
                 + java.lang.String.format("%02d", nowAmericaAsuncion.get(Calendar.YEAR)))
-        val zone_date_time = "$zone_date $zone_time"
-        return if (phoneDateTime != zone_date_time) {
-            Toast.makeText(
-                context,
-                "La zona horaria no coincide con America/Asuncion",
-                Toast.LENGTH_SHORT
-            ).show()
+        val zoneDateTime = "$zoneDate $zoneTime"
+        return if (phoneDateTime != zoneDateTime) {
+            Toast.makeText(context, "La zona horaria no coincide con America/Asuncion", Toast.LENGTH_SHORT).show()
             false
         } else {
             true
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun fechaCorrecta(): Boolean {
-        var sql : String = "SELECT distinct IFNULL(FECHA,'01/01/2020') AS ULTIMA_SINCRO FROM svm_vendedor_pedido order by id desc"
-        var cursor:Cursor = funcion.consultar(sql)
-        var fecUltimaSincro:String = ""
+        val sql = "SELECT distinct IFNULL(FECHA,'01/01/2020') AS ULTIMA_SINCRO FROM svm_vendedor_pedido order by id desc"
+        val cursor:Cursor = funcion.consultar(sql)
+        var fecUltimaSincro = ""
         if (cursor.count > 0) {
             fecUltimaSincro = funcion.dato(cursor,"ULTIMA_SINCRO")
         }
@@ -94,41 +76,29 @@ class FuncionesDispositivo(var context: Context) {
         }
         val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
         return if (diffInDays != 0) {
-            Toast.makeText(
-                context,
-                "La fecha actual del sistema no coincide con la fecha de sincronizacion",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(context, "La fecha actual del sistema no coincide con la fecha de sincronizacion", Toast.LENGTH_SHORT).show()
             false
         } else {
             true
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun getFechaActual():String{
         val dfDate = SimpleDateFormat("dd/MM/yyyy")
         val cal = Calendar.getInstance()
-        return dfDate.format(cal.getTime()) + ""
+        return dfDate.format(cal.time) + ""
     }
 
     fun tarjetaSim(telMgr:TelephonyManager): Boolean {
         var state = true
-        val simState = telMgr!!.simState
-        when (simState) {
+        when (telMgr.simState) {
             TelephonyManager.SIM_STATE_ABSENT -> {
-                Toast.makeText(
-                    context,
-                    "Insertar SIM para realizar la operacion",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, "Insertar SIM para realizar la operacion", Toast.LENGTH_SHORT).show()
                 state = false
             }
             TelephonyManager.SIM_STATE_UNKNOWN -> {
-                Toast.makeText(
-                    context,
-                    "Insertar SIM para realizar la operacion",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, "Insertar SIM para realizar la operacion", Toast.LENGTH_SHORT).show()
                 state = false
             }
         }
@@ -137,41 +107,17 @@ class FuncionesDispositivo(var context: Context) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun imei(telMgr:TelephonyManager) : String {
-        var state = true
-        if (ActivityCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return "No tiene permisos"
         }
-        return telMgr!!.deviceId
+        return telMgr.deviceId
     }
 
     fun horaAutomatica(): Boolean {
-        if (Settings.System.getInt(
-                context.getContentResolver(),
-                Settings.System.AUTO_TIME,
-                0
-            ) != 1
-            || Settings.System.getInt(
-                context.getContentResolver(),
-                Settings.System.AUTO_TIME_ZONE,
-                0
-            ) != 1
+        if (System.getInt(context.contentResolver, System.AUTO_TIME, 0) != 1
+            || System.getInt(context.contentResolver, System.AUTO_TIME_ZONE, 0) != 1
         ) {
-            Toast.makeText(
-                context,
-                "Debe configurar su hora de manera automatica",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(context, "Debe configurar su hora de manera automatica", Toast.LENGTH_LONG).show()
             return false
         }
         return true
@@ -208,12 +154,12 @@ class FuncionesDispositivo(var context: Context) {
     }
 
     fun verificaRoot():Boolean{
-        try {
+        return try {
             Runtime.getRuntime().exec("su")
             funcion.mensaje(context,"Atención","El teléfono está rooteado.")
-            return false
+            false
         } catch (e : java.lang.Exception) {
-            return true
+            true
         }
     }
 

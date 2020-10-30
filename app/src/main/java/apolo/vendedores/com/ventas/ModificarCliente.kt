@@ -18,6 +18,7 @@ class ModificarCliente : AppCompatActivity() {
     companion object{
         var codCliente : String = ""
         var codSubcliente : String = ""
+        var editable = false
     }
 
     var funcion : FuncionesUtiles = FuncionesUtiles()
@@ -44,6 +45,7 @@ class ModificarCliente : AppCompatActivity() {
         btnAceptar.setOnClickListener{registrar()}
         btnCancelar.setOnClickListener{finish()}
         inicializaETAccion(accion)
+        habilitar(editable)
     }
 
     private fun sqlModificar():String{
@@ -163,6 +165,19 @@ class ModificarCliente : AppCompatActivity() {
         EnviarModificacion.accion = accion
         val enviarModificacion = EnviarModificacion()
         enviarModificacion.enviar()
+    }
+
+    private fun habilitar(estado: Boolean){
+        etTel1.isEnabled = estado
+        cbConfirmado1.isEnabled = estado
+        etTel2.isEnabled = estado
+        cbConfirmado2.isEnabled = estado
+        etDireccion.isEnabled = estado
+        cbConfirmado3.isEnabled = estado
+        etCercaDe.isEnabled = estado
+        cbConfirmado4.isEnabled = estado
+        btnAceptar.isEnabled = estado
+        btnCancelar.isEnabled = estado
     }
 
 }

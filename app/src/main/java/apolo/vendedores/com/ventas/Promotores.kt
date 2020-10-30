@@ -16,13 +16,13 @@ import kotlinx.android.synthetic.main.barra_vendedores.*
 class Promotores : AppCompatActivity() {
 
     companion object{
-        var datos: HashMap<String, String> = HashMap<String, String>()
+        var datos: HashMap<String, String> = HashMap()
         lateinit var funcion : FuncionesUtiles
         lateinit var cursor: Cursor
-        var lista : ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
+        var lista : ArrayList<HashMap<String,String>> = ArrayList()
     }
 
-    var posicion = 0
+    private var posicion = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,21 +47,21 @@ class Promotores : AppCompatActivity() {
     }
 
     fun buscar(){
-        var campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
-        var groupBy = ""
-        var orderBy = "a.COD_VENDEDOR"
-        var tabla = " svm_cliente_vendedor a "
-        var where = ("")
+        val campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
+        val groupBy = ""
+        val orderBy = "a.COD_VENDEDOR"
+        val tabla = " svm_cliente_vendedor a "
+        val where = ("")
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()
     }
 
     fun cargarLista(cursor: Cursor){
-        lista = ArrayList<HashMap<String,String>>()
+        lista = ArrayList()
         for (i in 0 until cursor.count){
-            datos = HashMap<String,String>()
-            datos.put("COD_VENDEDOR",funcion.dato(cursor,"COD_VENDEDOR"))
-            datos.put("DESC_VENDEDOR",funcion.dato(cursor,"DESC_VENDEDOR"))
+            datos = HashMap()
+            datos["COD_VENDEDOR"] = funcion.dato(cursor,"COD_VENDEDOR")
+            datos["DESC_VENDEDOR"] = funcion.dato(cursor,"DESC_VENDEDOR")
             lista.add(datos)
             cursor.moveToNext()
         }
@@ -70,14 +70,14 @@ class Promotores : AppCompatActivity() {
     fun mostrar(){
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
         funcion.valores = arrayOf("COD_VENDEDOR", "DESC_VENDEDOR")
-        var adapter: Adapter.AdapterGenericoCabecera =
+        val adapter: Adapter.AdapterGenericoCabecera =
             Adapter.AdapterGenericoCabecera(this
                 ,lista
                 ,R.layout.ven_pro_lista_promotores
                 ,funcion.vistas
                 ,funcion.valores)
         lvPromotores.adapter = adapter
-        lvPromotores.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvPromotores.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             posicion = position
             FuncionesUtiles.posicionCabecera = position
             FuncionesUtiles.posicionDetalle  = 0
@@ -86,18 +86,18 @@ class Promotores : AppCompatActivity() {
         }
     }
 
-    fun realizarVenta(){
+    private fun realizarVenta(){
         if (lista.size==0){
             return
         }
-        var sql : String = "SELECT NUMERO MAXIMO, IND_PALM, PER_VENDER " +
+        val sql : String = "SELECT NUMERO MAXIMO, IND_PALM, PER_VENDER " +
                 "     FROM svm_vendedor_pedido " +
-                "    WHERE COD_VENDEDOR = '"+lista.get(posicion).get("COD_VENDEDOR")+"'"
+                "    WHERE COD_VENDEDOR = '"+ lista[posicion]["COD_VENDEDOR"] +"'"
 
-        var cursor:Cursor = funcion.consultar(sql)
+        val cursor:Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
-        var indPalm : String = "N"
-        var perVender : String = "M"
+        var indPalm = "N"
+        var perVender = "M"
         if (cursor.count > 0) {
             indPalm = funcion.dato(cursor,"IND_PALM")
             perVender = funcion.dato(cursor,"PER_VENDER")
@@ -105,10 +105,10 @@ class Promotores : AppCompatActivity() {
         }
 
 
-        if(indPalm.equals("S") && perVender.equals("S")){
+        if(indPalm == "S" && perVender == "S"){
 //            Pedidos.nuevo = true
 //            Pedidos.maximo = funcion.datoEntero(cursor,"MAXIMO")
-            ListaClientes.codVendedor = lista.get(posicion).get("COD_VENDEDOR").toString()
+            ListaClientes.codVendedor = lista[posicion]["COD_VENDEDOR"].toString()
             startActivity(Intent(this, ListaClientes::class.java))
         }else{
             funcion.mensaje(this,"Atención!","No posee permiso para vender en esta cartera!")
@@ -116,8 +116,8 @@ class Promotores : AppCompatActivity() {
 
     }
 
-    fun consultarPedidos() {
-//        ListaClientes.codVendedor = lista.get(posicion).get("COD_VENDEDOR").toString()
-//        startActivity(Intent(this,ConsultaPedidos::class.java))
+    private fun consultarPedidos() {
+        ListaClientes.codVendedor = lista[posicion]["COD_VENDEDOR"].toString()
+        startActivity(Intent(this,ConsultaPedidos::class.java))
     }
 }

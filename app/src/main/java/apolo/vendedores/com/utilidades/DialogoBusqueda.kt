@@ -131,7 +131,7 @@ class DialogoBusqueda {
                                             ,funcion.vistas
                                             ,funcion.valores)
         lvBusqueda.adapter = adapter
-        lvBusqueda.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvBusqueda.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             posicion = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvBusqueda.invalidateViews()
@@ -149,7 +149,7 @@ class DialogoBusqueda {
                 ,funcion.vistas
                 ,funcion.valores)
         lvBusqueda.adapter = adapter
-        lvBusqueda.setOnItemClickListener { parent: ViewGroup, view: View, position: Int, id: Long ->
+        lvBusqueda.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             posicion = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvBusqueda.invalidateViews()

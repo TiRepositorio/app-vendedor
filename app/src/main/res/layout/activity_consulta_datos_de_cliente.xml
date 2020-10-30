@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro"
+    tools:context=".ventas.ConsultaPedidos">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
+
+            <TextView
+                android:text="Desde: "
+                android:textColor="@color/textoClaro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/etDesde"/>
+
+            <EditText
+                android:id="@+id/etDesde"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:editable="false"
+                android:background="@color/textoClaro"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
+
+            <TextView
+                android:text="Hasta: "
+                android:textColor="@color/textoClaro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/etHasta"/>
+
+            <EditText
+                android:id="@+id/etHasta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:editable="false"
+                android:background="@color/textoClaro"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:background="#55009900">
+
+
+        <RadioGroup
+            android:id="@+id/rgFiltro"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbPendiente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pendiente"
+                android:textColor="@color/textoClaro"
+                android:textColorLink="@color/verdeApolo"/>
+
+            <RadioButton
+                android:id="@+id/rbEnviado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Enviado"
+                android:textColor="@color/textoClaro"
+                android:textColorLink="@color/verdeApolo"/>
+
+            <RadioButton
+                android:id="@+id/rbTodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Todo"
+                android:textColor="@color/textoClaro"
+                android:textColorLink="@color/verdeApolo"/>
+        </RadioGroup>
+
+        <ImageButton
+            android:id="@+id/imgBuscar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_buscar"
+            android:background="#55FFFFFF"
+            android:padding="3dp"/>
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="360dp"
+                    android:text="Cliente"
+                    android:gravity="start|center_horizontal"
+                    style="@style/cabeceraTabla"
+                    />
+
+                <TextView
+                    android:id="@+id/tv2"
+                    style="@style/cabeceraTabla"
+                    android:layout_width="90dp"
+                    android:layout_height="match_parent"
+                    android:text="Fecha" />
+                <TextView
+                    android:id="@+id/tv3"
+                    android:layout_width="90dp"
+                    android:text="Estado"
+                    style="@style/cabeceraTabla"
+                    />
+            </LinearLayout>
+            <ListView
+                android:id="@+id/lvConsultaDatosDeClientes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:background="@color/textoClaro">
+        <Button
+            android:id="@+id/btModificar"
+            android:text="Modificar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textColor="@color/textoClaro"
+            android:background="@color/verdeOscuro"/>
+        <Button
+            android:id="@+id/btConsultar"
+            android:text="Consultar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@color/quantum_deeporange900"
+            android:textColor="@color/textoClaro"/>
+        <Button
+            android:id="@+id/btEliminar"
+            android:text="Eliminar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@color/fondoFooter"
+            android:textColor="@color/textoClaro"/>
+
+    </LinearLayout>
+
+</LinearLayout>

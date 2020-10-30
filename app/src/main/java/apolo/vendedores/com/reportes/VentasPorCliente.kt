@@ -70,7 +70,7 @@ class VentasPorCliente : AppCompatActivity() {
         FuncionesUtiles.posicionCabecera = 0
         funcion.vistas = intArrayOf(
             R.id.tv1,
-            R.id.tv1,
+            R.id.tv2,
             R.id.tv3,
             R.id.tv4,
             R.id.tv5,

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/footerTabla"
+                android:layout_height="match_parent"
+                android:text="Detalle"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:background="@color/fondoFooter">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@color/fondoFooter">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    android:text="Ref:"
+                    style="@style/tvTitulo"/>
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="70dp"
+                    android:layout_height="25dp"
+                    android:background="#AAAAAA"
+                    android:layout_weight="1">
+                    <Spinner
+                        android:id="@+id/spReferenciaPromo"
+                        android:layout_width="fill_parent"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                        />
+                </androidx.gridlayout.widget.GridLayout>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    android:text="Prec:"
+                    style="@style/tvTitulo"/>
+
+                <TextView
+                    android:id="@+id/tvdPrecioReferenciaPromo"
+                    android:layout_width="match_parent"
+                    android:gravity="end"
+                    android:text="Cod:"
+                    android:layout_weight="1"
+                    style="@style/tvDetalle"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@color/fondoFooter">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    android:text="Can:"
+                    style="@style/tvTitulo"/>
+
+                <EditText
+                    android:id="@+id/tvdCantidadPromo"
+                    style="@style/tvDetalle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:hint="cantidad"
+                    android:inputType="number"
+                    android:text="0" />
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    android:text="Tot:"
+                    style="@style/tvTitulo"/>
+
+                <TextView
+                    android:id="@+id/tvdTotalPromo"
+                    android:layout_width="50dp"
+                    android:gravity="end"
+                    android:text="Desc:"
+                    android:layout_weight="1"
+                    style="@style/tvDetalle"/>
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/trCombo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="@color/fondoFooter"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    style="@style/tvTitulo"/>
+
+                <TextView
+                    style="@style/tvTitulo"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:inputType="none"
+                    android:editable="false"
+                    android:text="Cantidad de combo:" />
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:gravity="end"
+                    style="@style/tvTitulo"/>
+
+                <EditText
+                    android:id="@+id/tvdCantidadCombo"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:inputType="number"
+                    android:text="0"
+                    style="@style/tvDetalle"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvDetalleArticulo"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Detalle"
+                android:textSize="14dp"
+                android:background="@color/textoClaro"/>
+            <EditText
+                android:id="@+id/agregarPromocion"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:inputType="none"
+                android:editable="false"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="50dp"
+                        android:text="Cod."
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraSubTabla"/>
+                    <TextView
+                        android:layout_width="250dp"
+                        android:text="Descripción"
+                        android:gravity="start|center_vertical"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:gravity="end|center_vertical"
+                        android:text="Precio"
+                        style="@style/cabeceraSubTabla"/>
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lvPromocionDescuento"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btAgregarPromocion"
+            android:text="Agregar"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btCancelar"
+            android:text="Cancelar"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>
+</LinearLayout>

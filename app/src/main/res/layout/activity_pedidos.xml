@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ventas.Pedidos"
+    android:background="@color/fondoOscuro">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvCodCliente"
+            android:text="000-0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/textoCuadriculaOscura"/>
+        <TextView
+            android:id="@+id/tvDescCliente"
+            android:text="Descripcion"
+            android:gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/textoCuadriculaOscura"/>
+        <EditText
+            android:id="@+id/accion"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#AAAAAA"
+            android:layout_margin="10dp"
+            android:layout_weight="1">
+            <Spinner
+                android:id="@+id/spListaPrecio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                />
+        </androidx.gridlayout.widget.GridLayout>
+
+        <TextView
+            android:text="Ven.:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/textoCuadriculaOscura"/>
+
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#AAAAAA"
+            android:layout_margin="10dp"
+            android:layout_weight="1">
+            <Spinner
+                android:id="@+id/spVenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                />
+        </androidx.gridlayout.widget.GridLayout>
+        <Button
+            android:id="@+id/btnPromociones"
+            android:text="Promociones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="11dp"
+            android:layout_weight="1"/>
+        <EditText
+            android:id="@+id/accionPedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#AAAAAA"
+        android:layout_margin="10dp"
+        android:layout_weight="1">
+        <Spinner
+            android:id="@+id/spCondicionVenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+            />
+    </androidx.gridlayout.widget.GridLayout>
+
+    <Button
+        android:id="@+id/btnUltimaVenta"
+        android:text="Ultima Venta"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="11dp"
+        android:layout_weight="1"
+        android:visibility="gone"/>
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+        android:id="@+id/tvPedido"
+        android:text="Pedidos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tial"
+        android:layout_weight="1"
+        android:onClick="mostrarContenido"
+        style="@style/tabContenidos"/>
+        <TextView
+            android:id="@+id/tvDetalle"
+            android:text="Detalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grisTab"
+            android:layout_weight="1"
+            android:onClick="mostrarContenido"
+            style="@style/tabContenidos"/>
+        <TextView
+            android:id="@+id/tvCerrar"
+            android:text="Cerrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grisTab"
+            android:layout_weight="1"
+            android:onClick="mostrarContenido"
+            style="@style/tabContenidos"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#757575">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llPedidos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/barra_vendedores"
+            />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:text="Promo"
+                        android:layout_height="match_parent"
+                        android:layout_width="50dp"
+                        android:textSize="10dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="SE"
+                        android:layout_width="50dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv1"
+                        android:layout_width="280dp"
+                        android:text="Descripcion"
+                        android:gravity="start"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv2"
+                        android:layout_width="100dp"
+                        android:text="P. Caja"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv3"
+                        android:layout_width="100dp"
+                        android:text="P. Unit"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv4"
+                        android:layout_width="150dp"
+                        android:text="Referencia"
+                        android:gravity="start"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv5"
+                        android:layout_width="100dp"
+                        android:text="Codigo"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv6"
+                        android:layout_width="150dp"
+                        android:text="Barra"
+                        android:gravity="end"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tv7"
+                        android:layout_width="50dp"
+                        android:text="M"
+                        style="@style/cabeceraSubTabla"/>
+
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvProductos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </TableLayout>
+
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:background="@color/fondoFooter">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@color/fondoFooter">
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Cod:"
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdCod"
+                        style="@style/tvDetalle"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="Cod:" />
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Ref:"
+                        style="@style/tvTitulo"/>
+
+                    <androidx.gridlayout.widget.GridLayout
+                        android:layout_width="70dp"
+                        android:layout_height="25dp"
+                        android:background="#AAAAAA"
+                        android:layout_weight="1">
+                        <Spinner
+                            android:id="@+id/spReferencia"
+                            android:layout_width="fill_parent"
+                            android:layout_height="25dp"
+                            android:layout_weight="1"
+                            style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                            />
+                    </androidx.gridlayout.widget.GridLayout>
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text=""
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdPrecioReferencia"
+                        android:layout_width="match_parent"
+                        android:gravity="end"
+                        android:text="Cod:"
+                        android:layout_weight="1"
+                        style="@style/tvDetalle"/>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@color/fondoFooter">
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Pag:"
+                        style="@style/tvTitulo"/>
+
+                    <EditText
+                        android:id="@+id/tvdDesc"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        android:text="0"
+                        android:layout_weight="1"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:hint="Descuento"
+                        style="@style/tvDetalle"/>
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Can:"
+                        style="@style/tvTitulo"/>
+
+                    <EditText
+                        android:id="@+id/tvdCantidad"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        android:text="0"
+                        android:layout_weight="1"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:hint="cantidad"
+                        style="@style/tvDetalle"/>
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
+                        android:text="Can:"
+                        style="@style/tvTitulo"/>
+
+                    <TextView
+                        android:id="@+id/tvdTotal"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        android:text="Desc:"
+                        android:layout_weight="1"
+                        style="@style/tvDetalle"/>
+
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btCantMinima"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cant. Min.:"
+                    android:layout_margin="5dp"/>
+
+                <Button
+                    android:id="@+id/btVender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Vender"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDetalles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="30dp"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:text="Codigo"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="250dp"
+                        android:text="Descripcion"
+                        android:gravity="start|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:text="Exist. Act."
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:text="Cantidad"
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="120dp"
+                        android:text="P. Unitario"
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="120dp"
+                        android:text="Total"
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:text="Prom."
+                        android:gravity="end|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvDetalle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+            </TableLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llCerrar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Pedido Nro."
+                        style="@style/textoCuadriculaOscura" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Orden Compra"
+                        style="@style/textoCuadriculaOscura" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Fecha"
+                        style="@style/textoCuadriculaOscura" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/etNroPedido"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:background="@color/textoClaro"
+                        style="@style/etEditable"/>
+                    <EditText
+                        android:id="@+id/etOrdenCompra"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:text="0"
+                        android:gravity="end"
+                        android:background="@color/textoClaro"
+                        style="@style/etEditable"/>
+                    <EditText
+                        android:id="@+id/etFecha"
+                        android:layout_weight="1"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:background="@color/textoClaro"
+                        style="@style/etEditable"/>
+                    <EditText
+                        android:id="@+id/etFechaHoy"
+                        android:inputType="date"
+                        android:background="@color/textoClaro"
+                        android:visibility="gone"
+                        style="@style/etEditable"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Observaciones"
+                        style="@style/textoCuadriculaOscura" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etObservacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/textoClaro"
+                            android:gravity="start"
+                            style="@style/etEditable"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="% Desc. Var."
+                            android:gravity="end"
+                            style="@style/textoCuadriculaOscura" />
+
+                        <EditText
+                            android:id="@+id/etDescVarios"
+                            style="@style/etEditable"
+                            android:layout_weight="1"
+                            android:background="@color/textoClaro"
+                            android:editable="false"
+                            android:gravity="end"
+                            android:hint="Descuentos Varios"
+                            android:inputType="none"
+                            android:text="0" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="% Desc. Fin."
+                            style="@style/textoCuadriculaOscura" />
+                        <EditText
+                            android:id="@+id/etDescFin"
+                            android:layout_weight="1"
+                            android:inputType="none"
+                            android:editable="false"
+                            android:text="0"
+                            android:hint="Desc. Financiero"
+                            android:gravity="end|center_vertical"
+                            android:background="@color/textoClaro"
+                            style="@style/etEditable"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Subtotal"
+                            android:gravity="end"
+                            style="@style/textoCuadriculaOscura" />
+                        <EditText
+                            android:id="@+id/etSubtotal"
+                            android:layout_weight="1"
+                            android:inputType="number"
+                            android:background="@color/textoClaro"
+                            android:gravity="end"
+                            android:enabled="false"
+                            style="@style/etEditable"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Total Desc."
+                            style="@style/textoCuadriculaOscura" />
+                        <EditText
+                            android:id="@+id/etTotalDesc"
+                            android:layout_weight="1"
+                            android:inputType="number"
+                            android:background="@color/textoClaro"
+                            android:gravity="end|center_vertical"
+                            android:enabled="false"
+                            style="@style/etEditable"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:text="Total Pedido"
+                            android:gravity="end"
+                            style="@style/textoCuadriculaOscura" />
+
+                        <EditText
+                            android:id="@+id/etTotalPedido"
+                            android:layout_weight="1"
+                            android:inputType="number"
+                            android:background="@color/textoClaro"
+                            android:gravity="end"
+                            android:enabled="false"
+                            style="@style/etEditable"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#CCC">
+                    <Button
+                        android:id="@+id/btEnviar"
+                        android:text="Enviar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/textoClaro"
+                        android:background="@color/azulMarino"/>
+                    <Button
+                        android:id="@+id/btConsultar"
+                        android:text="Grabar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:textSize="12dp"
+                        android:background="@color/fondoFooter"
+                        android:textColor="@color/textoClaro"
+                        android:visibility="gone"/>
+                    <Button
+                        android:id="@+id/btCancelar"
+                        android:text="Cancelar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="5dp"
+                        android:textSize="12dp"
+                        android:background="@color/verdeOscuro"
+                        android:textColor="@color/textoClaro"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

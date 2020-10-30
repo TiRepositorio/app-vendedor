@@ -203,7 +203,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     @SuppressLint("SetTextI18n")
     private fun mostrarVentaPorMarcas(){
-        funcion.vistas     = intArrayOf(R.id.tv1, R.id.tv1, R.id.tv3, R.id.tv4, R.id.tv5, R.id.tv6,R.id.tv7)
+        funcion.vistas     = intArrayOf(R.id.tv1, R.id.tv2, R.id.tv3, R.id.tv4, R.id.tv5, R.id.tv6,R.id.tv7)
         funcion.valores    = arrayOf("", "DESC_GTE_MARKETIN", "MAYOR_VENTA", "VENTA_MES1", "VENTA_MES2", "META","PORC")
         funcion.subVistas  = intArrayOf(R.id.tvs1, R.id.tvs2, R.id.tvs3, R.id.tvs4, R.id.tvs5, R.id.tvs6,R.id.tvs7)
         funcion.subValores = arrayOf("", "DESC_MODULO", "MAYOR_VENTA", "VENTA_MES1", "VENTA_MES2", "META","PORC")

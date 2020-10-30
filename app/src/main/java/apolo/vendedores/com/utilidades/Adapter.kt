@@ -10,6 +10,10 @@ import android.widget.*
 import androidx.core.view.get
 import apolo.vendedores.com.R
 import apolo.vendedores.com.reportes.ExtractoDeSalario
+import apolo.vendedores.com.ventas.DialogoPromocion
+import apolo.vendedores.com.ventas.ListaClientes
+import apolo.vendedores.com.ventas.Pedidos
+import apolo.vendedores.com.ventas.Promociones
 import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.imgAbrir
 import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.imgCerrar
 import kotlinx.android.synthetic.main.rep_canasta_de_marcas.view.*
@@ -1530,6 +1534,289 @@ class Adapter{
 
             return totalPorcCump/subDataSource.size
         }
+    }
+
+    //PROMOCIONES
+    class AdapterPromociones(private val context: Context,
+                             private val dataSource: ArrayList<HashMap<String, String>>,
+                             private val molde: Int,
+                             private val vistas:IntArray,
+                             private val valores:Array<String>) : BaseAdapter()
+    {
+
+        private val inflater: LayoutInflater
+                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(molde, parent, false)
+
+            for (i in 0 until vistas.size){
+                try {
+                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
+                    if (verificaPromoCargada(position)){
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
+                    } else {
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#FF0000"))
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#FF0000"))
+                    }
+                } catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (Promociones.posPromocion== position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
+
+            return rowView
+        }
+
+        fun getTotalEntero(parametro:String):Int{
+
+            var totalValor: Int = 0
+
+            for (i in 0 until dataSource.size) {
+                totalValor = totalValor + Integer.parseInt(dataSource.get(i).get(parametro).toString().replace(".","",false))
+            }
+
+            return totalValor
+        }
+
+        fun getTotalDecimal(parametro: String):Double{
+            var totalPorcCump: Double = 0.0
+
+            for (i in 0 until dataSource.size) {
+                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+            }
+            return totalPorcCump
+        }
+
+        private fun verificaCargado(position:Int):Boolean{
+            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
+                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
+                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                    +  "   AND COD_ARTICULO = '${dataSource.get(position).get("COD_ARTICULO")}' "
+                    +  " ")
+            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            if (funcion.consultar(sql).count > 0){
+                return false
+            }
+            return true
+        }
+
+        private fun verificaPromoCargada(position:Int):Boolean{
+            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
+                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
+                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                    +  "   AND NRO_PROMOCION = '${dataSource.get(position).get("NRO_PROMOCION")}' "
+                    +  " ")
+            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            if (funcion.consultar(sql).count > 0){
+                return false
+            }
+            return true
+        }
+
+        fun getPromedioDecimal(parametro: String):Double{
+
+            var totalPorcCump: Double = 0.0
+
+            for (i in 0 until dataSource.size) {
+                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+            }
+
+            return totalPorcCump/dataSource.size
+        }
+
+    }
+    class AdapterDialogoPromociones(private val context: Context,
+                                    private val dataSource: ArrayList<HashMap<String, String>>,
+                                    private val molde: Int,
+                                    private val vistas:IntArray,
+                                    private val valores:Array<String>) : BaseAdapter()
+    {
+
+        private val inflater: LayoutInflater
+                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(molde, parent, false)
+
+            for (i in 0 until vistas.size){
+                try {
+                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
+                    if (verificaCargado(position)){
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
+                    } else {
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#FF0000"))
+                        rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#FF0000"))
+                    }
+                } catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (DialogoPromocion.posicion == position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
+
+            return rowView
+        }
+
+        fun getTotalEntero(parametro:String):Int{
+
+            var totalValor: Int = 0
+
+            for (i in 0 until dataSource.size) {
+                totalValor = totalValor + Integer.parseInt(dataSource.get(i).get(parametro).toString().replace(".","",false))
+            }
+
+            return totalValor
+        }
+
+        fun getTotalDecimal(parametro: String):Double{
+            var totalPorcCump: Double = 0.0
+
+            for (i in 0 until dataSource.size) {
+                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+            }
+            return totalPorcCump
+        }
+
+        private fun verificaCargado(position:Int):Boolean{
+            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
+                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
+                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                    +  "   AND COD_ARTICULO = '${dataSource.get(position).get("COD_ARTICULO")}' "
+                    +  " ")
+            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            if (funcion.consultar(sql).count > 0){
+                return false
+            }
+            return true
+        }
+
+        private fun verificaPromoCargada(position:Int):Boolean{
+            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
+                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
+                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                    +  "   AND NRO_PROMOCION = '${dataSource.get(position).get("NRO_PROMOCION")}' "
+                    +  " ")
+            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            if (funcion.consultar(sql).count > 0){
+                return false
+            }
+            return true
+        }
+
+        fun getPromedioDecimal(parametro: String):Double{
+
+            var totalPorcCump: Double = 0.0
+
+            for (i in 0 until dataSource.size) {
+                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+            }
+
+            return totalPorcCump/dataSource.size
+        }
+
+    }
+
+    //PEDIDOS
+    class AdapterDetallePedido(private val context: Context,
+                               private val dataSource: ArrayList<HashMap<String, String>>,
+                               private val molde: Int,
+                               private val vistas: IntArray,
+                               private val valores: Array<String>,
+                               private val etAccion : EditText,
+                               private val accion: String) : BaseAdapter()
+    {
+
+        private val inflater: LayoutInflater
+                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(molde, parent, false)
+
+            for (i in 0 until vistas.size){
+                try {
+                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
+                } catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }
+
+            rowView.imgEliminar.setOnClickListener(){
+                Pedidos.posDetalle = position
+                etAccion.setText(accion)
+            }
+
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (Pedidos.posDetalle == position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
+
+            return rowView
+        }
+
     }
 
 }

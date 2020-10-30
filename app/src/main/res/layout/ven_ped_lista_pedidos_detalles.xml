@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/imgEliminar"
+        android:layout_width="30dp"
+        android:layout_height="24dp"
+        android:background="@color/fondoFooter"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_eliminar" />
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="100dp"
+        android:text="Codigo"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="250dp"
+        android:text="Descripcion"
+        android:gravity="start|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="100dp"
+        android:text="Exist. Act."
+        android:gravity="end|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="100dp"
+        android:text="Cantidad"
+        android:gravity="end|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv5"
+        android:layout_width="120dp"
+        android:text="P. Unitario"
+        android:gravity="end|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv6"
+        android:layout_width="120dp"
+        android:text="Total"
+        android:gravity="end|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv7"
+        android:layout_width="100dp"
+        android:text="Prom."
+        android:gravity="end|center_vertical"
+        style="@style/textoSubTabla"
+        />
+
+</LinearLayout>

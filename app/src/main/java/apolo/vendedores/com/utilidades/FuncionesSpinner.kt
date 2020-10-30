@@ -53,7 +53,7 @@ class FuncionesSpinner(var context: Context, private var spinner: Spinner) {
         return opcion.split("|").toTypedArray()
     }
 
-    private fun cargarSpinner(opciones:Array<String>?){
+    fun cargarSpinner(opciones:Array<String>?){
         if (opciones.isNullOrEmpty()){return}
         val spinnerAdapter : ArrayAdapter<String>? = ArrayAdapter(context,R.layout.spinner_adapter,opciones)
         spinner.adapter = spinnerAdapter

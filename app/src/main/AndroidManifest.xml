@@ -124,6 +124,21 @@
         <activity android:name=".ventas.asistencia.Marcacion"
             tools:ignore="Instantiatable"
             android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.Pedidos"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.Promociones"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.ConsultaPedidos"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.ConsultaDatosDeCliente"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.ConsultaClientesNoPositivados"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />

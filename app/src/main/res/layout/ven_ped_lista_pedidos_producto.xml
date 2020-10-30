@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/ibtn_tactico"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/estrella"
+        android:textColor="#fffafa"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/ibtn_se3"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/surtido3"
+        android:text="fast"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ibtn_se2"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/surtido2"
+        android:text="fast"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ibtn_se1"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/surtido1"
+        android:text="fast"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ibtn_se0"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/surtido0"
+        android:text="fast"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ibtn_se"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="5dp"
+        android:src="@drawable/surtido"
+        android:text="fast"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:gravity="start|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla" />
+
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla" />
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:gravity="start|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla"/>
+
+    <TextView
+        android:id="@+id/tv5"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla"/>
+
+    <TextView
+        android:id="@+id/tv6"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:gravity="end|center_vertical"
+        android:scrollbars="horizontal"
+        style="@style/textoTabla" />
+
+    <TextView
+        android:id="@+id/tv7"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:height="27dp"
+        android:maxLines="1"
+        android:scrollbars="horizontal"
+        android:text="text1"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:width="30dip"
+        android:visibility="gone"
+        />
+
+
+    <ImageView
+        android:id="@+id/imgVentaRapida"
+        android:layout_width="50dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:text="fast"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textColor="#fffafa"
+        android:textSize="12sp"
+        android:src="@drawable/fast"  />
+
+</LinearLayout>
