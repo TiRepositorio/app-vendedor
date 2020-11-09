@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="apolo.vendedores.com">
 
+    <uses-permission android:name="andtoid.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="andtoid.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,6 +20,10 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="Android.permission.INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:icon="@mipmap/ic_launcher"
@@ -139,6 +147,12 @@
         <activity android:name=".ventas.ConsultaClientesNoPositivados"
             tools:ignore="Instantiatable"
             android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.PromotoresCatastro"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.catastro.CatastrarCliente"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />
@@ -146,6 +160,9 @@
 
         <activity
             android:name=".utilidades.Mapa"
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".utilidades.MapaCatastro"
             android:label="@string/title_activity_maps" />
 
         <!--Datos para abrir el mapa-->

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -25,10 +26,15 @@ import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.configurar.ActualizarVersion
 import apolo.vendedores.com.menu.DialogoMenu
+import apolo.vendedores.com.reportes.AvanceDeComisiones
+import apolo.vendedores.com.reportes.SubAvanceDeComisiones
+import apolo.vendedores.com.reportes.SubVentasPorMarcas
+import apolo.vendedores.com.reportes.VentasPorMarca
 import apolo.vendedores.com.utilidades.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.ven_pri_evol_diaria_de_venta.*
+import kotlinx.android.synthetic.main.ventana_principal.*
 import java.io.File
 import java.io.IOException
 import java.lang.Exception
@@ -54,6 +60,11 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     )
     private lateinit var telMgr : TelephonyManager
     private lateinit var dispositivo : FuncionesDispositivo
+
+    private lateinit var grafico : Graficos
+    private var subInforme1 = SubVentasPorMarcas()
+    private var subInforme2 = SubAvanceDeComisiones()
+
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +102,25 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         dispositivo.verificaRoot()
 
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
+        subInforme1.cargarVentasPorMarcas()
+        subInforme1.cargarDatosX("DESC_GTE_MARKETIN")
+        subInforme1.cargarDatosY("VENTA_MES2")
+
+        grafico = Graficos(graVentas,subInforme1.datosX,subInforme1.datosY)
+        grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
+        graVentas.setOnClickListener{
+            startActivity(Intent(this,VentasPorMarca::class.java))
+        }
+
+        subInforme2.cargarDatos()
+        subInforme2.cargarDatosX("TIP_COM")
+        subInforme2.cargarDatosY("MONTO_A_COBRAR")
+
+        grafico = Graficos(graComision,subInforme2.datosX,subInforme2.datosY)
+        grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
+        graComision.setOnClickListener{
+            startActivity(Intent(this,AvanceDeComisiones::class.java))
+        }
 
         evolucionDiaria()
         nav_view_menu.setNavigationItemSelectedListener(this)

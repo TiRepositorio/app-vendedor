@@ -467,6 +467,21 @@ class SentenciasSQL {
                     + " FOTO_FACHADA BLOB		 			 , TIPO TEXT        )")
         }
 
+        fun createTableSvmCatastroCliente(): String {
+            return ("CREATE TABLE IF NOT EXISTS svm_catastro_cliente "
+                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CLIENTE TEXT      , COD_VENDEDOR TEXT       ,"
+                    + " NOM_VENDEDOR TEXT 	 	 			, RAZON_SOCIAL TEXT      , NOM_FANTASIA TEXT       ,"
+                    + " DIR_COMERCIAL TEXT	     			, COD_PAIS TEXT         , COD_DEPARTAMENTO TEXT   ,"
+                    + " COD_CIUDAD TEXT  	     			, BARRIO TEXT   	    , RUC TEXT             	  ,"
+                    + " CI TEXT    	   	  	 				, CELULAR TEXT    	    , LINEA_BAJA TEXT      	  ,"
+                    + " COD_CONDICION_VENTA TEXT			, COD_TIPO_CLIENTE TEXT , COD_DIAS_VISITA TEXT    ,"
+                    + " FEC_ALTA TEXT                       , ESTADO TEXT           , COD_CLI_VEND TEXT       ,"
+                    + " CERCA_DE TEXT                       , EMAIL TEXT            , CANAL_SUGERIDO TEXT     ,"
+                    + " NOM_REF_COMERCIAL TEXT              , TEL_REF_COMERCIAL TEXT, NOM_REF_BANCARIA TEXT   ,"
+                    + " TEL_REF_BANCARIA TEXT               , COMENTARIO TEXT       , LIMITE_CREDITO TEXT	  ,"
+                    + " LATITUD TEXT						, LONGITUD TEXT			, FOTO_FACHADA BLOB		 )")
+        }
+
         fun createTableSvmPedidosCab(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_pedidos_cab"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT     , COD_CLIENTE TEXT  , COD_SUBCLIENTE TEXT        ,"
@@ -561,7 +576,7 @@ class SentenciasSQL {
             lista.add(4, createTableVtMarcacionVisita())
             lista.add(5, createTableSvmPedidosCab())
             lista.add(6, createTableSvmPedidosDet())
-//            lista.add(7, )
+            lista.add(7, createTableSvmCatastroCliente())
 //            lista.add(8, createTableStvCategoriaPalm())
 //            lista.add(9, createTableSpmRetornoComentario())
 //            lista.add(10, createTableSvmDiasTomaFotoCliente())

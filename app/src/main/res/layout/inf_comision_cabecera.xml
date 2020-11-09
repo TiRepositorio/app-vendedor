@@ -11,7 +11,7 @@
         />
 
     <TextView
-        android:id="@+id/tv1"
+        android:id="@+id/tv2"
         android:text="Total Venta"
         android:layout_weight="1"
         android:gravity="end"

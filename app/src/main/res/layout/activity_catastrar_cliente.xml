@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@color/fondoOscuro">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/textoClaro"
             android:text="FORMULARIO DE CATASTRO DE CLIENTES" />
 
         <Button
@@ -44,19 +47,29 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Codigo:" />
 
                 <EditText
                     android:id="@+id/etCodigo"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|left"
-                    android:background="#fffafa"
+                    android:layout_weight="1"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
+                    android:layout_gravity="center_vertical|left"
+                    android:background="#fffafa"
                     android:inputType="textNoSuggestions"
                     android:longClickable="false"
                     android:textColor="#000000" />
+
+                <ImageButton
+                    android:id="@+id/imgBuscarCliente"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:src="@drawable/ic_buscar"/>
             </LinearLayout>
 
             <LinearLayout
@@ -73,6 +86,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Razon Social:" />
 
                 <EditText
@@ -81,8 +95,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -101,6 +113,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Nom. Fantasia:" />
 
                 <EditText
@@ -109,8 +122,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -129,6 +140,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Dir. Comercial:" />
 
                 <EditText
@@ -137,8 +149,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -157,6 +167,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Cerca de:" />
 
                 <EditText
@@ -164,10 +175,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
-                    android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -186,6 +194,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Departamento:" />
 
                 <EditText
@@ -215,6 +224,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Ciudad:" />
 
                 <EditText
@@ -245,6 +255,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Barrio:" />
 
                 <EditText
@@ -254,8 +265,6 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -274,6 +283,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Nº RUC:" />
 
                 <EditText
@@ -283,8 +293,6 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:longClickable="false"
                     android:textColor="#000000" />
@@ -304,6 +312,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="C.I.Nº:" />
 
                 <EditText
@@ -313,8 +322,6 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
                     android:longClickable="false"
                     android:textColor="#000000" />
@@ -334,6 +341,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Cel:" />
 
                 <EditText
@@ -343,9 +351,7 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textNoSuggestions"
+                    android:inputType="phone"
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -364,6 +370,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Linea Baja:" />
 
                 <EditText
@@ -373,9 +380,7 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textNoSuggestions"
+                    android:inputType="phone"
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -394,18 +399,17 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Email:" />
 
                 <EditText
                     android:id="@+id/etEmail"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textNoSuggestions"
+                    android:inputType="textEmailAddress"
                     android:textColor="#000000" />
             </LinearLayout>
 
@@ -423,6 +427,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Lim. de Credito:" />
 
                 <EditText
@@ -432,9 +437,7 @@
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:inputType="textNoSuggestions"
+                    android:inputType="number"
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
@@ -453,19 +456,19 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Clúster:" />
 
                 <EditText
                     android:id="@+id/etTipoCliente"
                     android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|left"
                     android:layout_weight="1"
                     android:background="#fffafa"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions"
-                    android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
 
@@ -483,6 +486,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Lista de Precios:" />
 
                 <EditText
@@ -512,6 +516,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Forma Pago:" />
 
                 <EditText
@@ -544,6 +549,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Visita:" />
 
                 <EditText
@@ -580,12 +586,14 @@
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
 			        android:text="Latitud:"/>
 			        
 	        	<TextView 
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
 			        android:text="Longitud:"/>
 			    
 			</LinearLayout>
@@ -601,12 +609,14 @@
 			        android:id="@+id/tvLatitud"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
 			        android:layout_weight="1" />
 			        
 	        	<TextView 
 	        	    android:id="@+id/tvLongitud"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
 			        android:layout_weight="1" />
 			    
 			</LinearLayout>
@@ -632,6 +642,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textoClaro"
                     android:text="Referencia Comercial" />
             </LinearLayout>
 
@@ -644,6 +655,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Nombre:" />
 
                 <EditText
@@ -674,6 +686,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Telefono:" />
 
                 <EditText
@@ -705,6 +718,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textoClaro"
                     android:text="Referencia Bancaria" />
             </LinearLayout>
 
@@ -717,6 +731,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Nombre:" />
 
                 <EditText
@@ -747,6 +762,7 @@
                 <TextView
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
                     android:text="Telefono:" />
 
                 <EditText
@@ -780,6 +796,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="Foto Fachada" />
 
@@ -789,7 +806,7 @@
                     android:layout_height="wrap_content" 
                     android:scaleX="0.8"
                     android:scaleY="0.8"
-                    android:src="@drawable/camara" />
+                    android:src="@drawable/ic_camara" />
             </LinearLayout>
             
              
@@ -833,6 +850,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textoClaro"
                     android:text="Comentario:" />
             </LinearLayout>
 
@@ -850,6 +868,7 @@
                     android:layout_weight="1"
                     android:background="#fffafa"
                     android:focusable="false"
+                    android:hint="Comentario"
                     android:focusableInTouchMode="false"
                     android:inputType="textNoSuggestions|textMultiLine"
                     android:lines="3"
@@ -872,6 +891,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:text="Enviar" />
 
                 <Button
@@ -879,6 +899,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:text="Guardar" />
 
                 <Button
@@ -886,6 +907,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:text="Nuevo" />
 
                 <Button
@@ -893,6 +915,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:text="Cancelar" />
             </LinearLayout>
         </LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".supervisores.CanastaDeMarcas">
+    tools:context=".reportes.VentasPorMarca">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                             android:text="Cod."
                             android:gravity="end"
                             android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
@@ -65,31 +66,31 @@
 
                         <TextView
                             android:layout_width="130dp"
-                            android:text="Valor de la Canasta"
+                            android:text="Mayor venta"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
                             android:layout_width="120dp"
-                            android:text="Ventas"
+                            android:text="Venta"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
                             android:layout_width="120dp"
-                            android:text="Metas"
+                            android:text="Venta"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
                             android:layout_width="120dp"
-                            android:text="Porc. Cump."
+                            android:text="Meta"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
                             android:layout_width="120dp"
-                            android:text="Tot. Percibir"
+                            android:text="%"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
 

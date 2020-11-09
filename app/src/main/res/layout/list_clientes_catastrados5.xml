@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="horizontal|vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:text="Desde: "
+                        android:textColor="@color/textoClaro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@+id/etDesde"/>
+
+                    <EditText
+                        android:id="@+id/etDesde"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="14dp"
+                        android:paddingRight="5dp"
+                        android:paddingLeft="5dp"
+                        android:editable="false"
+                        android:background="@color/textoClaro"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_margin="5dp">
+
+                    <TextView
+                        android:text="Hasta: "
+                        android:textColor="@color/textoClaro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@+id/etHasta"/>
+
+                    <EditText
+                        android:id="@+id/fecHasta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingRight="5dp"
+                        android:paddingLeft="5dp"
+                        android:textSize="14dp"
+                        android:editable="false"
+                        android:background="@color/textoClaro"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:background="#55009900">
+
+
+                <RadioGroup
+                    android:id="@+id/rgFiltro"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbPendiente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Pendiente"
+                        android:textColor="@color/textoClaro"
+                        android:textColorLink="@color/verdeApolo"/>
+
+                    <RadioButton
+                        android:id="@+id/rbEnviado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Enviado"
+                        android:textColor="@color/textoClaro"
+                        android:textColorLink="@color/verdeApolo"/>
+
+                    <RadioButton
+                        android:id="@+id/rbTodo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Todo"
+                        android:checked="true"
+                        android:textColor="@color/textoClaro"
+                        android:textColorLink="@color/verdeApolo"/>
+                </RadioGroup>
+
+                <ImageButton
+                    android:id="@+id/imgBuscar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_buscar"
+                    android:background="#55FFFFFF"
+                    android:padding="3dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="4dip"
+            android:layout_marginTop="2dip"
+            android:layout_weight="1"
+            android:clipToPadding="true"
+            android:orientation="vertical"
+            android:overScrollMode="never" >
+
+            <TableLayout
+                android:id="@+id/amortization"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#008000" >
+
+                    <TextView
+                        android:id="@+id/tpe1"
+                        android:layout_width="70sp"
+                        android:gravity="left|center_vertical"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="Codigo"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tpe2"
+                        android:layout_width="180sp"
+                        android:ellipsize="end"
+                        android:gravity="left|center_vertical"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="Razon Social"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tpe3"
+                        android:layout_width="180sp"
+                        android:ellipsize="end"
+                        android:gravity="left|center_vertical"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="Nom. Fantasia"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tpe4"
+                        android:layout_width="90sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="RUC"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tpe5"
+                        android:layout_width="90sp"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="CI"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:id="@+id/tpe6"
+                        android:layout_width="90sp"
+                        android:maxLines="1"
+                        android:scrollbars="horizontal"
+                        android:text="Estado"
+                        style="@style/cabeceraSubTabla"/>
+                </TableRow>
+
+                <ListView
+                    android:id="@+id/lvdClientes"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:paddingTop="1dip"
+                    android:scrollbars="none" />
+            </TableLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:background="@color/textoClaro">
+            <Button
+                android:id="@+id/btModificar"
+                android:text="Modificar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textColor="@color/textoClaro"
+                android:background="@color/verdeOscuro"/>
+            <Button
+                android:id="@+id/btConsultar"
+                android:text="Consultar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@color/quantum_deeporange900"
+                android:textColor="@color/textoClaro"/>
+            <Button
+                android:id="@+id/btEliminar"
+                android:text="Eliminar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:background="@color/fondoFooter"
+                android:textColor="@color/textoClaro"/>
+
+        </LinearLayout>
+    
+    </LinearLayout>
+
+</RelativeLayout>

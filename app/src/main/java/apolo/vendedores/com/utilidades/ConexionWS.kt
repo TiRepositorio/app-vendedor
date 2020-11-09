@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Base64
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
+import apolo.vendedores.com.ventas.catastro.CatastrarCliente
 import org.ksoap2.SoapEnvelope
 import org.ksoap2.serialization.SoapObject
 import org.ksoap2.serialization.SoapPrimitive
@@ -27,7 +28,7 @@ class ConexionWS {
         private var SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
 
-    private fun setMethodName(name : String) {
+    private fun setMethodName(name: String) {
         METHOD_NAME = name
         SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
@@ -62,25 +63,26 @@ class ConexionWS {
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
         try {
-            solicitud = SoapObject(NAMESPACE,METHOD_NAME)
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario["LOGIN"])
-            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_PERSONA"])
-        } catch (e : Exception){
+            solicitud.addProperty("codPersona", "72367")
+//            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_PERSONA"])
+        } catch (e: Exception){
             return false
         }
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL,480000)
+        val transporte = HttpTransportSE(URL, 480000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
             if (resultado.indexOf("01*") <= -1){
                 return false
             }
-        } catch (e : Exception){
+        } catch (e: Exception){
             e.message.toString()
             return false
         }
@@ -97,7 +99,7 @@ class ConexionWS {
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario["LOGIN"])
-        } catch (e : Exception){
+        } catch (e: Exception){
             return false
         }
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
@@ -107,7 +109,7 @@ class ConexionWS {
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response as Vector<SoapPrimitive>
-        } catch (e : Exception){
+        } catch (e: Exception){
             e.message
             return false
         }
@@ -116,7 +118,7 @@ class ConexionWS {
             if (resultado.size>4){
                 extraerDatos(resultado, listaTablas)
             }
-        } catch (e : Exception){
+        } catch (e: Exception){
             return false
         }
         return true
@@ -129,7 +131,7 @@ class ConexionWS {
             val buf = ByteArray(1024)
             var len: Int = entrada.read(buf)
             while (len>0){
-                salida.write(buf,0,len)
+                salida.write(buf, 0, len)
                 len = entrada.read(buf)
             }
             salida.close()
@@ -137,26 +139,28 @@ class ConexionWS {
             val archivo = File(direccionEntrada)
             archivo.delete()
             return true
-        }catch (e:FileNotFoundException){
+        }catch (e: FileNotFoundException){
 
-        }catch (e:IOException){
+        }catch (e: IOException){
 
         }
         return false
     }
 
     @SuppressLint("SdCardPath")
-    fun extraerDatos(resultado : Vector<SoapPrimitive>, listaTablas:Vector<String>) : Boolean{
+    fun extraerDatos(resultado: Vector<SoapPrimitive>, listaTablas: Vector<String>) : Boolean{
         lateinit var fos : FileOutputStream
         try {
             for (i in 0 until resultado.size){
-                fos = FileOutputStream("/data/data/apolo.vendedores.com/" +listaTablas[i].split(" ")[5] + ".gzip")
-                fos.write(Base64.decode(resultado[i].toString(),0))
+                fos = FileOutputStream("/data/data/apolo.vendedores.com/" + listaTablas[i].split(" ")[5] + ".gzip")
+                fos.write(Base64.decode(resultado[i].toString(), 0))
                 fos.close()
-                descomprimir("/data/data/apolo.vendedores.com/"+listaTablas[i].split(" ")[5] +".gzip",
-                    "/data/data/apolo.vendedores.com/"+listaTablas[i].split(" ")[5] +".txt" )
+                descomprimir(
+                    "/data/data/apolo.vendedores.com/" + listaTablas[i].split(" ")[5] + ".gzip",
+                    "/data/data/apolo.vendedores.com/" + listaTablas[i].split(" ")[5] + ".txt"
+                )
             }
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             e.message
             return false
         }
@@ -164,128 +168,136 @@ class ConexionWS {
     }
 
     //enviar marcaciones
-    fun procesaMarcacionAsistencia(codVendedor: String,vMarcaciones:String) : String{
+    fun procesaMarcacionAsistencia(codVendedor: String, vMarcaciones: String) : String{
         setMethodName("ProcesaMarcacionProm")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
 
         try {
-            solicitud = SoapObject(NAMESPACE,METHOD_NAME)
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codEmpresa", "1")
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
 
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL,240000)
+        val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
         return resultado
     }
-    fun procesaMarcacionAsistenciaAct(codVendedor: String,vMarcaciones:String) : String{
+    fun procesaMarcacionAsistenciaAct(codVendedor: String, vMarcaciones: String) : String{
         setMethodName("ProcesaMarcacionAsistenciaAct")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
 
         try {
-            solicitud = SoapObject(NAMESPACE,METHOD_NAME)
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codEmpresa", "1")
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
 
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL,240000)
+        val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
         return resultado
     }
 
-    fun procesaEnviaSolicitudSD(codRepartidor:String,cabecera:String,detalle:String) : String{
+    fun procesaEnviaSolicitudSD(codRepartidor: String, cabecera: String, detalle: String) : String{
         setMethodName("ProcesaAutorizaSDVend")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
 
         try {
-            solicitud = SoapObject(NAMESPACE,METHOD_NAME)
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codEmpresa", "1")
             solicitud.addProperty("codRepartidor", codRepartidor)
             solicitud.addProperty("cabecera", cabecera)
             solicitud.addProperty("detalle", detalle)
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
 
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL,240000)
+        val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
         return resultado
     }
 
-    fun procesaEnviaNuevaUbicacionCliente( codVendedor: String, codCliente:String, imagenFachada:String) : String{
+    fun procesaEnviaNuevaUbicacionCliente(
+        codVendedor: String,
+        codCliente: String,
+        imagenFachada: String
+    ) : String{
         setMethodName("ProcesaActualizaClienteFinal")
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
 
         try {
-            solicitud = SoapObject(NAMESPACE,METHOD_NAME)
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("vcodVendedor", codVendedor)
-            solicitud.addProperty("vclientes", codCliente.replace("''","").replace("'",""))
+            solicitud.addProperty("vclientes", codCliente.replace("''", "").replace("'", ""))
             solicitud.addProperty("vfoto_fachada", imagenFachada)
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
 
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL,240000)
+        val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
-        } catch (e : Exception){
+        } catch (e: Exception){
             return e.message.toString()
         }
         return resultado
     }
 
     //Enviar datos modificados del cliente
-    fun procesaActualizaDatosClienteFinal(codVendedor: String?, clientes: String, FotoFachada: String?): String? {
+    fun procesaActualizaDatosClienteFinal(
+        codVendedor: String?,
+        clientes: String,
+        FotoFachada: String?
+    ): String? {
         setMethodName("ProcesaActualizaClienteFinal")
         val solicitud: SoapObject?
         val resultado: String?
@@ -304,6 +316,44 @@ class ConexionWS {
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
+        val transporte = HttpTransportSE(URL, 240000)
+        try {
+            transporte.call(SOAP_ACTION, envelope)
+            val sp = envelope.response as SoapPrimitive
+            resultado = sp.toString()
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        return resultado
+    }
+    //Catastrar cliente
+    fun procesaCatastroClienteFinal(
+        cod_cliente: String?,
+        vcliente: String,
+        vFotoFachada: String?
+    ): String {
+        METHOD_NAME = "ProcesaClienteFinal"
+        SOAP_ACTION = "http://edsystem/servidor/ProcesaClienteFinal"
+        val request: SoapObject?
+        val resultado: String?
+        try {
+            request = SoapObject(NAMESPACE, METHOD_NAME)
+            request.addProperty("usuario", "edsystem")
+            request.addProperty("password", "#edsystem@polo")
+            request.addProperty("vcodVendedor", CatastrarCliente.codVendedor)
+            request.addProperty("vcodCliente", cod_cliente)
+            request.addProperty("vclientes", vcliente.replace("''", " ").replace("'", ""))
+            request.addProperty("vfoto_fachada", vFotoFachada)
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(request)
         val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
@@ -341,7 +391,7 @@ class ConexionWS {
             val fos: FileOutputStream?
 //            fos = FileOutputStream("/sdcard/apolo_02.apk")
             fos = FileOutputStream(MainActivity2.nombre)
-            fos.write(Base64.decode(resultado.toByteArray(),0))
+            fos.write(Base64.decode(resultado.toByteArray(), 0))
             fos.close()
         } catch (e: java.lang.Exception) {
             return false
@@ -382,7 +432,7 @@ class ConexionWS {
         return res
     }
 
-    fun enviarPedido(cabecera:String,detalle:String,nroComprobante:String,codVendedor: String): String? {
+    fun enviarPedido(cabecera: String, detalle: String, nroComprobante: String, codVendedor: String): String? {
         setMethodName("ProcesaPedido")
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
@@ -410,5 +460,7 @@ class ConexionWS {
         }
         return resultado
     }
+
+
 
 }

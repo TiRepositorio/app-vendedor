@@ -98,8 +98,8 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         cargarCodigos()
 
-        var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, sum(MAYOR_VENTA) MAYOR_VENTA, sum(VENTA_MES1) VENTA_MES1, "
-                            +   "		   sum(VENTA_MES2) VENTA_MES2  , sum(META) META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC "
+        var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, CAST(sum(MAYOR_VENTA) AS INTEGER) MAYOR_VENTA, CAST(sum(VENTA_MES1) AS INTEGER) VENTA_MES1, "
+                            +   "		   CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , CAST(sum(META) AS INTEGER) META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC "
                             +   " from svm_metas_punto_por_linea "
                             +   " group by DESC_GTE_MARKETIN ")
 
@@ -120,7 +120,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             datos["MAYOR_VENTA"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("MAYOR_VENTA")).replace(",", ".").toDouble())
             datos["VENTA_MES1"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES1")).replace(",", ".").toDouble())
             datos["VENTA_MES2"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("VENTA_MES2")).replace(",", ".").toDouble())
-            datos["META"] = formatNumeroEntero.format(Integer.parseInt(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".")))
+            datos["META"] = funcion.enteroLargo(funcion.dato(cursor,"META"))
             datos["PORC"] = formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC"))
             listaVentasPorMarca.add(datos)
             cursor.moveToNext()
@@ -153,7 +153,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 datos["MAYOR_VENTA"] = cursor.getString(cursor.getColumnIndex("MAYOR_VENTA"))
                 datos["VENTA_MES1"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES1"))
                 datos["VENTA_MES2"] = formatNumeroEntero.format(funcion.datoEntero(cursor,"VENTA_MES2"))
-                datos["META"] = formatNumeroEntero.format(cursor.getString(cursor.getColumnIndex("META")).replace(",", ".").replace("null", "0").replace(" ", "0").toInt())
+                datos["META"] = funcion.enteroCliente(funcion.dato(cursor,"META"))
                 datos["PORC"] = formatNumeroDecimal.format(funcion.datoDecimal(cursor,"PORC"))
                 datos["MES_1"] = cursor.getString(cursor.getColumnIndex("MES_1"))
                 datos["MES_2"] = cursor.getString(cursor.getColumnIndex("MES_2"))

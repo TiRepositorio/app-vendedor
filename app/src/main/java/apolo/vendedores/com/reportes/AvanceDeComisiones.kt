@@ -69,8 +69,8 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
                 + "       ,  SUM(MONTO_VENTA)    AS MONTO_VENTA "
                 + "       ,  SUM(MONTO_A_COBRAR) AS MONTO_A_COBRAR "
                 + "  FROM svm_liq_premios_vend "
-                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
-                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
+//                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
+//                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
                 + " GROUP BY TIP_COM ")
 
         try {
@@ -100,8 +100,8 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
                 + "     , SUM(MONTO_VENTA) AS MONTO_VENTA"
                 + " FROM svm_liq_premios_vend "
                 + " WHERE TIP_COM  = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["CATEGORIA"] + "' "
-                + "   AND COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
-                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
+//                + "   AND COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
+//                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
                 + " GROUP BY COD_MARCA ORDER BY COD_MARCA")
 
         cursor = funcion.consultar(sql)
@@ -139,7 +139,7 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     @SuppressLint("SetTextI18n")
     private fun mostrarDetalle(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1)
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
         funcion.valores = arrayOf("MARCA","TOTAL")
         val adapterDetalle: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,R.layout.inf_comision_detalle,funcion.vistas,funcion.valores

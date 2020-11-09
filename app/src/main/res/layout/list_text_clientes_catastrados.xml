@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/td1"
+        android:layout_width="70sp"
+        android:gravity="left|center_vertical"
+        android:text="text1"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/td2"
+        android:layout_width="180sp"
+        android:gravity="left|center_vertical"
+        android:text="text2"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/td3"
+        android:layout_width="180sp"
+        android:layout_weight="1"
+        android:gravity="left|center_vertical"
+        android:text="text3"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/td4"
+        android:layout_width="90sp"
+        android:text="text4"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/td5"
+        android:layout_width="90sp"
+        android:text="text5"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/td6"
+        android:layout_width="90sp"
+        android:text="text6"
+        android:textColor="#fffafa"
+        style="@style/textoSubTabla" />
+
+</LinearLayout>

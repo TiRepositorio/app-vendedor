@@ -7,7 +7,7 @@
     android:layout_height="fill_parent"
     android:id="@+id/contMenu"
     android:fitsSystemWindows="true"
-    tools:context=".supervisores.CanastaDeMarcas"
+    tools:context=".reportes.VentasPorMarca"
     >
 
     <!--    tools:openDrawer="start"-->

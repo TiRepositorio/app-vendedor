@@ -52,7 +52,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
         ) {
             return LatLng("-25.4961055036".toDouble(),"-54.7291505575".toDouble())
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f,listener)
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f,listener)
         latitud  = lati
         longitud = long
         return LatLng(latitud.toDouble(),longitud.toDouble())
@@ -77,7 +77,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
 
     fun calculaDistanciaCoordenadas(lat1: Double, lat2: Double, lng1: Double, lng2: Double): Double {
         val dist: Double
-        val earthRadius = 6371000.0 //radio de la tierra en metros
+        val earthRadius = 6371000000.0 //radio de la tierra en metros
         val dLat = Math.toRadians(lat2 - lat1)
         val dLng = Math.toRadians(lng2 - lng1)
         val sindLat = sin(dLat / 2)
