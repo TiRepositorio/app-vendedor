@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import apolo.vendedores.com.R
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.Sincronizacion
 import kotlinx.android.synthetic.main.activity_configurar_usuario.*
@@ -87,5 +88,10 @@ class ConfigurarUsuario : AppCompatActivity() {
 
     private fun borrarUsuario(){
         MainActivity.bd!!.execSQL("delete from usuarios")
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this,MainActivity2::class.java))
+        super.onBackPressed()
     }
 }

@@ -1,62 +1,34 @@
 package apolo.vendedores.com.reportes
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import apolo.vendedores.com.MainActivity2
 
-class SubAvanceDeComisiones{
+class SubVentasPorClientes{
 
     lateinit var cursor : Cursor
     lateinit var lista : ArrayList<HashMap<String, String>>
     lateinit var datosX : Array<String>
     lateinit var datosY : IntArray
 
-    fun cargarDatos():ArrayList<HashMap<String, String>>{
+    @SuppressLint("Recycle")
+    fun cargarVentasPorCliente():ArrayList<HashMap<String, String>>{
 
-        val sql : String = (" SELECT  TIP_COM "
-                + "       ,  CAST(SUM(MONTO_VENTA) AS INTEGER)    AS MONTO_VENTA "
-                + "       ,  CAST(SUM(MONTO_A_COBRAR) AS INTEGER) AS MONTO_A_COBRAR "
-                + "  FROM svm_liq_premios_vend "
-//                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
-//                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
-                + " GROUP BY TIP_COM ")
+        val sql : String = ("select COD_VENDEDOR,  "
+                +   "		   CAST(sum(VENTA_4) AS INTEGER) VENTA_4  "
+                +   " from svm_metas_punto_por_cliente "
+                +   " group by COD_VENDEDOR ")
 
         try {
             cursor = MainActivity2.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
         } catch (e : Exception){
-            var error = e.message
+            e.message
             return lista
         }
 
         lista = ArrayList()
         MainActivity2.funcion.cargarLista(lista,cursor)
-        if (lista.size == 0){
-            var dato = HashMap<String,String>()
-            dato["TIP_COM"] = "A"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "B"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "C"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "D"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "O"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-        }
         return lista
     }
 
@@ -80,7 +52,6 @@ class SubAvanceDeComisiones{
             } catch (e : Exception){
                 listaInt.add(0)
             }
-//            datosY[i] = lista.get(i).get(indice).toString().replace(".","").toInt()
         }
         datosY = listaInt.toIntArray()
     }

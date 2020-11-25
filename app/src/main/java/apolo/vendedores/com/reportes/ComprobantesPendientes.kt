@@ -34,8 +34,13 @@ class ComprobantesPendientes : AppCompatActivity() {
     }
 
     fun inicializarElementos(){
-        cargarComprobantesPendientes()
-        mostrarComprobantesPendientes()
+        try {
+            cargarComprobantesPendientes()
+            mostrarComprobantesPendientes()
+        } catch (e : java.lang.Exception) {
+            e.message
+            return
+        }
     }
 
     private fun cargarComprobantesPendientes(){
@@ -47,7 +52,7 @@ class ComprobantesPendientes : AppCompatActivity() {
                 + "        SUM(TOT_GRAVADA + TOT_IVA) AS TOT_GRAVADA    , "
                 + "        (SUM(TOT_IVA)+sum(TOT_GRAVADA))/11      AS TOT_IVA              , "
                 + "        SUM(TOT_COMPROBANTE) AS TOT_COMPROBANTE        "
-                + "   FROM svm_liquidacion_fuerza_venta                   "
+                + "   FROM rhv_liquidacion_fuerza_venta                   "
                 + "  GROUP BY TIP_COMPROBANTE_REF,SUBSTR(FEC_COMPROBANTE,4,7), DESCRIPCION ")
 
         try {
@@ -87,7 +92,7 @@ class ComprobantesPendientes : AppCompatActivity() {
                     + "        TOT_GRAVADA + TOT_IVA AS TOT_GRAVADA        , "
                     + "        TOT_IVA            , "
                     + "        TOT_COMPROBANTE      "
-                    + " FROM   svm_liquidacion_fuerza_venta"
+                    + " FROM   rhv_liquidacion_fuerza_venta"
                     + " WHERE  TIP_COMPROBANTE_REF         = '" + listaComprobantes[i]["TIP_COMPROBANTE_REF"] + "'"
                     + "   AND  SUBSTR(FEC_COMPROBANTE,4,7) = '" + listaComprobantes[i]["PERIODO"] + "'"
                     + " ORDER BY FEC_COMPROBANTE DESC")

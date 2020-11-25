@@ -48,7 +48,7 @@
         android:fitsSystemWindows="true"
         android:layout_gravity="start"
         app:elevation="20dp"
-        app:headerLayout="@layout/menu_cab_vendedores"
+        app:headerLayout="@layout/menu_supervisores"
         app:menu="@menu/drawer_menu_vendedores"
         >
 

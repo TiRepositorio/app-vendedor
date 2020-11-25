@@ -20,23 +20,27 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@color/fondoCabecera"
-            android:visibility="gone"
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_usuario_claro"
-                />
-
-            <TextView
-                android:id="@+id/tvVendedor"
+            <include
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre del vendedor"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:textColor="@color/textoClaro"/>
+                layout="@layout/barra_vendedores"/>
+
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_usuario_claro"-->
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvVendedor"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Nombre del vendedor"-->
+<!--                android:textStyle="bold"-->
+<!--                android:padding="10dp"-->
+<!--                android:textColor="@color/textoClaro"/>-->
 
         </LinearLayout>
 
@@ -48,19 +52,6 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#ddd"
-                android:src="@drawable/ic_dolar" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ddd"
-                android:padding="5dp"
-                android:text="Cobertura Mensual"
-                android:textStyle="bold" />
 
         </LinearLayout>
 

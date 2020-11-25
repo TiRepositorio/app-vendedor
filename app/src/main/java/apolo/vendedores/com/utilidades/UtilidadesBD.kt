@@ -4,9 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class UtilidadesBD( context: Context,
-                    factory: SQLiteDatabase.CursorFactory?) :
-      SQLiteOpenHelper( context,"edsystem_vendedor",factory,1){
+class UtilidadesBD( context: Context, factory: SQLiteDatabase.CursorFactory?) :
+      SQLiteOpenHelper( context,"vendedor",factory,1){
     override fun onCreate(db: SQLiteDatabase?) {
         db!!.execSQL(SentenciasSQL.createTableUsuarios())
     }

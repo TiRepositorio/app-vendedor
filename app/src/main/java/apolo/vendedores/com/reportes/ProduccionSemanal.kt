@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_avance_de_comisiones2.*
 import kotlinx.android.synthetic.main.activity_produccion_semanal.*
@@ -27,7 +28,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private var semana : String = ""
     var codVendedor = ""
-//    private var desVendedor = ""
+    private var desVendedor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,36 +43,44 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
         funcion.cargarTitulo(R.drawable.ic_dolar,"Produccion semanal")
         imgTitulo.visibility = View.GONE
         tvTitulo.visibility = View.GONE
-        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","svm_produccion_semanal_vend")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_produccion_semanal_vend"),this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","ven_svm_produccion_semanal_vend")
         funcion.inicializaContadores()
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
         barraMenu.setNavigationItemSelectedListener(this)
+        validacion()
         cargarCabecera()
         mostrarCabecera()
         cargaDetalle()
         mostrarDetalle()
     }
 
-//    fun cargarCodigos(){
-//        codVendedor = tvVendedor.text!!.toString().split("-")[0]
-//        desVendedor = tvVendedor.text.toString().split("-")[1]
-//        if (tvVendedor.text.toString().split("-").size>2){
-//            desVendedor = tvVendedor.text.toString()
-//            while (desVendedor.indexOf("-") != 0){
-//                desVendedor = desVendedor.substring(1,desVendedor.length)
-//            }
-//            desVendedor = desVendedor.substring(1,desVendedor.length)
-//        }
-////        funcion.mensaje(this,codVendedor,desVendedor)
-//    }
+    private fun cargarCodigos(){
+        codVendedor = tvVendedor.text!!.toString().split("-")[0]
+        desVendedor = tvVendedor.text.toString().split("-")[1]
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1,desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1,desVendedor.length)
+        }
+    }
+
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
 
     private fun cargarCabecera(){
-//        cargarCodigos()
+        cargarCodigos()
         val sql : String = ("SELECT SEMANA , PERIODO     " +
-                            "     , SUM(MONTO_VIATICO) AS MONTO_VIATICO " +
+                            "     , SUM(MONTO_TOTAL) AS MONTO_TOTAL " +
                             "  from svm_produccion_semanal_vend " +
-//                            " WHERE COD_VENDEDOR  = '$codVendedor' " +
+                            " WHERE COD_VENDEDOR  = '$codVendedor' " +
 //                            "   AND DESC_VENDEDOR = '$desVendedor' " +
                             " GROUP BY SEMANA, PERIODO " +
                             " ORDER BY CAST(SEMANA AS INTEGER)")
@@ -87,7 +96,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
             datos = HashMap()
             datos["SEMANA"] = cursor.getString(cursor.getColumnIndex("SEMANA"))
             datos["PERIODO"] = cursor.getString(cursor.getColumnIndex("PERIODO"))
-            datos["MONTO_VIATICO"] = funcion.entero(cursor.getString(cursor.getColumnIndex("MONTO_VIATICO")))
+            datos["MONTO_TOTAL"] = funcion.entero(cursor.getString(cursor.getColumnIndex("MONTO_TOTAL")))
             FuncionesUtiles.listaCabecera.add(datos)
             cursor.moveToNext()
             semana = FuncionesUtiles.listaCabecera[0]["SEMANA"].toString()
@@ -96,10 +105,10 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun cargaDetalle(){
 
-        val sql : String = ("SELECT CANTIDAD, SEMANA, MONTO_TOTAL , PERIODO "
+        val sql : String = ("SELECT CANTIDAD, SEMANA, MONTO_TOTAL , PERIODO, MONTO_VIATICO "
                          +  "  from svm_produccion_semanal_vend "
                          +  " where SEMANA        = '$semana' "
-//                         +  "   AND COD_VENDEDOR  = '$codVendedor' "
+                         +  "   AND COD_VENDEDOR  = '$codVendedor' "
 //                         +  "   AND DESC_VENDEDOR = '$desVendedor' "
                          +  " ORDER BY CAST(MONTO_TOTAL AS INTEGER)")
 
@@ -118,7 +127,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
             datos["CANTIDAD"] = funcion.entero(funcion.dato(cursor,"CANTIDAD"))
             datos["SEMANA"] = funcion.entero(cursor.getString(cursor.getColumnIndex("SEMANA")))
             datos["MONTO_TOTAL"] = funcion.entero(cursor.getString(cursor.getColumnIndex("MONTO_TOTAL")))
-            datos["PERIODO"] = cursor.getString(cursor.getColumnIndex("PERIODO"))
+            datos["MONTO_VIATICO"] = cursor.getString(cursor.getColumnIndex("MONTO_VIATICO"))
             FuncionesUtiles.listaDetalle.add(datos)
             cursor.moveToNext()
         }
@@ -126,15 +135,15 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     @SuppressLint("SetTextI18n")
     private fun mostrarCabecera(){
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3)
-        funcion.valores = arrayOf("SEMANA","PERIODO","MONTO_VIATICO")
+        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3)
+        funcion.valores = arrayOf("SEMANA","PERIODO","MONTO_TOTAL")
         val adapterCabecera: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
             FuncionesUtiles.listaCabecera,
             R.layout.rep_prod_sem_lista_produccion_semanal_cabecera2,
             funcion.vistas,funcion.valores
         )
         lvProduccionSemanalCabecera.adapter = adapterCabecera
-        tvCabeceraTotalProduccion.text = funcion.entero(adapterCabecera.getTotalEntero("MONTO_VIATICO"))+""
+        tvCabeceraTotalProduccion.text = funcion.entero(adapterCabecera.getTotalEntero("MONTO_TOTAL"))+""
         lvProduccionSemanalCabecera.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->
             FuncionesUtiles.posicionCabecera = position
             semana = FuncionesUtiles.listaCabecera[position]["SEMANA"].toString()
@@ -147,7 +156,7 @@ class ProduccionSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     private fun mostrarDetalle(){
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4)
-        funcion.valores = arrayOf("SEMANA","CANTIDAD","MONTO_TOTAL","PERIODO")
+        funcion.valores = arrayOf("SEMANA","CANTIDAD","MONTO_VIATICO","MONTO_TOTAL")
         val adapterDetalle: Adapter.AdapterGenericoDetalle = Adapter.AdapterGenericoDetalle(this,
             FuncionesUtiles.listaDetalle,
             R.layout.rep_prod_sem_lista_produccion_semanal_detalle2,

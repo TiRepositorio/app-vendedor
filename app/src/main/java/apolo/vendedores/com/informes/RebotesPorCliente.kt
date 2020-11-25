@@ -10,6 +10,7 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_rebotes_por_vendedor.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -29,6 +30,8 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
         var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,20 +43,45 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     fun inicializarElementos(){
         barraMenu.setNavigationItemSelectedListener(this)
-        funcion.listaVendedores("COD_VENDEDOR","NOM_VENDEDOR","svm_rebotes_por_cliente"/*,tvVendedor,nav_view_menu*/)
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_rebotes_por_cliente"),this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","ven_svm_rebotes_por_cliente"/*,tvVendedor,nav_view_menu*/)
         funcion.cargarTitulo(R.drawable.ic_rebote,"Rebotes por vendedor")
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
+        validacion()
         cargar()
         mostrar()
     }
 
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
+
+    private fun cargarCodigos(){
+        try {
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
+        } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1, desVendedor.length)
+        }
+//        funcion.mensaje(this,codVendedor,desVendedor)
+    }
+
     private fun cargar(){
+        cargarCodigos()
         val sql = ("SELECT /*COD_VENDEDOR,*/CODIGO, DESC_PENALIDAD, MONTO_TOTAL, FECHA/*, NOM_VENDEDOR, DESC_SUPERVISOR*/ "
                         + "  FROM svm_rebotes_por_cliente  "
-//                        + " WHERE  "
-//                        + "       COD_VENDEDOR = '" + tvVendedor.text.toString().split("-")[0] + "'   AND "
-//                        + "       NOM_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "'       "
+                        + " WHERE  "
+                        + "       COD_VENDEDOR = '$codVendedor'   "
+//                        + " AND   NOM_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "'       "
                         + " ORDER BY  CODIGO, date(substr(FECHA,7) || '-' ||"
                         + "substr(FECHA,4,2) || '-' ||"
                         + "substr(FECHA,1,2)) DESC")
@@ -77,7 +105,7 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     fun mostrar(){
         funcion.valores = arrayOf("CODIGO","FECHA", "DESC_PENALIDAD","MONTO_TOTAL")
-        funcion.vistas = intArrayOf(R.id.tv1,R.id.tv1,R.id.tv3,R.id.tv4)
+        funcion.vistas = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4)
         val adapter: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
                                                                                         FuncionesUtiles.listaCabecera,
                                                                                         R.layout.inf_reb_vend_lista_rebotes,

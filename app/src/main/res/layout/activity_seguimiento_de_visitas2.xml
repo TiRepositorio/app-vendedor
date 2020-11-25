@@ -6,19 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:id="@+id/contMenu"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".reportes.VariablesMensuales"
+    tools:context=".reportes.SeguimientoDeVisitas"
     >
+
+    <!--    tools:openDrawer="start"-->
+
 
     <include
         android:id="@+id/vendInclude"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        layout="@layout/activity_variables_mensuales"
+        layout="@layout/activity_seguimiento_de_visitas"
         />
-
-
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

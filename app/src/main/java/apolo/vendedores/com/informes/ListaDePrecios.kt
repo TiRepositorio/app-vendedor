@@ -31,7 +31,20 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lista_de_precios)
 
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBuscar,spBuscar,etBuscar,btBuscar,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBuscar,
+            spBuscar,
+            etBuscar,
+            btBuscar,
+            llBotonVendedores
+        )
         inicializarElementos()
     }
 
@@ -86,7 +99,7 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     private fun cargarPrecios(){
         val sql =
-            ("select a.COD_LISTA_PRECIO, b.DESC_LISTA_PRECIO, a.PREC_CAJA, a.PREC_UNID, 'GS.' SIGLAS  "
+            ("select DISTINCT a.COD_LISTA_PRECIO, b.DESC_LISTA_PRECIO, a.PREC_CAJA, a.PREC_UNID, 'GS.' SIGLAS  "
                     + " from svm_articulos_precios a "
                     + " left join svm_precios_fijos b on a.cod_lista_precio = b.cod_lista_precio "
                     + " where COD_ARTICULO = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_ARTICULO"] + "' "

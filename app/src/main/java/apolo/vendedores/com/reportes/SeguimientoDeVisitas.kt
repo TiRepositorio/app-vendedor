@@ -2,14 +2,18 @@ package apolo.vendedores.com.reportes
 
 import android.database.Cursor
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas.*
+import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas2.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
 class SeguimientoDeVisitas : AppCompatActivity(){
@@ -25,6 +29,7 @@ class SeguimientoDeVisitas : AppCompatActivity(){
         setContentView(R.layout.activity_seguimiento_de_visitas)
 
         funcion = FuncionesUtiles(imgTitulo, tvTitulo)
+
         inicializarElementos()
     }
 
@@ -34,7 +39,6 @@ class SeguimientoDeVisitas : AppCompatActivity(){
         actualizarDatos(ibtnSiguiente)
         funcion.inicializaContadores()
         funcion.cargarTitulo(R.drawable.ic_visitado, "Seguimiento de visitas")
-        tvVendedor.setOnClickListener { funcion.mostrarMenu() }
         cargarPeriodo()
         mostrarPeriodo()
         cargarDetalle()
@@ -141,4 +145,5 @@ class SeguimientoDeVisitas : AppCompatActivity(){
             lvVendedroes.invalidateViews()
         }
     }
+
 }

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import apolo.vendedores.com.ventas.catastro.CatastrarCliente
 import kotlinx.android.synthetic.main.activity_promotores.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -18,10 +19,11 @@ class PromotoresCatastro : AppCompatActivity() {
 
     companion object{
         var datos: HashMap<String, String> = HashMap()
-        lateinit var funcion : FuncionesUtiles
         lateinit var cursor: Cursor
         var lista : ArrayList<HashMap<String,String>> = ArrayList()
     }
+
+    lateinit var funcion : FuncionesUtiles
 
     private var posicion = 0
 
@@ -40,6 +42,7 @@ class PromotoresCatastro : AppCompatActivity() {
         funcion.addItemSpinner(this,"Codigo-Nombre","a.COD_VENDEDOR-a.DESC_VENDEDOR")
         funcion.inicializaContadores()
         funcion.cargarTitulo(R.drawable.ic_persona,"Lista de vendedores")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_cliente_vendedor"),this)
         btBuscar.setOnClickListener{buscar()}
         btRealizar.setOnClickListener{realizarVenta()}
         btSalir.setOnClickListener{finish()}
@@ -50,7 +53,7 @@ class PromotoresCatastro : AppCompatActivity() {
         val campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
         val groupBy = ""
         val orderBy = "a.COD_VENDEDOR"
-        val tabla = " svm_cliente_vendedor a "
+        val tabla = " ven_svm_cliente_vendedor a "
         val where = ("")
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()

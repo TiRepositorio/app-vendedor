@@ -84,7 +84,7 @@ class PreciosModificados : AppCompatActivity(){
     }
 
     private fun cargarPrecios(){
-        val sql = ("select FEC_VIGENCIA, COD_LISTA_PRECIO, PRECIO_ANT, PRECIO_ACT, TIPO, DECIMALES "
+        val sql = ("SELECT DISTINCT FEC_VIGENCIA, COD_LISTA_PRECIO, PRECIO_ANT, PRECIO_ACT, TIPO, DECIMALES "
                 + "  from vtv_precios_fijos "
                 + "  WHERE COD_ARTICULO = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_ARTICULO"] + "'"
                 + "    and COD_UNIDAD_MEDIDA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_UNIDAD_MEDIDA"] + "'"

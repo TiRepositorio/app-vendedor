@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_pedidos_en_reparto.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -22,6 +23,9 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
         contMenu.closeDrawer(GravityCompat.START)
         return true
     }
+
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     companion object{
         var funcion : FuncionesUtiles = FuncionesUtiles()
@@ -40,18 +44,43 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
     fun inicializarElementos(){
         barraMenu.setNavigationItemSelectedListener(this)
         funcion.cargarTitulo(R.drawable.ic_ruteo_lista,"Pedidos en reparto")
-        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "svm_pedidos_en_reparto")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_pedidos_en_reparto"),this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "ven_svm_pedidos_en_reparto")
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
+        validacion()
         cargar()
         mostrar()
     }
 
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
+
+    private fun cargarCodigos(){
+        try {
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
+        } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1, desVendedor.length)
+        }
+//        funcion.mensaje(this,codVendedor,desVendedor)
+    }
+
     private fun cargar(){
+        cargarCodigos()
         var sql = "SELECT DISTINCT DESC_REPARTIDOR ,TEL_REPARTIDOR " +
                          "  FROM svm_pedidos_en_reparto " +
-//                         " WHERE " +
-//                         "       COD_VENDEDOR   = '" + this.tvVendedor.text.toString().split("-")[0] + "'        AND" +
+                         " WHERE " +
+                         "       COD_VENDEDOR   = '$codVendedor'  " +
                          " ORDER BY DESC_REPARTIDOR ASC"
         cursor = funcion.consultar(sql)
         FuncionesUtiles.listaCabecera = ArrayList()

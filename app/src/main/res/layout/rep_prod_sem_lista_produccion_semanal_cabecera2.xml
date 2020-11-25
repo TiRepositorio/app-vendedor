@@ -7,12 +7,11 @@
         android:id="@+id/tv1"
         android:layout_weight="1.5"
         android:text="Categoria"
-        android:textAlignment="center"
         style="@style/textoTabla"
         />
 
     <TextView
-        android:id="@+id/tv1"
+        android:id="@+id/tv2"
         android:text="Total Venta"
         android:layout_weight="1"
         style="@style/textoTabla"
@@ -22,7 +21,7 @@
         android:id="@+id/tv3"
         android:text="Comision"
         android:layout_weight="1.2"
-        android:textAlignment="textEnd"
+        android:gravity="end|center_vertical"
         style="@style/textoTabla"
         />
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.*
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import kotlinx.android.synthetic.main.activity_corte_de_stock.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.util.*
@@ -17,6 +18,8 @@ class CorteDeStock : Activity() {
     lateinit var lista: ArrayList<HashMap<String, String>>
     lateinit var cursor: Cursor
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +31,40 @@ class CorteDeStock : Activity() {
 
     fun inicializarElementos(){
         funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
-        funcion.cargarTitulo(R.drawable.ic_check,"Estado de pedidos")
-        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "svm_listado_pedidos")
+        funcion.cargarTitulo(R.drawable.ic_check,"Corte de logistica")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_pedidos_sin_stock_rep"),this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "ven_svm_pedidos_sin_stock_rep")
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
+        validacion()
         cargar()
         mostrar()
     }
 
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
+
+    private fun cargarCodigos(){
+        try {
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
+        } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1, desVendedor.length)
+        }
+//        funcion.mensaje(this,codVendedor,desVendedor)
+    }
+
     private fun cargar(){
+        cargarCodigos()
         lista = ArrayList()
         try {
             val sql = ("select COD_EMPRESA     , ORIGEN      , DESC_DEPOSITO   ,"
@@ -45,7 +73,8 @@ class CorteDeStock : Activity() {
                     + "ARTICULO        , CANTIDAD    , PRECIO_UNITARIO ,"
                     + "MONTO_TOTAL     , PEDIDO      , DESC_MOTIVO     ,"
                     + "DECIMALES "
-                    + " from svm_pedidos_sin_stock_rep ")
+                    + " from svm_pedidos_sin_stock_rep "
+                    + "where COD_VENDEDOR = '$codVendedor'")
             cursor = funcion.consultar(sql)
         } catch (e: Exception) {
             e.message

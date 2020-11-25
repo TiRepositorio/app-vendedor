@@ -11,7 +11,7 @@
         <item
             android:id="@+id/vendReportes"
             android:icon="@drawable/ic_dolar"
-            android:title="Reportes"/>
+            android:title="Reportes de pago"/>
         <item
             android:id="@+id/vendInformes"
             android:icon="@drawable/ic_graficos"

@@ -31,7 +31,6 @@ class Sincronizacion : AppCompatActivity() {
         var tipoSinc: String = "T"
         lateinit var context: Context
         var primeraVez = false
-        var contador = 0
         var nf = DecimalFormat("000")
     }
 
@@ -72,7 +71,7 @@ class Sincronizacion : AppCompatActivity() {
 
         @SuppressLint("WrongThread", "SetTextI18n")
         override fun doInBackground(vararg p0: Void?): Void? {
-            imeiBD = MainActivity.conexionWS.procesaVersion(FuncionesUtiles.usuario["LOGIN"].toString())
+            imeiBD = MainActivity.conexionWS.procesaVersion()
             if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1) {
                 progressDialog.dismiss()
                 runOnUiThread {
@@ -159,14 +158,16 @@ class Sincronizacion : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun sincronizarTodo(){
-        val th = Thread(Runnable {
+        val th = Thread {
             runOnUiThread {
                 tvImei.text = tvImei.text.toString() + "\n\nSincronizando"
             }
             borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables())
-            obtenerArchivosTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables(),
-                MainActivity.tablasSincronizacion.listaCamposSincronizacion())
-        })
+            obtenerArchivosMasivo(
+                MainActivity.tablasSincronizacion.listaSQLCreateTables(),
+                MainActivity.tablasSincronizacion.listaCamposSincronizacion()
+            )
+        }
         th.start()
     }
 
@@ -265,16 +266,167 @@ class Sincronizacion : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("SetTextI18n", "SdCardPath")
+    private fun obtenerArchivosMasivo(listaSQLCreateTable: Vector<String>, listaCampos: Vector<Vector<String>>):Boolean{
+        runOnUiThread {
+            pbTabla.progress = 0
+            pbProgresoTotal.progress = 0
+        }
+        for (i in 0 until listaSQLCreateTable.size){
+            MainActivity.bd!!.beginTransaction()
+            try {
+
+                //Leer el archivo desde la direccion asignada
+                var archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
+                var leeArchivo  = FileReader(archivo)
+                var buffer      = BufferedReader(leeArchivo)
+                val sql         : String            = listaSQLCreateTable[i]
+
+                try {
+                    MainActivity.bd!!.execSQL(sql)
+                } catch (e: Exception) {
+                    runOnUiThread{
+                        tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                    }
+                    return false
+                }
+
+                //Obtiene cantidad de lineas
+                var numeroLineas = 0
+                var linea: String? = buffer.readLine()
+                while (linea != null){
+                    numeroLineas++
+                    linea = buffer.readLine()
+                }
+
+                archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
+                leeArchivo  = FileReader(archivo)
+                buffer      = BufferedReader(leeArchivo)
+
+                //Extrae valor de los campo e inserta a la BD
+                linea = buffer.readLine()
+                var cont = 0
+                runOnUiThread {
+                    tvImei.text = tvImei.text.toString() + "\n${nf.format(i)} - " + listaSQLCreateTable[i].split(" ")[5]
+                }
+                var sql2 = "insert into " + listaSQLCreateTable[i].split(" ")[5] + "("
+                for (j in 0 until listaCampos[i].size){
+                    sql2 += if (j == listaCampos[i].size-1){
+                        listaCampos[i][j] + ")"
+                    } else {
+                        listaCampos[i][j] + ","
+                    }
+                }
+                sql2 += " values "
+                var contador = 0
+                var ins = 0
+                while (linea != null){
+                    val valores : ArrayList<String> = linea.split("|") as ArrayList<String>
+                    sql2 += if (ins > 0){
+                        ",("
+                    } else {
+                        " ("
+                    }
+                    contador++
+                    ins++
+                    for (j in 0 until listaCampos[i].size){
+                        sql2 += if (valores[j] == "null" || valores[j].isEmpty()){
+                            "' '"
+                        } else {
+                            "'${valores[j].replace("'","''")}'"
+                        }
+                        sql2 += if (j == listaCampos[i].size-1){
+                            ")"
+                        } else {
+                            ","
+                        }
+                    }
+
+                    if (ins == 50){
+                        val buffer2 = buffer
+                        if (buffer2.readLine()!=null){
+                            try {
+                                MainActivity.bd!!.execSQL(sql2)
+                            } catch (e: Exception) {
+                                e.message
+                                runOnUiThread{
+                                    tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                                }
+                                return false
+                            }
+                            sql2 = "insert into " + listaSQLCreateTable[i].split(" ")[5] + "("
+                            for (j in 0 until listaCampos[i].size){
+                                sql2 += if (j == listaCampos[i].size-1){
+                                    listaCampos[i][j] + ")"
+                                } else {
+                                    listaCampos[i][j] + ","
+                                }
+                            }
+                            sql2 += " values "
+                        }
+                        ins = 0
+                    }
+
+                    linea = buffer.readLine()
+                    runOnUiThread {
+                        cont++
+                        var progreso : Double = (100/numeroLineas.toDouble())*(cont)
+                        if (cont == numeroLineas){
+                            progreso = 100.0
+                        }
+                        pbTabla.progress = progreso.toInt()
+                    }
+                }
+                try {
+                    if (contador>0 && ins > 0){
+                        MainActivity.bd!!.execSQL(sql2)
+                    }
+                } catch (e: Exception) {
+                    e.message
+                    runOnUiThread{
+                        tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                    }
+                    return false
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                }
+                return false
+            }
+            runOnUiThread {
+                pbProgresoTotal.progress = (100/listaSQLCreateTable.size)*(i+1)
+            }
+            MainActivity.bd!!.setTransactionSuccessful()
+            MainActivity.bd!!.endTransaction()//inserta valores en tablas especificas
+            if (listaSQLCreateTable[i].split(" ")[5] == "svm_vendedor_pedido") {
+                try {
+                    MainActivity.bd!!.execSQL("update svm_vendedor_pedido set ULTIMA_SINCRO = FECHA")
+                } catch (e:java.lang.Exception){
+                    e.message
+                    runOnUiThread{
+                        tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                    }
+                }
+            }
+        }
+        runOnUiThread {
+            pbProgresoTotal.progress = 100
+            btFinalizar.visibility = View.VISIBLE
+        }
+        if (tipoSinc == "T"){
+//            cargarSvm_vendedor_pedido_venta()
+        }
+        return true
+    }
+
     override fun onBackPressed() {
         return
     }
 
+    @SuppressLint("SetTextI18n")
     fun cerrar(view: View) {
-        if (primeraVez){
-            startActivity(Intent(this,MainActivity2::class.java))
-            primeraVez = false
-        }
-
+        startActivity(Intent(this,MainActivity2::class.java))
         finish()
     }
 

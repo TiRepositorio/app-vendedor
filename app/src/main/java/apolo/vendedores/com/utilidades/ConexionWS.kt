@@ -33,15 +33,16 @@ class ConexionWS {
         SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
 
-    fun procesaVersion(codVendedor: String):String{
+    fun procesaVersion():String{
         lateinit var resultado: String
-        setMethodName("ProcesaVersionVendedorAct")
+        setMethodName("ProcesaVersionGestor")
 
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
         request.addProperty("password", "#edsystem@polo")
-        request.addProperty("codVendedor", codVendedor)
+        request.addProperty("codPersona", FuncionesUtiles.usuario["LOGIN"])
         request.addProperty("version", MainActivity.version)
+        request.addProperty("codEmpresa", "1")
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(request)
@@ -59,15 +60,15 @@ class ConexionWS {
     }
 
     fun generaArchivos()  : Boolean{
-        setMethodName("GeneraArchivosVendedor_Act")
+        setMethodName("GeneraArchivosGestor")
         lateinit var solicitud : SoapObject
         lateinit var resultado : String
         try {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codVendedor", FuncionesUtiles.usuario["LOGIN"])
-            solicitud.addProperty("codPersona", "72367")
+            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["LOGIN"])
+            solicitud.addProperty("codEmpresa", "1")
 //            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_PERSONA"])
         } catch (e: Exception){
             return false
@@ -75,7 +76,7 @@ class ConexionWS {
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL, 480000)
+        val transporte = HttpTransportSE(URL, 600000)
         try {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response.toString()
@@ -91,14 +92,15 @@ class ConexionWS {
 
     @TargetApi(Build.VERSION_CODES.O)
     fun obtenerArchivos(): Boolean{
-        setMethodName("ObtieneArchivosVendedor")
+        setMethodName("ObtieneArchivosGestor")
         lateinit var solicitud : SoapObject
-        lateinit var resultado : Vector<SoapPrimitive>
+        lateinit var resultado : Vector<*>
         try {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario["LOGIN"])
+            solicitud.addProperty("codEmpresa", "1")
         } catch (e: Exception){
             return false
         }
@@ -108,8 +110,8 @@ class ConexionWS {
         val transporte = HttpTransportSE(URL, 240000)
         try {
             transporte.call(SOAP_ACTION, envelope)
-            resultado = envelope.response as Vector<SoapPrimitive>
-        } catch (e: Exception){
+            resultado = envelope.response as Vector<*>
+        } catch (e: Exception) {
             e.message
             return false
         }
@@ -148,7 +150,7 @@ class ConexionWS {
     }
 
     @SuppressLint("SdCardPath")
-    fun extraerDatos(resultado: Vector<SoapPrimitive>, listaTablas: Vector<String>) : Boolean{
+    fun extraerDatos(resultado: Vector<*>, listaTablas: Vector<String>) : Boolean{
         lateinit var fos : FileOutputStream
         try {
             for (i in 0 until resultado.size){
@@ -275,6 +277,7 @@ class ConexionWS {
             solicitud.addProperty("vcodVendedor", codVendedor)
             solicitud.addProperty("vclientes", codCliente.replace("''", "").replace("'", ""))
             solicitud.addProperty("vfoto_fachada", imagenFachada)
+//        request.addProperty("codEmpresa", "1")
         } catch (e: Exception){
             return e.message.toString()
         }
@@ -308,6 +311,7 @@ class ConexionWS {
             solicitud.addProperty("vcodVendedor", codVendedor)
             solicitud.addProperty("vclientes", clientes.replace("''", " ").replace("'", ""))
             solicitud.addProperty("vfoto_fachada", FotoFachada)
+//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             var err = e.message
             err = "" + err
@@ -346,6 +350,7 @@ class ConexionWS {
             request.addProperty("vcodCliente", cod_cliente)
             request.addProperty("vclientes", vcliente.replace("''", " ").replace("'", ""))
             request.addProperty("vfoto_fachada", vFotoFachada)
+//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             var err = e.message
             err = "" + err
@@ -377,6 +382,7 @@ class ConexionWS {
             request.addProperty("usuario", "edsystem")
             request.addProperty("password", "#edsystem@polo")
             request.addProperty("version", vers)
+//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             return false
         }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -28,19 +30,53 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:layout_height="50dp"
+                android:text="Apolo Import S.A."
+                android:gravity="start|center_vertical"
+                android:textSize="20dp"
+                android:padding="10dp"
+                android:layout_weight="1"
+                style="@style/titulo"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:background="@color/tial"
+                android:onClick="mostrarMenu"
+                android:src="@drawable/ic_menu"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
                 android:text="Resumen de ventas por marcas"
-                style="@style/titulo"
+                android:gravity="start|center_vertical"
+                style="@style/tituloClaro"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/tial"
+                android:gravity="start|center_vertical"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:layout_weight="1"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:paddingRight="5dp"
@@ -61,19 +97,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:orientation="vertical"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent">
             <TextView
                 android:text="Avance de comisiones"
-                style="@style/titulo"
+                android:gravity="start|center_vertical"
+                style="@style/tituloClaro"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/tial"
+                android:gravity="start|center_vertical"
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:layout_weight="1"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:paddingRight="5dp"
@@ -90,20 +134,54 @@
             </LinearLayout>
         </LinearLayout>
 
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_weight="1"-->
+<!--            android:padding="10dp"-->
+<!--            android:background="@color/textoClaro"-->
+<!--            android:gravity="center_horizontal">-->
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:layout_weight="1"
+            android:background="@color/textoClaro"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+<!--            <TextView-->
+<!--                android:text="Evolución diaria de ventas"-->
+<!--                android:gravity="start|center_vertical"-->
+<!--                style="@style/tituloClaro"-->
+<!--                tools:ignore="HardcodedText" />-->
+
             <TextView
-                android:text="Evolución diaria de ventas"
-                style="@style/titulo"
+                android:text="Informes de pago"
+                android:gravity="start|center_vertical"
+                style="@style/tituloClaro"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/tial"
+                android:gravity="start|center_vertical"
                 />
+
+<!--            <include-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                layout="@layout/ven_pri_evol_diaria_de_venta"/>-->
 
             <include
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/ven_pri_evol_diaria_de_venta"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                layout="@layout/ven_pri_accesos"/>
 
         </LinearLayout>
 

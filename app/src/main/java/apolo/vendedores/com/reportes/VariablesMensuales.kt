@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.MainActivity
@@ -14,7 +15,10 @@ import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_variables_mensuales.*
-import kotlinx.android.synthetic.main.activity_variables_mensuales2.*
+import kotlinx.android.synthetic.main.activity_variables_mensuales.llBotonVendedores
+import kotlinx.android.synthetic.main.activity_variables_mensuales2.barraMenu
+import kotlinx.android.synthetic.main.activity_variables_mensuales2.contMenu
+import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.text.DecimalFormat
 
 class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -47,13 +51,17 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun inicializarElementos(){
+        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion.cargarTitulo(R.drawable.ic_dolar,"Variables mensuales")
         FuncionesUtiles.posicionCabecera = 0
         FuncionesUtiles.posicionDetalle  = 0
         llBotonVendedores.visibility = View.VISIBLE
         llBotonVendedores.setOnClickListener { mostrarMenu() }
         barraMenu.setNavigationItemSelectedListener(this)
-
-        listaVendedores()
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR",sqlVendedores())
+        actualizarDatos(ibtnAnterior)
+        actualizarDatos(ibtnSiguiente)
+//        listaVendedores()
         cargarCoberturaMensual()
         mostrarCoberturaMensual()
         cargarCuotaPorUnidadDeNegocio()
@@ -66,6 +74,17 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
         } else {
             contMenu.openDrawer(GravityCompat.START)
         }
+    }
+
+    private fun sqlVendedores():String{
+        return ("select distinct COD_VENDEDOR, DESC_VENDEDOR from ("
+                + "select distinct c.COD_VENDEDOR, c.DESC_VENDEDOR "
+                + "  from fvv_liq_cuota_x_und_neg_vend c "
+                + " union all "
+                + "select distinct c.COD_VENDEDOR, c.DESC_VENDEDOR "
+                + "  from svm_cobertura_mensual_vend c "
+                + ")"
+                + " order by cast(COD_VENDEDOR as integer)")
     }
 
     @SuppressLint("SetTextI18n", "Recycle")
@@ -204,4 +223,20 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
             lvCuotaPorUnidadDeNegocio.invalidateViews()
         }
     }
+
+    private fun actualizarDatos(imageView: ImageView){
+        imageView.setOnClickListener{
+            if (imageView.id==ibtnAnterior.id){
+                funcion.posVend--
+            } else {
+                funcion.posVend++
+            }
+            funcion.actualizaVendedor(this)
+            cargarCoberturaMensual()
+            mostrarCoberturaMensual()
+            cargarCuotaPorUnidadDeNegocio()
+            mostrarCuotaPorUnidadDeNegocio()
+        }
+    }
+
 }

@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_avance_de_comisiones.*
 import kotlinx.android.synthetic.main.activity_avance_de_comisiones2.*
@@ -24,6 +25,9 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
         var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
     }
+
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         tvVendedor.text = item.title.toString()
@@ -47,11 +51,13 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     fun inicializarElementos(){
         funcion.cargarTitulo(R.drawable.ic_dolar,"Avance de comisiones")
-        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","svm_liq_premios_vend")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_liq_premios_vend"),this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","ven_svm_liq_premios_vend")
         funcion.inicializaContadores()
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
         barraMenu.setNavigationItemSelectedListener(this)
+        validacion()
         try {
             cargarCabecera()
             mostrarCabecera()
@@ -63,13 +69,35 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
-    private fun cargarCabecera(){
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
 
+    private fun cargarCodigos(){
+        try {
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
+        } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1, desVendedor.length)
+        }
+//        funcion.mensaje(this,codVendedor,desVendedor)
+    }
+
+    private fun cargarCabecera(){
+        cargarCodigos()
         val sql : String = (" SELECT  TIP_COM "
                 + "       ,  SUM(MONTO_VENTA)    AS MONTO_VENTA "
                 + "       ,  SUM(MONTO_A_COBRAR) AS MONTO_A_COBRAR "
                 + "  FROM svm_liq_premios_vend "
-//                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
+                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
 //                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
                 + " GROUP BY TIP_COM ")
 

@@ -186,9 +186,10 @@ class SentenciasSQL {
 
         fun createTableSvmCiudades(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_ciudades "
-                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CIUDAD TEXT       , DESC_CIUDAD TEXT,"
-                    + " COD_DEPARTAMENTO TEXT               , DESC_DEPARTAMENTO TEXT, COD_PAIS TEXT   ,"
-                    + " DESC_PAIS TEXT                      , FRECUENCIA TEXT   )")
+                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT      , COD_VENDEDOR TEXT     ,"
+                    + "COD_CIUDAD TEXT        , DESC_CIUDAD TEXT                    , COD_DEPARTAMENTO TEXT ,"
+                    + " DESC_DEPARTAMENTO TEXT, COD_PAIS TEXT                       , DESC_PAIS TEXT        ,"
+                    + " FRECUENCIA TEXT       )")
         }
 
         fun createTableSvmTablaVisitas(): String {
@@ -212,8 +213,8 @@ class SentenciasSQL {
 
         fun createTableSvmPreciosFijos(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_precios_fijos "
-                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_LISTA_PRECIO TEXT,"
-                    + " DESC_LISTA_PRECIO TEXT  )")
+                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_VENDEDOR TEXT    ,"
+                    + "COD_LISTA_PRECIO TEXT, DESC_LISTA_PRECIO TEXT  )")
         }
 
         fun createTableSvmLiqComisionVendedor(): String {
@@ -243,8 +244,9 @@ class SentenciasSQL {
 
         fun createTableSvmCondVentaVendedor(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_cond_venta_vendedor "
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_LISTA_PRECIO TEXT, COD_CONDICION_VENTA TEXT,"
-                    + " COD_CLIENTE TEXT					 , COD_SUBCLIENTE TEXT  , COD_VENDEDOR TEXT DEFAULT '9504')")
+                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT   , COD_EMPRESA TEXT          , COD_VENDEDOR TEXT ,"
+                    + " COD_LISTA_PRECIO TEXT                   , COD_CONDICION_VENTA TEXT  , COD_CLIENTE TEXT  , "
+                    + " COD_SUBCLIENTE TEXT )")
         }
 
         fun createTableSvmEvolDiariaVenta(): String {
@@ -263,14 +265,15 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT  	, COD_ARTICULO TEXT  	,"
                     + " DESC_ARTICULO TEXT					 , COD_LISTA_PRECIO TEXT, COD_UNIDAD_MEDIDA TEXT,"
                     + " REFERENCIA TEXT						 , FEC_VIGENCIA TEXT 	, PRECIO_ANT TEXT 		,"
-                    + " PRECIO_ACT TEXT					 	 , TIPO TEXT			, DECIMALES TEXT )")
+                    + " PRECIO_ACT TEXT					 	 , TIPO TEXT			, DECIMALES TEXT        ,"
+                    + " COD_VENDEDOR TEXT)")
         }
 
         fun createTableStvCategoriaPalm(): String {
             return ("CREATE TABLE IF NOT EXISTS stv_categoria_palm "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT		, COD_CATEGORIA TEXT, DESC_CATEGORIA TEXT,"
                     + "	 COD_SEGMENTO TEXT					 , DESC_SEGMENTO TEXT	, ORDEN TEXT		, TIPO TEXT		 	 , "
-                    + "  COD_TIP_CLIENTE TEXT)")
+                    + "  COD_TIP_CLIENTE TEXT                , COD_VENDEDOR TEXT)")
         }
 
         fun createTableSpmRetornoComentario(): String {
@@ -313,7 +316,7 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT , COD_EMPRESA TEXT     , FEC_MOVIMIENTO TEXT    , "
                     + "  FEC_INICIO TEXT                	  , FEC_FIN TEXT         , CANTIDAD TEXT          , "
                     + "  CANT_VENDIDO TEXT                    , CANT_NO_VENDIDO TEXT , CANT_NO_VISITADO TEXT  , "
-                    + "  SEMANA TEXT                          , PORC TEXT            , COD_VENDEDOR TEXT      ,"
+                    + "  SEMANA TEXT                          , PORC TEXT            , COD_VENDEDOR TEXT      , "
                     + "  DESC_VENDEDOR TEXT )")
         }
 
@@ -341,7 +344,7 @@ class SentenciasSQL {
                     + "  CANT_HASTA TEXT					 , COD_ARTICULO TEXT 		, COD_UNIDAD_MEDIDA TEXT,"
                     + "  DESC_UND_MEDIDA TEXT			 	 , IND_TIPO TEXT			, DESCUENTO TEXT		,"
                     + "  PRECIO_GS TEXT					 	 , PRECIO_RS TEXT		 	, MULT TEXT				,"
-                    + "  IND_MULTIPLE TEXT                   )")
+                    + "  IND_MULTIPLE TEXT                   , COD_VENDEDOR TEXT)")
         }
 
         fun createTableSvmMensajeConclusion(): String {
@@ -352,8 +355,8 @@ class SentenciasSQL {
         fun createTableSvmSurtidoEficiente(): String? {
             return ("CREATE TABLE IF NOT EXISTS svm_surtido_eficiente "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT  	, COD_CLIENTE TEXT	, "
-                    + " COD_SUBCLIENTE TEXT					 ,	TIP_CLIENTE TEXT 	, COD_ARTICULO TEXT	, "
-                    + " TIP_SURTIDO TEXT 		 														  "
+                    + " COD_SUBCLIENTE TEXT					 , TIP_CLIENTE TEXT 	, COD_ARTICULO TEXT	, "
+                    + " TIP_SURTIDO TEXT                     , COD_VENDEDOR TEXT							  "
                     + ")")
         }
 
@@ -384,7 +387,7 @@ class SentenciasSQL {
         fun createTableSvmCoberturaVisVendedores(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_cobertura_vis_vendedores "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_GRUPO  TEXT      , PORC_DESDE  TEXT,"
-                    + " PORC_HASTA TEXT, PORC_COM    TEXT    , COD_VENDEDOR TEXT    , DESC_VENDEDOR TEXT)")
+                    + " PORC_HASTA TEXT, PORC_COM    TEXT    , COD_VENDEDOR TEXT    , COD_EMPRESA TEXT)")
         }
 
         fun createTableRhvLiquidacionFuerzaVenta(): String {
@@ -603,6 +606,16 @@ class SentenciasSQL {
 
             return lista
         }
+
+        //VISTAS DE VENDEDORES
+        fun venVistaCabecera(tabla:String):String{
+            return "CREATE VIEW IF NOT EXISTS ven_" + tabla + " as " +
+                    "select DISTINCT A.COD_VENDEDOR, B.DESC_VENDEDOR" +
+                    "  FROM $tabla A, svm_vendedor_pedido B" +
+                    " WHERE A.COD_EMPRESA = B.COD_EMPRESA " +
+                    "   AND A.COD_VENDEDOR= B.COD_VENDEDOR;"
+        }
+
 
     }
 }

@@ -37,8 +37,8 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private val formatNumeroEntero : DecimalFormat = DecimalFormat("###,###,##0.##")
     private val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
-    private var codSupervisor = ""
-    private var desSupervisor = ""
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,17 +80,17 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     @SuppressLint("SetTextI18n")
     private fun cargarCodigos(){
         try {
-            codSupervisor = tvVendedor.text!!.toString().split("-")[0]
-            desSupervisor = tvVendedor.text!!.toString().split("-")[1]
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
         } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
         if (tvVendedor.text.toString().split("-").size>2){
-            desSupervisor = tvVendedor.text!!.toString()
-            while (desSupervisor.indexOf("-") != 0){
-                desSupervisor = desSupervisor.substring(1, desSupervisor.length)
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
             }
-            desSupervisor = desSupervisor.substring(1, desSupervisor.length)
+            desVendedor = desVendedor.substring(1, desVendedor.length)
         }
-//        funcion.mensaje(this,codSupervisor,desSupervisor)
+//        funcion.mensaje(this,codVendedor,desVendedor)
     }
 
     @SuppressLint("Recycle")
@@ -100,7 +100,8 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, CAST(sum(MAYOR_VENTA) AS INTEGER) MAYOR_VENTA, CAST(sum(VENTA_MES1) AS INTEGER) VENTA_MES1, "
                             +   "		   CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , CAST(sum(META) AS INTEGER) META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC "
-                            +   " from svm_metas_punto_por_linea "
+                            +   "  from svm_metas_punto_por_linea "
+                            +   " where COD_VENDEDOR = '$codVendedor'"
                             +   " group by DESC_GTE_MARKETIN ")
 
         try {
@@ -133,6 +134,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                     + " SUM(META) AS META  	  , SUM(MES_1) AS MES_1		            , SUM(MES_2) AS MES_2           , SUM((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC 			 "
                     + " from svm_metas_punto_por_linea "
                     + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}'"
+                    + "   AND COD_VENDEDOR = '$codVendedor'"
                     + " GROUP BY DESC_MODULO   "
                     + " Order By cast(ifnull(ORD_GTE_MARK,0) as double), cast(ifnull(NRO_ORD_MAG,0) as double), cast(ifnull(ORD_CATEGORIA,0) as double)")
 
@@ -176,6 +178,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                         + " from svm_metas_punto_por_linea "
                         + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}' "
                         + "   and DESC_MODULO       = '${sublistasVentasPorMarcas[i][j]["DESC_MODULO"]}' "
+                        + "   AND COD_VENDEDOR = '$codVendedor'"
                         + " Order By cast(ifnull(ORD_GTE_MARK,0) as double), cast(ifnull(NRO_ORD_MAG,0) as double), cast(ifnull(ORD_CATEGORIA,0) as double)")
                 cursor =funcion.consultar(sql)
                 sub1 = ArrayList()

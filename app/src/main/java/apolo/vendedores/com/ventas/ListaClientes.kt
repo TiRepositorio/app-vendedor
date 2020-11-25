@@ -1,5 +1,6 @@
 package apolo.vendedores.com.ventas
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -20,8 +21,8 @@ import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
-import apolo.vendedores.com.ventas.asistencia.Marcacion
 import apolo.vendedores.com.utilidades.Mapa
+import apolo.vendedores.com.ventas.asistencia.Marcacion
 import apolo.vendedores.com.ventas.justificacion.NoVenta
 import kotlinx.android.synthetic.main.activity_lista_clientes.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -247,6 +248,21 @@ class ListaClientes : AppCompatActivity() {
                     buscar("")
                     return
                 }
+                if (et.text.toString().trim() == "vender") {
+                    Pedidos.nuevo = true
+                    startActivity(Intent(this@ListaClientes, Pedidos::class.java))
+                    return
+                }
+                if (et.text.toString().trim() == "venderNoPresencial") {
+                    Pedidos.nuevo = true
+                    Pedidos.indPresencial = "N"
+                    startActivity(Intent(this@ListaClientes, Pedidos::class.java))
+                    return
+                }
+                if (et.text.toString().trim() == "marcacion") {
+                    entradaSalida()
+                    return
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -272,9 +288,27 @@ class ListaClientes : AppCompatActivity() {
         startActivity(modifcar)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun vender(){
-        Pedidos.nuevo = true
-        startActivity(Intent(this,Pedidos::class.java))
+        if (FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIP_CAUSAL"].toString().trim() == "B"){
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAutorizacion("vender",accion)
+            return
+        }
+        if (validaMarcacionSalida()){
+            funcion.toast(this,"Este cliente ya tiene marcación de salida.")
+            return
+        }
+        if (!verificaMarcacionCliente()){
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAccionOpcion("marcacion"
+                                       ,"venderNoPresencial",accion
+                                       ,"¿Se encuentra en el cliente?",""
+                                       ,"SI","NO")
+            return
+        }
+        Pedidos.indPresencial = "S"
+        accion.setText("vender")
     }
 
     private fun sd(){
@@ -282,13 +316,49 @@ class ListaClientes : AppCompatActivity() {
         startActivity(sd)
     }
 
+    private fun validaMarcacionSalida():Boolean{
+        val sql = ("Select id "
+                + "  from vt_marcacion_ubicacion "
+                + " where COD_CLIENTE    = '" + codCliente + "' "
+                + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
+                + "   and TIPO           IN ('S','E')  "
+                + "   and FECHA 	     = '" + funcion.getFechaActual() + "'")
+        val cursor = funcion.consultar(sql)
+        if (cursor.count > 0) {
+            if (funcion.dato(cursor, "TIPO") == "S") {
+                return true
+            }
+        } else {
+            return false
+        }
+        return false
+    }
+
+    private fun verificaMarcacionCliente(): Boolean {
+        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
+                         +  "  from vt_marcacion_ubicacion             			"
+                         +  " where TIPO           IN ('E')                 	"
+                         +  "   and COD_CLIENTE    = '" + codCliente + "' "
+                         +  "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
+                         +  "   and FECHA          = '${funcion.getFechaActual()}'} "
+                         +  " order by id desc     ")
+        val cursor: Cursor = funcion.consultar(sql)
+        cursor.moveToFirst()
+        if (cursor.count > 0) {
+            if (funcion.dato(cursor, "TIPO") == "E") {
+                return true
+            }
+        }
+        return false
+    }
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun noVenta(){
         NoVenta.modificacion = true
-        NoVenta.editable = true
-        NoVenta.nuevo = true
-        NoVenta.etAccion = accion
-        NoVenta.context = this
+        NoVenta.editable     = true
+        NoVenta.nuevo        = true
+        NoVenta.etAccion     = accion
+        NoVenta.context      = this
         val noVenta = NoVenta(codCliente, codSubcliente, lm, telMgr, latitud, longitud)
         noVenta.cargarDialogo()
     }

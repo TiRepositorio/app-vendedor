@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import kotlinx.android.synthetic.main.activity_promotores.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
@@ -39,6 +40,7 @@ class Promotores : AppCompatActivity() {
         funcion.addItemSpinner(this,"Codigo-Nombre","a.COD_VENDEDOR-a.DESC_VENDEDOR")
         funcion.inicializaContadores()
         funcion.cargarTitulo(R.drawable.ic_persona,"Lista de vendedores")
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_cliente_vendedor"),this)
         btBuscar.setOnClickListener{buscar()}
         btRealizar.setOnClickListener{realizarVenta()}
         btConsultar.setOnClickListener{consultarPedidos()}
@@ -50,7 +52,7 @@ class Promotores : AppCompatActivity() {
         val campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
         val groupBy = ""
         val orderBy = "a.COD_VENDEDOR"
-        val tabla = " svm_cliente_vendedor a "
+        val tabla = " ven_svm_cliente_vendedor a "
         val where = ("")
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()

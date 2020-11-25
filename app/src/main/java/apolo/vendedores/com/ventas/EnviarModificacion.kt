@@ -60,7 +60,7 @@ class EnviarModificacion {
         }
         override fun doInBackground(vararg params: Void?): Void? {
             return try {
-                respuesta = MainActivity2.conexionWS.procesaVersion(FuncionesUtiles.usuario["LOGIN"].toString())
+                respuesta = MainActivity2.conexionWS.procesaVersion()
                 null
             } catch (e: Exception) {
                 respuesta = e.message.toString()

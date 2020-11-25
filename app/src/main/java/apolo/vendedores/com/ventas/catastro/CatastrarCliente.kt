@@ -184,7 +184,7 @@ class CatastrarCliente : Activity() {
 
         override fun doInBackground(vararg params: Void?): Void? {
             return try {
-                resultado = MainActivity2.conexionWS.procesaVersion(FuncionesUtiles.usuario["LOGIN"].toString())
+                resultado = MainActivity2.conexionWS.procesaVersion()
                 resultado = "01*ENVIADO CON EXITO"
                 null
             } catch (e: Exception) {

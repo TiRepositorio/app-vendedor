@@ -18,6 +18,7 @@ import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -25,14 +26,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.configurar.ActualizarVersion
+import apolo.vendedores.com.informes.EvolucionDiariaDeVentas
 import apolo.vendedores.com.menu.DialogoMenu
-import apolo.vendedores.com.reportes.AvanceDeComisiones
-import apolo.vendedores.com.reportes.SubAvanceDeComisiones
-import apolo.vendedores.com.reportes.SubVentasPorMarcas
-import apolo.vendedores.com.reportes.VentasPorMarca
+import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
+import kotlinx.android.synthetic.main.ven_pri_accesos.*
 import kotlinx.android.synthetic.main.ven_pri_evol_diaria_de_venta.*
 import kotlinx.android.synthetic.main.ventana_principal.*
 import java.io.File
@@ -53,8 +53,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var conexionWS : ConexionWS = ConexionWS()
     }
 
-    private val REQUEST_EXTERNAL_STORAGE = 1
-    private val PERMISSIONS_STORAGE = arrayOf(
+    private val requestExternalStorage = 1
+    private val permissionsStorage = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
@@ -63,8 +63,9 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private lateinit var grafico : Graficos
     private var subInforme1 = SubVentasPorMarcas()
-    private var subInforme2 = SubAvanceDeComisiones()
-
+    private var subInforme2 = SubVentasPorClientes()
+    private var subInforme3 = SubAvanceDeComisiones()
+    private var cerrar = false
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,8 +77,6 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         inicializaElementosReporte()
         cargarUsuarioInicial()
     }
-
-
 
     override fun onBackPressed() {
         if (drawer_layout_aplicacion.isDrawerOpen(GravityCompat.START)) {
@@ -95,6 +94,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         inicializaETAccion(accion)
 
         etAccion = accion
+
         dispositivo = FuncionesDispositivo(this)
         rooteado = !dispositivo.verificaRoot()
 
@@ -112,17 +112,32 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             startActivity(Intent(this,VentasPorMarca::class.java))
         }
 
-        subInforme2.cargarDatos()
-        subInforme2.cargarDatosX("TIP_COM")
-        subInforme2.cargarDatosY("MONTO_A_COBRAR")
+//        subInforme2.cargarVentasPorCliente()
+//        subInforme2.cargarDatosX("COD_VENDEDOR")
+//        subInforme2.cargarDatosY("VENTA_4")
+//
+//        grafico = Graficos(graComision,subInforme2.datosX,subInforme2.datosY)
+//        grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
+//        graComision.setOnClickListener{
+//            startActivity(Intent(this,VentasPorCliente::class.java))
+//        }
 
-        grafico = Graficos(graComision,subInforme2.datosX,subInforme2.datosY)
+        subInforme3.cargarDatos()
+        subInforme3.cargarDatosX("TIP_COM")
+        subInforme3.cargarDatosY("MONTO_VENTA")
+
+        grafico = Graficos(graComision,subInforme3.datosX,subInforme3.datosY)
         grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
         graComision.setOnClickListener{
             startActivity(Intent(this,AvanceDeComisiones::class.java))
         }
 
-        evolucionDiaria()
+        ibt1Acceso.setOnClickListener { startActivity(Intent(this,ExtractoDeSalario::class.java)) }
+        ibt2Acceso.setOnClickListener { startActivity(Intent(this,ComprobantesPendientes::class.java)) }
+        ibt3Acceso.setOnClickListener { startActivity(Intent(this,VentasPorCliente::class.java)) }
+
+//        evolucionDiaria()
+//        trCabecera.setOnClickListener(View.OnClickListener { startActivity(Intent(this,EvolucionDiariaDeVentas::class.java)) })
         nav_view_menu.setNavigationItemSelectedListener(this)
 //        funcion.ejecutar("drop table if exists vt_pedidos_det",this)
 //        funcion.ejecutar("drop table if exists vt_pedidos_cab",this)
@@ -135,7 +150,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             funcion.ejecutar(SentenciasSQL.createTableUsuarios(),this)
             cursor = funcion.consultar("SELECT * FROM usuarios")
         } catch(e: Exception){
-//            var error = e.message
+            e.message
             return false
         }
 
@@ -182,6 +197,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         if (menuItem.itemId == R.id.vendActualizar){
             actualizarVersion()
         }
+
+        cerrar = menuItem.itemId == R.id.vendConfigurar
 
         //valida que el chip este activo y sea de una operadora nacional
 //        if (!dispositivo.validaEstadoSim(telMgr)){
@@ -248,6 +265,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun inicializaETAccion(etAccion: EditText){
         etAccion.addTextChangedListener(object : TextWatcher {
+            @RequiresApi(Build.VERSION_CODES.N)
             override fun afterTextChanged(s: Editable?) {
                 if (etAccion.text.toString() == "DESCARGAR"){
                     descargarActualizacion()
@@ -262,6 +280,13 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (s.toString() == "abrir"){
                     startActivity(DialogoMenu.intent)
                     Companion.etAccion.setText("")
+                    if (cerrar){
+                        finish()
+                    }
+                }
+                if (s.toString() == "sincronizado"){
+                    inicializaElementosReporte()
+                    accion.setText("")
                 }
             }
 
@@ -295,7 +320,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun abrir(activity: Activity){
-        ActivityCompat.requestPermissions(activity,PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE)
+        ActivityCompat.requestPermissions(activity,permissionsStorage,requestExternalStorage)
         val file = File(nombre)
         if (Build.VERSION.SDK_INT >= 24) {
             val fileUri = FileProvider.getUriForFile(baseContext,"apolo.vendedores.com.fileprovider",file)
@@ -324,13 +349,17 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-
-
     private fun evolucionDiaria(){
         val evolucion = ConsultasInicio(this)
         evolucion.evolucionDiariaDeVenta(lvEvolucionDiariaDeVentas)
     }
 
-
+    fun mostrarMenu(view: View) {
+        if (drawer_layout_aplicacion.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout_aplicacion.closeDrawer(GravityCompat.START)
+        } else {
+            drawer_layout_aplicacion.openDrawer(GravityCompat.START)
+        }
+    }
 
 }

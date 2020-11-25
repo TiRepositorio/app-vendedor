@@ -101,10 +101,4 @@ class Graficos(grafico: BarChart, private var datosX: Array<String>, private var
         return barData
     }
 
-    fun dataSet(dataSet: DataSet<Entry>):DataSet<Entry>{
-        dataSet.colors = colores
-        dataSet.valueTextSize = 10f
-        return dataSet
-    }
-
 }

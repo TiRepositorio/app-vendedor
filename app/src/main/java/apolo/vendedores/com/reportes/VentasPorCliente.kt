@@ -2,19 +2,27 @@ package apolo.vendedores.com.reportes
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_ventas_por_cliente.*
+import kotlinx.android.synthetic.main.activity_ventas_por_cliente.barraMenu
+import kotlinx.android.synthetic.main.activity_ventas_por_cliente.contMenu
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
-class VentasPorCliente : AppCompatActivity() {
+class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var funcion: FuncionesUtiles
     lateinit var adapter: Adapter.AdapterGenericoCabecera
     private var totSurtido: Double = 0.0
     private var mix4: Double = 0.0
+    private var codVendedor = ""
+    private var desVendedor = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,19 +33,49 @@ class VentasPorCliente : AppCompatActivity() {
     fun inicializarElementos() {
         funcion = FuncionesUtiles(this, imgTitulo, tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
         funcion.cargarTitulo(R.drawable.ic_mapa, "Ventas por cliente")
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","svm_metas_punto_por_cliente")
+        barraMenu.setNavigationItemSelectedListener(this)
+        actualizarDatos(ibtnAnterior)
+        actualizarDatos(ibtnSiguiente)
         tvMes1.text = funcion.getMes(funcion.getMes() - 1)
         tvMes2.text = funcion.getMes(funcion.getMes())
         tvMes1.setBackgroundResource(R.drawable.border_textviews)
         tvMes2.setBackgroundResource(R.drawable.border_textviews)
+        validacion()
         cargarDatos()
     }
 
+
+    private fun validacion(){
+        if (tvVendedor!!.text.toString() == "Nombre del vendedor"){
+            funcion.toast(this, "No hay datos para mostrar.")
+            finish()
+        }
+    }
+
+    private fun cargarCodigos(){
+        try {
+            codVendedor = tvVendedor.text!!.toString().split("-")[0]
+            desVendedor = tvVendedor.text!!.toString().split("-")[1]
+        } catch (e: java.lang.Exception){tvVendedor.text = "Nombre del vendedor"}
+        if (tvVendedor.text.toString().split("-").size>2){
+            desVendedor = tvVendedor.text!!.toString()
+            while (desVendedor.indexOf("-") != 0){
+                desVendedor = desVendedor.substring(1, desVendedor.length)
+            }
+            desVendedor = desVendedor.substring(1, desVendedor.length)
+        }
+//        funcion.mensaje(this,codVendedor,desVendedor)
+    }
+
     private fun cargarDatos() {
+        cargarCodigos()
         val sql =
             ("select DESC_VENDEDOR    , CODIGO         , NOM_SUBCLIENTE  , CIUDAD        , COD_SUPERVISOR , DESC_SUPERVISOR ,"
                     + "       LISTA_PRECIO     , MAYOR_VENTA    , VENTA_3         , MIX_3         , VENTA_4        , MIX_4           ,"
                     + "       METAS            , MES_1          , MES_2           , TOT_SURTIDO "
                     + "  FROM svm_metas_punto_por_cliente  "
+                    + " WHERE COD_VENDEDOR = '$codVendedor'  "
                     + " ORDER BY CAST (CODIGO AS DOUBLE) ")
         FuncionesUtiles.listaCabecera = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaCabecera, funcion.consultar(sql))
@@ -127,5 +165,28 @@ class VentasPorCliente : AppCompatActivity() {
         tvVenta4.text = funcion.entero(adapter.getTotalEntero("VENTA_4").toString())
         tvMix4.text = funcion.entero(adapter.getTotalEntero("MIX_4").toString())
         tvSurtidoEficiente.text = funcion.decimal(adapter.getTotalEntero("MIX_4") * 100 / totSurtido)
+    }
+
+    private fun actualizarDatos(imageView: ImageView){
+        imageView.setOnClickListener{
+            if (imageView.id==ibtnAnterior.id){
+                funcion.posVend--
+            } else {
+                funcion.posVend++
+            }
+            funcion.actualizaVendedor(this)
+            cargarDatos()
+            mostrar()
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        tvVendedor.text = item.title.toString()
+        FuncionesUtiles.posicionCabecera = 0
+        FuncionesUtiles.posicionDetalle  = 0
+        cargarDatos()
+        mostrar()
+        contMenu.closeDrawer(GravityCompat.START)
+        return true
     }
 }

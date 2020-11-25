@@ -13,12 +13,15 @@ class ConsultasInicio(var context: Context) {
     var funcion : FuncionesUtiles = FuncionesUtiles(context)
 
     fun evolucionDiariaDeVenta(lista:ListView){
-        val sql = ("SELECT COD_EMPRESA  , COD_VENDEDOR	    , DESC_VENDEDOR, PEDIDO_2_ATRAS, PEDIDO_1_ATRAS,"
-                + "           TOTAL_PEDIDOS, TOTAL_FACT  	    , META_VENTA   , META_LOGRADA  , PROY_VENTA    ,"
-                + "		      TOTAL_REBOTE , TOTAL_DEVOLUCION   , CANT_CLIENTES, CANT_POSIT    , EF_VISITA 	   ,"
-                + "		      DIA_TRAB	   , PUNTAJE			, SURTIDO_EF   , "
-                + "           IFNULL(((CAST(CANT_POSIT AS DOUBLE)/CAST(CANT_CLIENTES AS DOUBLE))*100),0.0) COBERTURA "
-                + "      FROM svm_evol_diaria_venta  ")
+        val sql = ("SELECT a.COD_EMPRESA  , a.COD_VENDEDOR	    , b.DESC_VENDEDOR, a.PEDIDO_2_ATRAS, a.PEDIDO_1_ATRAS,"
+                + "           a.TOTAL_PEDIDOS, a.TOTAL_FACT  	    , a.META_VENTA   , a.META_LOGRADA  , a.PROY_VENTA    ,"
+                + "		      a.TOTAL_REBOTE , a.TOTAL_DEVOLUCION   , a.CANT_CLIENTES, a.CANT_POSIT    , a.EF_VISITA 	   ,"
+                + "		      a.DIA_TRAB	   , a.PUNTAJE			, a.SURTIDO_EF   , "
+                + "           IFNULL(((CAST(a.CANT_POSIT AS DOUBLE)/CAST(a.CANT_CLIENTES AS DOUBLE))*100),0.0) COBERTURA "
+                + "      FROM svm_evol_diaria_venta a, svm_vendedor_pedido b  "
+                + "     WHERE a.COD_EMPRESA  = b.COD_EMPRESA   "
+                + "       AND a.COD_VENDEDOR = b.COD_VENDEDOR  "
+                + "")
         try {
             EvolucionDiariaDeVentas.cursor = funcion.consultar(sql)
             EvolucionDiariaDeVentas.cursor.moveToFirst()

@@ -190,9 +190,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -245,9 +245,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -255,7 +255,6 @@ class FuncionesUtiles {
 
 
     constructor(
-        context: Context,
         imgTitulo: ImageView?,
         tvTitulo: TextView?,
         imgAnterior: ImageView?,
@@ -299,9 +298,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -323,9 +322,9 @@ class FuncionesUtiles {
         this.spBuscar = spBuscar
         this.etBuscar = etBuscar
         this.btBuscar = btBuscar
-        llBuscar!!.visibility = View.VISIBLE
-        etBuscar!!.inputType = 2
-        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        llBuscar.visibility = View.VISIBLE
+        etBuscar.inputType = 2
+        spBuscar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
             }
@@ -337,9 +336,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -349,20 +348,19 @@ class FuncionesUtiles {
     //Variables
     companion object{
         lateinit var cursor: Cursor
-        val usuario : HashMap<String, String> = HashMap<String, String>()
+        val usuario : HashMap<String, String> = HashMap()
         var posicionCabecera: Int = 0
         var posicionDetalle : Int = 0
         var posicionDetalle2: Int = 0
         var posicionGenerico: Int = 0
-        var listaCabecera: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var listaDetalle2: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-        var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList<ArrayList<HashMap<String, String>>>()
-        var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList<ArrayList<ArrayList<HashMap<String, String>>>>()
+        var listaCabecera: ArrayList<HashMap<String, String>> = ArrayList()
+        var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList()
+        var listaDetalle2: ArrayList<HashMap<String, String>> = ArrayList()
+        var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
+        var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList()
         val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###.##")
         val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
         var formatoGenerico: NumberFormat = NumberFormat.getInstance()
-        var intMarcacion : Int = 0
         var ultimaVenta : Int = -1
     }
 
@@ -400,10 +398,10 @@ class FuncionesUtiles {
 
     //FUNCIONES DE BD
     fun dato(cursor: Cursor, index: String): String {
-        try {
-            return cursor.getString(cursor.getColumnIndex(index))
+        return try {
+            cursor.getString(cursor.getColumnIndex(index))
         } catch (e: java.lang.Exception){
-            return ""
+            ""
         }
     }
     fun datoEntero(cursor: Cursor, index: String): Int{
@@ -428,13 +426,14 @@ class FuncionesUtiles {
 
         return (valor*100)/total
     }
+    @SuppressLint("Recycle")
     fun consultar(sql: String): Cursor{
         return try {
             cursor = MainActivity.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
             cursor
         } catch (e: Exception){
-            var error = e.message
+            e.message
             cursor
         }
     }
@@ -453,7 +452,7 @@ class FuncionesUtiles {
             MainActivity.bd!!.execSQL(sql)
             true
         } catch (e: Exception) {
-            var dialogo:AlertDialog.Builder = AlertDialog.Builder(context)
+            val dialogo:AlertDialog.Builder = AlertDialog.Builder(context)
             dialogo.setMessage(e.message)
             dialogo.setTitle("ERROR")
             dialogo.show()
@@ -871,6 +870,7 @@ class FuncionesUtiles {
         imgTitulo!!.setImageResource(icon)
         tvTitulo!!.setText(titulo)
     }
+    @SuppressLint("SetTextI18n")
     fun actualizaVendedor(context: Context){
         if (posVend == listaVendedores.size){
             Toast.makeText(context, "Es el ultimo registro", Toast.LENGTH_SHORT).show()
@@ -880,10 +880,8 @@ class FuncionesUtiles {
                 Toast.makeText(context, "Es el primer registro", Toast.LENGTH_SHORT).show()
                 posVend++
             } else {
-                tvVendedor!!.setText(
-                    listaVendedores.get(posVend).get("codigo") + "-" +
-                            listaVendedores.get(posVend).get("descripcion")
-                )
+                tvVendedor!!.text = listaVendedores[posVend]["codigo"] + "-" +
+                        listaVendedores[posVend]["descripcion"]
                 inicializaContadores()
             }
         }
@@ -921,19 +919,19 @@ class FuncionesUtiles {
         }
     }
     fun listaVendedores(codVendedor: String, descVendedor: String, tabla: String){
-        var sql = ("SELECT DISTINCT " + codVendedor + "," + descVendedor + " "
+        val sql = ("SELECT DISTINCT " + codVendedor + "," + descVendedor + " "
                 + " FROM " + tabla
                 + " ORDER BY CAST(" + codVendedor + " AS NUMBER)")
         cargarVendedores(sql, codVendedor, descVendedor)
     }
     fun listaSupervisores(codSupervisor: String, descSupervisor: String, tabla: String){
-        var sql = ("SELECT DISTINCT " + codSupervisor + "," + descSupervisor + " "
+        val sql = ("SELECT DISTINCT " + codSupervisor + "," + descSupervisor + " "
                 + " FROM " + tabla
                 + " ORDER BY CAST(" + codSupervisor + " AS NUMBER)")
         cargarSupervisores(sql, codSupervisor, descSupervisor)
     }
     fun listaGerentes(codGerente: String, descGerente: String, tabla: String){
-        var sql = ("SELECT DISTINCT " + codGerente + "," + descGerente + " "
+        val sql = ("SELECT DISTINCT " + codGerente + "," + descGerente + " "
                 + " FROM " + tabla
                 + " ORDER BY CAST(" + codGerente + " AS NUMBER)")
         cargarGerentes(sql, codGerente, descGerente)
@@ -955,10 +953,9 @@ class FuncionesUtiles {
     @SuppressLint("Recycle", "SetTextI18n")
     fun cargarVendedores(sql: String, codVendedor: String, descVendedor: String){
         try {
-            cursor = MainActivity.bd!!.rawQuery(sql, null)
-            cursor.moveToFirst()
-            val codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
-            val descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            cursor = consultar(sql)
+            val codigo = dato(cursor,codVendedor)
+            val descripcion = dato(cursor,descVendedor)
             tvVendedor!!.text = "$codigo-$descripcion"
 
         } catch (e: Exception){
@@ -966,15 +963,11 @@ class FuncionesUtiles {
             return
         }
         barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Vendedores"
-        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario.get(
-            "NOMBRE"
-        )
-        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario.get(
-            "LOGIN"
-        )
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Nom.: " + usuario["NOMBRE"]
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario["LOGIN"]
         barraMenu!!.menu.clear()
 
-        listaVendedores = ArrayList<HashMap<String, String>>()
+        listaVendedores = ArrayList()
         for (i in 0 until cursor.count){
             val codigo = dato(cursor, codVendedor)
             val descripcion = dato(cursor, descVendedor)
@@ -1039,9 +1032,9 @@ class FuncionesUtiles {
         }
     }
     private fun addVendedor(codigo: String, descripcion: String){
-        var dato : HashMap<String, String> = HashMap()
-        dato.put("codigo", codigo)
-        dato.put("descripcion", descripcion)
+        val dato : HashMap<String, String> = HashMap()
+        dato["codigo"] = codigo
+        dato["descripcion"] = descripcion
         listaVendedores.add(dato)
     }
     private fun addSupervisor(codigo: String, descripcion: String){
