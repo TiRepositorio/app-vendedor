@@ -26,6 +26,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.configurar.ActualizarVersion
+import apolo.vendedores.com.configurar.CalcularClavePrueba
+import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.informes.EvolucionDiariaDeVentas
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
@@ -109,7 +111,9 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         grafico = Graficos(graVentas,subInforme1.datosX,subInforme1.datosY)
         grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
         graVentas.setOnClickListener{
-            startActivity(Intent(this,VentasPorMarca::class.java))
+            if (dispositivo.fechaCorrecta()) {
+                startActivity(Intent(this, VentasPorMarca::class.java))
+            }
         }
 
 //        subInforme2.cargarVentasPorCliente()
@@ -129,12 +133,26 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         grafico = Graficos(graComision,subInforme3.datosX,subInforme3.datosY)
         grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
         graComision.setOnClickListener{
-            startActivity(Intent(this,AvanceDeComisiones::class.java))
+            if (dispositivo.fechaCorrecta()) {
+                startActivity(Intent(this, AvanceDeComisiones::class.java))
+            }
         }
 
-        ibt1Acceso.setOnClickListener { startActivity(Intent(this,ExtractoDeSalario::class.java)) }
-        ibt2Acceso.setOnClickListener { startActivity(Intent(this,ComprobantesPendientes::class.java)) }
-        ibt3Acceso.setOnClickListener { startActivity(Intent(this,VentasPorCliente::class.java)) }
+        ibt1Acceso.setOnClickListener {
+            if (dispositivo.fechaCorrecta()) {
+                startActivity(Intent(this, ExtractoDeSalario::class.java))
+            }
+        }
+        ibt2Acceso.setOnClickListener {
+            if (dispositivo.fechaCorrecta()) {
+                startActivity(Intent(this, ComprobantesPendientes::class.java))
+            }
+        }
+        ibt3Acceso.setOnClickListener {
+            if (dispositivo.fechaCorrecta()) {
+                startActivity(Intent(this, VentasPorCliente::class.java))
+            }
+        }
 
 //        evolucionDiaria()
 //        trCabecera.setOnClickListener(View.OnClickListener { startActivity(Intent(this,EvolucionDiariaDeVentas::class.java)) })
@@ -185,6 +203,12 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        if (R.id.vendConfigurar != menuItem.itemId && R.id.vendSincronizar != menuItem.itemId && R.id.vendSalir != menuItem.itemId){
+            if (!dispositivo.fechaCorrecta()){
+                funcion.toast(this,"Debe sincronizar para continuar.")
+                return false
+            }
+        }
         val menu = DialogoMenu(this)
         when (menuItem.itemId){
             R.id.vendVenta                  -> menu.mostrarMenu(menuItem,R.layout.menu_cab_visitas)
@@ -194,8 +218,18 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.vendSalir                  -> finish()
         }
 
+        if (menuItem.itemId == R.id.vendConfigurar){
+            CalcularClavePrueba.informe = ConfigurarUsuario::class.java
+        }
+
         if (menuItem.itemId == R.id.vendActualizar){
             actualizarVersion()
+        }
+        if (menuItem.itemId == R.id.vendSincronizar){
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAccionOpcion("sincronizar","",accion
+                ,"¿Desea sincronizar ahora?","¡Atención!"
+                ,"SI","NO")
         }
 
         cerrar = menuItem.itemId == R.id.vendConfigurar
@@ -286,6 +320,10 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 }
                 if (s.toString() == "sincronizado"){
                     inicializaElementosReporte()
+                    accion.setText("")
+                }
+                if (s.toString() == "sincronizar"){
+                    startActivity(Intent(this@MainActivity2,Sincronizacion::class.java))
                     accion.setText("")
                 }
             }

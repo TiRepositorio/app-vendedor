@@ -61,6 +61,8 @@
             android:name=".utilidades.Sincronizacion"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".configurar.CalcularClavePrueba" />
+        <activity
             android:name=".configurar.ConfigurarUsuario"
             android:windowSoftInputMode="adjustNothing" />
         <activity

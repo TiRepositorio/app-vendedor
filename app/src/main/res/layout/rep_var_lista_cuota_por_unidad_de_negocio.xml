@@ -13,7 +13,7 @@
             />
 
         <TextView
-            android:id="@+id/tv1"
+            android:id="@+id/tv2"
             android:layout_width="190dp"
             android:text="01/04/2020 - 30/04/2020"
             android:gravity="end|center_vertical"

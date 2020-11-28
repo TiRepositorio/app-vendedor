@@ -13,9 +13,9 @@ import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_variables_mensuales.*
-import kotlinx.android.synthetic.main.activity_variables_mensuales.llBotonVendedores
 import kotlinx.android.synthetic.main.activity_variables_mensuales2.barraMenu
 import kotlinx.android.synthetic.main.activity_variables_mensuales2.contMenu
 import kotlinx.android.synthetic.main.barra_vendedores.*
@@ -51,14 +51,26 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     fun inicializarElementos(){
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
-        funcion.cargarTitulo(R.drawable.ic_dolar,"Variables mensuales")
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
+        funcion.cargarTitulo(R.drawable.ic_dolar,"Cobertura mensual")
         FuncionesUtiles.posicionCabecera = 0
         FuncionesUtiles.posicionDetalle  = 0
         llBotonVendedores.visibility = View.VISIBLE
         llBotonVendedores.setOnClickListener { mostrarMenu() }
         barraMenu.setNavigationItemSelectedListener(this)
-        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR",sqlVendedores())
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("fvv_liq_cuota_x_und_neg_vend"),this)
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_cobertura_mensual_vend"),this)
+        funcion.ejecutar("create view if not exists variables_mensuales_cab as ${sqlVendedores()}",this)
+        funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","variables_mensuales_cab")
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
 //        listaVendedores()
@@ -78,11 +90,13 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     private fun sqlVendedores():String{
         return ("select distinct COD_VENDEDOR, DESC_VENDEDOR from ("
-                + "select distinct c.COD_VENDEDOR, c.DESC_VENDEDOR "
-                + "  from fvv_liq_cuota_x_und_neg_vend c "
+                + "select distinct c.COD_VENDEDOR, d.DESC_VENDEDOR "
+                + "  from fvv_liq_cuota_x_und_neg_vend c, ven_fvv_liq_cuota_x_und_neg_vend d "
+                + " where c.COD_VENDEDOR = d.COD_VENDEDOR "
                 + " union all "
-                + "select distinct c.COD_VENDEDOR, c.DESC_VENDEDOR "
-                + "  from svm_cobertura_mensual_vend c "
+                + "select distinct c.COD_VENDEDOR, d.DESC_VENDEDOR "
+                + "  from svm_cobertura_mensual_vend c, ven_svm_cobertura_mensual_vend d "
+                + " where c.COD_VENDEDOR = d.COD_VENDEDOR "
                 + ")"
                 + " order by cast(COD_VENDEDOR as integer)")
     }
@@ -175,8 +189,7 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
                 + " ,PORC_PREMIO		, PORC_ALC_PREMIO		, MONTO_VENTA	"
                 + " ,MONTO_CUOTA		, MONTO_A_COBRAR "
                 + "  from fvv_liq_cuota_x_und_neg_vend "
-//                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
-//                + "   AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' "
+                + " WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' "
                 + " ORDER BY CAST(COD_UNID_NEGOCIO AS INTEGER)")
 
         try {

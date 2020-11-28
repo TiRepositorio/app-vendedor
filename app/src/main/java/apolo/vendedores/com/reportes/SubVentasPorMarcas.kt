@@ -25,6 +25,9 @@ class SubVentasPorMarcas{
             cursor.moveToFirst()
         } catch (e : Exception){
             e.message
+            lista = ArrayList()
+            datoAuxiliar(lista)
+            return lista
         }
 
         lista = ArrayList()
@@ -32,53 +35,57 @@ class SubVentasPorMarcas{
             MainActivity2.funcion.cargarLista(lista,cursor)
         }
         if (lista.size==0){
-            var dato = HashMap<String,String>()
-            dato["DESC_GTE_MARKETIN"] = "APOLO"
-            dato["DESC_MODULO"] = "APOLO"
-            dato["MAYOR_VENTA"] = "0"
-            dato["VENTA_MES1"] = "0"
-            dato["VENTA_MES2"] = "0"
-            dato["META"] = "0"
-            dato["PORC"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["DESC_GTE_MARKETIN"] = "INPASA"
-            dato["DESC_MODULO"] = "INPASA"
-            dato["MAYOR_VENTA"] = "0"
-            dato["VENTA_MES1"] = "0"
-            dato["VENTA_MES2"] = "0"
-            dato["META"] = "0"
-            dato["PORC"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["DESC_GTE_MARKETIN"] = "BEBIDAS"
-            dato["DESC_MODULO"] = "BEBIDAS"
-            dato["MAYOR_VENTA"] = "0"
-            dato["VENTA_MES1"] = "0"
-            dato["VENTA_MES2"] = "0"
-            dato["META"] = "0"
-            dato["PORC"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["DESC_GTE_MARKETIN"] = "SINERGIA"
-            dato["DESC_MODULO"] = "SINERGIA"
-            dato["MAYOR_VENTA"] = "0"
-            dato["VENTA_MES1"] = "0"
-            dato["VENTA_MES2"] = "0"
-            dato["META"] = "0"
-            dato["PORC"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["DESC_GTE_MARKETIN"] = "JNJ"
-            dato["DESC_MODULO"] = "JNJ"
-            dato["MAYOR_VENTA"] = "0"
-            dato["VENTA_MES1"] = "0"
-            dato["VENTA_MES2"] = "0"
-            dato["META"] = "0"
-            dato["PORC"] = "0"
-            lista.add(dato)
+            datoAuxiliar(lista)
         }
         return lista
+    }
+
+    private fun datoAuxiliar(lista:ArrayList<HashMap<String,String>>){
+        var dato = HashMap<String,String>()
+        dato["DESC_GTE_MARKETIN"] = "APOLO"
+        dato["DESC_MODULO"] = "APOLO"
+        dato["MAYOR_VENTA"] = "0"
+        dato["VENTA_MES1"] = "0"
+        dato["VENTA_MES2"] = "0"
+        dato["META"] = "0"
+        dato["PORC"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["DESC_GTE_MARKETIN"] = "INPASA"
+        dato["DESC_MODULO"] = "INPASA"
+        dato["MAYOR_VENTA"] = "0"
+        dato["VENTA_MES1"] = "0"
+        dato["VENTA_MES2"] = "0"
+        dato["META"] = "0"
+        dato["PORC"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["DESC_GTE_MARKETIN"] = "BEBIDAS"
+        dato["DESC_MODULO"] = "BEBIDAS"
+        dato["MAYOR_VENTA"] = "0"
+        dato["VENTA_MES1"] = "0"
+        dato["VENTA_MES2"] = "0"
+        dato["META"] = "0"
+        dato["PORC"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["DESC_GTE_MARKETIN"] = "SINERGIA"
+        dato["DESC_MODULO"] = "SINERGIA"
+        dato["MAYOR_VENTA"] = "0"
+        dato["VENTA_MES1"] = "0"
+        dato["VENTA_MES2"] = "0"
+        dato["META"] = "0"
+        dato["PORC"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["DESC_GTE_MARKETIN"] = "JNJ"
+        dato["DESC_MODULO"] = "JNJ"
+        dato["MAYOR_VENTA"] = "0"
+        dato["VENTA_MES1"] = "0"
+        dato["VENTA_MES2"] = "0"
+        dato["META"] = "0"
+        dato["PORC"] = "0"
+        lista.add(dato)
     }
 
     fun cargarDatosX(indice:String){

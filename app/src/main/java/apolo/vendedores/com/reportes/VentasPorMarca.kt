@@ -15,7 +15,12 @@ import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_canasta_de_marcas.*
+import kotlinx.android.synthetic.main.activity_canasta_de_marcas.tvMes1
+import kotlinx.android.synthetic.main.activity_canasta_de_marcas.tvMes2
 import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.*
+import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.barraMenu
+import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.contMenu
+import kotlinx.android.synthetic.main.activity_ventas_por_cliente.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.text.DecimalFormat
 
@@ -49,7 +54,6 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     fun inicializarElementos(){
         funcion = FuncionesUtiles(
-            this,
             imgTitulo,
             tvTitulo,
             ibtnAnterior,
@@ -64,6 +68,10 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         funcion.inicializaContadores()
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
+        tvMes1.text = funcion.getMes(funcion.getMes() - 1)
+        tvMes2.text = funcion.getMes(funcion.getMes())
+        tvMes1.setBackgroundResource(R.drawable.border_textviews)
+        tvMes2.setBackgroundResource(R.drawable.border_textviews)
         barraMenu.setNavigationItemSelectedListener(this)
         validacion()
         cargarVentasPorClientes()

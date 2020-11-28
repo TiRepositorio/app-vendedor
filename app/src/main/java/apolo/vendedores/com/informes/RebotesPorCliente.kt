@@ -37,7 +37,16 @@ class RebotesPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rebotes_por_vendedor)
 
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         inicializarElementos()
     }
 

@@ -37,7 +37,16 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pedidos_en_reparto)
 
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         inicializarElementos()
     }
 

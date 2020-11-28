@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.R
+import apolo.vendedores.com.ventas.ListaClientes
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.dialogo_contacto.*
 import java.text.DateFormat
@@ -61,8 +62,8 @@ class FuncionesUtiles {
         this.spBuscar = spBuscar
         this.etBuscar = etBuscar
         this.btBuscar = btBuscar
-        etBuscar!!.inputType = 2
-        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        etBuscar.inputType = 2
+        spBuscar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
             }
@@ -74,9 +75,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -100,8 +101,8 @@ class FuncionesUtiles {
         this.spBuscar = spBuscar
         this.etBuscar = etBuscar
         this.btBuscar = btBuscar
-        etBuscar!!.inputType = 2
-        spBuscar!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        etBuscar.inputType = 2
+        spBuscar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
             }
@@ -113,9 +114,9 @@ class FuncionesUtiles {
                 id: Long
             ) {
                 if (position == 0){
-                    etBuscar!!.inputType = 3 //NUMBER
+                    etBuscar.inputType = 3 //NUMBER
                 } else {
-                    etBuscar!!.inputType = 1 //TEXTO
+                    etBuscar.inputType = 1 //TEXTO
                 }
             }
         }
@@ -123,7 +124,6 @@ class FuncionesUtiles {
 
     //titulo y lista de vendedores
     constructor(
-        context: Context,
         imgTitulo: ImageView?,
         tvTitulo: TextView?,
         imgAnterior: ImageView?,
@@ -371,17 +371,17 @@ class FuncionesUtiles {
     var btBuscar: Button?   = null
     var imgTitulo: ImageView? = null
     var tvTitulo: TextView? = null
-    var imgAnterior: ImageView? = null
-    var imgSiguiente: ImageView? = null
+    private var imgAnterior: ImageView? = null
+    private var imgSiguiente: ImageView? = null
     var tvVendedor : TextView? = null
-    var tvSupervisor : TextView? = null
-    var tvGerentes : TextView? = null
+    private var tvSupervisor : TextView? = null
+    private var tvGerentes : TextView? = null
     var contMenu: DrawerLayout? = null
     var barraMenu: NavigationView? = null
     var context : Context? = null
-    var spinnerAdapter : ArrayAdapter<String>? = null
-    var valoresSpinner: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
-    var parametros : Array<String> = arrayOf<String>()
+    private var spinnerAdapter : ArrayAdapter<String>? = null
+    private var valoresSpinner: ArrayList<HashMap<String, String>> = ArrayList()
+    private var parametros : Array<String> = arrayOf()
     lateinit var vistas : IntArray
     lateinit var vistasCabecera : IntArray
     lateinit var valores: Array<String>
@@ -390,11 +390,11 @@ class FuncionesUtiles {
     lateinit var subVistas2 : IntArray
     lateinit var subValores2: Array<String>
     lateinit var listaVendedores: ArrayList<HashMap<String, String>>
-    lateinit var listaSupervisores: ArrayList<HashMap<String, String>>
-    lateinit var listaGerentes: ArrayList<HashMap<String, String>>
+    private lateinit var listaSupervisores: ArrayList<HashMap<String, String>>
+    private lateinit var listaGerentes: ArrayList<HashMap<String, String>>
     var posVend : Int = 0
-    var posSup : Int = 0
-    var posGer : Int = 0
+    private var posSup : Int = 0
+    private var posGer : Int = 0
 
     //FUNCIONES DE BD
     fun dato(cursor: Cursor, index: String): String {
@@ -486,31 +486,33 @@ class FuncionesUtiles {
     }
     fun addItemSpinner(context: Context, parametro: String, campo: String){
         parametros = parametro.split("-").toTypedArray()
-        for (i in 0 until parametros.size){
-            var valor : HashMap<String, String> = HashMap<String, String>()
-            valor.put(parametros[i], campo.split("-")[i])
-            valoresSpinner!!.add(valor)
+        for (i in parametros.indices){
+            val valor : HashMap<String, String> = HashMap()
+            valor[parametros[i]] = campo.split("-")[i]
+            valoresSpinner.add(valor)
         }
-        spinnerAdapter = ArrayAdapter<String>(context, R.layout.spinner_adapter, parametros)
+        spinnerAdapter = ArrayAdapter(context, R.layout.spinner_adapter, parametros)
         spBuscar!!.adapter = spinnerAdapter
     }
+    @SuppressLint("SetTextI18n")
     fun buscar(tabla: String) : Cursor{
-        var sql: String = ""
+        val sql: String
         if (spBuscar!!.selectedItemPosition != 0){
             sql = "SELECT * FROM " + tabla +
-                    " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
+                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem] +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
-            tvVendedor!!.setText("Todos")
+            tvVendedor!!.text = "Todos"
             return consultar(sql)
         }
         sql = "SELECT * FROM " + tabla +
-              " WHERE " + valoresSpinner!!.get(spBuscar!!.selectedItemPosition).get(spBuscar!!.selectedItem) +
+              " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem] +
               "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
-        tvVendedor!!.setText("Todos")
+        tvVendedor!!.text = "Todos"
         return consultar(sql)
     }
+    @SuppressLint("SetTextI18n")
     fun buscar(tabla: String, campos: String?, groupBy: String?, orderBy: String?) : Cursor{
-        var sql: String = ""
+        var sql: String
         if (spBuscar!!.selectedItemPosition != 0){
             sql = "SELECT " + campos + " FROM " + tabla +
                     " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].toUpperCase(
@@ -537,14 +539,18 @@ class FuncionesUtiles {
         return consultar(sql)
     }
     fun buscar(tabla: String, campos: String?, groupBy: String?, orderBy: String?, where: String) : Cursor{
-        var sql = ""
+        var sql: String
         if (spBuscar!!.selectedItemPosition != 0){
             sql = "SELECT " + campos + " FROM " + tabla +
-                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].toUpperCase() +
+                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].toUpperCase(
+                Locale.ROOT
+            ) +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
             if (valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size>1){
                 for(i in 1 until valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size){
-                    sql = sql + " OR " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[i].toUpperCase() +
+                    sql = "$sql OR " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[i].toUpperCase(
+                        Locale.ROOT
+                    ) +
                             " LIKE '%" + etBuscar!!.text.toString() + "%' "
                 }
             }
@@ -566,11 +572,13 @@ class FuncionesUtiles {
         return datoEntero(consultar(sql), "MAXIMO")
     }
     fun cargarDatos(cursor: Cursor):ArrayList<HashMap<String, String>>{
-        var lista = ArrayList<HashMap<String, String>>()
+        val lista = ArrayList<HashMap<String, String>>()
         for (i in 0 until cursor.count){
-            var dato : HashMap<String, String> = HashMap<String, String>()
+            val dato : HashMap<String, String> = HashMap()
             for (j in 0 until cursor.columnCount){
-                try {dato.put(cursor.getColumnName(j), dato(cursor, cursor.getColumnName(j)))} catch (e: Exception){}
+                try {
+                    dato[cursor.getColumnName(j)] = dato(cursor, cursor.getColumnName(j))
+                } catch (e: Exception){}
             }
             lista.add(dato)
             cursor.moveToNext()
@@ -638,7 +646,7 @@ class FuncionesUtiles {
     fun decimal(decimal: String, cantidad: Int):String{
         formatoGenerico.minimumFractionDigits = cantidad
         formatoGenerico.maximumFractionDigits = cantidad
-        if (decimal.trim().equals("")||decimal.trim().equals("null")){
+        if (decimal.trim() == "" || decimal.trim() == "null"){
             return "0.0"
         }
         if (decimal.indexOf(",")>-1){
@@ -696,12 +704,12 @@ class FuncionesUtiles {
         }
         return diferencia.toInt()
     }
-    fun convertirFechatoSQLFormat(fecha: String): String? {
-        var fecha = fecha
+    fun convertirFechatoSQLFormat(fechas: String): String? {
+        var fecha = fechas
         var res = ""
         var dia = ""
         var mes = ""
-        var año = ""
+        var anho = ""
         fecha = fecha.replace("/", "")
         fecha = fecha.replace(" ", "")
         for (i in fecha.indices) {
@@ -711,37 +719,37 @@ class FuncionesUtiles {
                 if (i < 4) {
                     mes += fecha[i]
                 } else {
-                    año += fecha[i]
+                    anho += fecha[i]
                 }
             }
         }
-        res = "$año-$mes-$dia"
+        res = "$anho-$mes-$dia"
         return res
     }
 
     //FECHAS
     fun getDiaDeLaSemana(str_fecha: String?): String? {
         val formatoDelTexto = SimpleDateFormat("dd/MM/yyyy")
-        var fecha: Date? = null
+        val fecha: Date?
         try {
             fecha = formatoDelTexto.parse(str_fecha)
             val cal: Calendar = GregorianCalendar.getInstance()
-            cal.setTime(fecha)
+            cal.time = fecha
             return getDia(cal.get(Calendar.DAY_OF_WEEK))
         } catch (ex: java.lang.Exception) {
         }
         return "Lunes"
     }
     fun getDia(dia: Int):String{
-        when(dia){
-            1 -> return "Domingo"
-            2 -> return "Lunes"
-            3 -> return "Martes"
-            4 -> return "Miercoles"
-            5 -> return "Jueves"
-            6 -> return "Viernes"
-            7 -> return "Sabado"
-            else -> return "No corresponde"
+        return when(dia){
+            1 -> "Domingo"
+            2 -> "Lunes"
+            3 -> "Martes"
+            4 -> "Miercoles"
+            5 -> "Jueves"
+            6 -> "Viernes"
+            7 -> "Sabado"
+            else -> "No corresponde"
         }
     }
     fun getDiaDeLaSemana(): String {
@@ -752,37 +760,37 @@ class FuncionesUtiles {
         return getFechaActual().split("/")[1].toInt()
     }
     fun getMes(mes: String):String{
-        when (mes){
-            "01" -> return "Enero"
-            "02" -> return "Febrero"
-            "03" -> return "Marzo"
-            "04" -> return "Abril"
-            "05" -> return "Mayo"
-            "06" -> return "Junio"
-            "07" -> return "Julio"
-            "08" -> return "Agosto"
-            "09" -> return "Setiembre"
-            "10" -> return "Octubre"
-            "11" -> return "Noviembre"
-            "12" -> return "Diciembre"
-            else -> return "Valor no corresponde"
+        return when (mes){
+            "01" -> "Enero"
+            "02" -> "Febrero"
+            "03" -> "Marzo"
+            "04" -> "Abril"
+            "05" -> "Mayo"
+            "06" -> "Junio"
+            "07" -> "Julio"
+            "08" -> "Agosto"
+            "09" -> "Setiembre"
+            "10" -> "Octubre"
+            "11" -> "Noviembre"
+            "12" -> "Diciembre"
+            else -> "Valor no corresponde"
         }
     }
     fun getMes(mes: Int):String{
-        when (mes){
-            1 -> return "Enero"
-            2 -> return "Febrero"
-            3 -> return "Marzo"
-            4 -> return "Abril"
-            5 -> return "Mayo"
-            6 -> return "Junio"
-            7 -> return "Julio"
-            8 -> return "Agosto"
-            9 -> return "Setiembre"
-            10 -> return "Octubre"
-            11 -> return "Noviembre"
-            12 -> return "Diciembre"
-            else -> return "Valor no corresponde"
+        return when (mes){
+            1 -> "Enero"
+            2 -> "Febrero"
+            3 -> "Marzo"
+            4 -> "Abril"
+            5 -> "Mayo"
+            6 -> "Junio"
+            7 -> "Julio"
+            8 -> "Agosto"
+            9 -> "Setiembre"
+            10 -> "Octubre"
+            11 -> "Noviembre"
+            12 -> "Diciembre"
+            else -> "Valor no corresponde"
         }
     }
     fun getHoraActual(): String? {
@@ -827,9 +835,9 @@ class FuncionesUtiles {
         val cal = Calendar.getInstance()
         val sql : String = ("SELECT numero MAXIMO, ind_palm, ultima_sincro, RANGO, TIPO_promotor, MIN_FOTO, MAX_FOTO, IND_FOTO, FEC_CARGA_RUTEO, MAX_DESC "
                 + ",version, MAX_DESC_VAR, PER_VENDER, INT_MARCACION  from svm_vendedor_pedido_venta  where COD_promotor ="
-                + "'" + usuario.get("LOGIN") + "'")
+                + "'" + usuario["LOGIN"] + "'")
         val cursor : Cursor = consultar(sql)
-        var fecha : String = ""
+        var fecha = ""
         if (cursor.count>0){
             fecha = try {
                 dato(cursor, "FEC_CARGA_RUTEO").trim()
@@ -843,12 +851,12 @@ class FuncionesUtiles {
         }
         try {
             d = fecha(fecha)
-            d1 = fechaF(cal.getTime().toString())
+            d1 = fechaF(cal.time.toString())
         } catch (e: java.text.ParseException) {
             e.printStackTrace();
         }
 
-        val diffInDays : Int = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)) as Int
+        val diffInDays : Int = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
 
         if (diffInDays != 0) {
             mensaje(context, "Atención!", "No se ha habilitado este dia para enviar ruteo.")
@@ -868,7 +876,7 @@ class FuncionesUtiles {
     }
     fun cargarTitulo(icon: Int, titulo: String){
         imgTitulo!!.setImageResource(icon)
-        tvTitulo!!.setText(titulo)
+        tvTitulo!!.text = titulo
     }
     @SuppressLint("SetTextI18n")
     fun actualizaVendedor(context: Context){
@@ -886,6 +894,7 @@ class FuncionesUtiles {
             }
         }
     }
+    @SuppressLint("SetTextI18n")
     fun actualizaSupervisor(context: Context){
         if (posSup == listaSupervisores.size){
             Toast.makeText(context, "Es el ultimo registro", Toast.LENGTH_SHORT).show()
@@ -895,10 +904,8 @@ class FuncionesUtiles {
                 Toast.makeText(context, "Es el primer registro", Toast.LENGTH_SHORT).show()
                 posSup++
             } else {
-                tvSupervisor!!.setText(
-                    listaSupervisores.get(posSup).get("codigo") + "-" +
-                            listaSupervisores.get(posSup).get("descripcion")
-                )
+                tvSupervisor!!.text = listaSupervisores[posSup]["codigo"] + "-" +
+                        listaSupervisores[posSup]["descripcion"]
                 inicializaContadores()
             }
         }
@@ -976,16 +983,16 @@ class FuncionesUtiles {
             cursor.moveToNext()
         }
     }
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "Recycle")
     fun cargarSupervisores(sql: String, codVendedor: String, descVendedor: String){
         try {
             cursor = MainActivity.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
-            var codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
-            var descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
-            tvSupervisor!!.text = codigo + "-" + descripcion
+            val codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
+            val descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            tvSupervisor!!.text = "$codigo-$descripcion"
         } catch (e: Exception){
-            var error = e.message
+            e.message
             return
         }
         barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Supervisores"
@@ -995,30 +1002,28 @@ class FuncionesUtiles {
 
         listaSupervisores = ArrayList()
         for (i in 0 until cursor.count){
-            var codigo = dato(cursor, codVendedor)
-            var descripcion = dato(cursor, descVendedor)
-            barraMenu!!.menu.add(codigo + "-" + descripcion).setIcon(R.drawable.ic_usuario)
+            val codigo = dato(cursor, codVendedor)
+            val descripcion = dato(cursor, descVendedor)
+            barraMenu!!.menu.add("$codigo-$descripcion").setIcon(R.drawable.ic_usuario)
             addSupervisor(codigo, descripcion)
             cursor.moveToNext()
         }
     }
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "Recycle")
     fun cargarGerentes(sql: String, codVendedor: String, descVendedor: String){
         try {
             cursor = MainActivity.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
-            var codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
-            var descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
-            tvGerentes!!.text = codigo + "-" + descripcion
+            val codigo = cursor.getString(cursor.getColumnIndex(codVendedor))
+            val descripcion = cursor.getString(cursor.getColumnIndex(descVendedor))
+            tvGerentes!!.text = "$codigo-$descripcion"
 
         } catch (e: Exception){
-            var error = e.message
+            e.message
             return
         }
         barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvTituloMenu2).text = "Gerentes"
-        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario.get(
-            "NOMBRE"
-        )
+        barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvNombreSup).text = "Ger.: " + usuario["NOMBRE"]
         barraMenu!!.getHeaderView(0).findViewById<TextView>(R.id.tvCodigoSup).text = "Cod.: " + usuario["LOGIN"]
         barraMenu!!.menu.clear()
 
@@ -1039,14 +1044,14 @@ class FuncionesUtiles {
     }
     private fun addSupervisor(codigo: String, descripcion: String){
         val dato : HashMap<String, String> = HashMap()
-        dato.put("codigo", codigo)
-        dato.put("descripcion", descripcion)
+        dato["codigo"] = codigo
+        dato["descripcion"] = descripcion
         listaSupervisores.add(dato)
     }
     private fun addGerentes(codigo: String, descripcion: String){
         val dato : HashMap<String, String> = HashMap()
-        dato.put("codigo", codigo)
-        dato.put("descripcion", descripcion)
+        dato["codigo"] = codigo
+        dato["descripcion"] = descripcion
         listaGerentes.add(dato)
     }
 
@@ -1068,7 +1073,7 @@ class FuncionesUtiles {
         val sql : String =
             ("SELECT numero MAXIMO, ind_palm, ultima_sincro, RANGO, TIPO_promotor, MIN_FOTO, MAX_FOTO, IND_FOTO, FEC_CARGA_RUTEO, MAX_DESC "
                     + ",version, MAX_DESC_VAR, PER_VENDER, INT_MARCACION  from svm_vendedor_pedido  where COD_promotor ="
-                    + "'" + usuario.get("LOGIN") + "'")
+                    + "'" + usuario["LOGIN"] + "'")
         return if (consultar(sql).count>0){
             datoEntero(consultar(sql), "INT_MARCACION")
         } else {
@@ -1076,7 +1081,7 @@ class FuncionesUtiles {
         }
     }
     fun getRangoDistancia(): Int {
-        val sql = "SELECT RANGO from svm_vendedor_pedido  where COD_VENDEDOR = '${usuario["LOGIN"]}'"
+        val sql = "SELECT RANGO from svm_vendedor_pedido  where COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         return if (consultar(sql).count>0){
             datoEntero(consultar(sql), "RANGO")
         } else {
@@ -1100,7 +1105,7 @@ class FuncionesUtiles {
         entrada.text = et.text
         dialogo.setPositiveButton(
             "OK"
-        ) { _: DialogInterface, i: Int ->
+        ) { _: DialogInterface, _: Int ->
             et.text = entrada.text
         }
         dialogo.setCancelable(false)
@@ -1137,73 +1142,69 @@ class FuncionesUtiles {
         dialogo.show()
     }
     fun dialogoEntradaNumero(et: EditText, context: Context){
-        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
-        var entrada:EditText = EditText(context)
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        val entrada = EditText(context)
         dialogo.setTitle(et.hint)
         entrada.inputType = InputType.TYPE_CLASS_NUMBER
         dialogo.setView(entrada)
         entrada.text = et.text
-        if (et.text.toString().trim().equals("0")){
+        if (et.text.toString().trim() == "0"){
             entrada.setText("")
         }
         dialogo.setPositiveButton(
-            "OK",
-            DialogInterface.OnClickListener() { dialogInterface: DialogInterface, i: Int ->
-                if (entrada.text.trim().equals("") || entrada.text.trim()
-                        .equals("null") || entrada.text.isEmpty()
-                ) {
-                    entrada.setText("0")
-                }
-                et.setText(entrada.text.toString().toInt().toString())
-            })
+            "OK"
+        ) { _: DialogInterface, _: Int ->
+            if (entrada.text.trim() == "" || entrada.text.trim() == "null" || entrada.text.isEmpty()
+            ) {
+                entrada.setText("0")
+            }
+            et.setText(entrada.text.toString().toInt().toString())
+        }
         dialogo.setCancelable(false)
         dialogo.show()
     }
     fun dialogoEntradaNumeroDecimal(et: EditText, context: Context){
-        var dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
-        var entrada:EditText = EditText(context)
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        val entrada = EditText(context)
         dialogo.setTitle(et.hint)
         dialogo.setView(entrada)
 //        entrada.inputType = InputType.TYPE_CLASS_PHONE
-        entrada.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
+        entrada.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
         entrada.keyListener = DigitsKeyListener.getInstance(false, true)
         entrada.text = et.text
-        if (et.text.toString().trim().equals("0")){
+        if (et.text.toString().trim() == "0"){
             entrada.setText("")
         }
         dialogo.setPositiveButton(
-            "OK",
-            DialogInterface.OnClickListener() { dialogInterface: DialogInterface, i: Int ->
-                if (entrada.text.trim().equals("") || entrada.text.trim()
-                        .equals("null") || entrada.text.isEmpty()
-                ) {
-                    entrada.setText("0.0")
-                }
-                et.setText(decimal(entrada.text.toString().replace(",", ".")))
-            })
+            "OK"
+        ) { _: DialogInterface, _: Int ->
+            if (entrada.text.trim() == "" || entrada.text.trim() == "null" || entrada.text.isEmpty()
+            ) {
+                entrada.setText("0.0")
+            }
+            et.setText(decimal(entrada.text.toString().replace(",", ".")))
+        }
         dialogo.setCancelable(false)
         dialogo.show()
     }
 
     //DATOS
     fun codPersona():String{
-        var sql : String = "SELECT DISTINCT COD_PERSONA FROM svm_vendedor_pedido"
-        var cursor : Cursor = consultar(sql)
-        if (cursor.count < 1){
+        val sql : String = "SELECT DISTINCT COD_PERSONA FROM svm_vendedor_pedido"
+        val cursor : Cursor = consultar(sql)
+        return if (cursor.count < 1){
             MainActivity.codPersona = ""
-            return ""
+            ""
         } else {
             MainActivity.codPersona = dato(cursor, "COD_PERSONA")
-            return dato(cursor, "COD_PERSONA")
+            dato(cursor, "COD_PERSONA")
         }
     }
     fun maxDescuento():Double{
         val sql : String = ("SELECT NUMERO MAXIMO, IND_PALM, ULTIMA_SINCRO, RANGO, MIN_FOTOS, "
                 +  "       MAX_FOTOS, IND_FOTO, "
                 +  "       VERSION, PER_VENDER  "
-                +  "  FROM svm_vendedor_pedido WHERE COD_SUPERVISOR = '${FuncionesUtiles.usuario.get(
-            "PASS"
-        )}'")
+                +  "  FROM svm_vendedor_pedido WHERE COD_SUPERVISOR = '${usuario["PASS"]}'")
         return datoDecimal(consultar(sql), "IND_PALM")
     }
     fun ultimoNroOrden(tabla: String): Int {
@@ -1233,7 +1234,7 @@ class FuncionesUtiles {
         var cont = 0
         var id = ""
         for (i in 0 until nreg) {
-            cont = cont + 1
+            cont += 1
             id = cursor.getString(cursor.getColumnIndex("id"))
             upd = ("UPDATE '" + tabla + "' SET nro_orden = '" + cont + "" + "' "
                     + "WHERE id=" + id)

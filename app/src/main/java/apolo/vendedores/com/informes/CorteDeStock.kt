@@ -30,7 +30,16 @@ class CorteDeStock : Activity() {
     }
 
     fun inicializarElementos(){
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         funcion.cargarTitulo(R.drawable.ic_check,"Corte de logistica")
         funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_pedidos_sin_stock_rep"),this)
         funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "ven_svm_pedidos_sin_stock_rep")

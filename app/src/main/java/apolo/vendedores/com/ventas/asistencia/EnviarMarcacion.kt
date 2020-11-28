@@ -1,6 +1,7 @@
 package apolo.vendedores.com.ventas.asistencia
 
 import android.app.ProgressDialog
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
@@ -100,6 +101,81 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
                 MainActivity2.funcion.mensaje(contexto,"Resultado", mensaje[1])
             }
             etAccion.setText(accion)
+        }
+    }
+
+    //envia todas las marcaciones del dia anterior
+    fun procesaEnviaMarcaciones(){
+        val funcion = FuncionesUtiles(contexto)
+        var cadena = " "
+        val date = MainActivity2.funcion.getFechaActual()
+        val sql  = ("Select a.id, a.COD_EMPRESA, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD   "
+                + "  from vt_marcacion_ubicacion a "
+                + " where a.FECHA not like '%"
+                + date
+                + "%'"
+                + " group by a.id, a.COD_EMPRESA, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD "
+                + "  order by a.id desc ")
+        val cursor: Cursor = funcion.consultar(sql)
+        cursor.moveToFirst()
+        if(cursor.count > 0){
+            val tipo =  cursor.getString(cursor.getColumnIndex("TIPO"))
+            if(tipo == "E"){
+                val valores = ContentValues()
+                val columnas: String = ( " COD_EMPRESA ,FECHA    ,COD_PROMOTOR ,COD_CLIENTE ,COD_SUBCLIENTE ,TIPO,"
+                        + " ESTADO      ,LATITUD  ,LONGITUD"     )
+                valores.put("COD_EMPRESA", funcion.dato(cursor,"COD_EMPRESA"))
+                valores.put("FECHA", funcion.dato(cursor,"FECHA"))
+                valores.put("COD_PROMOTOR", funcion.dato(cursor,"COD_PROMOTOR"))
+                valores.put("COD_CLIENTE", funcion.dato(cursor,"COD_CLIENTE"))
+                valores.put("COD_SUBCLIENTE", funcion.dato(cursor,"COD_SUBCLIENTE"))
+                valores.put("TIPO", "S")
+                valores.put("ESTADO", "P")
+                valores.put("LATITUD", "")
+                valores.put("LONGITUD", "")
+                funcion.insertar("vt_marcacion_ubicacion", columnas, valores)
+            }
+        }
+
+        val query =
+            ("Select a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, ifnull(a.OBSERVACION,'') OBSERVACION   "
+                    + "  from vt_marcacion_ubicacion a "
+                    + "  where a.ESTADO = 'P' "
+                    + "    and a.FECHA not like '%" + date + "%'"
+                    + "  group by a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, a.OBSERVACION "
+                    + "  order by a.id desc ")
+
+        val cursor1: Cursor = funcion.consultar(query)
+        cursor1.moveToFirst()
+        for (i in 1..cursor1.count) {
+            val codEmpresa = "1"
+            val codVendedor: String = funcion.dato(cursor1,"COD_PROMOTOR")
+            val codCliente: String = funcion.dato(cursor1,"COD_CLIENTE")
+            val codSubcliente: String = funcion.dato(cursor1,"COD_SUBCLIENTE")
+            val tipo: String = funcion.dato(cursor1,"TIPO")
+            val fecha: String = funcion.dato(cursor1,"FECHA")
+            val latitud: String = funcion.dato(cursor1,"LATITUD")
+            val longitud: String = funcion.dato(cursor1,"LONGITUD")
+            val observacion: String = funcion.dato(cursor1,"OBSERVACION")
+            val codPersona : String = FuncionesUtiles.usuario["LOGIN"].toString()
+
+            cadena += "'$codEmpresa','$codVendedor','$codCliente','$codSubcliente"
+            cadena += "','$tipo',to_date('$fecha','dd/MM/yyyy hh24:mi:ss'),'$latitud','$longitud','$observacion';"
+
+            cursor1.moveToNext()
+        }
+
+        if(cursor1.count > 0){
+            val mensaje: Array<String> = MainActivity2.conexionWS.procesaMarcacionAsistenciaAct (
+                FuncionesUtiles.usuario["LOGIN"].toString() , cadena ).split("*").toTypedArray()
+            if (mensaje.size != 1) {
+                if (mensaje[0] == "01") {
+                    val update = " UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
+                            "  WHERE ESTADO = 'P'" +
+                            "    AND FECHA not like '%" + date + "%'"
+                    funcion.ejecutar(update, contexto)
+                }
+            }
         }
     }
 }

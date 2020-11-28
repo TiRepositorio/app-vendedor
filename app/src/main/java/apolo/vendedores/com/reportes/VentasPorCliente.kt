@@ -31,7 +31,16 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     fun inicializarElementos() {
-        funcion = FuncionesUtiles(this, imgTitulo, tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         funcion.cargarTitulo(R.drawable.ic_mapa, "Ventas por cliente")
         funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR","svm_metas_punto_por_cliente")
         barraMenu.setNavigationItemSelectedListener(this)

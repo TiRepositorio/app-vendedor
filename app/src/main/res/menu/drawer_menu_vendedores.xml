@@ -21,6 +21,10 @@
             android:icon="@drawable/ic_configurar"
             android:title="Configurar"/>
         <item
+            android:id="@+id/vendSincronizar"
+            android:icon="@drawable/ic_sincronizar"
+            android:title="Sincronizar"/>
+        <item
             android:id="@+id/vendActualizar"
             android:icon="@drawable/ic_actualizar"
             android:title="Actualizar versión"/>

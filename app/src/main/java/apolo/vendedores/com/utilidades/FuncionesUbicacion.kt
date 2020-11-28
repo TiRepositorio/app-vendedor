@@ -77,7 +77,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
 
     fun calculaDistanciaCoordenadas(lat1: Double, lat2: Double, lng1: Double, lng2: Double): Double {
         val dist: Double
-        val earthRadius = 6371000000.0 //radio de la tierra en metros
+        val earthRadius = 6371000.0 //radio de la tierra en metros
         val dLat = Math.toRadians(lat2 - lat1)
         val dLng = Math.toRadians(lng2 - lng1)
         val sindLat = sin(dLat / 2)

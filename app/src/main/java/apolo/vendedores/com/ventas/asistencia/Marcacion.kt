@@ -103,7 +103,6 @@ class Marcacion : AppCompatActivity() {
                 if(verificaMarcacionCliente()){
                     funcion.toast(this,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
                     if (trigger.trim() == "Abrir"){
-//                    funcion.mensaje(this,"Error","La ventana no se va a abrir.")
                         return false
                     }
                     val autorizacion = DialogoAutorizacion(this)
@@ -383,15 +382,18 @@ class Marcacion : AppCompatActivity() {
         dialogMarcarPresenciaCliente.btnVolver.setOnClickListener {
             dialogMarcarPresenciaCliente.dismiss()
         }
-        val sql = ("Select a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, "
+        val sql = ("Select DISTINCT a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, "
                 + "a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
                 + "  from vt_marcacion_ubicacion a,"
                 + "		  svm_cliente_vendedor b "
-                + "  where a.COD_CLIENTE    = '" + codCliente + "'"
+                + "  where a.COD_EMPRESA    = b.COD_EMPRESA "
+                + "    and a.COD_CLIENTE    = '" + codCliente + "'"
                 + "    and a.COD_SUBCLIENTE = '" + codSubcliente + "'"
                 + "    and a.COD_CLIENTE    = b.COD_CLIENTE  "
                 + "    and a.COD_SUBCLIENTE = b.COD_SUBCLIENTE "
                 + "    and ( a.TIPO = 'E' or a.TIPO = 'S' ) "
+                + "  GROUP BY a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, "
+                + "           a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
                 + "  order by a.id desc ")
         val cursor: Cursor = funcion.consultar(sql)
         val cod = "$codCliente - $codSubcliente"

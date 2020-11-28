@@ -299,12 +299,12 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
                     !(lista[i]["LATITUD"].toString().trim() == "0.0" && lista[i]["LONGITUD"].toString().trim() == "0.0") &&
                     !(lista[i]["LATITUD"].toString().trim() == "null" && lista[i]["LONGITUD"].toString().trim() == "null") &&
                     !(lista[i]["LATITUD"].toString().isEmpty() && lista[i]["LONGITUD"].toString().isEmpty())){
-                    val posicion = LatLng(lista[i]["LATITUD"]!!.toDouble(), lista[i]["LONGITUD"]!!.toDouble())
-                    mMap.addMarker(MarkerOptions().position(posicion).title("CLIENTE:").snippet(
-                        lista[i]["COD_CLIENTE"] + "-" + lista[i]["DESC_CLIENTE"] + "\nDIRECCION:\n" + lista[i]["DIRECCION"]
-                    )
+                        val posicion = LatLng(lista[i]["LATITUD"]!!.toDouble(), lista[i]["LONGITUD"]!!.toDouble())
+                        mMap.addMarker(MarkerOptions().position(posicion).title("CLIENTE:").snippet(
+                            lista[i]["COD_CLIENTE"] + "-" + lista[i]["DESC_CLIENTE"] + "\nDIRECCION:\n" + lista[i]["DIRECCION"]
+                        )
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicion,mMap.maxZoomLevel - 5))
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(posicion,mMap.maxZoomLevel - 5))
                 }
             }
         }

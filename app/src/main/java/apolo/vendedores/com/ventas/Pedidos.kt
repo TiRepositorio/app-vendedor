@@ -147,6 +147,10 @@ class Pedidos : AppCompatActivity() {
         cargarAtriculosDetalle()
 //        spVenta.isEnabled == (ListaClientes.indDirecta.trim() == "S")
         spVenta.isEnabled = ListaClientes.indDirecta == "S"
+        if (nuevo){
+            articulosDetalle = ""
+//            lvProductos.invalidateViews()
+        }
     }
 
     //Mostrar los layouts correspondientes
@@ -1015,6 +1019,11 @@ class Pedidos : AppCompatActivity() {
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
 //        }
+        if (nuevo){
+            articulosDetalle = ""
+            lvProductos.invalidateViews()
+            return
+        }
         indBloqueado = "S"
         val sql : String = ("SELECT DISTINCT a.*, b.DESC_ARTICULO FROM vt_pedidos_det a, svm_articulos_precios b "
                          +  " WHERE a.NUMERO = '$maximo' "
@@ -1036,6 +1045,7 @@ class Pedidos : AppCompatActivity() {
     }
 
     private fun cargarAtriculosDetalle(){
+//        if (nuevo) return
         val sql = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                 +  " WHERE NUMERO       = '$maximo' "
                 +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "

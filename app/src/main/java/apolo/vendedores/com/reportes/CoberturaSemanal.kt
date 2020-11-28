@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import kotlinx.android.synthetic.main.activity_cobertura_semanal.*
 
 class CoberturaSemanal : AppCompatActivity() {
@@ -29,6 +30,7 @@ class CoberturaSemanal : AppCompatActivity() {
     }
 
     fun inicializarElementos(){
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("fvv_cob_semanal_vend"),this)
         cargarCabecera()
         mostrarCabecera()
         if (FuncionesUtiles.listaCabecera.size>0){
@@ -39,10 +41,11 @@ class CoberturaSemanal : AppCompatActivity() {
 
     private fun cargarCabecera(){
         val sql = " SELECT distinct " +
-                "        COD_VENDEDOR, DESC_VENDEDOR       " +
-                "      , SUM(CAST(MONTO_A_COBRAR AS NUMBER)) as MONTO_A_COBRAR " +
-                "   FROM fvv_cob_semanal_vend  " +
-                "  GROUP BY COD_VENDEDOR, DESC_VENDEDOR"
+                "        a.COD_VENDEDOR, b.DESC_VENDEDOR       " +
+                "      , SUM(CAST(a.MONTO_A_COBRAR AS NUMBER)) as MONTO_A_COBRAR " +
+                "   FROM fvv_cob_semanal_vend a, ven_fvv_cob_semanal_vend b " +
+                "  WHERE a.COD_VENDEDOR = b.COD_VENDEDOR " +
+                "  GROUP BY a.COD_VENDEDOR, b.DESC_VENDEDOR"
 
         try {
             cursor = funcion.consultar(sql)
@@ -64,13 +67,13 @@ class CoberturaSemanal : AppCompatActivity() {
     }
 
     private fun mostrarCabecera(){
-        valores = arrayOf("DESC_VENDEDOR","MONTO_A_COBRAR")
-        vistas = intArrayOf(R.id.tv1,R.id.tv1)
+        funcion.valores = arrayOf("DESC_VENDEDOR","MONTO_A_COBRAR")
+        funcion.vistas = intArrayOf(R.id.tv1,R.id.tv2)
         val adapterCabecera: Adapter.AdapterGenericoCabecera = Adapter.AdapterGenericoCabecera(this,
                                                                                 FuncionesUtiles.listaCabecera,
                                                                                 R.layout.rep_cob_sem_lista_cobertura_semanal_cabecera,
-                                                                                vistas,
-                                                                                valores
+                                                                                funcion.vistas,
+                                                                                funcion.valores
                                                                                 )
         lvVendCoberturaSemanal.adapter = adapterCabecera
         lvVendCoberturaSemanal.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->
@@ -86,8 +89,6 @@ class CoberturaSemanal : AppCompatActivity() {
         val sql = ("SELECT SEMANA, CLIENT_VENTAS, TOT_CLIENTES, CAST(PORC_COBERTURA AS NUMBER) PORC_COBERTURA, PERIODO "
                 + "     FROM fvv_cob_semanal_vend   "
                 + "    where COD_VENDEDOR  = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["COD_VENDEDOR"] + "' "
-                + "      AND DESC_VENDEDOR = '" +  FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["DESC_VENDEDOR"]
-                                                               .toString().split("-")[1] + "' "
                 + " ORDER BY CAST(SEMANA AS NUMBER) ")
 
         try {

@@ -18,10 +18,7 @@ import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
-import apolo.vendedores.com.utilidades.Adapter
-import apolo.vendedores.com.utilidades.DialogoAutorizacion
-import apolo.vendedores.com.utilidades.FuncionesUtiles
-import apolo.vendedores.com.utilidades.Mapa
+import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.asistencia.Marcacion
 import apolo.vendedores.com.ventas.justificacion.NoVenta
 import kotlinx.android.synthetic.main.activity_lista_clientes.*
@@ -32,6 +29,7 @@ class ListaClientes : AppCompatActivity() {
     companion object{
         var datos: HashMap<String, String> = HashMap()
         lateinit var funcion : FuncionesUtiles
+        lateinit var ubicacion: FuncionesUbicacion
         var codVendedor : String = ""
         var codCliente : String = ""
         var codSubcliente : String = ""
@@ -52,7 +50,6 @@ class ListaClientes : AppCompatActivity() {
         lateinit var etAccion: EditText
     }
 
-
     private lateinit var lm : LocationManager
     private lateinit var telMgr : TelephonyManager
 
@@ -66,6 +63,7 @@ class ListaClientes : AppCompatActivity() {
         //solo con titulo
         funcion = FuncionesUtiles(imgTitulo,tvTitulo)
         funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,llBuscar,spBuscar,etBuscar,btBuscar)
+        ubicacion = FuncionesUbicacion(this)
 
         inicializarElementos()
     }
@@ -88,6 +86,8 @@ class ListaClientes : AppCompatActivity() {
         cbNoAtendidos.setOnClickListener{buscarBloqueado()}
         cbRuteoDelDia.setOnClickListener{buscarRuteo()}
         cbTodos.setOnClickListener{buscarTodo()}
+        ubicacion.obtenerUbicacion(lm)
+        ubicacion.obtenerUbicacion(lm)
     }
 
     fun buscar(condicion:String){
@@ -307,6 +307,7 @@ class ListaClientes : AppCompatActivity() {
                                        ,"SI","NO")
             return
         }
+        Pedidos.nuevo = true
         Pedidos.indPresencial = "S"
         accion.setText("vender")
     }
@@ -317,12 +318,13 @@ class ListaClientes : AppCompatActivity() {
     }
 
     private fun validaMarcacionSalida():Boolean{
-        val sql = ("Select id "
+        val sql = ("Select id, TIPO "
                 + "  from vt_marcacion_ubicacion "
                 + " where COD_CLIENTE    = '" + codCliente + "' "
                 + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
                 + "   and TIPO           IN ('S','E')  "
-                + "   and FECHA 	     = '" + funcion.getFechaActual() + "'")
+                + "   and FECHA 	     LIKE '" + funcion.getFechaActual() + "%'"
+                + " ORDER BY CAST(id AS INTEGER) DESC")
         val cursor = funcion.consultar(sql)
         if (cursor.count > 0) {
             if (funcion.dato(cursor, "TIPO") == "S") {
@@ -340,7 +342,7 @@ class ListaClientes : AppCompatActivity() {
                          +  " where TIPO           IN ('E')                 	"
                          +  "   and COD_CLIENTE    = '" + codCliente + "' "
                          +  "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
-                         +  "   and FECHA          = '${funcion.getFechaActual()}'} "
+                         +  "   and FECHA          LIKE '${funcion.getFechaActual()}%' "
                          +  " order by id desc     ")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
@@ -378,6 +380,5 @@ class ListaClientes : AppCompatActivity() {
         val configurarUbicacion = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivity(configurarUbicacion)
     }
-
 
 }

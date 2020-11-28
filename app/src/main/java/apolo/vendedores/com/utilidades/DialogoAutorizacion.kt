@@ -20,8 +20,8 @@ class DialogoAutorizacion(var context: Context) {
 
     fun dialogoAutorizacion(accion:String, cargaAcion : EditText){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
-//        var claveTemp : String = claves.generaClave()
-        val claveTemp = "54127854"
+        val claveTemp : String = claves.generaClave()
+//        val claveTemp = "54127854"
         dialogo.setTitle("Solicitar autorizacion")
 
         dialogo.setMessage(claveTemp)
@@ -91,7 +91,7 @@ class DialogoAutorizacion(var context: Context) {
     }
 
     fun dialogoMapa(accion:String, cargaAcion : EditText){
-        var dialogo : Dialog = Dialog(context)
+        val dialogo = Dialog(context)
         try {
             dialogo.setContentView(R.layout.menu_cliente)
         } catch (e: Exception){

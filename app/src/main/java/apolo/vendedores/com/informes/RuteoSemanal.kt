@@ -12,7 +12,6 @@ import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.*
 import kotlinx.android.synthetic.main.activity_ruteo_semanal.*
 import kotlinx.android.synthetic.main.activity_ruteo_semanal.barraMenu
 import kotlinx.android.synthetic.main.activity_ruteo_semanal.contMenu
@@ -33,7 +32,16 @@ class RuteoSemanal : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun inicializarElementos(){
         llBotonesCab.visibility = View.GONE
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         funcion.cargarTitulo(R.drawable.ic_mapa,"Ruteo semanal")
         funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_ruteo_semanal_cliente_vend"),this)
         funcion.listaVendedores("COD_VENDEDOR", "DESC_VENDEDOR", "ven_svm_ruteo_semanal_cliente_vend")

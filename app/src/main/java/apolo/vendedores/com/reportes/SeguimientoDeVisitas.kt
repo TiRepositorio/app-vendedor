@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas.*
 import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas2.*
@@ -38,6 +39,7 @@ class SeguimientoDeVisitas : AppCompatActivity(){
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
         funcion.inicializaContadores()
+        funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_seg_visitas_semanal"),this)
         funcion.cargarTitulo(R.drawable.ic_visitado, "Seguimiento de visitas")
         cargarPeriodo()
         mostrarPeriodo()
@@ -100,19 +102,19 @@ class SeguimientoDeVisitas : AppCompatActivity(){
             FuncionesUtiles.listaDetalle = ArrayList()
             return
         }
-        val sql: String = "SELECT IFNULL(COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
-                          "       IFNULL(CANTIDAD,'0')        AS CANTIDAD      , IFNULL(CANT_VENDIDO,'0')       AS CANT_VENDIDO           , " +
-                          "       IFNULL(CANT_NO_VENDIDO,'0') AS CANT_NO_VENTA , IFNULL(CANT_NO_VISITADO,'0')   AS CANT_NO_VISITADO       , " +
-                          "       IFNULL(PORC,'0.0') PORC " +
-                          "  FROM svm_seg_visitas_semanal " +
-                          " WHERE SEMANA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["SEMANA"] + "' " +
-                          " ORDER BY COD_VENDEDOR "
+        val sql: String = "SELECT IFNULL(a.COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(b.DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
+                          "       IFNULL(a.CANTIDAD,'0')        AS CANTIDAD      , IFNULL(a.CANT_VENDIDO,'0')       AS CANT_VENDIDO           , " +
+                          "       IFNULL(a.CANT_NO_VENDIDO,'0') AS CANT_NO_VENTA , IFNULL(a.CANT_NO_VISITADO,'0')   AS CANT_NO_VISITADO       , " +
+                          "       IFNULL(a.PORC,'0.0') PORC " +
+                          "  FROM svm_seg_visitas_semanal a, ven_svm_seg_visitas_semanal b " +
+                          " WHERE a.SEMANA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["SEMANA"] + "' " +
+                          " ORDER BY a.COD_VENDEDOR "
         cursor = funcion.consultar(sql)
         FuncionesUtiles.listaDetalle = ArrayList()
         for (i in 0 until cursor.count) {
             datos = HashMap()
-//            datos.put("COD_VENDEDOR", funcion.dato(cursor, "COD_VENDEDOR"))
-//            datos.put("NOMBRE_VENDEDOR", funcion.dato(cursor, "NOMBRE_VENDEDOR"))
+            datos["COD_VENDEDOR"] = funcion.dato(cursor, "COD_VENDEDOR")
+            datos["NOMBRE_VENDEDOR"] = funcion.dato(cursor, "NOMBRE_VENDEDOR")
             datos["CANTIDAD"] = funcion.entero(funcion.dato(cursor, "CANTIDAD"))
             datos["CANT_VENDIDO"] = funcion.entero(funcion.dato(cursor, "CANT_VENDIDO"))
             datos["CANT_NO_VENTA"] = funcion.entero(funcion.dato(cursor, "CANT_NO_VENTA"))
@@ -125,7 +127,7 @@ class SeguimientoDeVisitas : AppCompatActivity(){
 
     private fun mostrarDetalle(){
         funcion.subVistas = intArrayOf(R.id.tvd1, R.id.tvd2, R.id.tvd3, R.id.tvd4, R.id.tvd5, R.id.tvd6, R.id.tvd7)
-        funcion.subValores = arrayOf("", ""  ,"CANTIDAD"         ,
+        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         ,
                                      "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" ,
                                      "PORC")
 //        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         ,

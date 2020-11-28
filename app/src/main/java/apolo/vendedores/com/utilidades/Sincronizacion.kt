@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
+import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
 import kotlinx.android.synthetic.main.activity_sincronizacion.*
 import java.io.BufferedReader
 import java.io.File
@@ -35,15 +36,15 @@ class Sincronizacion : AppCompatActivity() {
     }
 
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
-//    lateinit var enviarMarcacion : EnviarMarcacion
+    lateinit var enviarMarcacion : EnviarMarcacion
 
     @Suppress("ClassName")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sincronizacion)
         context = this
-//        EnviarMarcacion.context = context
-//        enviarMarcacion = EnviarMarcacion()
+        EnviarMarcacion.contexto = context
+        enviarMarcacion = EnviarMarcacion("","")
         imeiBD = ""
         if (FuncionesUtiles.usuario["CONF"].equals("N")){
             btFinalizar.visibility = View.VISIBLE
@@ -81,7 +82,7 @@ class Sincronizacion : AppCompatActivity() {
                 return null
             }
 
-//            enviarMarcacion.procesaEnviaMarcaciones()
+            enviarMarcacion.procesaEnviaMarcaciones()
 
             insertarUsuario()
             if (imeiBD.length>3 && imeiBD.isNotEmpty()){

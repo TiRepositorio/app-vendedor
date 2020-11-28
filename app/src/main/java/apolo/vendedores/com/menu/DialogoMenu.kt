@@ -12,6 +12,7 @@ import android.widget.*
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.configurar.AcercaDe
+import apolo.vendedores.com.configurar.CalcularClavePrueba
 import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.informes.*
 import apolo.vendedores.com.prueba.VentanaAuxiliar
@@ -58,12 +59,14 @@ class DialogoMenu(var context: Context) {
         val lista:ArrayList<ItemAbrir> = ArrayList()
         lista.add(item((R.drawable.ic_dolar).toString(),"Avance de comisiones",Intent(context,apolo.vendedores.com.reportes.AvanceDeComisiones::class.java)))
         lista.add(item((R.drawable.ic_dolar).toString(),"Extracto de cuenta",Intent(context,apolo.vendedores.com.reportes.ExtractoDeSalario::class.java)))
-        lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por marca",Intent(context,apolo.vendedores.com.reportes.VentasPorMarca::class.java)))
-        lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por cliente",Intent(context,apolo.vendedores.com.reportes.VentasPorCliente::class.java)))
-        lista.add(item((R.drawable.ic_dolar).toString(),"Producción semanal",Intent(context,apolo.vendedores.com.reportes.ProduccionSemanal::class.java)))
-        lista.add(item((R.drawable.ic_dolar).toString(),"Seguimiento de visitas",Intent(context,apolo.vendedores.com.reportes.SeguimientoDeVisitas::class.java)))
+        if (vendedor459() || vendedor37() || vendedor6()){
+            lista.add(item((R.drawable.ic_dolar).toString(),"Producción Semanal",Intent(context,apolo.vendedores.com.reportes.SeguimientoDeVisitas::class.java)))
+            lista.add(item((R.drawable.ic_dolar).toString(),"Seguimiento de visitas",Intent(context,apolo.vendedores.com.reportes.SeguimientoDeVisitas::class.java)))
+        }
         lista.add(item((R.drawable.ic_dolar).toString(),"Comprobantes pendientes a emitir",Intent(context,apolo.vendedores.com.reportes.ComprobantesPendientes::class.java)))
-        lista.add(item((R.drawable.ic_dolar).toString(),"Cobertura semanal",Intent(context,apolo.vendedores.com.reportes.CoberturaSemanal::class.java)))
+        if (vendedor459()){
+            lista.add(item((R.drawable.ic_dolar).toString(),"Cobertura semanal",Intent(context,apolo.vendedores.com.reportes.CoberturaSemanal::class.java)))
+        }
         lista.add(item((R.drawable.ic_dolar).toString(),"Variables mensuales",Intent(context,apolo.vendedores.com.reportes.VariablesMensuales::class.java)))
         return lista
     }
@@ -76,7 +79,9 @@ class DialogoMenu(var context: Context) {
         lista.add(item((R.drawable.ic_lista).toString(),"Precios modificados",Intent(context, PreciosModificados::class.java)))
         lista.add(item((R.drawable.ic_check).toString(),"Estado de pedidos",Intent(context, EstadoDePedidos::class.java)))
         lista.add(item((R.drawable.ic_evol_diaria_venta).toString(),"Evolucion diaria de ventas",Intent(context,EvolucionDiariaDeVentas::class.java)))
-        lista.add(item((R.drawable.ic_check).toString(),"Ver anuncio",Intent(context,VentanaAuxiliar::class.java)))
+        lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por marca",Intent(context,apolo.vendedores.com.reportes.VentasPorMarca::class.java)))
+        lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por cliente",Intent(context,apolo.vendedores.com.reportes.VentasPorCliente::class.java)))
+//        lista.add(item((R.drawable.ic_check).toString(),"Ver anuncio",Intent(context,VentanaAuxiliar::class.java)))
         lista.add(item((R.drawable.ic_lista).toString(),"Lista de precios",Intent(context,ListaDePrecios::class.java)))
         lista.add(item((R.drawable.ic_mapa).toString(),"Ruteo semanal",Intent(context,RuteoSemanal::class.java)))
         return lista
@@ -84,9 +89,9 @@ class DialogoMenu(var context: Context) {
 
     fun configurar():ArrayList<ItemAbrir>{
         val lista:ArrayList<ItemAbrir> = ArrayList()
-        lista.add(item((R.drawable.ic_usuario).toString(),"Configurar usuario",Intent(context,ConfigurarUsuario::class.java)))
+        lista.add(item((R.drawable.ic_usuario).toString(),"Configurar usuario",Intent(context,CalcularClavePrueba::class.java)))
         lista.add(item((R.drawable.ic_acerca).toString(),"Acerca de",Intent(context,AcercaDe::class.java)))
-        lista.add(item((R.drawable.ic_sincronizar).toString(),"Sincronizar",Intent(context,Sincronizacion::class.java)))
+//        lista.add(item((R.drawable.ic_sincronizar).toString(),"Sincronizar",Intent(context,Sincronizacion::class.java)))
         return lista
     }
 
@@ -156,4 +161,21 @@ class DialogoMenu(var context: Context) {
         MainActivity2.etAccion.setText("abrir")
     }
 
+    private fun vendedor459():Boolean{
+        val sql = "SELECT DISTINCT COD_VENDEDOR FROM svm_vendedor_pedido where COD_VENDEDOR LIKE '4%' OR COD_VENDEDOR LIKE '5%' OR COD_VENDEDOR LIKE '9%'"
+        return MainActivity2.funcion.consultar(sql).count>0
+    }
+    private fun vendedor37():Boolean{
+        val sql = "SELECT DISTINCT COD_VENDEDOR FROM svm_vendedor_pedido where COD_VENDEDOR LIKE '3%' OR COD_VENDEDOR LIKE '6%' OR COD_VENDEDOR LIKE '7%'" +
+                " AND NOT IN ('3002','3003','7002','7003')"
+        return MainActivity2.funcion.consultar(sql).count>0
+    }
+    private fun vendedor6():Boolean{
+        val sql = "SELECT DISTINCT COD_VENDEDOR FROM svm_vendedor_pedido where COD_VENDEDOR LIKE '6%'"
+        return MainActivity2.funcion.consultar(sql).count>0
+    }
+    private fun vendedor37Tradicional():Boolean{
+        val sql = "SELECT DISTINCT COD_VENDEDOR FROM svm_vendedor_pedido where COD_VENDEDOR IN ('3002','3003','7002','7003')"
+        return MainActivity2.funcion.consultar(sql).count>0
+    }
 }

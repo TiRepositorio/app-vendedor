@@ -42,7 +42,16 @@ class EstadoDePedidos : Activity(), NavigationView.OnNavigationItemSelectedListe
     }
     
     fun inicializarElementos(){
-        funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,ibtnAnterior,ibtnSiguiente,tvVendedor,contMenu,barraMenu,llBotonVendedores)
+        funcion = FuncionesUtiles(
+            imgTitulo,
+            tvTitulo,
+            ibtnAnterior,
+            ibtnSiguiente,
+            tvVendedor,
+            contMenu,
+            barraMenu,
+            llBotonVendedores
+        )
         funcion.cargarTitulo(R.drawable.ic_check,"Estado de pedidos")
         funcion.ejecutar(SentenciasSQL.venVistaCabecera("svm_listado_pedidos"),this)
         funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "ven_svm_listado_pedidos")

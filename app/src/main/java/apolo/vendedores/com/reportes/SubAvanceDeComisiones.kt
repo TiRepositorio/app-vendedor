@@ -24,40 +24,46 @@ class SubAvanceDeComisiones{
             cursor = MainActivity2.bd!!.rawQuery(sql, null)
             cursor.moveToFirst()
         } catch (e : Exception){
-            var error = e.message
+            e.message
+            lista = ArrayList()
+            datoAuxiliar(lista)
             return lista
         }
 
         lista = ArrayList()
         MainActivity2.funcion.cargarLista(lista,cursor)
         if (lista.size == 0){
-            var dato = HashMap<String,String>()
-            dato["TIP_COM"] = "A"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "B"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "C"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "D"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
-            dato = HashMap()
-            dato["TIP_COM"] = "O"
-            dato["MONTO_VENTA"] = "0"
-            dato["MONTO_A_COBRAR"] = "0"
-            lista.add(dato)
+            datoAuxiliar(lista)
         }
         return lista
+    }
+
+    private fun datoAuxiliar(lista:ArrayList<HashMap<String,String>>){
+        var dato = HashMap<String,String>()
+        dato["TIP_COM"] = "A"
+        dato["MONTO_VENTA"] = "0"
+        dato["MONTO_A_COBRAR"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["TIP_COM"] = "B"
+        dato["MONTO_VENTA"] = "0"
+        dato["MONTO_A_COBRAR"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["TIP_COM"] = "C"
+        dato["MONTO_VENTA"] = "0"
+        dato["MONTO_A_COBRAR"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["TIP_COM"] = "D"
+        dato["MONTO_VENTA"] = "0"
+        dato["MONTO_A_COBRAR"] = "0"
+        lista.add(dato)
+        dato = HashMap()
+        dato["TIP_COM"] = "O"
+        dato["MONTO_VENTA"] = "0"
+        dato["MONTO_A_COBRAR"] = "0"
+        lista.add(dato)
     }
 
     fun cargarDatosX(indice:String){

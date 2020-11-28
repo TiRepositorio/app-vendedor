@@ -1417,8 +1417,8 @@ class Adapter{
             val adapterSubtabla = Subtabla(context,
                 subDataSource[position],subMolde,subVistas,subValores,position)
             val subLista = rowView.findViewById<ListView>(idSubLista)
-            val imgAbrir = rowView.findViewById<ImageButton>(R.id.imgAbrir)
-            val imgCerrar = rowView.findViewById<ImageButton>(R.id.imgCerrar)
+            val imgAbrir = rowView.findViewById<ImageView>(R.id.imgAbrir)
+            val imgCerrar = rowView.findViewById<ImageView>(R.id.imgCerrar)
 
             rowView.imgAbrir.visibility  = View.VISIBLE
             rowView.imgCerrar.visibility = View.GONE
@@ -1447,14 +1447,14 @@ class Adapter{
                     imgAbrir.visibility  = View.GONE
                     imgCerrar.visibility = View.VISIBLE
                     if (layoutSubTabla != null){
-                        rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.VISIBLE
+                        rowView.findViewById<LinearLayout>(layoutSubTabla).visibility = View.VISIBLE
                     }
                     subLista.visibility = View.VISIBLE
                 } else {
                     imgAbrir.visibility  = View.VISIBLE
                     imgCerrar.visibility = View.GONE
                     if (layoutSubTabla != null){
-                        rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.GONE
+                        rowView.findViewById<LinearLayout>(layoutSubTabla).visibility = View.GONE
                     }
                     subLista.visibility = View.GONE
                 }
