@@ -114,6 +114,12 @@
             android:name=".reportes.VariablesMensuales"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".reportes.CanastaDeMarcas"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".reportes.CanastaDeClientes"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".ventas.Promotores"
             android:windowSoftInputMode="adjustNothing" />
         <activity

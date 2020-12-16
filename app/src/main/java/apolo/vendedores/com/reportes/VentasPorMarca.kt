@@ -14,13 +14,8 @@ import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas.*
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas.tvMes1
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas.tvMes2
 import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.*
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.barraMenu
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.contMenu
-import kotlinx.android.synthetic.main.activity_ventas_por_cliente.*
+import kotlinx.android.synthetic.main.activity_ventas_por_marcas.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.text.DecimalFormat
 
@@ -47,7 +42,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_canasta_de_marcas2)
+        setContentView(R.layout.activity_ventas_por_marcas2)
 
         inicializarElementos()
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".reportes.CanastaDeMarcas">
+    tools:context=".reportes.CanastaDeClientes">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Canasta de marcas"
+                android:text="Canasta de clientes"
                 android:textStyle="bold"
                 android:background="#ddd"
                 android:padding="5dp"/>
@@ -37,13 +37,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="1">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
                 <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -54,19 +54,14 @@
                         android:background="@color/verdeApolo">
 
                         <TextView
-                            android:layout_width="30dp"
-                            style="@style/cabeceraTabla"/>
-
-                        <TextView
-                            android:layout_width="40dp"
+                            android:layout_width="60dp"
                             android:text="Cod."
-                            android:textAlignment="textEnd"
-                            android:paddingLeft="5dp"
+                            android:textAlignment="center"
                             style="@style/cabeceraTabla"/>
 
                         <TextView
                             android:layout_width="250dp"
-                            android:text="Marca / Descripcion"
+                            android:text="Cleintes (Descripcion)"
                             android:textAlignment="textStart"
                             style="@style/cabeceraTabla"/>
 
@@ -103,10 +98,9 @@
                     </TableRow>
 
                     <ListView
-                        android:id="@+id/lvCanastaDeMarcas"
-                        android:layout_width="match_parent"
+                        android:id="@+id/lvCanastaDeClientes"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"/>
+                        android:layout_weight="@android:integer/config_longAnimTime" />
 
                     <TableRow
                         android:layout_width="match_parent"
@@ -114,11 +108,8 @@
                         android:background="@color/verdeApolo">
 
                         <TextView
-                            android:layout_width="30dp"
-                            style="@style/cabeceraTabla"/>
-
-                        <TextView
-                            android:layout_width="40dp"
+                            android:layout_width="60dp"
+                            android:textAlignment="center"
                             style="@style/cabeceraTabla"/>
 
                         <TextView

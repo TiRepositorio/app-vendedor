@@ -65,7 +65,7 @@ class FuncionesSpinner(var context: Context, private var spinner: Spinner) {
 
     fun getIndex(key:String,valor:String):Int{
         for (i in 0 until valores.size) {
-            if (valores[i][key].equals(valor)){
+            if (valores[i][key].toString().trim() == valor.trim()){
                 return i
             }
         }

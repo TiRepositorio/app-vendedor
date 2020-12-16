@@ -208,15 +208,12 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun spReferencias(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
-        val campos : String = " a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
+        val campos : String = " distinct a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
                               " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
-                              " (b.CANT_MINIMA/a.mult) CANT_MINIMA  , " +
-                              " CASE  WHEN a.IND_BASICO <> 'S' THEN " +
+                              " (b.CANT_MINIMA/a.mult) CANT_MINIMA  , b.PREC_UNID * a.MULT " +
+                              " /*CASE  WHEN TRIM(a.IND_BASICO) = 'S' THEN " +
                               "            ((CASE WHEN CAST(a.MULT AS NUMBER) = 1 THEN b.PREC_UNID ELSE CAST(b.PREC_CAJA AS NUMBER) / CAST(${listaProductos[posProducto]["MULT"]} AS NUMBER) END) * CAST(a.MULT AS NUMBER) )" +
-                              "       ELSE b.PREC_CAJA END " +
+                              "       ELSE CASE WHEN CAST(a.COD_UNIDAD_REL AS NUMBER) > 2 THEN CAST(b.PREC_CAJA AS NUMBER) / CAST(${listaProductos[posProducto]["MULT"]} AS NUMBER) * CAST(a.MULT AS NUMBER)  ELSE b.PREC_CAJA END END */ " +
                               " AS PRECIO" //+
         val tabla = " svm_st_articulos a, svm_articulos_precios b "
         val where : String = "     a.COD_ARTICULO = '" + listaProductos[posProducto]["COD_ARTICULO"] + "' " +

@@ -73,6 +73,7 @@ class FuncionesDispositivo(var context: Context) {
             d1 = dfDate.parse(dfDate.format(cal.time))
         } catch (e: ParseException) {
             e.printStackTrace()
+            e.message
         }
         val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
         return if (diffInDays != 0) {

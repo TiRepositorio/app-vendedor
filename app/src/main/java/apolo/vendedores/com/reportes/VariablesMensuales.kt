@@ -134,8 +134,7 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     private fun cargarCoberturaMensual(){
         val sql : String = (" SELECT TOT_CLI_CART,CANT_POSIT,PORC_LOGRO,PORC_COB,PREMIOS,MONTO_A_COBRAR"
                           + "   from svm_cobertura_mensual_vend" 
-//                          + "  WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0] + "' " 
-//                          + "    AND DESC_VENDEDOR = '" + tvVendedor.text.toString().split("-")[1] + "' " 
+                          + "  WHERE COD_VENDEDOR  = '" + tvVendedor.text.toString().split("-")[0].trim() + "' "
                 )
 
         try {

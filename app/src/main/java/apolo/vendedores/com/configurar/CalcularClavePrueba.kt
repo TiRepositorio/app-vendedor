@@ -20,8 +20,8 @@ class CalcularClavePrueba : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calcular_clave_prueba)
         val clave = contraClave.generaClave()
-//        tvClaveTemporal.text = "54127854"
-        tvClaveTemporal.text = clave
+        tvClaveTemporal.text = "54127854"
+//        tvClaveTemporal.text = clave
         tvClave.visibility = View.GONE
     }
 

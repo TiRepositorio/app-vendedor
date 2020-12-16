@@ -60,7 +60,7 @@ class DialogoMenu(var context: Context) {
         lista.add(item((R.drawable.ic_dolar).toString(),"Avance de comisiones",Intent(context,apolo.vendedores.com.reportes.AvanceDeComisiones::class.java)))
         lista.add(item((R.drawable.ic_dolar).toString(),"Extracto de cuenta",Intent(context,apolo.vendedores.com.reportes.ExtractoDeSalario::class.java)))
         if (vendedor459() || vendedor37() || vendedor6()){
-            lista.add(item((R.drawable.ic_dolar).toString(),"Producción Semanal",Intent(context,apolo.vendedores.com.reportes.SeguimientoDeVisitas::class.java)))
+            lista.add(item((R.drawable.ic_dolar).toString(),"Producción Semanal",Intent(context,apolo.vendedores.com.reportes.ProduccionSemanal::class.java)))
             lista.add(item((R.drawable.ic_dolar).toString(),"Seguimiento de visitas",Intent(context,apolo.vendedores.com.reportes.SeguimientoDeVisitas::class.java)))
         }
         lista.add(item((R.drawable.ic_dolar).toString(),"Comprobantes pendientes a emitir",Intent(context,apolo.vendedores.com.reportes.ComprobantesPendientes::class.java)))
@@ -68,6 +68,10 @@ class DialogoMenu(var context: Context) {
             lista.add(item((R.drawable.ic_dolar).toString(),"Cobertura semanal",Intent(context,apolo.vendedores.com.reportes.CoberturaSemanal::class.java)))
         }
         lista.add(item((R.drawable.ic_dolar).toString(),"Variables mensuales",Intent(context,apolo.vendedores.com.reportes.VariablesMensuales::class.java)))
+        if (vendedor6() || vendedor37Tradicional() || vendedor37()){
+            lista.add(item((R.drawable.ic_dolar).toString(),"Canasta de marcas",Intent(context,apolo.vendedores.com.reportes.CanastaDeMarcas::class.java)))
+            lista.add(item((R.drawable.ic_dolar).toString(),"Canasta de clientes",Intent(context,apolo.vendedores.com.reportes.CanastaDeClientes::class.java)))
+        }
         return lista
     }
 

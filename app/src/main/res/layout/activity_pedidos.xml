@@ -364,7 +364,7 @@
                     <TextView
                         android:layout_width="40dp"
                         android:gravity="end"
-                        android:text="Can:"
+                        android:text="Tot:"
                         style="@style/tvTitulo"/>
 
                     <TextView
