@@ -88,7 +88,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun cargarUbicacion(){
-        if (modificarCliente){
+        if (modificarCliente) {
             id = ""
             tipo = "G"
             latitud  = positionCliente!!.latitude.toString()
@@ -273,6 +273,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 //        mMap.isMyLocationEnabled = true
         mMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        mMap.clear()
         if (ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -1111,6 +1111,20 @@ class FuncionesUtiles {
         dialogo.setCancelable(false)
         dialogo.show()
     }
+    fun dialogoEntradaTextoLargo(et: EditText, context: Context){
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        val entrada = EditText(context)
+        dialogo.setTitle(et.hint)
+        dialogo.setView(entrada)
+        entrada.text = et.text
+        dialogo.setPositiveButton(
+            "OK"
+        ) { _: DialogInterface, _: Int ->
+            et.text = entrada.text
+        }
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
     fun dialogoEntrada(et: EditText, context: Context, etAccion: EditText, accion: String){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         val entrada = EditText(context)

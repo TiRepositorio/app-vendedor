@@ -20,13 +20,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/textoCuadriculaOscura"/>
+
         <TextView
             android:id="@+id/tvDescCliente"
             android:text="Descripcion"
             android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             style="@style/textoCuadriculaOscura"/>
+
+        <TextView
+            android:id="@+id/tvCondicionVenta"
+            android:text="EFE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/textoCuadriculaOscura"/>
+
         <EditText
             android:id="@+id/accion"
             android:layout_width="0dp"
@@ -89,7 +99,8 @@
 
     <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+        android:visibility="gone">
     <androidx.gridlayout.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -206,21 +217,24 @@
                         android:layout_width="100dp"
                         android:text="P. Caja"
                         android:gravity="end"
-                        style="@style/cabeceraSubTabla"/>
+                        style="@style/cabeceraSubTabla"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/tv3"
                         android:layout_width="100dp"
                         android:text="P. Unit"
                         android:gravity="end"
-                        style="@style/cabeceraSubTabla"/>
+                        style="@style/cabeceraSubTabla"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/tv4"
                         android:layout_width="150dp"
                         android:text="Referencia"
                         android:gravity="start"
-                        style="@style/cabeceraSubTabla"/>
+                        style="@style/cabeceraSubTabla"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/tv5"
@@ -264,17 +278,36 @@
                 android:paddingRight="5dp"
                 android:background="@color/fondoFooter">
 
-                <TableRow
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:layout_height="10dp"
+                    android:padding="10dp"
                     android:background="@color/fondoFooter">
 
                     <TextView
                         android:layout_width="40dp"
                         android:gravity="end"
+                        android:text="Pag:"
+                        style="@style/tvTitulo"
+                        android:visibility="gone"/>
+
+                    <EditText
+                        android:id="@+id/tvdDesc"
+                        android:layout_width="50dp"
+                        android:gravity="end"
+                        android:text="0"
+                        android:layout_weight="1"
+                        android:inputType="none"
+                        android:editable="false"
+                        android:hint="Descuento"
+                        style="@style/tvDetalle"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:layout_width="40dp"
+                        android:gravity="end"
                         android:text="Cod:"
-                        style="@style/tvTitulo"/>
+                        style="@style/tvTitulo"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/tvdCod"
@@ -283,7 +316,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="Cod:" />
+                        android:text="Cod:"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:layout_width="40dp"
@@ -305,10 +339,105 @@
                             />
                     </androidx.gridlayout.widget.GridLayout>
 
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/fondoFooter">
+
+                    <CheckBox
+                        android:id="@+id/cbUM1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="8dp"
+                        android:background="@color/textoClaro"/>
+                    <CheckBox
+                        android:id="@+id/cbUM2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="8dp"
+                        android:background="@color/textoClaro"/>
+                    <CheckBox
+                        android:id="@+id/cbUM3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="8dp"
+                        android:background="@color/textoClaro"/>
+                    <CheckBox
+                        android:id="@+id/cbUM4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="8dp"
+                        android:background="@color/textoClaro"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/fondoFooter">
+
+                    <TextView
+                        android:id="@+id/tvUM1"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:paddingLeft="30dp"
+                        android:text="Cod:"
+                        android:textSize="14dp"
+                        style="@style/tvTituloCuadro"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tvUM2"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:paddingLeft="30dp"
+                        android:text="Ref:"
+                        android:textSize="14dp"
+                        style="@style/tvTituloCuadro"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tvUM3"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:paddingLeft="30dp"
+                        android:text="Cod:"
+                        android:textSize="14dp"
+                        style="@style/tvTituloCuadro"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tvUM4"
+                        android:layout_width="match_parent"
+                        android:gravity="start"
+                        android:paddingLeft="30dp"
+                        android:text="Cod:"
+                        android:textSize="14dp"
+                        style="@style/tvTituloCuadro"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@color/fondoFooter">
+
+
                     <TextView
                         android:layout_width="40dp"
                         android:gravity="end"
-                        android:text=""
+                        android:text="Pre:"
                         style="@style/tvTitulo"/>
 
                     <TextView
@@ -317,31 +446,6 @@
                         android:gravity="end"
                         android:text="Cod:"
                         android:layout_weight="1"
-                        style="@style/tvDetalle"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:background="@color/fondoFooter">
-
-                    <TextView
-                        android:layout_width="40dp"
-                        android:gravity="end"
-                        android:text="Pag:"
-                        style="@style/tvTitulo"/>
-
-                    <EditText
-                        android:id="@+id/tvdDesc"
-                        android:layout_width="50dp"
-                        android:gravity="end"
-                        android:text="0"
-                        android:layout_weight="1"
-                        android:inputType="none"
-                        android:editable="false"
-                        android:hint="Descuento"
                         style="@style/tvDetalle"/>
 
                     <TextView
@@ -385,11 +489,21 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btCodigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Cod.:"
+                    android:textSize="12dp"
+                    android:layout_margin="5dp"/>
+
+                <Button
                     android:id="@+id/btCantMinima"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Cant. Min.:"
+                    android:textSize="12dp"
                     android:layout_margin="5dp"/>
 
                 <Button
@@ -398,6 +512,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Vender"
+                    android:textSize="12dp"
                     android:layout_margin="5dp"/>
 
             </LinearLayout>

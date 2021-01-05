@@ -435,7 +435,7 @@ class SentenciasSQL {
 
 
         //NO SINCRONIZADOS
-        fun createTableVtMarcacionUbicacion(): String {
+        private fun createTableVtMarcacionUbicacion(): String {
             return "CREATE TABLE IF NOT EXISTS vt_marcacion_ubicacion" +
                     " (id INTEGER PRIMARY KEY AUTOINCREMENT , COD_EMPRESA TEXT      , FECHA TEXT        , COD_PROMOTOR TEXT, " +
                     "  COD_CLIENTE TEXT   				    , COD_SUBCLIENTE TEXT   , TIPO TEXT  	    , ESTADO TEXT      , " +
@@ -461,7 +461,7 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, ID_DET INTEGER, IMAGEN BLOB, NRO_ITEM TEXT )")
         }
 
-        fun createTableSvmModificaCatastro(): String {
+        private fun createTableSvmModificaCatastro(): String {
             return  ("CREATE TABLE IF NOT EXISTS svm_modifica_catastro "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT	, COD_CLIENTE TEXT		,"
                     + " COD_SUBCLIENTE TEXT					 , TELEFONO1 TEXT	, TELEFONO2 TEXT		,"
@@ -470,7 +470,7 @@ class SentenciasSQL {
                     + " FOTO_FACHADA BLOB		 			 , TIPO TEXT        )")
         }
 
-        fun createTableSvmCatastroCliente(): String {
+        private fun createTableSvmCatastroCliente(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_catastro_cliente "
                     + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CLIENTE TEXT      , COD_VENDEDOR TEXT       ,"
                     + " NOM_VENDEDOR TEXT 	 	 			, RAZON_SOCIAL TEXT      , NOM_FANTASIA TEXT       ,"
@@ -485,7 +485,7 @@ class SentenciasSQL {
                     + " LATITUD TEXT						, LONGITUD TEXT			, FOTO_FACHADA BLOB		 )")
         }
 
-        fun createTableSvmPedidosCab(): String {
+        private fun createTableSvmPedidosCab(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_pedidos_cab"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT     , COD_CLIENTE TEXT  , COD_SUBCLIENTE TEXT        ,"
                     + " COD_VENDEDOR TEXT                    , COD_LISTA_PRECIO TEXT, FECHA TEXT        , FECHA_INT TEXT             ,"
@@ -524,7 +524,7 @@ class SentenciasSQL {
                     + " from vt_pedidos_prov;")
         }
 
-        fun createTableSvmPedidosDet(): String {
+        private fun createTableSvmPedidosDet(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_pedidos_det"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT       , NUMERO NUMBER               , COD_ARTICULO TEXT        ,"
                     + " CANTIDAD NUMBER                      , PRECIO_UNITARIO NUMBER , MONTO_TOTAL NUMBER          , TOTAL_IVA NUMBER         ,"
@@ -539,7 +539,7 @@ class SentenciasSQL {
         }
 
         //SD
-        fun createTableSvm_solicitud_dev_cab(): String {
+        private fun createTableSvm_solicitud_dev_cab(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_solicitud_dev_cab "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT    	, COD_VENDEDOR TEXT 	,"
                     + " NRO_COMPROBANTE TEXT				 , COD_CLIENTE TEXT    	, COD_SUBCLIENTE TEXT 	,"
@@ -548,7 +548,7 @@ class SentenciasSQL {
                     + " NRO_REGISTRO_REF TEXT 				 , FECHA TEXT )")
         }
 
-        fun createTableSvm_solicitud_dev_det(): String {
+        private fun createTableSvm_solicitud_dev_det(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_solicitud_dev_det"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT	, COD_EMPRESA TEXT	 	, TIP_PLANILLA TEXT	, "
                     + " NRO_PLANILLA TEXT						, SER_COMP TEXT			, TIP_COMP TEXT		, "
@@ -560,7 +560,7 @@ class SentenciasSQL {
                     + " COD_PENALIDAD TEXT						, GRABADO_CAB TEXT		, EST_ENVIO TEXT 	, "
                     + " FECHA TEXT	)")
         }
-        fun createTableVtMarcacionVisita(): String? {
+        private fun createTableVtMarcacionVisita(): String? {
             return ("CREATE TABLE IF NOT EXISTS vt_marcacion_visita "
                     + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_SUCURSAL TEXT, "
                     + " COD_CLIENTE TEXT					, COD_SUBCLIENTE TEXT, COD_VENDEDOR TEXT, "
@@ -569,9 +569,25 @@ class SentenciasSQL {
                     + " HORA_ALTA TEXT		)")
         }
 
+        private fun createTableCcClientesBajaProv():String{
+            return ("CREATE TABLE IF NOT EXISTS cc_clientes_baja_prov (" +
+                    "       id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "       COD_EMPRESA VARCHAR(5)," +
+                    "       COD_VENDEDOR VARCHAR(10)," +
+                    "       DESC_VENDEDOR VARCHAR(50)," +
+                    "       COD_CLIENTE VARCHAR(20)," +
+                    "       COD_SUBCLIENTE VARCHAR(20)," +
+                    "       DESC_CLIENTE VARCHAR(100)," +
+                    "       DESC_SUBCLIENTE VARCHAR(100)," +
+                    "       COMENTARIO VARCHAR(300)," +
+                    "       ESTADO CHARACTER DEFAULT 'P'," +
+                    "       FOTO_FACHADA BLOB       " +
+                    ");")
+        }
+
 
         fun listaSQLCreateTable(): Vector<String> {
-            var lista : Vector<String> = Vector<String>()
+            val lista : Vector<String> = Vector()
             lista.add(0, createTableSvmModificaCatastro())
             lista.add(1, createTableSvm_solicitud_dev_det())
             lista.add(2, createTableSvm_solicitud_dev_cab())
@@ -580,7 +596,7 @@ class SentenciasSQL {
             lista.add(5, createTableSvmPedidosCab())
             lista.add(6, createTableSvmPedidosDet())
             lista.add(7, createTableSvmCatastroCliente())
-//            lista.add(8, createTableStvCategoriaPalm())
+            lista.add(8, createTableCcClientesBajaProv())
 //            lista.add(9, createTableSpmRetornoComentario())
 //            lista.add(10, createTableSvmDiasTomaFotoCliente())
 //            lista.add(11, )

@@ -13,12 +13,10 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.configurar.AcercaDe
 import apolo.vendedores.com.configurar.CalcularClavePrueba
-import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.informes.*
 import apolo.vendedores.com.prueba.VentanaAuxiliar
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.ItemAbrir
-import apolo.vendedores.com.utilidades.Sincronizacion
 import kotlinx.android.synthetic.main.menu_cab_configurar.*
 import java.lang.Exception
 
@@ -46,11 +44,15 @@ class DialogoMenu(var context: Context) {
 
     fun venta():ArrayList<ItemAbrir>{
         val lista:ArrayList<ItemAbrir> = ArrayList()
-        lista.add(item((R.drawable.ic_venta).toString(),"Realizar venta",Intent(context,apolo.vendedores.com.ventas.Promotores::class.java)))
-        lista.add(item((R.drawable.ic_buscar).toString(),"Datos de clientes",Intent(context,apolo.vendedores.com.ventas.ConsultaDatosDeCliente::class.java)))
-        lista.add(item((R.drawable.ic_buscar).toString(),"Clientes no visitados",Intent(context,apolo.vendedores.com.ventas.ConsultaClientesNoPositivados::class.java)))
-        lista.add(item((R.drawable.ic_catastrar).toString(),"Catastar",Intent(context,apolo.vendedores.com.ventas.PromotoresCatastro::class.java)))
-//        lista.add(item((R.drawable.ic_reunion).toString(),"Marcar reunión",Intent(context,VentanaAuxiliar::class.java)))
+        try {
+            lista.add(item((R.drawable.ic_venta).toString(),"Realizar venta",Intent(context,apolo.vendedores.com.ventas.Promotores::class.java)))
+            lista.add(item((R.drawable.ic_buscar).toString(),"Datos de clientes",Intent(context,apolo.vendedores.com.ventas.ConsultaDatosDeCliente::class.java)))
+            lista.add(item((R.drawable.ic_buscar).toString(),"Clientes no visitados",Intent(context,apolo.vendedores.com.ventas.ConsultaClientesNoPositivados::class.java)))
+            lista.add(item((R.drawable.ic_catastrar).toString(),"Catastar",Intent(context,apolo.vendedores.com.ventas.PromotoresCatastro::class.java)))
+            lista.add(item((R.drawable.ic_baja).toString(),"Dar de baja",Intent(context,apolo.vendedores.com.ventas.PromotoresBaja::class.java)))
+        } catch (e :Exception) {
+
+        }
 //        lista.add(item((R.drawable.ic_calendario).toString(),"Modificar día de visita",Intent(context,VentanaAuxiliar::class.java)))
         return lista
     }

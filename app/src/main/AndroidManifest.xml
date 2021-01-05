@@ -158,7 +158,13 @@
         <activity android:name=".ventas.PromotoresCatastro"
             tools:ignore="Instantiatable"
             android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.PromotoresBaja"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".ventas.catastro.CatastrarCliente"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".ventas.baja.Baja"
             tools:ignore="Instantiatable"
             android:windowSoftInputMode="adjustNothing"/>
         <activity
@@ -176,7 +182,7 @@
         <!--Datos para abrir el mapa-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCKcfr0aHwMZPPau7HD291NbPT3dWo9K3g" />
+            android:value="AIzaSyCva4opR1ok5nXfJeCqYNaESg7mdd8lGmc" />
     </application>
 
 </manifest>

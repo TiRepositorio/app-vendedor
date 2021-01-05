@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fondoOscuro">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/fondoOscuro">
+
+        <EditText
+            android:id="@+id/etAccion"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:editable="false"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/textoClaro"
+            android:text="FORMULARIO DE BAJA DE CLIENTES"
+            android:paddingLeft="40sp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/btVolver"
+            android:layout_width="40sp"
+            android:layout_height="30sp"
+            android:textColor="@color/textoClaro"
+            android:background="@color/fondoFooter"
+            android:text="X" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        android:overScrollMode="never" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Codigo:" />
+
+                <EditText
+                    android:id="@+id/etCodigo"
+                    android:layout_width="fill_parent"
+                    style="@style/campoCatastro"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:id="@+id/imgBuscarCliente"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:src="@drawable/ic_buscar"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Nombre:" />
+
+                <EditText
+                    android:id="@+id/etNombreCliente"
+                    style="@style/campoCatastro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Subcliente:" />
+
+                <EditText
+                    android:id="@+id/etNombreSubcliente"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Nº RUC:" />
+
+                <EditText
+                    android:id="@+id/etRUC"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Zona:" />
+
+                <EditText
+                    android:id="@+id/etCodZona"
+                    android:layout_width="60sp"
+                    style="@style/campoCatastro"
+                    android:layout_marginRight="3dp" />
+                <EditText
+                    android:id="@+id/etDescZona"
+                    android:layout_weight="1"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Región:" />
+
+                <EditText
+                    android:id="@+id/etRegion"
+                    style="@style/campoCatastro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Ciudad:" />
+
+                <EditText
+                    android:id="@+id/etCiudad"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Dir. Comercial:" />
+
+                <EditText
+                    android:id="@+id/etDireccion"
+                    style="@style/campoCatastro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Cerca de:" />
+
+                <EditText
+                    android:id="@+id/etCercaDe"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Cel:" />
+
+                <EditText
+                    android:id="@+id/etCelular"
+                    style="@style/campoCatastro" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Lim. de Credito:" />
+
+                <EditText
+                    android:id="@+id/etLimiteCredito"
+                    style="@style/campoCatastro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Deuda total:" />
+
+                <EditText
+                    android:id="@+id/etTotalDeuda"
+                    style="@style/campoCatastro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+                    android:text="Tipo de cliente:" />
+
+                <EditText
+                    android:id="@+id/etCodTipoCliente"
+                    android:layout_width="60sp"
+                    style="@style/campoCatastro"
+                    android:layout_marginRight="3dp" />
+
+                <EditText
+                    android:id="@+id/etDescTipoCliente"
+                    style="@style/campoCatastro"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:text="Cond. Venta:"
+                    android:textColor="@color/textoClaro" />
+
+                <EditText
+                    android:id="@+id/etCodCondVenta"
+                    android:layout_width="60sp"
+                    android:layout_marginRight="3dp"
+                    style="@style/campoCatastro" />
+
+                <EditText
+                    android:id="@+id/etDescCondVenta"
+                    style="@style/campoCatastro"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="3sp"
+				android:orientation="vertical" />
+
+            
+	       <LinearLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal">
+	            
+			    <TextView 
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+			        android:text="Latitud:"/>
+			        
+	        	<TextView 
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+			        android:text="Longitud:"/>
+			    
+			</LinearLayout>
+			
+	
+			
+			<LinearLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal">
+	            
+			    <TextView 
+			        android:id="@+id/tvLatitud"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+			        android:layout_weight="1" />
+			        
+	        	<TextView 
+	        	    android:id="@+id/tvLongitud"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+                    android:textColor="@color/textoClaro"
+			        android:layout_weight="1" />
+			    
+			</LinearLayout>
+			
+			<Button 
+			    android:id="@+id/btBuscarEnMapa"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:text="Buscar en Mapa"/>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            
+             <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/textoClaro"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="Foto Fachada" />
+
+            	<ImageButton
+                    android:id="@+id/ibtFotoFachada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:src="@drawable/ic_camara" />
+            </LinearLayout>
+            
+             
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+            
+            
+             <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/ivFachada"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" 
+                    android:adjustViewBounds="true"
+                    android:gravity="center_horizontal|center_vertical"  />
+ 
+            </LinearLayout>
+
+ 
+              
+              
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textoClaro"
+                    android:text="Comentario:" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/etComentario"
+                    android:layout_width="fill_parent"
+                    android:layout_height="70sp"
+                    android:layout_gravity="center_vertical|left"
+                    android:layout_weight="1"
+                    android:background="#fffafa"
+                    android:focusable="false"
+                    android:hint="Comentario"
+                    android:focusableInTouchMode="false"
+                    android:inputType="textNoSuggestions|textMultiLine"
+                    android:lines="3"
+                    android:textColor="#000000" />
+            </LinearLayout>
+            
+          
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3sp"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btEnviar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:text="Enviar" />
+
+                <Button
+                    android:id="@+id/btCancelar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:text="Cancelar" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

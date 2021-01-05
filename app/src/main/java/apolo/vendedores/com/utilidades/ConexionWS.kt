@@ -467,6 +467,39 @@ class ConexionWS {
         return resultado
     }
 
-
+    fun enviarBaja(codVendedor: String, codCliente: String, codSubcliente: String, cliente: String, fotoFachada: String): String {
+        setMethodName("ProcesaBajaClienteFinal ")
+        val request: SoapObject?
+        val resultado: String?
+        try {
+            request = SoapObject(NAMESPACE, METHOD_NAME)
+            request.addProperty("usuario", "edsystem")
+            request.addProperty("password", "#edsystem@polo")
+//            request.addProperty("codEmpresa", "1")
+            request.addProperty("vcodVendedor", codVendedor)
+            request.addProperty("vcodCliente", codCliente)
+            request.addProperty("vcodSubcliente", codSubcliente)
+            request.addProperty("vcliente", cliente)
+            request.addProperty("vfoto_fachada", fotoFachada)
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(request)
+        val transporte = HttpTransportSE(URL, 120000)
+        try {
+            transporte.call(SOAP_ACTION, envelope)
+            val sp = envelope.response as SoapPrimitive
+            resultado = sp.toString()
+        } catch (e: java.lang.Exception) {
+            var err = e.message
+            err = "" + err
+            return err
+        }
+        return resultado
+    }
 
 }

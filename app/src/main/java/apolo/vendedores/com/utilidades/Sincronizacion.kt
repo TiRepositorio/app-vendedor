@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -417,6 +418,10 @@ class Sincronizacion : AppCompatActivity() {
         }
         if (tipoSinc == "T"){
 //            cargarSvm_vendedor_pedido_venta()
+//            cargarSurtidoEficiente(funcion.consultar("SELECT DISTINCT COD_CLIENTE || '-' || COD_SUBCLIENTE || '-' || TIP_CLIENTE AS CAMPO FROM svm_surtido_eficiente"))
+//            cargarSvmArticulosPrecios(funcion.consultar("SELECT DISTINCT cod_vendedor CAMPO FROM svm_cliente_vendedor "),
+//                                      funcion.consultar("SELECT DISTINCT COD_LISTA_PRECIO CAMPO FROM cliente_list_prec "),
+//                                      funcion.consultar("SELECT DISTINCT TIP_CLIENTE CAMPO FROM svm_cliente_vendedor "))
         }
         return true
     }
@@ -469,4 +474,76 @@ class Sincronizacion : AppCompatActivity() {
         return true
     }
 
+
+    fun cargarSurtidoEficiente(cursor:Cursor){
+        for (i in 0 until cursor.count){
+            val codCliente    : String = funcion.dato(cursor,"CAMPO").toString().split("-")[0]
+            val codSubcliente : String = funcion.dato(cursor,"CAMPO").toString().split("-")[1]
+            val tipCliente    : String = funcion.dato(cursor,"CAMPO").toString().split("-")[2]
+            val tabla : String = "svm_surtido_eficiente_" + tipCliente.replace(".","") + codCliente + codSubcliente
+            var sql : String = "DROP TABLE IF EXISTS $tabla "
+            funcion.ejecutar(sql,this)
+            sql = "CREATE TABLE IF NOT EXISTS $tabla AS SELECT * FROM svm_surtido_eficiente " +
+                  "WHERE TIP_CLIENTE = '$tipCliente' AND COD_CLIENTE = '$codCliente' AND COD_SUBCLIENTE = '$codSubcliente'"
+            funcion.ejecutar(sql,this)
+            cursor.moveToNext()
+        }
+    }
+
+    fun cargarSvmArticulosPrecios(cursor: Cursor, cursor2: Cursor, cursor3: Cursor){
+        for (i in 0 until cursor.count){
+            cursor2.moveToFirst()
+            for (j in 0 until cursor2.count) {
+                cursor3.moveToFirst()
+                for (k in 0 until cursor3.count) {
+
+                    val codVendedor: String = MainActivity.funcion.dato(cursor, "CAMPO")
+                    val codListaPrecio: String = MainActivity.funcion.dato(cursor2, "CAMPO")
+                    val tipCliente: String = MainActivity.funcion.dato(cursor3, "CAMPO")
+                    //            var codCondicion   : String = funcion.dato(cursor,"CAMPO").toString().split("-")[3]
+                    val tabla: String =
+                        "svm_articulos_precios_$codVendedor$codListaPrecio" + tipCliente.replace(
+                            ".",
+                            ""
+                        )
+                    var sql: String = "DROP TABLE IF EXISTS $tabla "
+                    MainActivity.funcion.ejecutar(sql, this)
+                    sql = "CREATE TABLE IF NOT EXISTS $tabla AS SELECT * FROM svm_articulos_precios " +
+                            "WHERE (cod_vendedor = '$codVendedor' or trim(cod_vendedor) = '')  AND (trim(cod_lista_precio) = '$codListaPrecio' or tirm(cod_lista_precio) = '') "
+                    MainActivity.funcion.ejecutar(sql, this)
+                    val tablaCab: String =
+                        "svm_promociones_art_cab_s" + tipCliente.replace(
+                            ".",
+                            ""
+                        ) + codListaPrecio + codVendedor
+                    sql = "DROP TABLE IF EXISTS $tablaCab "
+                    MainActivity.funcion.ejecutar(sql, this)
+                    sql = "CREATE TABLE IF NOT EXISTS $tablaCab AS SELECT * FROM svm_promociones_art_cab " +
+                            "WHERE (trim(TIP_CLIENTE) IN ('$tipCliente','','null')) " +
+                            "  AND (trim(COD_LISTA_PRECIO) IN ('$codListaPrecio','','null')) " +
+                            "  AND (trim(COD_VENDEDOR) = '$codVendedor') AND IND_ART = 'S'"
+                    MainActivity.funcion.ejecutar(sql, this)
+                    val tablaDet: String =
+                        "svm_promociones_art_det_s" + tipCliente.replace(
+                            ".",
+                            ""
+                        ) + codListaPrecio + codVendedor
+                    sql = "DROP TABLE IF EXISTS $tablaDet "
+                    MainActivity.funcion.ejecutar(sql, this)
+                    sql = "CREATE TABLE IF NOT EXISTS $tablaDet AS SELECT * FROM svm_promociones_art_det " +
+                            "WHERE NRO_PROMOCION IN (SELECT DISTINCT NRO_PROMOCION FROM $tablaCab) "
+                    MainActivity.funcion.ejecutar(sql, this)
+                    sql = "UPDATE $tabla SET IND_PROMO_ACT = 'N'"
+                    MainActivity.funcion.ejecutar(sql, this)
+                    sql = "UPDATE $tabla SET IND_PROMO_ACT = 'S' " +
+                            " WHERE cod_articulo in (SELECT DISTINCT COD_ARTICULO FROM $tablaCab)" +
+                            "    OR cod_articulo in (SELECT DISTINCT COD_ARTICULO FROM $tablaDet)"
+                    MainActivity.funcion.ejecutar(sql, this)
+                    cursor3.moveToNext()
+                }
+                cursor2.moveToNext()
+            }
+            cursor.moveToNext()
+        }
+    }
 }

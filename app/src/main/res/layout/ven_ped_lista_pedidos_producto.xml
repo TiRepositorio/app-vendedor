@@ -14,7 +14,8 @@
         android:padding="5dp"
         android:src="@drawable/estrella"
         android:textColor="#fffafa"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/ibtn_se3"
@@ -70,7 +71,8 @@
         android:text="fast"
         android:textColor="#fffafa"
         android:textSize="12sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/ibtn_se"
@@ -101,7 +103,8 @@
         android:layout_height="match_parent"
         android:gravity="end|center_vertical"
         android:scrollbars="horizontal"
-        style="@style/textoTabla" />
+        style="@style/textoTabla"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv3"
@@ -109,7 +112,8 @@
         android:layout_height="match_parent"
         android:gravity="end|center_vertical"
         android:scrollbars="horizontal"
-        style="@style/textoTabla" />
+        style="@style/textoTabla"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv4"
@@ -117,7 +121,8 @@
         android:layout_height="match_parent"
         android:gravity="start|center_vertical"
         android:scrollbars="horizontal"
-        style="@style/textoTabla"/>
+        style="@style/textoTabla"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv5"

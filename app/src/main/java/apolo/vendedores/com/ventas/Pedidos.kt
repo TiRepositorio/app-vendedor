@@ -224,13 +224,92 @@ class Pedidos : AppCompatActivity() {
         val order = ""
         spReferencias = FuncionesSpinner(this,spReferencia)
         spReferencias.generaSpinner(campos,tabla,where,whereOpcional,group,order,"REFERENCIA","")
+        cbReferencias(campos,tabla,where,whereOpcional)
+    }
+
+    private fun cbReferencias(campos:String,tabla:String,where:String,whereOpcional:String){
+        var sql : String = "SELECT " + campos +
+                "  FROM " + tabla +
+                " WHERE " + where
+        if (whereOpcional.trim() != ""){ sql += whereOpcional }
+        val lista : ArrayList<HashMap<String,String>> = ArrayList()
+        esconderCB()
+        funcion.cargarLista(lista,funcion.consultar(sql))
+        for (i in 0 until lista.size){
+            when (i){
+                0 -> {
+                    tvUM1.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    cbUM1.text = lista[i]["REFERENCIA"]
+                    tvUM1.visibility = View.VISIBLE
+                    cbUM1.visibility = View.VISIBLE
+                }
+                1 -> {
+                    tvUM2.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    cbUM2.text = lista[i]["REFERENCIA"]
+                    tvUM2.visibility = View.VISIBLE
+                    cbUM2.visibility = View.VISIBLE
+                }
+                2 -> {
+                    tvUM3.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    cbUM3.text = lista[i]["REFERENCIA"]
+                    tvUM3.visibility = View.VISIBLE
+                    cbUM3.visibility = View.VISIBLE
+                }
+                3 -> {
+                    tvUM4.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    cbUM4.text = lista[i]["REFERENCIA"]
+                    tvUM4.visibility = View.VISIBLE
+                    cbUM4.visibility = View.VISIBLE
+                }
+            }
+        }
+        cbUM1.setOnClickListener {
+            spReferencia.setSelection(0)
+            cbUM2.isChecked = false
+            cbUM3.isChecked = false
+            cbUM4.isChecked = false
+            if (!cbUM1.isChecked) {cbUM1.isChecked = true}
+        }
+        cbUM2.setOnClickListener {
+            spReferencia.setSelection(1)
+            cbUM1.isChecked = false
+            cbUM3.isChecked = false
+            cbUM4.isChecked = false
+            if (!cbUM2.isChecked) {cbUM2.isChecked = true}
+        }
+        cbUM3.setOnClickListener {
+            spReferencia.setSelection(2)
+            cbUM1.isChecked = false
+            cbUM2.isChecked = false
+            cbUM4.isChecked = false
+            if (!cbUM3.isChecked) {cbUM3.isChecked = true}
+        }
+        cbUM4.setOnClickListener {
+            spReferencia.setSelection(2)
+            cbUM1.isChecked = false
+            cbUM2.isChecked = false
+            cbUM3.isChecked = false
+            if (!cbUM4.isChecked) {cbUM4.isChecked = true}
+        }
+        cbUM1.isChecked = true
+        cbUM2.isChecked = false
+        cbUM3.isChecked = false
+        cbUM4.isChecked = false
+    }
+
+    private fun esconderCB(){
+        tvUM1.visibility = View.GONE
+        tvUM2.visibility = View.GONE
+        tvUM3.visibility = View.GONE
+        tvUM4.visibility = View.GONE
+        cbUM1.visibility = View.GONE
+        cbUM2.visibility = View.GONE
+        cbUM3.visibility = View.GONE
+        cbUM4.visibility = View.GONE
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun spReferenciasListener(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         spReferencia.onItemSelectedListener = object : OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
@@ -288,10 +367,7 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun condicionDeVenta(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
-        val campos = " COD_CONDICION_VENTA,DESCRIPCION,TIPO_CONDICION,DIAS_INICIAL,ABREVIATURA,PORC_DESC "
+        val campos = " COD_CONDICION_VENTA,DESCRIPCION,TIPO_CONDICION,DIAS_INICIAL,ABREVIATURA,PORC_DESC,MONTO_MIN_DESC "
         val tabla = " svm_condicion_venta "
         val where : String = " cod_condicion_venta in " +
                              " ( select COD_CONDICION_VENTA from svm_cond_venta_vendedor " +
@@ -303,7 +379,7 @@ class Pedidos : AppCompatActivity() {
                                         " AND (tipo_condicion = '" + ListaClientes.tipCondicion + "' or tipo_condicion = 'S' "
                                      } else { "AND (tipo_condicion = '" + ListaClientes.tipCondicion + "') " }
         val group = ""
-        val order = " descripcion "
+        val order = " DESCRIPCION "
         spCondicionDeVenta = FuncionesSpinner(this,spCondicionVenta)
         spCondicionDeVenta.generaSpinner(campos,tabla,where,whereOpcional,group,order,"DESCRIPCION","")
         spCondicionVenta.setSelection(spCondicionDeVenta.getIndex("COD_CONDICION_VENTA",ListaClientes.codCondicion))
@@ -318,6 +394,7 @@ class Pedidos : AppCompatActivity() {
             }
         }
         modificacion = "S"
+        tvCondicionVenta.text = "CV: ${spCondicionVenta.selectedItem}"
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -550,11 +627,12 @@ class Pedidos : AppCompatActivity() {
 //            return
 //        }
         tvdCod.text = listaProductos[posProducto]["COD_ARTICULO"]
+        btCodigo.text = "Cod.: ${listaProductos[posProducto]["COD_ARTICULO"]}"
         tvdPrecioReferencia.text = funcion.entero(spReferencias.getDato("PRECIO"))
         tvdDesc.setText(tvdPrecioReferencia.text)
         btCantMinima.text = "Cant. Min.: " + spReferencias.getDato("CANT_MINIMA")
         cantidadMinima = spReferencias.getDato("CANT_MINIMA").toInt()
-        if (spReferencias.getDato("CANT_MINIMA").trim() == "" || spReferencias.getDato("CANT_MINIMA").toInt() == 0){
+        if (spReferencias.getDato("CANT_MINIMA").trim() == "" || spReferencias.getDato("CANT_MINIMA").toInt() == 0) {
             btCantMinima.text = "Cant. Min.: " + 1
             cantidadMinima = 1
         }
@@ -1013,9 +1091,6 @@ class Pedidos : AppCompatActivity() {
     //DETALLES
     @RequiresApi(Build.VERSION_CODES.N)
     fun cargarDetalle(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         if (nuevo){
             articulosDetalle = ""
             lvProductos.invalidateViews()
@@ -1039,6 +1114,7 @@ class Pedidos : AppCompatActivity() {
         mostrarDetalle()
         cargarAtriculosDetalle()
         lvProductos.invalidateViews()
+        habilitaDescuentoFinanciero()
     }
 
     private fun cargarAtriculosDetalle(){
@@ -1094,9 +1170,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun eliminarDetalle(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val sql: String
         if (listaDetalles[posDetalle]["NRO_PROMOCION"].toString().trim().replace("null","") == ""){
             sql = "DELETE FROM  vt_pedidos_det WHERE id = ${listaDetalles[posDetalle]["id"]}"
@@ -1146,13 +1219,11 @@ class Pedidos : AppCompatActivity() {
         dialogoCalendario()
         btEnviar.setOnClickListener{enviarPedido()}
         btCancelar.setOnClickListener{finish()}
+        habilitaDescuentoFinanciero()
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun dialogoCalendario(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val calendario = DialogoCalendario(this)
         etFechaHoy.setText(funcion.getFechaActual())
         etFecha.setOnClickListener{calendario.onCreateDialog(1,etFecha,etFechaHoy)!!.show()}
@@ -1164,9 +1235,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun inicializaETFecha(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         etFecha.addTextChangedListener(object:TextWatcher{
             @SuppressLint("SimpleDateFormat")
             override fun afterTextChanged(s: Editable?) {
@@ -1201,9 +1269,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun inicializaETObservacion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         etObservacion.addTextChangedListener(object:TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 val sql = "update vt_pedidos_cab set COMENTARIO = '${s.toString()}' " +
@@ -1499,6 +1564,22 @@ class Pedidos : AppCompatActivity() {
         })
     }
 
+    private fun habilitaDescuentoFinanciero(){
+        val montoMinimo = spCondicionDeVenta.getDato("MONTO_MIN_DESC").trim().toFloat()
+        var monto       = etSubtotal.text.toString().trim().replace(".","")
+        monto = monto.replace(",",".")
+        if (monto.isEmpty() || monto.trim() == ""){ monto = "0" }
+        val montoTotal = monto.toFloat()
+        if (montoMinimo > montoTotal){
+            etDescFin.setText("0")
+            etDescFin.setOnClickListener { funcion.toast(this,"No a alcanzado el monto mínimo de " +
+                                                                            "${funcion.numero("0",montoMinimo.toString())} " +
+                                                                            "para acceder al descuento.") }
+        } else {
+            inicializaETDescuentoFinanciero()
+        }
+    }
+
     fun autorizaDescuentosVarios(){
         try {
 //            etSubtotal.setText(totalPedido.toString())
@@ -1736,13 +1817,13 @@ class Pedidos : AppCompatActivity() {
             rowView.ibtn_se.setBackgroundResource(R.drawable.border_textview)
             rowView.ibtn_tactico.setBackgroundResource(R.drawable.border_textview)
 
-            when(dataSource[position]["TIP_SURTIDO"]){
-                "0" -> rowView.ibtn_se0.visibility = View.VISIBLE
-                "1" -> rowView.ibtn_se1.visibility = View.VISIBLE
-                "2" -> rowView.ibtn_se2.visibility = View.VISIBLE
-                "3" -> rowView.ibtn_se3.visibility = View.VISIBLE
-                else -> rowView.ibtn_se.visibility = View.VISIBLE
-            }
+//            when(dataSource[position]["TIP_SURTIDO"]){
+//                "0" -> rowView.ibtn_se0.visibility = View.VISIBLE
+//                "1" -> rowView.ibtn_se1.visibility = View.VISIBLE
+//                "2" -> rowView.ibtn_se2.visibility = View.VISIBLE
+//                "3" -> rowView.ibtn_se3.visibility = View.VISIBLE
+//                else -> rowView.ibtn_se.visibility = View.VISIBLE
+//            }
 
             rowView.imgVentaRapida.setBackgroundResource(R.drawable.border_textview)
             rowView.imgVentaRapida.setOnClickListener{
@@ -1750,9 +1831,7 @@ class Pedidos : AppCompatActivity() {
                 etAccion.setText("ventaRapida")
             }
 
-            if (dataSource[position]["IND_PROMO_ACT"].equals("N")){
-                rowView.ibtn_tactico.visibility = View.INVISIBLE
-            } else {
+            if (!dataSource[position]["IND_PROMO_ACT"].equals("N")){
                 rowView.ibtn_tactico.visibility = View.VISIBLE
             }
 

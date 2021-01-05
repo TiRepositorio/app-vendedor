@@ -72,7 +72,7 @@ class DialogoBusqueda {
         }
         dialogo.imgBuscar.setOnClickListener{
             buscar(dialogo.etBuscar)
-            if (campos.equals("")){
+            if (campos == ""){
                 mostrar(dialogo.lvBuscar)
             } else {
                 mostrarCampos(dialogo.lvBuscar)
@@ -159,7 +159,7 @@ class DialogoBusqueda {
     private fun seleccionar(btSeleccionar: Button, textView: TextView){
         btSeleccionar.setOnClickListener{
             if (lista.size>0){
-                if (campos.equals("")){
+                if (campos == ""){
                     textView.text = lista.get(posicion).get(codigo.split(" ")[0]) + " - " + lista.get(posicion).get(descripcion)
                 } else {
                     textView.text = lista.get(posicion).get(campos.split(",")[0]) +
@@ -177,8 +177,8 @@ class DialogoBusqueda {
     private fun seleccionar(btSeleccionar: Button, textView: TextView,textView2: TextView?){
         btSeleccionar.setOnClickListener{
             if (lista.size>0){
-                textView.text = lista.get(posicion).get(codigo.split(" ")[0])
-                textView2!!.text = lista.get(posicion).get(descripcion)
+                textView.text = lista[posicion][codigo.split(" ")[0]]
+                textView2!!.text = lista[posicion][descripcion]
             }
             dialogo.dismiss()
             posicion = 0

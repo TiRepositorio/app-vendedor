@@ -204,7 +204,7 @@ class FuncionesFoto {
     }
 
     fun foto2 (requestCode: Int, resultCode: Int, data: Intent?,ivFoto1:ImageView,ivFoto2:ImageView,nombre:String,tipoFoto: String) : String{
-        if (tipoFoto.equals("2")) {
+        if (tipoFoto == "2") {
             if (requestCode === 1) {
                 if (data == null) {
                     var iv: ImageView? = null
