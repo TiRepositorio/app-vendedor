@@ -80,13 +80,13 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun validacion(trigger:String) : Boolean {
         ubicacion.obtenerUbicacion(lm!!)
-        if (!ubicacion.validaUbicacionSimulada(lm!!)) { return false }
+        if (!ubicacion.validaUbicacionSimulada(lm)) { return false }
         if (!dispositivo.horaAutomatica()) { return false }
         if (!dispositivo.modoAvion()){ return false }
         if (!dispositivo.zonaHoraria()){ return false }
         if (!dispositivo.fechaCorrecta()){ return false }
         if (!dispositivo.tarjetaSim(telMgr!!)){ return false }
-        if (!ubicacion.ubicacionActivada(lm!!)){
+        if (!ubicacion.ubicacionActivada(lm)){
             ubicacion.latitud  = ""
             ubicacion.longitud = ""
             etAccion.setText("abrirUbicacion")
@@ -109,7 +109,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 ubicacion.latitud.toDouble(),
                 latitud.toDouble(),
                 ubicacion.longitud.toDouble(),
-                longitud.toDouble()) * 1000
+                longitud.toDouble())
             if (distanciaCliente > funcion.getRangoDistancia()) {
                 if(verificaMarcacionCliente()){
                     funcion.toast(context,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")

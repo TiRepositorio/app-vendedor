@@ -332,7 +332,7 @@ class Sincronizacion : AppCompatActivity() {
                     contador++
                     ins++
                     for (j in 0 until listaCampos[i].size){
-                        sql2 += if (valores[j] == "null" || valores[j].isEmpty()){
+                        sql2 += if (valores[j] == "null" || valores[j].isEmpty()) {
                             "' '"
                         } else {
                             "'${valores[j].replace("'","''")}'"
@@ -346,7 +346,7 @@ class Sincronizacion : AppCompatActivity() {
 
                     if (ins == 50){
                         val buffer2 = buffer
-                        if (buffer2.readLine()!=null){
+//                        if (buffer2.readLine()!=null){
                             try {
                                 MainActivity.bd!!.execSQL(sql2)
                             } catch (e: Exception) {
@@ -365,7 +365,7 @@ class Sincronizacion : AppCompatActivity() {
                                 }
                             }
                             sql2 += " values "
-                        }
+//                        }
                         ins = 0
                     }
 

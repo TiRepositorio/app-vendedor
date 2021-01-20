@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-
 class EnviarPedido(
     var context: Context,
     private var lm: LocationManager,

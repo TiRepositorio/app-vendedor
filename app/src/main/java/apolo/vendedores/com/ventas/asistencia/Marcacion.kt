@@ -14,19 +14,19 @@ import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Window
-import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
-import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.ventas.ListaClientes
 import kotlinx.android.synthetic.main.activity_marcacion.*
 import kotlinx.android.synthetic.main.ven_asis_dialogo_marcacion_cliente.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.math.roundToInt
+
 
 class Marcacion : AppCompatActivity() {
     companion object{
@@ -65,7 +65,7 @@ class Marcacion : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    fun validacion(trigger:String) : Boolean {
+    fun validacion(trigger: String) : Boolean {
         ubicacion.obtenerUbicacion(lm)
         if (!ubicacion.validaUbicacionSimulada(lm)) { return false }
         if (!dispositivo.horaAutomatica()) { return false }
@@ -86,29 +86,36 @@ class Marcacion : AppCompatActivity() {
             Mapa.codCliente = codCliente
             Mapa.codSubcliente = codSubcliente
             Mapa.codVendedor = ListaClientes.codVendedor
-            startActivity(Intent(this,Mapa::class.java))
+            startActivity(Intent(this, Mapa::class.java))
             finish()
             return false
         } else {
             if (ubicacion.latitud.trim() == "" || ubicacion.longitud.trim() == "") {
-                funcion.toast(this,"No se encuentra la ubicacion GPS del telefono")
+                funcion.toast(this, "No se encuentra la ubicacion GPS del telefono")
                 return false
             }
             val distanciaCliente : Double = ubicacion.calculaDistanciaCoordenadas(
                 ubicacion.latitud.toDouble(),
                 latitud.toDouble(),
                 ubicacion.longitud.toDouble(),
-                longitud.toDouble()) * 1000
+                longitud.toDouble()
+            )
             if (distanciaCliente > funcion.getRangoDistancia()) {
                 if(verificaMarcacionCliente()){
-                    funcion.toast(this,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
+                    funcion.toast(
+                        this,
+                        "No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m."
+                    )
                     if (trigger.trim() == "Abrir"){
                         return false
                     }
                     val autorizacion = DialogoAutorizacion(this)
-                        autorizacion.dialogoAutorizacion(trigger,accion)
+                        autorizacion.dialogoAutorizacion(trigger, accion)
                 }else{
-                    funcion.toast(this, "No se encuentra en el cliente. Se encuentra a ${distanciaCliente.roundToInt()} m.")
+                    funcion.toast(
+                        this,
+                        "No se encuentra en el cliente. Se encuentra a ${distanciaCliente.roundToInt()} m."
+                    )
                 }
                 return false
             }
@@ -139,6 +146,34 @@ class Marcacion : AppCompatActivity() {
             }
         }
         return estado
+    }
+
+    private fun validaVisitaCliente(): Boolean {
+        var sql = ("Select *" + " from vt_pedidos_cab "
+                + " where COD_CLIENTE = '" + ListaClientes.codCliente + "'"
+                + " and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'"
+                + " and FEC_ALTA = '" + funcion.getFechaHoraActual() + "'"
+                + " and ESTADO IN ('P','E')")
+        var cursor: Cursor = funcion.consultar(sql)
+        var nreg = cursor.count
+        return if (nreg == 0) {
+            sql = ("Select *" + " from vt_marcacion_visita "
+                    + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
+                    + "   and COD_CLIENTE    = '" + ListaClientes.codCliente + "'"
+                    + "   and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'"
+                    + "   and FECHA = '" + funcion.getFechaActual() + "'"
+                    + "   and ESTADO IN ('P','E')")
+            cursor = funcion.consultar(sql)
+            nreg = cursor.count
+            if (nreg == 0) {
+                funcion.toast(this, "Debe realizar una venta o justificar la no venta a este cliente")
+                false
+            } else {
+                true
+            }
+        } else {
+            true
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -218,7 +253,7 @@ class Marcacion : AppCompatActivity() {
                     + "  order by a.id desc ")
         cursor = funcion.consultar(select)
         listaMarcaciones = ArrayList()
-        funcion.cargarLista(listaMarcaciones,cursor)
+        funcion.cargarLista(listaMarcaciones, cursor)
         mostrar()
     }
 
@@ -247,10 +282,14 @@ class Marcacion : AppCompatActivity() {
                 + "  order by id desc ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count > 0) {
-            val codCliente = funcion.dato(cursor,"COD_CLIENTE")
-            val codSubcliente = funcion.dato(cursor,"COD_SUBCLIENTE")
-            if (funcion.dato(cursor,"TIPO") != "S") {
-                Toast.makeText(this, "Debe marcar la salida del cliente $codCliente - $codSubcliente", Toast.LENGTH_SHORT).show()
+            val codCliente = funcion.dato(cursor, "COD_CLIENTE")
+            val codSubcliente = funcion.dato(cursor, "COD_SUBCLIENTE")
+            if (funcion.dato(cursor, "TIPO") != "S") {
+                Toast.makeText(
+                    this,
+                    "Debe marcar la salida del cliente $codCliente - $codSubcliente",
+                    Toast.LENGTH_SHORT
+                ).show()
                 dialogMarcarPresenciaCliente.chkEntrada.isChecked = false
                 return false
             }
@@ -258,7 +297,7 @@ class Marcacion : AppCompatActivity() {
         return true
     }
 
-    private fun marcar(cb : CheckBox){
+    private fun marcar(cb: CheckBox){
         val fecha: String = funcion.getFechaActual() + " " + funcion.getHoraActual()
         val tipo = if (cb.id == dialogMarcarPresenciaCliente.chkEntrada.id) { "E" } else { "S" }
         cb.text = fecha
@@ -274,7 +313,7 @@ class Marcacion : AppCompatActivity() {
         values.put("TIPO", tipo)
         values.put("LATITUD", ubicacion.latitud)
         values.put("LONGITUD", ubicacion.longitud)
-        funcion.insertar("vt_marcacion_ubicacion",  values)
+        funcion.insertar("vt_marcacion_ubicacion", values)
     }
 
     private fun desmarcar(cb: CheckBox){
@@ -291,14 +330,14 @@ class Marcacion : AppCompatActivity() {
         {
             cb.text = ""
             dialogMarcarPresenciaCliente.chkSalida.isEnabled = cb.id == dialogMarcarPresenciaCliente.chkSalida.id
-            val id = funcion.dato(cursor,"id")
+            val id = funcion.dato(cursor, "id")
             val update = "delete from vt_marcacion_ubicacion where id = $id"
-            funcion.ejecutar(update,this)
+            funcion.ejecutar(update, this)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private fun marcarEntrada(cb : CheckBox){
+    private fun marcarEntrada(cb: CheckBox){
         if (cb.isChecked)
         {
             if (!validacion("Entrada")){
@@ -318,7 +357,7 @@ class Marcacion : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private fun marcarSalida(cb : CheckBox){
+    private fun marcarSalida(cb: CheckBox){
         if (cb.isChecked)
         {
             if (!validacion("Salida")){
@@ -326,6 +365,10 @@ class Marcacion : AppCompatActivity() {
 //                return
             }
             if (!validaEntrada()){
+                cb.isChecked =  false
+                return
+            }
+            if (!validaVisitaCliente()){
                 cb.isChecked =  false
                 return
             }
@@ -350,16 +393,22 @@ class Marcacion : AppCompatActivity() {
             dialogMarcarPresenciaCliente.chkSalida.isChecked = false
             return false
         } else {
-            if (funcion.dato(cursor,"TIPO") != "E") {
+            if (funcion.dato(cursor, "TIPO") != "E") {
                 funcion.toast(this, "Debe marcar la entrada al cliente")
                 dialogMarcarPresenciaCliente.chkSalida.isChecked = false
                 return false
             }
             try {
-                val diff = funcion.tiempoTranscurrido(funcion.dato(cursor,"FECHA"),funcion.getFechaHoraActual())
+                val diff = funcion.tiempoTranscurrido(
+                    funcion.dato(cursor, "FECHA"),
+                    funcion.getFechaHoraActual()
+                )
                 val minLapso: Double = tiempoMin.toDouble()
                 if (diff < minLapso) {
-                    funcion.toast(this, "DEBE PERMANECER UN MINIMO DE $tiempoMin min. EN EL CLIENTE")
+                    funcion.toast(
+                        this,
+                        "DEBE PERMANECER UN MINIMO DE $tiempoMin min. EN EL CLIENTE"
+                    )
                     dialogMarcarPresenciaCliente.chkSalida.isChecked = false
                     return false
                 }
@@ -412,15 +461,23 @@ class Marcacion : AppCompatActivity() {
             } else {
                 dialogMarcarPresenciaCliente.chkEntrada.isChecked = true
                 dialogMarcarPresenciaCliente.chkEntrada.isEnabled = false
-                dialogMarcarPresenciaCliente.chkEntrada.text = cursor.getString(cursor.getColumnIndex("FECHA"))
+                dialogMarcarPresenciaCliente.chkEntrada.text = cursor.getString(
+                    cursor.getColumnIndex(
+                        "FECHA"
+                    )
+                )
                 dialogMarcarPresenciaCliente.chkSalida.isEnabled = true
                 dialogMarcarPresenciaCliente.chkSalida.isChecked = false
             }
         }
         dialogMarcarPresenciaCliente.tvCodCliente.text = cod
         dialogMarcarPresenciaCliente.tvDescCliente.text = desc
-        dialogMarcarPresenciaCliente.chkEntrada.setOnClickListener { marcarEntrada(dialogMarcarPresenciaCliente.chkEntrada) }
-        dialogMarcarPresenciaCliente.chkSalida.setOnClickListener{ marcarSalida(dialogMarcarPresenciaCliente.chkSalida) }
+        dialogMarcarPresenciaCliente.chkEntrada.setOnClickListener { marcarEntrada(
+            dialogMarcarPresenciaCliente.chkEntrada
+        ) }
+        dialogMarcarPresenciaCliente.chkSalida.setOnClickListener{ marcarSalida(
+            dialogMarcarPresenciaCliente.chkSalida
+        ) }
         dialogMarcarPresenciaCliente.setCanceledOnTouchOutside(false)
         dialogMarcarPresenciaCliente.show()
     }
@@ -433,36 +490,37 @@ class Marcacion : AppCompatActivity() {
         enviar.enviar()
     }
 
-    private fun inicializaETAccion(et:EditText){
-        et.addTextChangedListener(object : TextWatcher{
+    private fun inicializaETAccion(et: EditText){
+        et.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString() == "cargarMarcaciones"){
+                if (s.toString() == "cargarMarcaciones") {
                     cargarMarcaciones()
                     et.setText("")
                 }
-                if (s.toString() == "Abrir"){
+                if (s.toString() == "Abrir") {
                     et.setText("")
                 }
-                if (s.toString() == "noAbrir"){
+                if (s.toString() == "noAbrir") {
                     finish()
                 }
-                if (s.toString() == "Entrada"){
+                if (s.toString() == "Entrada") {
                     marcar(dialogMarcarPresenciaCliente.chkEntrada)
                     et.setText("")
                 }
-                if (s.toString() == "noEntrada"){
+                if (s.toString() == "noEntrada") {
                     et.setText("")
                 }
-                if (s.toString() == "Salida"){
+                if (s.toString() == "Salida") {
                     marcar(dialogMarcarPresenciaCliente.chkSalida)
                     et.setText("")
                 }
-                if (s.toString() == "noSalida"){
+                if (s.toString() == "noSalida") {
                     et.setText("")
                 }
             }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 }

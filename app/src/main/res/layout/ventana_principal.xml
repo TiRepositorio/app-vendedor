@@ -34,6 +34,14 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:background="@color/tial"
+                android:onClick="mostrarMenu"
+                android:src="@drawable/ic_menu"/>
             <TextView
                 android:layout_height="50dp"
                 android:text="Apolo Import S.A."
@@ -43,14 +51,6 @@
                 android:layout_weight="1"
                 style="@style/titulo"
                 />
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:background="@color/tial"
-                android:onClick="mostrarMenu"
-                android:src="@drawable/ic_menu"/>
 
         </LinearLayout>
 
