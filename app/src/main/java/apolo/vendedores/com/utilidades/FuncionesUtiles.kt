@@ -479,7 +479,7 @@ class FuncionesUtiles {
     fun actualizar(tabla: String, valores: ContentValues, where: String){
         try {
             MainActivity.bd!!.update(tabla, valores, where, null)
-            mensaje("Correcto", "Acualizado correctamente")
+//            mensaje("Correcto", "Actualizado correctamente")
         } catch (e: Exception){
             mensaje("Error", e.message.toString())
         }

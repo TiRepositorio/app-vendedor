@@ -152,7 +152,7 @@ class Marcacion : AppCompatActivity() {
         var sql = ("Select *" + " from vt_pedidos_cab "
                 + " where COD_CLIENTE = '" + ListaClientes.codCliente + "'"
                 + " and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'"
-                + " and FEC_ALTA = '" + funcion.getFechaHoraActual() + "'"
+                + " and FEC_ALTA = '" + funcion.getFechaActual() + "'"
                 + " and ESTADO IN ('P','E')")
         var cursor: Cursor = funcion.consultar(sql)
         var nreg = cursor.count

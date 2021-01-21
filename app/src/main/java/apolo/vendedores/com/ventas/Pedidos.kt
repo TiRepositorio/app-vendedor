@@ -704,9 +704,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun insertarPedido(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         if (!validaciones()){ return }
 //        if (porcDescuentos < 0.0){
 //            porcDescuentos = funcion.maxDescuento()
@@ -1817,13 +1814,13 @@ class Pedidos : AppCompatActivity() {
             rowView.ibtn_se.setBackgroundResource(R.drawable.border_textview)
             rowView.ibtn_tactico.setBackgroundResource(R.drawable.border_textview)
 
-//            when(dataSource[position]["TIP_SURTIDO"]){
-//                "0" -> rowView.ibtn_se0.visibility = View.VISIBLE
-//                "1" -> rowView.ibtn_se1.visibility = View.VISIBLE
-//                "2" -> rowView.ibtn_se2.visibility = View.VISIBLE
-//                "3" -> rowView.ibtn_se3.visibility = View.VISIBLE
-//                else -> rowView.ibtn_se.visibility = View.VISIBLE
-//            }
+            when(dataSource[position]["TIP_SURTIDO"]){
+                "0" -> rowView.ibtn_se0.visibility = View.VISIBLE
+                "1" -> rowView.ibtn_se1.visibility = View.VISIBLE
+                "2" -> rowView.ibtn_se2.visibility = View.VISIBLE
+                "3" -> rowView.ibtn_se3.visibility = View.VISIBLE
+                else -> rowView.ibtn_se.visibility = View.VISIBLE
+            }
 
             rowView.imgVentaRapida.setBackgroundResource(R.drawable.border_textview)
             rowView.imgVentaRapida.setOnClickListener{

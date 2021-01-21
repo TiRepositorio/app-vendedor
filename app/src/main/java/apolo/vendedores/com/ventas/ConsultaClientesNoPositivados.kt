@@ -4,6 +4,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.R
@@ -57,6 +59,21 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
         btModificar.setOnClickListener{modificar()}
         btConsultar.setOnClickListener{consultar()}
         btEliminar.setOnClickListener{eliminar()}
+        inicializarEtAccion()
+    }
+
+    private fun inicializarEtAccion(){
+        accion.addTextChangedListener(object : TextWatcher{
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().trim() == "recargarLista"){
+                    buscarDatos()
+                }
+            }
+
+        })
     }
 
     private fun buscarDatos(){
@@ -122,6 +139,7 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
         Pedidos.totalPedido             = lista[position]["TOT_COMPROBANTE"].toString()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun modificar(){
         if (lista.size>0){
             if (lista[posicion]["ESTADO"].toString().trim() == "E"){
@@ -150,6 +168,10 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
     }
 
     private fun eliminar(){
+        if (lista[posicion]["ESTADO"] == "E"){
+            funcion.toast(this,"El registro ya fue enviado.")
+            return
+        }
         funcion.ejecutar("DELETE FROM vt_marcacion_visita WHERE id = '${lista[posicion]["id"]}' ",this)
         buscarDatos()
     }

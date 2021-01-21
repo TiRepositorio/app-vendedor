@@ -250,7 +250,6 @@
         <item name="android:background">#fffafa</item>
     </style>
 
-
     <style name="tituloClaro2" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>

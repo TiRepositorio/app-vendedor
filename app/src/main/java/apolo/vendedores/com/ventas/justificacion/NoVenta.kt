@@ -455,7 +455,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         values = ContentValues()
                         values.put("ESTADO", "E")
                         try {
-                            MainActivity2.bd!!.update("CLI_VENDEDOR", values,
+                            MainActivity2.bd!!.update("vt_marcacion_visita", values,
                                 " COD_CLIENTE = '" + ListaClientes.codCliente + "'" +
                                         "  and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'",
                                 null
