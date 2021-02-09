@@ -218,7 +218,8 @@ class DialogoPromocion(
 
     private fun buscar(nroPromocion:String){
         var sql : String = "SELECT DISTINCT a.COD_ARTICULO, a.DESC_ARTICULO, IFNULL(a.COD_UNIDAD_MEDIDA,'01') COD_UNIDAD_MEDIDA, a.REFERENCIA, a.CANT_VENTA" +
-                ", CASE WHEN IFNULL(a.COD_UNIDAD_MEDIDA,'01') = '01' OR TRIM(a.COD_UNIDAD_MEDIDA) = '' THEN b.PREC_UNID ELSE b.PREC_CAJA END AS PREC_CAJA " +
+//                ", CASE WHEN IFNULL(a.COD_UNIDAD_MEDIDA,'01') = '01' OR TRIM(a.COD_UNIDAD_MEDIDA) = '' THEN b.PREC_UNID ELSE b.PREC_CAJA END AS PREC_CAJA " +
+                ", (IFNULL(PREC_CAJA,1)/IFNULL(b.MULT,1)) * a.MULT PREC_CAJA " +
                 ", b.MULT APMULT, IFNULL(MAX(a.MULT),1) MULT, b.CANT_MINIMA, a.IND_COMBO, a.IND_TIPO, a.NRO_PROMOCION, b.PORC_IVA "
         sql +=  "  FROM svm_promociones_art_cab a, svm_articulos_precios b " +
                 " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  " +

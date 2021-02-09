@@ -326,7 +326,7 @@ class ListaClientes : AppCompatActivity() {
                 + "   and FECHA 	     LIKE '" + funcion.getFechaActual() + "%'"
                 + " ORDER BY CAST(id AS INTEGER) DESC")
         val cursor = funcion.consultar(sql)
-        if (cursor.count > 0) {
+        if (cursor.count > 2) {
             if (funcion.dato(cursor, "TIPO") == "S") {
                 return true
             }
