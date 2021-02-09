@@ -43,6 +43,7 @@ class Marcacion : AppCompatActivity() {
     private val dispositivo = FuncionesDispositivo(this)
     private val ubicacion   = FuncionesUbicacion(this)
     private lateinit var lm : LocationManager
+    private lateinit var lm2 : LocationManager
     private lateinit var telMgr : TelephonyManager
 
     //Dialog Marcacion
@@ -56,6 +57,7 @@ class Marcacion : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marcacion)
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        lm2 = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (!validacion("Abrir")){
             finish()
@@ -66,7 +68,6 @@ class Marcacion : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun validacion(trigger: String) : Boolean {
-        ubicacion.obtenerUbicacion(lm)
         if (!ubicacion.validaUbicacionSimulada(lm)) { return false }
         if (!dispositivo.horaAutomatica()) { return false }
         if (!dispositivo.modoAvion()){ return false }
@@ -80,6 +81,9 @@ class Marcacion : AppCompatActivity() {
             startActivity(configurarUbicacion)
             return false
         }
+        ubicacion.latitud  = ""
+        ubicacion.longitud = ""
+        ubicacion.obtenerUbicacion(lm,lm2)
         if (latitud.trim() == "" || longitud.trim() == "") {
             // ABRIR EL MAPA
             Mapa.modificarCliente = true
@@ -125,19 +129,18 @@ class Marcacion : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializaElementos(){
-        ubicacion.obtenerUbicacion(lm)
         ListaClientes.indPresencial = "S"
         inicializar()
     }
 
     private fun verificaMarcacionCliente(): Boolean {
         var estado = false
-        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 				"
+        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
                 + "  from vt_marcacion_ubicacion             			"
                 + " where TIPO           IN ('E','S')                 	"
                 + "   and COD_CLIENTE    = '" + codCliente      + "' "
                 + "   and COD_SUBCLIENTE = '" + codSubcliente   + "' "
-                + " order by id desc                        				")
+                + " order by id desc                        		 ")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
         if (cursor.count > 0) {
@@ -472,12 +475,18 @@ class Marcacion : AppCompatActivity() {
         }
         dialogMarcarPresenciaCliente.tvCodCliente.text = cod
         dialogMarcarPresenciaCliente.tvDescCliente.text = desc
-        dialogMarcarPresenciaCliente.chkEntrada.setOnClickListener { marcarEntrada(
-            dialogMarcarPresenciaCliente.chkEntrada
-        ) }
-        dialogMarcarPresenciaCliente.chkSalida.setOnClickListener{ marcarSalida(
-            dialogMarcarPresenciaCliente.chkSalida
-        ) }
+        dialogMarcarPresenciaCliente.chkEntrada.setOnClickListener {
+            if (!validacion("PRE-ENTRADA")){
+                return@setOnClickListener
+            }
+            marcarEntrada(dialogMarcarPresenciaCliente.chkEntrada)
+        }
+        dialogMarcarPresenciaCliente.chkSalida.setOnClickListener{
+            if (!validacion("PRE-SALIDA")){
+                return@setOnClickListener
+            }
+            marcarSalida(dialogMarcarPresenciaCliente.chkSalida)
+        }
         dialogMarcarPresenciaCliente.setCanceledOnTouchOutside(false)
         dialogMarcarPresenciaCliente.show()
     }

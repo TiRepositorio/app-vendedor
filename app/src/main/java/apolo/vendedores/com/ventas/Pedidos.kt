@@ -19,17 +19,12 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.utilidades.Adapter
 import kotlinx.android.synthetic.main.activity_pedidos.*
-import kotlinx.android.synthetic.main.activity_pedidos.btEnviar
-import kotlinx.android.synthetic.main.activity_pedidos.lvProductos
 import kotlinx.android.synthetic.main.barra_vendedores.*
-import kotlinx.android.synthetic.main.barra_vendedores.btBuscar
-import kotlinx.android.synthetic.main.barra_vendedores.etBuscar
-import kotlinx.android.synthetic.main.barra_vendedores.llBuscar
-import kotlinx.android.synthetic.main.barra_vendedores.spBuscar
 import kotlinx.android.synthetic.main.ven_ped_lista_pedidos_producto.view.*
 import java.text.NumberFormat
 import java.text.ParseException
@@ -76,8 +71,8 @@ class Pedidos : AppCompatActivity() {
     private lateinit var dispositivo : FuncionesDispositivo
     private lateinit var lm: LocationManager
     private lateinit var telMgr : TelephonyManager
-    private var listaProductos : ArrayList<HashMap<String,String>> = ArrayList()
-    private var listaDetalles : ArrayList<HashMap<String,String>> = ArrayList()
+    private var listaProductos : ArrayList<HashMap<String, String>> = ArrayList()
+    private var listaDetalles : ArrayList<HashMap<String, String>> = ArrayList()
     private var ultimaCondicion : Int = 0
     private var modificacion : String = "N"
     var indBloqueado = "N"
@@ -90,13 +85,22 @@ class Pedidos : AppCompatActivity() {
     var codMoneda = ""
     private var diasInicial = 0
     var decimales = ""
+    var indActualizado = false
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pedidos)
 
-        funcion = FuncionesUtiles(this,llTitulo,llBotonVendedores,llBuscar,spBuscar,etBuscar,btBuscar) //solo buscador
+        funcion = FuncionesUtiles(
+            this,
+            llTitulo,
+            llBotonVendedores,
+            llBuscar,
+            spBuscar,
+            etBuscar,
+            btBuscar
+        ) //solo buscador
         inicializarElementos()
         if (!nuevo){
             cargarDetalle()
@@ -112,7 +116,11 @@ class Pedidos : AppCompatActivity() {
         tvCodCliente.text = ListaClientes.codCliente + "-" + ListaClientes.codSubcliente
         tvDescCliente.text = ListaClientes.descCliente
 //        funcion.addItemSpinner(this,"Codigo-Descripcion-Cod. Barra","cod_articulo-cod_articulo-cod_articulo")
-        funcion.addItemSpinner(this,"Codigo-Descripcion-Cod. Barra","a.COD_ARTICULO-a.DESC_ARTICULO-a.COD_BARRA")
+        funcion.addItemSpinner(
+            this,
+            "Codigo-Descripcion-Cod. Barra",
+            "a.COD_ARTICULO-a.DESC_ARTICULO-a.COD_BARRA"
+        )
         dispositivo = FuncionesDispositivo(this)
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
@@ -128,11 +136,11 @@ class Pedidos : AppCompatActivity() {
         buscarProducto()
         inicializaETAccion(accionPedido)
         inicializaETAccion(accion)
-        tvdCantidad.setOnClickListener{funcion.dialogoEntradaNumero(tvdCantidad,this)}
-        tvdDesc.setOnClickListener{funcion.dialogoEntradaNumero(tvdDesc,this)}
+        tvdCantidad.setOnClickListener{funcion.dialogoEntradaNumero(tvdCantidad, this)}
+        tvdDesc.setOnClickListener{funcion.dialogoEntradaNumero(tvdDesc, this)}
         llPedidos.visibility = View.VISIBLE
         btVender.setOnClickListener{insertarPedido()}
-        btnPromociones.setOnClickListener{promociones()}
+        btnPromociones.setOnClickListener{promociones(btnPromociones)}
         etFechaPedido  = etFecha
         etTotalPedidos = etTotalPedido
         etNroOrdenCompra = etOrdenCompra
@@ -167,9 +175,9 @@ class Pedidos : AppCompatActivity() {
         llDetalles.visibility = View.GONE
         llCerrar.visibility = View.GONE
         when(view.id){
-            tvPedido.id   -> llPedidos.visibility = View.VISIBLE
-            tvDetalle.id  -> llDetalles.visibility = View.VISIBLE
-            tvCerrar.id   -> llCerrar.visibility = View.VISIBLE
+            tvPedido.id -> llPedidos.visibility = View.VISIBLE
+            tvDetalle.id -> llDetalles.visibility = View.VISIBLE
+            tvCerrar.id -> llCerrar.visibility = View.VISIBLE
         }
         cargarDetalle()
     }
@@ -188,17 +196,32 @@ class Pedidos : AppCompatActivity() {
         val whereOpcional = ""
         val group = ""
         val order = ""
-        spListaPrecios = FuncionesSpinner(this,spListaPrecio)
-        spListaPrecios.generaSpinner(campos,tabla,where,whereOpcional,group,order,"COD_LISTA_PRECIO","LP: ")
+        spListaPrecios = FuncionesSpinner(this, spListaPrecio)
+        spListaPrecios.generaSpinner(
+            campos,
+            tabla,
+            where,
+            whereOpcional,
+            group,
+            order,
+            "COD_LISTA_PRECIO",
+            "LP: "
+        )
         spListaPrecio.onItemSelectedListener = object : OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 codListaPrecio = spListaPrecios.getDato("COD_LISTA_PRECIO")
                 codMoneda = spListaPrecios.getDato("COD_MONEDA")
                 decimales = spListaPrecios.getDato("DECIMALES")
+                actualizaIndiceDePromocion()
             }
         }
         codListaPrecio = spListaPrecios.getDato("COD_LISTA_PRECIO")
@@ -222,19 +245,28 @@ class Pedidos : AppCompatActivity() {
         val whereOpcional = ""
         val group = ""
         val order = ""
-        spReferencias = FuncionesSpinner(this,spReferencia)
-        spReferencias.generaSpinner(campos,tabla,where,whereOpcional,group,order,"REFERENCIA","")
-        cbReferencias(campos,tabla,where,whereOpcional)
+        spReferencias = FuncionesSpinner(this, spReferencia)
+        spReferencias.generaSpinner(
+            campos,
+            tabla,
+            where,
+            whereOpcional,
+            group,
+            order,
+            "REFERENCIA",
+            ""
+        )
+        cbReferencias(campos, tabla, where, whereOpcional)
     }
 
-    private fun cbReferencias(campos:String,tabla:String,where:String,whereOpcional:String){
+    private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String){
         var sql : String = "SELECT " + campos +
                 "  FROM " + tabla +
                 " WHERE " + where
         if (whereOpcional.trim() != ""){ sql += whereOpcional }
-        val lista : ArrayList<HashMap<String,String>> = ArrayList()
+        val lista : ArrayList<HashMap<String, String>> = ArrayList()
         esconderCB()
-        funcion.cargarLista(lista,funcion.consultar(sql))
+        funcion.cargarLista(lista, funcion.consultar(sql))
         for (i in 0 until lista.size){
             when (i){
                 0 -> {
@@ -315,7 +347,12 @@ class Pedidos : AppCompatActivity() {
                 return
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 cargarDetalleProducto()
             }
         }
@@ -330,20 +367,22 @@ class Pedidos : AppCompatActivity() {
         val cursor: Cursor = funcion.consultar(
             "Select IND_DIRECTA  from svm_cliente_vendedor " + " where cod_cliente  = '"
                     + ListaClientes.codCliente + "' " + " and cod_subcliente = '"
-                    + ListaClientes.codSubcliente + "'   and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' ")
+                    + ListaClientes.codSubcliente + "'   and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' "
+        )
         cursor.moveToFirst()
         val indDirecta = cursor.getString(cursor.getColumnIndex("IND_DIRECTA"))
         if (indDirecta == "N") {
             spVenta.isEnabled = false
         }
-        val ven : Array<String> = arrayOf("VN","VD")
+        val ven : Array<String> = arrayOf("VN", "VD")
         val map = HashMap<String, String>()
         map["referencia"] = "N"
         lista.add(map)
         map["referencia"] = "V"
         lista.add(map)
 
-        val adapter: ArrayAdapter<String> = ArrayAdapter( this, R.layout.support_simple_spinner_dropdown_item, ven
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            this, R.layout.support_simple_spinner_dropdown_item, ven
         )
         spVenta.adapter = adapter
         if (vent == "N") {
@@ -352,7 +391,7 @@ class Pedidos : AppCompatActivity() {
             spVenta.setSelection(1)
         }
         spVenta.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected( arg0: AdapterView<*>?, arg1: View?,position: Int, id: Long) {
+            override fun onItemSelected(arg0: AdapterView<*>?, arg1: View?, position: Int, id: Long) {
                 vent = ven[position]
                 vent = if (vent == "VN") {
                     "N"
@@ -380,16 +419,35 @@ class Pedidos : AppCompatActivity() {
                                      } else { "AND (tipo_condicion = '" + ListaClientes.tipCondicion + "') " }
         val group = ""
         val order = " DESCRIPCION "
-        spCondicionDeVenta = FuncionesSpinner(this,spCondicionVenta)
-        spCondicionDeVenta.generaSpinner(campos,tabla,where,whereOpcional,group,order,"DESCRIPCION","")
-        spCondicionVenta.setSelection(spCondicionDeVenta.getIndex("COD_CONDICION_VENTA",ListaClientes.codCondicion))
+        spCondicionDeVenta = FuncionesSpinner(this, spCondicionVenta)
+        spCondicionDeVenta.generaSpinner(
+            campos,
+            tabla,
+            where,
+            whereOpcional,
+            group,
+            order,
+            "DESCRIPCION",
+            ""
+        )
+        spCondicionVenta.setSelection(
+            spCondicionDeVenta.getIndex(
+                "COD_CONDICION_VENTA",
+                ListaClientes.codCondicion
+            )
+        )
         ultimaCondicion = spCondicionVenta.selectedItemPosition
         diasInicial = spCondicionDeVenta.getDato("DIAS_INICIAL").toInt()
         spCondicionVenta.onItemSelectedListener = object : OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 return
             }
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 seleccionarCondicion()
             }
         }
@@ -398,73 +456,77 @@ class Pedidos : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun inicializaETAccion(etAccion:EditText){
+    private fun inicializaETAccion(etAccion: EditText){
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
 //        }
         etAccion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (etAccion.text.toString() == "condicion"){
+                if (etAccion.text.toString() == "condicion") {
                     accionCondicion()
                     return
                 }
-                if (etAccion.text.toString().trim() == "noCondicion"){
+                if (etAccion.text.toString().trim() == "noCondicion") {
                     noAccionCondicion()
                     return
                 }
-                if (etAccion.text.toString().trim().indexOf("guardarDetalle2") > -1){
+                if (etAccion.text.toString().trim().indexOf("guardarDetalle2") > -1) {
                     claveAutorizacion = etAccion.text.toString().split("*")[1]
                     indBloqueado = "S"
                     guardaDetalle2()
 
                     return
                 }
-                if (etAccion.text.toString().trim() == "noGuardarDetalle2"){
+                if (etAccion.text.toString().trim() == "noGuardarDetalle2") {
                     indBloqueado = "S"
                     tvdDesc.setText(tvdPrecioReferencia.text)
                     return
                 }
-                if (etAccion.text.toString().trim() == "eliminarDetalle"){
+                if (etAccion.text.toString().trim() == "eliminarDetalle") {
                     eliminarDetalle()
                     cargarDetalle()
                     return
                 }
-                if (etAccion.text.toString().trim() == "ventaRapida"){
+                if (etAccion.text.toString().trim() == "ventaRapida") {
                     ventaRapida()
                     return
                 }
-                if (etAccion.text.toString().trim() == "actualizarDetalle"){
+                if (etAccion.text.toString().trim() == "promociones") {
+                    promociones(etAccion)
+                    return
+                }
+                if (etAccion.text.toString().trim() == "actualizarDetalle") {
                     cargarDetalle()
                     return
                 }
-                if (etAccion.text.toString().trim() == "eliminarDetallePromocion"){
+                if (etAccion.text.toString().trim() == "eliminarDetallePromocion") {
                     eliminarDetallePromocion()
                     cargarDetalle()
                     return
                 }
-                if (etAccion.text.toString().split("*")[0].trim() == "noDescuentosVarios"){
+                if (etAccion.text.toString().split("*")[0].trim() == "noDescuentosVarios") {
                     noAutorizaDescuentosVarios()
                     claveAutorizacion = etAccion.text.toString().split("*")[1].trim()
                     recalcularTotal()
                     return
                 }
-                if (etAccion.text.toString().split("*")[0].trim() == "descuentosVarios"){
+                if (etAccion.text.toString().split("*")[0].trim() == "descuentosVarios") {
                     autorizaDescuentosVarios()
                     claveAutorizacion = etAccion.text.toString().split("*")[1].trim()
                     recalcularTotal()
                     return
                 }
-                if (etAccion.text.toString().split("*")[0].trim() == "descuentosVariosDecimal"){
+                if (etAccion.text.toString().split("*")[0].trim() == "descuentosVariosDecimal") {
                     autorizaDescuentosVariosDecimal()
                     claveAutorizacion = etAccion.text.toString().split("*")[1].trim()
                     recalcularTotal()
                     return
                 }
-                if (etAccion.text.toString().split("*")[0].trim() == "cargarDetallePedido"){
+                if (etAccion.text.toString().split("*")[0].trim() == "cargarDetallePedido") {
                     cargarDetalle()
                     return
                 }
-                if (etAccion.text.toString().split("*")[0].trim() == "cerrarTodo"){
+                if (etAccion.text.toString().split("*")[0].trim() == "cerrarTodo") {
                     finish()
                 }
             }
@@ -485,17 +547,19 @@ class Pedidos : AppCompatActivity() {
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
 //        }
-        if (spCondicionDeVenta.getIndex("COD_CONDICION_VENTA",ListaClientes.codCondicion).toString() != spCondicionVenta.selectedItemPosition.toString()
+        if (spCondicionDeVenta.getIndex("COD_CONDICION_VENTA", ListaClientes.codCondicion).toString() != spCondicionVenta.selectedItemPosition.toString()
             && spCondicionVenta.selectedItemPosition != ultimaCondicion){
             val dialogo = DialogoAutorizacion(this)
-            dialogo.dialogoAutorizacion("condicion",
-                                      "noCondicion",
-                                                accionPedido,
-                                       "Ingrese su codigo de vendedor",
-                                         "¿Seguro que desea modificar la condicion de venta?",
-                                                ListaClientes.codVendedor,
-                                        "Pedido bloqueado por la condicion de venta!",
-                                        "El codigo de vendedor ingresado es incorrecto")
+            dialogo.dialogoAutorizacion(
+                "condicion",
+                "noCondicion",
+                accionPedido,
+                "Ingrese su codigo de vendedor",
+                "¿Seguro que desea modificar la condicion de venta?",
+                ListaClientes.codVendedor,
+                "Pedido bloqueado por la condicion de venta!",
+                "El codigo de vendedor ingresado es incorrecto"
+            )
         } else {
             ultimaCondicion = spCondicionVenta.selectedItemPosition
         }
@@ -516,7 +580,7 @@ class Pedidos : AppCompatActivity() {
                 etDescFin.setText("")
                 etDescVarios.setText("")
                 etTotalDesc.setText("")
-                funcion.mensaje(this,"Atencion!","Pedido bloqueado por la condicion de venta!")
+                funcion.mensaje(this, "Atencion!", "Pedido bloqueado por la condicion de venta!")
             }
         }
         diasInicial = spCondicionDeVenta.getDato("DIAS_INICIAL").toInt()
@@ -551,7 +615,7 @@ class Pedidos : AppCompatActivity() {
                     "   AND   b.TIP_CLIENTE     = '${ListaClientes.tipCliente}' "
         val where : String = "  AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                              "  AND a.COD_LISTA_PRECIO = '${codListaPrecio}' "
-        cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
+        cargarLista(funcion.buscar(tabla, campos, groupBy, orderBy, where))
         mostrar()
     }
 
@@ -562,12 +626,12 @@ class Pedidos : AppCompatActivity() {
 //        }
         listaProductos = ArrayList()
         for (i in 0 until cursor.count){
-            val dato : HashMap<String,String> = HashMap()
+            val dato : HashMap<String, String> = HashMap()
             for (j in 0 until cursor.columnCount){
                 try {
                     dato[cursor.getColumnName(j).toUpperCase(Locale.ROOT)] =
-                        funcion.dato(cursor,cursor.getColumnName(j))
-                } catch (e:Exception){}
+                        funcion.dato(cursor, cursor.getColumnName(j))
+                } catch (e: Exception){}
             }
             dato["PREC_UNID"] = funcion.entero(dato["PREC_UNID"].toString())
             dato["PREC_CAJA"] = funcion.entero(dato["PREC_CAJA"].toString())
@@ -584,16 +648,22 @@ class Pedidos : AppCompatActivity() {
         FuncionesUtiles.posicionCabecera = 0
         FuncionesUtiles.posicionDetalle  = 0
         posProducto = 0
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7)
-        funcion.valores = arrayOf("DESC_ARTICULO", "PREC_CAJA"   , "PREC_UNID",
-                                  "REFERENCIA"   , "COD_ARTICULO", "COD_BARRA", "TIP_SURTIDO")
+        funcion.vistas  = intArrayOf(
+            R.id.tv1,
+            R.id.tv2,
+            R.id.tv3,
+            R.id.tv4,
+            R.id.tv5,
+            R.id.tv6,
+            R.id.tv7
+        )
+        funcion.valores = arrayOf(
+            "DESC_ARTICULO", "PREC_CAJA", "PREC_UNID",
+            "REFERENCIA", "COD_ARTICULO", "COD_BARRA", "TIP_SURTIDO"
+        )
         val adapter =
                  AdapterProducto(
-                     this
-                , listaProductos
-                , funcion.vistas
-                , funcion.valores
-                , accion
+                     this, listaProductos, funcion.vistas, funcion.valores, accion
                  )
         lvProductos.adapter = adapter
         lvProductos.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->
@@ -609,12 +679,12 @@ class Pedidos : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun verificaCargado(position:Int):Boolean{
+    private fun verificaCargado(position: Int):Boolean{
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return false
 //        }
         if (articulosDetalle.indexOf("|${listaProductos[position]["COD_ARTICULO"]}|") > -1){
-            funcion.toast(this,"El producto ya se ha cargado al pedido.")
+            funcion.toast(this, "El producto ya se ha cargado al pedido.")
             return false
         }
         return true
@@ -645,17 +715,23 @@ class Pedidos : AppCompatActivity() {
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
 //        }
-        tvdTotal.text = funcion.entero((tvdDesc.text.toString().replace(".","").toInt()) * (tvdCantidad.text.toString().replace(".","")).toInt())
+        tvdTotal.text = funcion.entero(
+            (tvdDesc.text.toString().replace(".", "").toInt()) * (tvdCantidad.text.toString()
+                .replace(
+                    ".",
+                    ""
+                )).toInt()
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun inicializaET(et:EditText){
+    private fun inicializaET(et: EditText){
 //        if (!dispositivo.validaEstadoSim(telMgr)){
 //            return
 //        }
         et.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (et.text.toString().trim().isNotEmpty()){
+                if (et.text.toString().trim().isNotEmpty()) {
                     calcularSubtotal()
                 } else {
                     tvdTotal.text = "0"
@@ -684,22 +760,91 @@ class Pedidos : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("Recycle")
     @RequiresApi(Build.VERSION_CODES.N)
     private fun actualizaIndiceDePromocion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
+        if (indActualizado){
+            return
+        }
         val codCondicion : String = spCondicionDeVenta.getDato("cod_condicion_venta")
+        val lista : String = spListaPrecios.getDato("COD_LISTA_PRECIO")
 //        val tabla : String = "svm_promociones_art_cab_s" + ListaClientes.tipCliente.replace(".","") + codListaPrecio + ListaClientes.codVendedor
-        val tabla = "svm_promociones_art_cab"
-//        val svmArticulosPrecios : String = "svm_articulos_precios_" + ListaClientes.codVendedor + codListaPrecio + ListaClientes.tipCliente.replace(".","")
-        val svmArticulosPrecios = "svm_articulos_precios"
-        var sql = "UPDATE $svmArticulosPrecios set IND_PROMO_ACT = 'N' "
-        funcion.ejecutar(sql,this)
-        sql = "UPDATE $svmArticulosPrecios SET IND_PROMO_ACT = 'S' WHERE COD_ARTICULO IN (SELECT DISTINCT COD_ARTICULO FROM $tabla WHERE COD_CONDICION_VENTA IN ($codCondicion,'','null'))"
-        funcion.ejecutar(sql,this)
-//        tabla = "svm_promociones_art_det_s" + ListaClientes.tipCliente.replace(".","") + codListaPrecio + ListaClientes.codVendedor
-//        sql = "UPDATE $svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE COD_ARTICULO IN (SELECT DISTINCT COD_ARTICULO FROM $tabla WHERE COD_CONDICION_VENTA IN ($codCondicion,'','null'))"
+        val tablaCab = "svm_promociones_art_cab"
+        var sql = ("SELECT distinct COD_ARTICULO FROM svm_promociones_art_cab c "
+                + "   WHERE (c.COD_CONDICION_VENTA = '" + codCondicion + "' or TRIM(COD_CONDICION_VENTA) = '')"
+                + "    and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or TRIM(TIP_CLIENTE) = '')"
+                + "    and (c.COD_LISTA_PRECIO = '" + lista + "' or TRIM(COD_LISTA_PRECIO) = '')")
+
+        var cursorProm: Cursor = MainActivity2.bd!!.rawQuery(sql, null)
+
+        var nreg = cursorProm.count
+        cursorProm.moveToFirst()
+        var `in`: String
+
+        `in` = if (nreg > 0) {
+            "'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO")) + "'"
+        } else {
+            return
+        }
+        for (i in 0 until nreg) {
+            `in` = `in` + ",'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO")) + "'"
+            cursorProm.moveToNext()
+        }
+
+        sql = ("SELECT distinct NRO_PROMOCION FROM svm_promociones_art_cab c "
+                + "   WHERE (c.COD_CONDICION_VENTA = '" + codCondicion + "' or TRIM(c.COD_CONDICION_VENTA) = '')"
+                + "    and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or TRIM(c.TIP_CLIENTE) = '')"
+                + "    and (c.COD_LISTA_PRECIO = '" + lista + "' or TRIM(c.COD_LISTA_PRECIO) = '')"
+                + "    and (c.IND_ART = 'S')")
+
+        cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
+
+        nreg = cursorProm.count
+        cursorProm.moveToFirst()
+
+        var inNro = "'" + cursorProm.getString(cursorProm.getColumnIndex("NRO_PROMOCION"))
+            .toString() + "'"
+
+        for (i in 0 until nreg) {
+            inNro =
+                inNro + ",'" + cursorProm.getString(cursorProm.getColumnIndex("NRO_PROMOCION")) + "'"
+            cursorProm.moveToNext()
+        }
+
+        sql = ("SELECT distinct COD_ARTICULO FROM svm_promociones_art_det b "
+                + "   WHERE NRO_PROMOCION IN (" + inNro + ")")
+
+        cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
+
+        nreg = cursorProm.getCount()
+        cursorProm.moveToFirst()
+
+        `in` += ",'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO"))
+            .toString() + "'"
+
+        for (i in 0 until nreg) {
+            `in` =
+                `in` + ",'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO")) + "'"
+            cursorProm.moveToNext()
+        }
+
+        sql = "UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'N'"
+
+        try {
+            MainActivity2.bd!!.execSQL(sql)
+        } catch (e: java.lang.Exception) {
+            funcion.mensaje(this, "Error", "No se pudo actualizar el campo${e.message}".trimIndent()
+            )
+        }
+
+        sql = ("UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE cod_articulo in ($`in`)")
+
+        try {
+            MainActivity2.bd!!.execSQL(sql)
+            indActualizado = true
+        } catch (e: java.lang.Exception) {
+            funcion.mensaje(this,"Error", "No se pudo actualizar el campo${e.message}".trimIndent())
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -708,16 +853,20 @@ class Pedidos : AppCompatActivity() {
 //        if (porcDescuentos < 0.0){
 //            porcDescuentos = funcion.maxDescuento()
 //        }
-        val porcDescuento : Double = 100 - (funcion.aEntero(tvdDesc.text.toString()) * 100)/(funcion.aEntero(tvdPrecioReferencia.text.toString())).toDouble()
+        val porcDescuento : Double = 100 - (funcion.aEntero(tvdDesc.text.toString()) * 100)/(funcion.aEntero(
+            tvdPrecioReferencia.text.toString()
+        )).toDouble()
         if (porcDescuento>porcDescuentos) {
             if (verificarDescuentosVarios() && verificarPromocion()) {
-                val mensaje : String = ("El descuento solicitado es de " + funcion.decimal(porcDescuento) + "%\n" +
+                val mensaje : String = ("El descuento solicitado es de " + funcion.decimal(
+                    porcDescuento
+                ) + "%\n" +
                         "CLIENTE: \t${ListaClientes.codCliente} - ${ListaClientes.codSubcliente}\n" +
                         "ARTICULO: \t${listaProductos[posProducto]["COD_ARTICULO"]}\n" +
                         "UM: \t${spReferencias.getDato("COD_UNIDAD_REL")}\n" +
                         "CANTIDAD: \t${tvdCantidad.text}")
                 val dialogo = DialogoAutorizacion(this)
-                dialogo.dialogoAutorizacion("guardarDetalle2","noGuardarDetalle2",accion,mensaje)
+                dialogo.dialogoAutorizacion("guardarDetalle2", "noGuardarDetalle2", accion, mensaje)
                 funcion.mensaje(this, "Descuento", "sin descuento")
             }
         } else {
@@ -737,7 +886,10 @@ class Pedidos : AppCompatActivity() {
             return
         }
         if (tvdCantidad.text.toString().toInt()%cantidadMinima != 0){
-            funcion.toast(this,"La cantidad minima es de $cantidadMinima articulos.\nSólo se pueden cargar múltiplos de $cantidadMinima.")
+            funcion.toast(
+                this,
+                "La cantidad minima es de $cantidadMinima articulos.\nSólo se pueden cargar múltiplos de $cantidadMinima."
+            )
             return
         }
         if (!verificaCargado(posProducto)){
@@ -754,16 +906,16 @@ class Pedidos : AppCompatActivity() {
         nf.maximumFractionDigits = decimales.toInt()
         var desc = 0.toFloat()
         if (etDescFin.text.toString() != "") {
-            desc += etDescVarios.text.toString().replace(",",".").toFloat()
+            desc += etDescVarios.text.toString().replace(",", ".").toFloat()
         }
         if (etDescVarios.text.toString() != "") {
-            desc += etDescVarios.text.toString().replace(",",".").toFloat()
+            desc += etDescVarios.text.toString().replace(",", ".").toFloat()
         }
         if (desc > 0) {
             if (decimales == "0") {
                 try {
                     totalPedido = nf.format(totalPedido)
-                    val totDesc: Float = totalPedido.replace(".","").toInt() * desc / 100
+                    val totDesc: Float = totalPedido.replace(".", "").toInt() * desc / 100
                     nf = NumberFormat.getInstance()
                     etTotalDesc.setText(nf.format(round(totDesc.toDouble()).toInt()))
 //                    etTotalPedido.setText(nf.format(calc))
@@ -807,8 +959,8 @@ class Pedidos : AppCompatActivity() {
         val sql = "SELECT MAX(NUMERO) MAXIMO from vt_pedidos_cab where COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         val cursor: Cursor = funcion.consultar(sql)
         if (cursor.moveToFirst()) {
-            maximo = if (funcion.datoEntero(cursor,"MAXIMO") > funcion.ultPedidoVenta(ListaClientes.codVendedor)) {
-                funcion.datoEntero(cursor,"MAXIMO")
+            maximo = if (funcion.datoEntero(cursor, "MAXIMO") > funcion.ultPedidoVenta(ListaClientes.codVendedor)) {
+                funcion.datoEntero(cursor, "MAXIMO")
             } else {
                 funcion.ultPedidoVenta(ListaClientes.codVendedor)
             }
@@ -825,7 +977,7 @@ class Pedidos : AppCompatActivity() {
         if (!dispositivo.modoAvion()){return false}
         if (!dispositivo.fechaCorrecta()){return false}
         if (tvdCantidad.text.toString().trim().toInt() == 0){
-            funcion.toast(this,"La cantidad debe ser mayor a 0.")
+            funcion.toast(this, "La cantidad debe ser mayor a 0.")
             return false
         }
         if (!dispositivo.zonaHoraria()){return false}
@@ -842,19 +994,23 @@ class Pedidos : AppCompatActivity() {
         val porcentaje: Double
         try {
             if (etDescVarios.text.isNotEmpty()){
-                porcentaje = etDescVarios.text.toString().replace(".","").replace(",",".").toDouble()
+                porcentaje = etDescVarios.text.toString().replace(".", "").replace(",", ".").toDouble()
                 if (porcentaje > 0.0){
                     descVarios = false
                 }
             }
-        } catch (e:java.lang.Exception){
+        } catch (e: java.lang.Exception){
             e.printStackTrace()
         }
         if (vent == "N"){
             ventaDirecta = false
         }
         if (!ventaDirecta && !descVarios){
-            funcion.mensaje(this,"","No se puede aplicar descuento a artículos teniendo descuentos varios")
+            funcion.mensaje(
+                this,
+                "",
+                "No se puede aplicar descuento a artículos teniendo descuentos varios"
+            )
             return false
         }
         return true
@@ -874,7 +1030,7 @@ class Pedidos : AppCompatActivity() {
                 ventaDirecta = false
             }
             if (nreg > 0 && !ventaDirecta) {
-                funcion.mensaje(this,"","No se puede aplicar descuentos con promociones!")
+                funcion.mensaje(this, "", "No se puede aplicar descuentos con promociones!")
                 false
             } else {
                 true
@@ -895,14 +1051,14 @@ class Pedidos : AppCompatActivity() {
             if(cursor.count==0){
                 1
             } else {
-                funcion.datoEntero(cursor,"NUMERO")
+                funcion.datoEntero(cursor, "NUMERO")
             }
         } else {
             id.toInt()
         }
     }
 
-    private fun habilitarSpinnersCabecera(estado:Boolean){
+    private fun habilitarSpinnersCabecera(estado: Boolean){
         spListaPrecio.isEnabled = estado
         spVenta.isEnabled = estado
         spCondicionVenta.isEnabled = estado
@@ -942,22 +1098,22 @@ class Pedidos : AppCompatActivity() {
             var totalComprobante: Int
             totalComprobante = etTotalPedido.text.toString().replace(".", "").toInt()
             if (totalComprobante == 0){
-                totalComprobante = tvdTotal.text.toString().replace(".","").toInt()
+                totalComprobante = tvdTotal.text.toString().replace(".", "").toInt()
             } else {
-                totalComprobante += tvdTotal.text.toString().replace(".","").toInt()
+                totalComprobante += tvdTotal.text.toString().replace(".", "").toInt()
             }
 
-            values.put( "TOT_COMPROBANTE", totalComprobante.toString())
+            values.put("TOT_COMPROBANTE", totalComprobante.toString())
             funcion.entero(totalComprobante)
             totalPedido = funcion.entero(totalComprobante)
         } else {
             var total: String = etTotalPedido.text.toString().replace(".", "")
             total = if (total.toInt() == 0){
-                tvdTotal.text.toString().replace(".","")
+                tvdTotal.text.toString().replace(".", "")
             } else {
-                (total.toFloat() + tvdTotal.text.toString().replace(".","").toFloat()).toString()
+                (total.toFloat() + tvdTotal.text.toString().replace(".", "").toFloat()).toString()
             }
-            total = total.replace(",",".")
+            total = total.replace(",", ".")
             totalComprobanteDecimal = total.toDouble()
             values.put("TOT_COMPROBANTE", totalComprobanteDecimal)
             val nf: NumberFormat = NumberFormat.getInstance()
@@ -978,7 +1134,11 @@ class Pedidos : AppCompatActivity() {
             values.put("NUMERO", maximo)
             values.put("NRO_ORDEN_COMPRA", etOrdenCompra.text.toString())
             try {
-                funcion.actualizar("vt_pedidos_cab", values, "NUMERO = '$maximo' and COD_VENDEDOR = '${ListaClientes.codVendedor}'")
+                funcion.actualizar(
+                    "vt_pedidos_cab",
+                    values,
+                    "NUMERO = '$maximo' and COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+                )
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()
             }
@@ -1023,7 +1183,12 @@ class Pedidos : AppCompatActivity() {
                 values.put("PRECIO_UNITARIO_C_IVA", tvdDesc.text.toString().replace(",", "."))
                 values.put("MONTO_TOTAL_CONIVA", total)
                 values.put("IND_BLOQUEADO", indBloqueado)
-                values.put("PRECIO_LISTA",tvdPrecioReferencia.text.toString().replace(".", "").replace(",", "."))
+                values.put(
+                    "PRECIO_LISTA", tvdPrecioReferencia.text.toString().replace(".", "").replace(
+                        ",",
+                        "."
+                    )
+                )
             }
         } catch (e: java.lang.Exception) {
             tvdTotal.text = "0"
@@ -1049,7 +1214,7 @@ class Pedidos : AppCompatActivity() {
             recalcularTotal()
 
         } catch (e: java.lang.Exception) {
-            funcion.mensaje(this,"Error!",e.message.toString())
+            funcion.mensaje(this, "Error!", e.message.toString())
             e.printStackTrace()
         }
     }
@@ -1070,18 +1235,26 @@ class Pedidos : AppCompatActivity() {
         val where = " and a.COD_FAMILIA      = '${listaProductos[posProducto]["COD_FAMILIA"]}' " +
                            " and a.COD_LINEA        = '${listaProductos[posProducto]["COD_LINEA"]}' " +
                            " and a.COD_LISTA_PRECIO = '${codListaPrecio}' " +
-                           " and a.PREC_CAJA        = '${listaProductos[posProducto]["PREC_CAJA"].toString().replace(".","")}' "
-        cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
+                           " and a.PREC_CAJA        = '${listaProductos[posProducto]["PREC_CAJA"].toString().replace(
+                               ".",
+                               ""
+                           )}' "
+        cargarLista(funcion.buscar(tabla, campos, groupBy, orderBy, where))
         posProducto = 0
         mostrar()
         etBuscar.text = textBuscar
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun promociones(){
+    private fun promociones(view: View){
+        if (view.id == btnPromociones.id){
+            Promociones.codArticulo = ""
+        } else {
+            Promociones.codArticulo = listaProductos[posProducto]["COD_ARTICULO"].toString()
+        }
         Promociones.codListaPrecio = codListaPrecio
         Promociones.condicionVenta = spCondicionDeVenta.getDato("COD_CONDICION_VENTA")
-        val promociones = Intent(this,Promociones::class.java)
+        val promociones = Intent(this, Promociones::class.java)
         startActivity(promociones)
     }
 
@@ -1123,7 +1296,7 @@ class Pedidos : AppCompatActivity() {
         val cursor = funcion.consultar(sql)
         articulosDetalle = ""
         for (i in 0 until cursor.count){
-            articulosDetalle += "|" + funcion.dato(cursor,"COD_ARTICULO") + "|"
+            articulosDetalle += "|" + funcion.dato(cursor, "COD_ARTICULO") + "|"
             cursor.moveToNext()
         }
     }
@@ -1145,17 +1318,29 @@ class Pedidos : AppCompatActivity() {
         if (listaDetalles.size>0){
             posDetalle = 0
         }
-        funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7)
-        funcion.valores = arrayOf("COD_ARTICULO"    , "DESC_ARTICULO"       , "EXISTENCIA_ACTUAL"   , "CANTIDAD"    ,
-                                  "PRECIO_UNITARIO" , "MONTO_TOTAL"         , "NRO_PROMOCION")
+        funcion.vistas  = intArrayOf(
+            R.id.tv1,
+            R.id.tv2,
+            R.id.tv3,
+            R.id.tv4,
+            R.id.tv5,
+            R.id.tv6,
+            R.id.tv7
+        )
+        funcion.valores = arrayOf(
+            "COD_ARTICULO", "DESC_ARTICULO", "EXISTENCIA_ACTUAL", "CANTIDAD",
+            "PRECIO_UNITARIO", "MONTO_TOTAL", "NRO_PROMOCION"
+        )
         val adapter: Adapter.AdapterDetallePedido =
-            Adapter.AdapterDetallePedido(this
-                ,listaDetalles
-                ,R.layout.ven_ped_lista_pedidos_detalles
-                ,funcion.vistas
-                ,funcion.valores
-                ,accion
-                ,"eliminarDetalle")
+            Adapter.AdapterDetallePedido(
+                this,
+                listaDetalles,
+                R.layout.ven_ped_lista_pedidos_detalles,
+                funcion.vistas,
+                funcion.valores,
+                accion,
+                "eliminarDetalle"
+            )
         lvDetalle.adapter = adapter
         lvDetalle.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionDetalle = position
@@ -1168,15 +1353,17 @@ class Pedidos : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun eliminarDetalle(){
         val sql: String
-        if (listaDetalles[posDetalle]["NRO_PROMOCION"].toString().trim().replace("null","") == ""){
+        if (listaDetalles[posDetalle]["NRO_PROMOCION"].toString().trim().replace("null", "") == ""){
             sql = "DELETE FROM  vt_pedidos_det WHERE id = ${listaDetalles[posDetalle]["id"]}"
-            funcion.ejecutar(sql,this)
+            funcion.ejecutar(sql, this)
             recalcularTotal()
         } else {
             val dialogoAutorizacion = DialogoAutorizacion(this)
-            dialogoAutorizacion.dialogoAccionOpcion("eliminarDetallePromocion","",accion,
+            dialogoAutorizacion.dialogoAccionOpcion(
+                "eliminarDetallePromocion", "", accion,
                 "El artículo pertenece a una promocion.\nSe eliminarán todos los artículos de la promoción.\n¿Desea continuar?",
-                "¡Atención!","SI","NO")
+                "¡Atención!", "SI", "NO"
+            )
         }
     }
 
@@ -1188,19 +1375,33 @@ class Pedidos : AppCompatActivity() {
         val sql = "DELETE FROM  vt_pedidos_det " +
                 " WHERE NRO_PROMOCION = '${listaDetalles[posDetalle]["NRO_PROMOCION"]}' " +
                 "   AND NUMERO = '$maximo' "
-        funcion.ejecutar(sql,this)
+        funcion.ejecutar(sql, this)
         recalcularTotal()
     }
 
     private fun recalcularTotal(){
         val sql = ("SELECT SUM(CAST(MONTO_TOTAL AS INTEGER)) MONTO_TOTAL FROM vt_pedidos_det " + " WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ")
         val cursor = funcion.consultar(sql)
-        val total = funcion.entero(funcion.dato(cursor,"MONTO_TOTAL"))
+        val total = funcion.entero(funcion.dato(cursor, "MONTO_TOTAL"))
         etSubtotal.setText(total)
-        var desc: String = if (etTotalDesc.text.toString() == ""){"0"}else{ etTotalDesc.text.toString().replace(".","") }
-        desc = desc.replace(",",".")
-        etTotalPedido.setText(funcion.entero((total.replace(".","").toInt() - desc.toInt()).toString()))
-        funcion.ejecutar("UPDATE vt_pedidos_cab SET TOT_COMPROBANTE = '${funcion.dato(cursor,"MONTO_TOTAL")}' WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ",this)
+        var desc: String = if (etTotalDesc.text.toString() == ""){"0"}else{ etTotalDesc.text.toString().replace(
+            ".",
+            ""
+        ) }
+        desc = desc.replace(",", ".")
+        etTotalPedido.setText(
+            funcion.entero(
+                (total.replace(".", "").toInt() - desc.toInt()).toString()
+            )
+        )
+        funcion.ejecutar(
+            "UPDATE vt_pedidos_cab SET TOT_COMPROBANTE = '${
+                funcion.dato(
+                    cursor,
+                    "MONTO_TOTAL"
+                )
+            }' WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ", this
+        )
     }
 
     //CIERRE
@@ -1223,7 +1424,7 @@ class Pedidos : AppCompatActivity() {
     fun dialogoCalendario(){
         val calendario = DialogoCalendario(this)
         etFechaHoy.setText(funcion.getFechaActual())
-        etFecha.setOnClickListener{calendario.onCreateDialog(1,etFecha,etFechaHoy)!!.show()}
+        etFecha.setOnClickListener{calendario.onCreateDialog(1, etFecha, etFechaHoy)!!.show()}
         inicializaETFecha()
         inicializaETObservacion()
         inicializaETDescuentosVarios()
@@ -1232,7 +1433,7 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun inicializaETFecha(){
-        etFecha.addTextChangedListener(object:TextWatcher{
+        etFecha.addTextChangedListener(object : TextWatcher {
             @SuppressLint("SimpleDateFormat")
             override fun afterTextChanged(s: Editable?) {
                 val dfDate = SimpleDateFormat("dd/MM/yyyy")
@@ -1248,7 +1449,11 @@ class Pedidos : AppCompatActivity() {
                 val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
                 println(diffInDays.toString())
                 if (diffInDays > 2) {
-                    funcion.mensaje(this@Pedidos,"¡Atención!","La fecha no puede ser mayor a dos días.")
+                    funcion.mensaje(
+                        this@Pedidos,
+                        "¡Atención!",
+                        "La fecha no puede ser mayor a dos días."
+                    )
                     val sdf = SimpleDateFormat("dd/MM/yyyy")
                     etFecha.setText(sdf.format(Date()))
                 }
@@ -1256,26 +1461,28 @@ class Pedidos : AppCompatActivity() {
                         "WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                         "  AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
                         "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
-                funcion.ejecutar(sql,this@Pedidos)
+                funcion.ejecutar(sql, this@Pedidos)
             }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         })
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun inicializaETObservacion(){
-        etObservacion.addTextChangedListener(object:TextWatcher{
+        etObservacion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val sql = "update vt_pedidos_cab set COMENTARIO = '${s.toString()}' " +
                         "WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                         "  AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
                         "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
-                funcion.ejecutar(sql,this@Pedidos)
+                funcion.ejecutar(sql, this@Pedidos)
             }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
@@ -1285,20 +1492,24 @@ class Pedidos : AppCompatActivity() {
                 etDescVarios.setText("0")
             }
             descVarAnterior = etDescVarios.text.toString()
-            funcion.dialogoEntradaNumeroDecimal(etDescVarios,this)
+            funcion.dialogoEntradaNumeroDecimal(etDescVarios, this)
         }
-        etDescVarios.addTextChangedListener(object:TextWatcher{
+        etDescVarios.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (etDescVarios.text.toString() != "") {
-                    if (etDescVarios.text.toString() == descVarAnterior){
+                    if (etDescVarios.text.toString() == descVarAnterior) {
                         return
                     }
-                    if (etDescVarios.text.toString() == "0" || etDescVarios.text.toString() == ""){
+                    if (etDescVarios.text.toString() == "0" || etDescVarios.text.toString() == "") {
                         return
                     }
-                    val descVarios = etDescVarios.text.toString().replace(",",".")
+                    val descVarios = etDescVarios.text.toString().replace(",", ".")
                     if (descVarios.toFloat() > 100) {
-                        funcion.mensaje(this@Pedidos,"Atención","El % de descuento supera al maximo permitido!")
+                        funcion.mensaje(
+                            this@Pedidos,
+                            "Atención",
+                            "El % de descuento supera al maximo permitido!"
+                        )
                         etDescVarios.setText(descVarAnterior)
                         return
                     }
@@ -1312,16 +1523,17 @@ class Pedidos : AppCompatActivity() {
                     val d1: String = if (etDescFin.text.toString() == "") {
                         "0"
                     } else {
-                        etDescFin.text.toString().replace(",",".")
+                        etDescFin.text.toString().replace(",", ".")
                     }
 
                     if (d1.toFloat() + d2.toFloat() > 100) {
-                        funcion.mensaje(this@Pedidos,"Atención","% no permitido !! ")
+                        funcion.mensaje(this@Pedidos, "Atención", "% no permitido !! ")
                         etDescVarios.setText(descVarAnterior)
                     } else {
-                        if(verificaDescuentosArticulos(maximo) && verificaPromocionExis()){
+                        if (verificaDescuentosArticulos(maximo) && verificaPromocionExis()) {
                             if (decimales == "0") {
-                                val calcDesc = etTotalPedido.text.toString().replace(".", "").toInt()
+                                val calcDesc =
+                                    etTotalPedido.text.toString().replace(".", "").toInt()
 
                                 val nf = NumberFormat.getInstance()
                                 nf.minimumFractionDigits = 2
@@ -1332,11 +1544,21 @@ class Pedidos : AppCompatActivity() {
                                 nf0.maximumFractionDigits = 0
 
                                 val autorizacion = DialogoAutorizacion(this@Pedidos)
-                                val mensaje = "El descuento solicitado es de " + nf.format(etDescVarios.text.toString().replace(",",".").toDouble()) + "%\n" +
+                                val mensaje = "El descuento solicitado es de " + nf.format(
+                                    etDescVarios.text.toString().replace(
+                                        ",",
+                                        "."
+                                    ).toDouble()
+                                ) + "%\n" +
                                         "CLIENTE: \t${ListaClientes.codCliente} - ${ListaClientes.codSubcliente}\n" +
                                         "LISTA: \t${codListaPrecio}\n" +
                                         "TOTAL PEDIDO: \t" + nf0.format(calcDesc) + "\n"
-                                autorizacion.dialogoAutorizacion("descuentosVarios","noDescuentosVarios",accion,mensaje)
+                                autorizacion.dialogoAutorizacion(
+                                    "descuentosVarios",
+                                    "noDescuentosVarios",
+                                    accion,
+                                    mensaje
+                                )
 
                             } else {
 
@@ -1349,14 +1571,24 @@ class Pedidos : AppCompatActivity() {
                                 nf.maximumFractionDigits = 2
 
                                 val autorizacion = DialogoAutorizacion(this@Pedidos)
-                                val mensaje = "El descuento solicitado es de " + nf.format(etDescVarios.text.toString().replace(",",".").toDouble()) + "%\n" +
+                                val mensaje = "El descuento solicitado es de " + nf.format(
+                                    etDescVarios.text.toString().replace(
+                                        ",",
+                                        "."
+                                    ).toDouble()
+                                ) + "%\n" +
                                         "CLIENTE: \t${ListaClientes.codCliente} - ${ListaClientes.codSubcliente}\n" +
                                         "LISTA: \t${codListaPrecio}\n" +
                                         "TOTAL PEDIDO: \t" + nf.format(calcDesc) + "\n"
-                                autorizacion.dialogoAutorizacion("descuentosVariosDecimal","noDescuentosVarios",accion,mensaje)
+                                autorizacion.dialogoAutorizacion(
+                                    "descuentosVariosDecimal",
+                                    "noDescuentosVarios",
+                                    accion,
+                                    mensaje
+                                )
 
                             }
-                        }else{
+                        } else {
                             etDescVarios.setText("")
                             if (decimales == "0") {
                                 try {
@@ -1364,7 +1596,8 @@ class Pedidos : AppCompatActivity() {
                                     val calcDes = totalPedido.replace(".", "").toInt()
                                     sumaDescuento = "0".toFloat()
                                     if (etDescFin.text.toString() != "") {
-                                        sumaDescuento = etDescFin.text.toString().replace(",",".").toFloat()
+                                        sumaDescuento =
+                                            etDescFin.text.toString().replace(",", ".").toFloat()
                                     }
                                     var totalDesc = (calcDes * (sumaDescuento / 100))
                                     val nf = NumberFormat.getInstance()
@@ -1374,7 +1607,7 @@ class Pedidos : AppCompatActivity() {
                                     totalDesc = calcDes - (calcDes * (sumaDescuento / 100))
                                     calc = round(totalDesc.toDouble()).toInt()
                                     etTotalPedido.setText(nf.format(calc))
-                                } catch (e : Exception) {
+                                } catch (e: Exception) {
                                     etTotalDesc.setText("")
                                     etTotalPedido.setText("")
                                 }
@@ -1389,7 +1622,8 @@ class Pedidos : AppCompatActivity() {
                             val calcDesc = Integer.parseInt(totalPedido.replace(".", ""))
                             sumaDescuento = "0".toFloat()
                             if (etDescFin.text.toString() != "") {
-                                sumaDescuento = etDescFin.text.toString().replace(",",".").toFloat()
+                                sumaDescuento =
+                                    etDescFin.text.toString().replace(",", ".").toFloat()
                             }
                             var totalDesc = (calcDesc * (sumaDescuento / 100))
                             val nf = NumberFormat.getInstance()
@@ -1398,7 +1632,7 @@ class Pedidos : AppCompatActivity() {
                             totalDesc = calcDesc - (calcDesc * (sumaDescuento / 100))
                             calc = round(totalDesc.toDouble()).toInt()
                             etTotalPedido.setText(nf.format(calc))
-                        } catch (e : Exception) {
+                        } catch (e: Exception) {
                             etTotalDesc.setText("")
                             etTotalPedido.setText("")
                         }
@@ -1406,8 +1640,9 @@ class Pedidos : AppCompatActivity() {
                 }
                 totalPedido = etTotalPedido.text.toString()
             }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
@@ -1417,26 +1652,30 @@ class Pedidos : AppCompatActivity() {
                 etDescFin.setText("0")
             }
             descFinAnterior = etDescFin.text.toString()
-            funcion.dialogoEntradaNumeroDecimal(etDescFin,this)
+            funcion.dialogoEntradaNumeroDecimal(etDescFin, this)
         }
-        etDescFin.addTextChangedListener(object:TextWatcher{
+        etDescFin.addTextChangedListener(object : TextWatcher {
             @SuppressLint("SetTextI18n")
             override fun afterTextChanged(s: Editable?) {
                 if (etDescFin.text.toString() != "") {
-                    if (etDescFin.text.toString() == descFinAnterior){
+                    if (etDescFin.text.toString() == descFinAnterior) {
                         return
                     }
-                    var descFin = etDescFin.text.toString().replace(".","")
-                    descFin = descFin.replace(",",".")
+                    var descFin = etDescFin.text.toString().replace(".", "")
+                    descFin = descFin.replace(",", ".")
                     if (descFin.toFloat() > spCondicionDeVenta.getDato("PORC_DESC").toFloat()) {
                         etDescFin.setText("0")
-                        funcion.mensaje(this@Pedidos,"Atención","El % de descuento supera al de la condición!")
+                        funcion.mensaje(
+                            this@Pedidos,
+                            "Atención",
+                            "El % de descuento supera al de la condición!"
+                        )
                         return
                     } else {
                         val d2: String = if (etDescVarios.text.toString() == "") {
                             "0"
                         } else {
-                            etDescVarios.text.toString().replace(",",".")
+                            etDescVarios.text.toString().replace(",", ".")
                         }
                         val d1: String = if (etDescFin.text.toString() == "") {
                             "0"
@@ -1445,15 +1684,19 @@ class Pedidos : AppCompatActivity() {
                         }
                         if (d1.toFloat() + d2.toFloat() > 100) {
                             etDescFin.setText(descFinAnterior)
-                            funcion.mensaje(this@Pedidos,"Atención","% no permido !! ")
+                            funcion.mensaje(this@Pedidos, "Atención", "% no permido !! ")
                         } else {
                             if (decimales == "0") {
                                 try {
 //                                    etSubtotal.setText(etTotalPedido.text.toString())
-                                    val calcDesc = etSubtotal.text.toString().replace(".","").toInt()
+                                    val calcDesc =
+                                        etSubtotal.text.toString().replace(".", "").toInt()
                                     sumaDescuento = "0".toFloat()
                                     if (etDescVarios.text.toString() != "") {
-                                        sumaDescuento = etDescVarios.text.toString().replace(",",".").toFloat()
+                                        sumaDescuento = etDescVarios.text.toString().replace(
+                                            ",",
+                                            "."
+                                        ).toFloat()
                                     }
                                     sumaDescuento += descFin.toFloat()
                                     var totalDesc = (calcDesc * (sumaDescuento / 100))
@@ -1463,7 +1706,7 @@ class Pedidos : AppCompatActivity() {
                                     totalDesc = calcDesc - (calcDesc * (sumaDescuento / 100))
                                     calc = round(totalDesc.toDouble()).toInt()
                                     etTotalPedido.setText(nf.format(calc))
-                                } catch (e : Exception) {
+                                } catch (e: Exception) {
                                     etTotalDesc.setText("")
                                     etTotalPedido.setText("88")
                                 }
@@ -1475,7 +1718,10 @@ class Pedidos : AppCompatActivity() {
                                     val calcDesc = total.toDouble()
                                     sumaDescuento = "0".toFloat()
                                     if (etDescVarios.text.toString() != "") {
-                                        sumaDescuento = etDescVarios.text.toString().replace(",",".").toFloat()
+                                        sumaDescuento = etDescVarios.text.toString().replace(
+                                            ",",
+                                            "."
+                                        ).toFloat()
                                     }
                                     sumaDescuento += descFin.toFloat()
                                     var totalDesc = (calcDesc * (sumaDescuento / 100))
@@ -1489,7 +1735,7 @@ class Pedidos : AppCompatActivity() {
                                     totalDesc = calcDesc - (calcDesc * (sumaDescuento / 100))
                                     calc2 = totalDesc
                                     etTotalPedido.setText(nf.format(calc2))
-                                } catch (e : Exception) {
+                                } catch (e: Exception) {
                                     etTotalDesc.setText("")
                                     etTotalPedido.setText("88")
                                 }
@@ -1504,7 +1750,8 @@ class Pedidos : AppCompatActivity() {
                             val calcDesc = etSubtotal.text.toString().replace(".", "").toInt()
                             sumaDescuento = "0".toFloat()
                             if (etDescVarios.text.toString() != "") {
-                                sumaDescuento = etDescVarios.text.toString().replace(",",".").toFloat()
+                                sumaDescuento =
+                                    etDescVarios.text.toString().replace(",", ".").toFloat()
                             }
                             var totalDesc = (calcDesc * (sumaDescuento / 100)).toInt()
                             val nf = NumberFormat.getInstance()
@@ -1515,7 +1762,7 @@ class Pedidos : AppCompatActivity() {
                             totalDesc = calcDesc - (calcDesc * (sumaDescuento / 100)).toInt()
                             calc = round(totalDesc.toDouble()).toInt()
                             etTotalPedido.setText(nf.format(calc))
-                        } catch (e : Exception) {
+                        } catch (e: Exception) {
                             etTotalDesc.setText("")
                             etTotalPedido.setText(e.toString())
                         }
@@ -1525,7 +1772,8 @@ class Pedidos : AppCompatActivity() {
                             val calcDesc = etSubtotal.text.toString().replace(",", ".").toDouble()
                             var sumaDescuento2 = 0.00
                             if (etDescVarios.text.toString() != "") {
-                                sumaDescuento2 = etDescVarios.text.toString().replace(",",".").toDouble()
+                                sumaDescuento2 =
+                                    etDescVarios.text.toString().replace(",", ".").toDouble()
                             }
                             var totalDesc = (calcDesc * (sumaDescuento2 / 100))
 
@@ -1537,41 +1785,51 @@ class Pedidos : AppCompatActivity() {
                             totalDesc = calcDesc - (calcDesc * (sumaDescuento / 100))
                             calc2 = totalDesc
                             etTotalPedido.setText(nf.format(calc2))
-                        } catch (e : Exception) {
+                        } catch (e: Exception) {
                             etTotalDesc.setText("")
                             etTotalPedido.setText(e.toString())
                         }
                     }
                 }
                 totalPedido = etTotalPedido.text.toString()
-                val desc = etDescFin.text.toString().replace(".","")
-                val totDesc = etTotalDesc.text.toString().replace(".","")
-                val sql = "update vt_pedidos_cab set PORC_DESC_FIN = '${desc.replace(",",".")}' " +
-                        " , DESCUENTO_FIN        = '$totDesc' "+
-                        " , TOT_DESCUENTO        = '${etTotalDesc.text.toString().replace(".","")}' " +
+                val desc = etDescFin.text.toString().replace(".", "")
+                val totDesc = etTotalDesc.text.toString().replace(".", "")
+                val sql = "update vt_pedidos_cab set PORC_DESC_FIN = '${desc.replace(",", ".")}' " +
+                        " , DESCUENTO_FIN        = '$totDesc' " +
+                        " , TOT_DESCUENTO        = '${
+                            etTotalDesc.text.toString().replace(".", "")
+                        }' " +
                         " WHERE NUMERO           = '$maximo' " +
                         "   AND COD_VENDEDOR     = '${ListaClientes.codVendedor}' " +
                         "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
                         "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
-                funcion.ejecutar(sql,this@Pedidos)
+                funcion.ejecutar(sql, this@Pedidos)
                 recalcularTotal()
             }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
     private fun habilitaDescuentoFinanciero(){
         val montoMinimo = spCondicionDeVenta.getDato("MONTO_MIN_DESC").trim().toFloat()
-        var monto       = etSubtotal.text.toString().trim().replace(".","")
-        monto = monto.replace(",",".")
+        var monto       = etSubtotal.text.toString().trim().replace(".", "")
+        monto = monto.replace(",", ".")
         if (monto.isEmpty() || monto.trim() == ""){ monto = "0" }
         val montoTotal = monto.toFloat()
         if (montoMinimo > montoTotal){
             etDescFin.setText("0")
-            etDescFin.setOnClickListener { funcion.toast(this,"No a alcanzado el monto mínimo de " +
-                                                                            "${funcion.numero("0",montoMinimo.toString())} " +
-                                                                            "para acceder al descuento.") }
+            etDescFin.setOnClickListener { funcion.toast(
+                this, "No a alcanzado el monto mínimo de " +
+                        "${
+                            funcion.numero(
+                                "0",
+                                montoMinimo.toString()
+                            )
+                        } " +
+                        "para acceder al descuento."
+            ) }
         } else {
             inicializaETDescuentoFinanciero()
         }
@@ -1583,7 +1841,7 @@ class Pedidos : AppCompatActivity() {
             val calcDesc = etSubtotal.text.toString().replace(".", "")
             sumaDescuento = "0".toFloat()
             if (etDescVarios.text.toString() != "") {
-                sumaDescuento = etDescFin.text.toString().replace(",",".").toFloat()
+                sumaDescuento = etDescFin.text.toString().replace(",", ".").toFloat()
                 if (sumaDescuento.toString() == "0.00"){
                     sumaDescuento = "0".toFloat()
                 }
@@ -1596,13 +1854,16 @@ class Pedidos : AppCompatActivity() {
             totDesc = calcDesc.toFloat() - (calcDesc.toFloat() * (sumaDescuento / 100))
             calc = round(totDesc.toDouble())
             etTotalPedido.setText(nf.format(calc))
-            val sql = "update vt_pedidos_cab set DESCUENTO_VAR = '${etDescVarios.text.toString().replace(".","").replace(",",".")}' " +
-                    " , TOT_DESCUENTO        = '${etTotalDesc.text.toString().replace(".","")}' " +
+            val sql = "update vt_pedidos_cab set DESCUENTO_VAR = '${etDescVarios.text.toString().replace(
+                ".",
+                ""
+            ).replace(",", ".")}' " +
+                    " , TOT_DESCUENTO        = '${etTotalDesc.text.toString().replace(".", "")}' " +
                     " WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                     "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
                     "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
-            funcion.ejecutar(sql,this@Pedidos)
-        } catch (e : Exception) {
+            funcion.ejecutar(sql, this@Pedidos)
+        } catch (e: Exception) {
             etTotalDesc.setText("")
             etTotalPedido.setText("")
         }
@@ -1632,13 +1893,16 @@ class Pedidos : AppCompatActivity() {
             totalDesc = calcDesc - (calcDesc * (sumaDescuento2 / 100))
             calc2 = totalDesc
             etTotalPedido.setText(nf.format(calc2))
-            val sql = "update vt_pedidos_cab set DESCUENTO_VAR = '${etDescVarios.text.toString().replace(",",".").toDouble()}' " +
+            val sql = "update vt_pedidos_cab set DESCUENTO_VAR = '${etDescVarios.text.toString().replace(
+                ",",
+                "."
+            ).toDouble()}' " +
                     " , TOT_DESCUENTO        = '$calc2' " +
                     " WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                     "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
                     "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
-            funcion.ejecutar(sql,this@Pedidos)
-        } catch (e : Exception) {
+            funcion.ejecutar(sql, this@Pedidos)
+        } catch (e: Exception) {
             etTotalDesc.setText("")
             etTotalPedido.setText("")
         }
@@ -1675,7 +1939,11 @@ class Pedidos : AppCompatActivity() {
             okVentaDirecta = false
         }
         return if (!okDescArticulo && !okVentaDirecta) {
-            funcion.mensaje(this,"","No se puede aplicar descuentos varios teniendo descuentos en artículos")
+            funcion.mensaje(
+                this,
+                "",
+                "No se puede aplicar descuentos varios teniendo descuentos en artículos"
+            )
             false
         } else {
             true
@@ -1696,7 +1964,7 @@ class Pedidos : AppCompatActivity() {
                 okVentaDirecta = false
             }
             if (nreg > 0 && !okVentaDirecta) {
-                funcion.mensaje(this,"","No se puede aplicar descuentos con promociones!")
+                funcion.mensaje(this, "", "No se puede aplicar descuentos con promociones!")
                 false
             } else {
                 true
@@ -1724,13 +1992,13 @@ class Pedidos : AppCompatActivity() {
         etNroPedido.setText(maximo.toString())
         val desc =
             if (lista[0]["TOT_DESCUENTO"].toString().trim() != "" && lista[0]["TOT_DESCUENTO"].toString().trim() != "null"){
-                lista[0]["TOT_DESCUENTO"].toString().replace(".","").toInt()
+                lista[0]["TOT_DESCUENTO"].toString().replace(".", "").toInt()
             } else {
                 0
             }
         val subtotal =
             if (lista[0]["TOT_COMPROBANTE"].toString().trim() != "" && lista[0]["TOT_COMPROBANTE"].toString().trim() != "null"){
-                lista[0]["TOT_COMPROBANTE"].toString().replace(".","").toInt()
+                lista[0]["TOT_COMPROBANTE"].toString().replace(".", "").toInt()
             } else {
                 0
             }
@@ -1758,12 +2026,18 @@ class Pedidos : AppCompatActivity() {
         if (lista.size == 0){
             return
         }
-        val total = lista[0]["TOT_COMPROBANTE"].toString().replace(".","").toDouble()
+        val total = lista[0]["TOT_COMPROBANTE"].toString().replace(".", "").toDouble()
         if (total < funcion.minVenta(ListaClientes.codVendedor)){
-            funcion.toast(this,"El monto minimo para realizar la venta es ${funcion.minVenta(ListaClientes.codVendedor)}.")
+            funcion.toast(
+                this, "El monto minimo para realizar la venta es ${
+                    funcion.minVenta(
+                        ListaClientes.codVendedor
+                    )
+                }."
+            )
             return
         }
-        val enviarPedido = EnviarPedido(this,lm,telMgr, lista[0])
+        val enviarPedido = EnviarPedido(this, lm, telMgr, lista[0])
         enviarPedido.enviarPedido()
     }
 
@@ -1832,6 +2106,11 @@ class Pedidos : AppCompatActivity() {
                 rowView.ibtn_tactico.visibility = View.VISIBLE
             }
 
+            rowView.ibtn_tactico.setOnClickListener {
+                posProducto = position
+                etAccion.setText("promociones")
+            }
+
             if (position%2==0){
                 rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
             } else {
@@ -1845,7 +2124,7 @@ class Pedidos : AppCompatActivity() {
             return rowView
         }
 
-        private fun verificaCargado(position:Int):Boolean{
+        private fun verificaCargado(position: Int):Boolean{
             if (articulosDetalle.indexOf("|${dataSource[position]["COD_ARTICULO"]}|") > -1){
                 return false
             }

@@ -373,6 +373,18 @@ class ListaClientes : AppCompatActivity() {
         Marcacion.descCliente   = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["DESC_CLIENTE"].toString()
         Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MIN"].toString()
         Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MAX"].toString()
+        val ubicacion = FuncionesUbicacion(this)
+        if (!ubicacion.validaUbicacionSimulada(lm)){
+            return
+        }
+        if (!ubicacion.ubicacionActivada(lm)){
+            return
+        }
+        ubicacion.obtenerUbicacion(lm)
+        if (!ubicacion.ubicacionEncontrada()){
+            return
+        }
+        ubicacion.obtenerUbicacion(lm)
         startActivity(Intent(this,Marcacion::class.java))
     }
 

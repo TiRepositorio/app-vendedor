@@ -171,7 +171,6 @@
             android:name=".prueba.VentanaAuxiliar"
             android:windowSoftInputMode="adjustNothing" />
 
-
         <activity
             android:name=".utilidades.Mapa"
             android:label="@string/title_activity_maps" />

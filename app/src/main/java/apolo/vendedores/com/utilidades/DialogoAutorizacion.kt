@@ -20,8 +20,8 @@ class DialogoAutorizacion(var context: Context) {
 
     fun dialogoAutorizacion(accion:String, cargaAcion : EditText){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
-//        val claveTemp : String = claves.generaClave()
-        val claveTemp = "54127854"
+        val claveTemp : String = claves.generaClave()
+//        val claveTemp = "54127854"
         dialogo.setTitle("Solicitar autorizacion")
 
         dialogo.setMessage(claveTemp)

@@ -45,6 +45,22 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
         }
     }
 
+    fun obtenerUbicacion(lm:LocationManager, lm2:LocationManager){
+        if (ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f,listener)
+        latitud  = lati
+        longitud = long
+        if (latitud == "0.0" || longitud == "0.0" || latitud == "" || longitud == "") {
+            lm2.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0f,listener)
+            latitud  = lati
+            longitud = long
+        }
+    }
+
     @SuppressLint("MissingPermission")
     fun obtenerUbicacionLatLng(lm:LocationManager):LatLng{
         if (ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
