@@ -102,7 +102,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         cargarCodigos()
 
         var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, CAST(sum(MAYOR_VENTA) AS INTEGER) MAYOR_VENTA, CAST(sum(VENTA_MES1) AS INTEGER) VENTA_MES1, "
-                            +   "		   CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , CAST(sum(META) AS INTEGER) META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC "
+                            +   "		   CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , CAST(sum(META) AS INTEGER) META, ((CAST(SUM(VENTA_MES2) AS DOUBLE)*100)/CAST(SUM(META) AS DOUBLE)) AS PORC "
                             +   "  from svm_metas_punto_por_linea "
                             +   " where COD_VENDEDOR = '$codVendedor'"
                             +   " group by DESC_GTE_MARKETIN ")
@@ -134,7 +134,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         for (i in 0 until listaVentasPorMarca.size){
             sql = ("select DESC_MODULO  	  , SUM(MAYOR_VENTA) AS MAYOR_VENTA     , SUM(VENTA_MES1) AS VENTA_MES1 , SUM(VENTA_MES2) AS VENTA_MES2     ,"
-                    + " SUM(META) AS META  	  , SUM(MES_1) AS MES_1		            , SUM(MES_2) AS MES_2           , SUM((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC 			 "
+                    + " SUM(META) AS META  	  , SUM(MES_1) AS MES_1		            , SUM(MES_2) AS MES_2           ,  printf(\"%.2f\",(SUM(CAST(VENTA_MES2 AS DOUBLE))*100)/SUM(CAST(META AS DOUBLE))) AS PORC  "
                     + " from svm_metas_punto_por_linea "
                     + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}'"
                     + "   AND COD_VENDEDOR = '$codVendedor'"
@@ -177,7 +177,7 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 sql = ("select DESC_SUPERVISOR , DESC_VENDEDOR, DESC_GTE_MARKETIN ,"
                         + "DESC_MODULO  	  , COD_CATEGORIA, DESC_CATEGORIA       ,"
                         + "MAYOR_VENTA     , VENTA_MES1   , VENTA_MES2        ,"
-                        + "META  	   	  , MES_1		 , MES_2 , META, ((CAST(VENTA_MES2 AS NUMBER)*100)/CAST(META AS NUMBER)) AS PORC 			 "
+                        + "META  	   	  , MES_1		 , MES_2 , META, ((CAST(VENTA_MES2 AS DOUBLE)*100)/CAST(META AS DOUBLE)) AS PORC 			 "
                         + " from svm_metas_punto_por_linea "
                         + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}' "
                         + "   and DESC_MODULO       = '${sublistasVentasPorMarcas[i][j]["DESC_MODULO"]}' "

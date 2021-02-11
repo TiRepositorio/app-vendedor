@@ -52,6 +52,10 @@ class Sincronizacion : AppCompatActivity() {
             return
         }
 
+        if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
+            funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
+            finish()
+        }
         try {
             preparaSincornizacion().execute()
         } catch(e: Exception){
@@ -403,7 +407,7 @@ class Sincronizacion : AppCompatActivity() {
             MainActivity.bd!!.endTransaction()//inserta valores en tablas especificas
             if (listaSQLCreateTable[i].split(" ")[5] == "svm_vendedor_pedido") {
                 try {
-                    MainActivity.bd!!.execSQL("update svm_vendedor_pedido set ULTIMA_SINCRO = FECHA")
+                    MainActivity.bd!!.execSQL("update svm_vendedor_pedido set ULTIMA_SINCRO = '${MainActivity2.funcion.getFechaHoraActual()}'")
                 } catch (e:java.lang.Exception){
                     e.message
                     runOnUiThread{

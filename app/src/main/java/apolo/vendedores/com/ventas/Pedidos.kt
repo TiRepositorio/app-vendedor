@@ -598,11 +598,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun buscarProducto(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
-//        val svmSurtidoEficiente : String = "svm_surtido_eficiente_" + ListaClientes.tipCliente.replace(".","") + ListaClientes.codCliente + ListaClientes.codSubcliente
-//        val svmArticulosPrecios : String = "svm_articulos_precios_" + ListaClientes.codVendedor + codListaPrecio + ListaClientes.tipCliente.replace(".","")
         val campos = " a.*,  b.TIP_SURTIDO "
         val groupBy = ""
         val orderBy = " a.DESC_ARTICULO ASC "
@@ -642,9 +637,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun mostrar(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         FuncionesUtiles.posicionCabecera = 0
         FuncionesUtiles.posicionDetalle  = 0
         posProducto = 0
@@ -1280,6 +1272,8 @@ class Pedidos : AppCompatActivity() {
             if (listaDetalles[i]["IND_BLOQUEADO"].toString() == "S"){
                 indBloqueado = "N"
             }
+            listaDetalles[i]["PRECIO_UNITARIO"] = funcion.numero("0",listaDetalles[i]["PRECIO_UNITARIO"].toString())
+            listaDetalles[i]["MONTO_TOTAL"] = funcion.numero("0",listaDetalles[i]["MONTO_TOTAL"].toString())
         }
         mostrarDetalle()
         cargarAtriculosDetalle()

@@ -687,6 +687,9 @@ class FuncionesUtiles {
     }
     fun fechaHora(fecha: String): Date {
         val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+        if (fecha.trim() == ""){
+            return hourFormat.parse("01/01/2020 00:00:00")
+        }
         return hourFormat.parse(fecha)
     }
     fun fecha(fecha: String): Date {
@@ -698,11 +701,26 @@ class FuncionesUtiles {
         return hourFormat.parse(hourFormat.format(fecha))
     }
     fun tiempoTranscurrido(fecha1: String, fecha2: String):Int{
-        var diferencia : Long = (fechaHora(fecha2).time/60000) - (fechaHora(fecha1).time / 60000)
+        var fec1 = fecha1
+        var fec2 = fecha2
+        if (fecha1.length < 12){
+            fec1 = "$fecha1 00:00:00"
+        }
+        if (fecha2.length < 12){
+            fec2 = "$fecha2 00:00:00"
+        }
+        var diferencia : Long = (fechaHora(fec2).time/60000) - (fechaHora(fec1).time / 60000)
         if (diferencia<0){
             diferencia *= (-1)
         }
         return diferencia.toInt()
+    }
+    fun fechaUltimaSincro():String{
+        return try {
+            dato(consultar("select ULTIMA_SINCRO FROM svm_vendedor_pedido"),"ULTIMA_SINCRO")
+        } catch (e:java.lang.Exception){
+            "01/01/2020 00:00:00"
+        }
     }
     fun convertirFechatoSQLFormat(fechas: String): String? {
         var fecha = fechas
