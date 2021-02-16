@@ -76,6 +76,17 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.show()
     }
 
+    fun dialogoAccion(accion:String, cargaAcion : EditText, mensaje:String,titulo:String,boton:String,cancelable:Boolean){
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        dialogo.setTitle(titulo)
+        dialogo.setMessage(mensaje)
+        dialogo.setPositiveButton(boton) { _: DialogInterface, _: Int ->
+            cargaAcion.setText(accion)
+        }
+        dialogo.setCancelable(cancelable)
+        dialogo.show()
+    }
+
     fun dialogoAccionOpcion(accionAceptar:String,accionCancelar:String, cargaAcion : EditText, mensaje:String,titulo:String,botonAceptar:String,botonCancelar:String){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         dialogo.setTitle(titulo)

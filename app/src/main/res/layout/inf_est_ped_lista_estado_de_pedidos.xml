@@ -27,8 +27,8 @@
 
     <TextView
         android:id="@+id/td4"
-        android:layout_width="75sp"
-        android:gravity="left|center_vertical"
+        android:layout_width="100dp"
+        android:gravity="center|center_vertical"
         android:text="text2"
         style="@style/textoTabla" />
 
@@ -51,10 +51,11 @@
 
     <TextView
         android:id="@+id/td7"
-        android:layout_width="185sp"
+        android:layout_width="250dp"
         android:gravity="left|center_vertical"
         android:text="text2"
         android:layout_weight="1"
+        android:scrollHorizontally="true"
         style="@style/textoTabla" />
 
 </LinearLayout>

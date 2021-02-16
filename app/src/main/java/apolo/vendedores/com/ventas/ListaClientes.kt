@@ -70,6 +70,7 @@ class ListaClientes : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializarElementos(){
+        funcion.inicializaContadores()
         funcion.addItemSpinner(this,"Codigo-Nombre-Ciudad","COD_CLIENTE-DESC_SUBCLIENTE-desc_ciudad")
         funcion.inicializaContadores()
         funcion.cargarTitulo(R.drawable.ic_persona,"Lista de clientes")
@@ -151,6 +152,7 @@ class ListaClientes : AppCompatActivity() {
     }
 
     fun mostrar(){
+        funcion.inicializaContadores()
         funcion.vistas  = intArrayOf(R.id.tv1 ,R.id.tv2 ,R.id.tv3 ,R.id.tv4 ,R.id.tv5 ,R.id.tv6 ,
                                      R.id.tv7 ,R.id.tv8 ,R.id.tv9 ,R.id.tv10,R.id.tv11,R.id.tv12,
                                      R.id.tv13,R.id.tv14,R.id.tv15,R.id.tv16,R.id.tv17 )
@@ -339,7 +341,7 @@ class ListaClientes : AppCompatActivity() {
     private fun verificaMarcacionCliente(): Boolean {
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
                          +  "  from vt_marcacion_ubicacion             			"
-                         +  " where TIPO           IN ('E')                 	"
+                         +  " where TIPO           IN ('S','E')                 	"
                          +  "   and COD_CLIENTE    = '" + codCliente + "' "
                          +  "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
                          +  "   and FECHA          LIKE '${funcion.getFechaActual()}%' "
@@ -347,6 +349,15 @@ class ListaClientes : AppCompatActivity() {
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
         if (cursor.count > 0) {
+            if (cursor.count > 1 && funcion.dato(cursor, "TIPO") == "S"){
+                Pedidos.indPresencial = "N"
+                val dialogo = DialogoAutorizacion(this)
+                dialogo.dialogoAccionOpcion("marcacion"
+                    ,"venderNoPresencial",accion
+                    ,"¿Se encuentra en el cliente?",""
+                    ,"SI","NO")
+                return false
+            }
             if (funcion.dato(cursor, "TIPO") == "E") {
                 return true
             }
@@ -374,7 +385,7 @@ class ListaClientes : AppCompatActivity() {
         Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MIN"].toString()
         Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MAX"].toString()
         val ubicacion = FuncionesUbicacion(this)
-        if (!ubicacion.validaUbicacionSimulada(lm)){
+        if (!ubicacion.validaUbicacionSimulada2(lm)){
             return
         }
         if (!ubicacion.ubicacionActivada(lm)){

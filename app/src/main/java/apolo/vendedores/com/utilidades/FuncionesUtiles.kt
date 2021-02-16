@@ -690,7 +690,11 @@ class FuncionesUtiles {
         if (fecha.trim() == ""){
             return hourFormat.parse("01/01/2020 00:00:00")
         }
-        return hourFormat.parse(fecha)
+        return try {
+            hourFormat.parse(fecha)
+        } catch (e:java.lang.Exception){
+            hourFormat.parse("01/01/2020 00:00:00")
+        }
     }
     fun fecha(fecha: String): Date {
         val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
@@ -708,6 +712,9 @@ class FuncionesUtiles {
         }
         if (fecha2.length < 12){
             fec2 = "$fecha2 00:00:00"
+        }
+        if (fec1.isEmpty() || fec2.isEmpty()){
+            return 16
         }
         var diferencia : Long = (fechaHora(fec2).time/60000) - (fechaHora(fec1).time / 60000)
         if (diferencia<0){

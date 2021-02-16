@@ -135,6 +135,7 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
         ListaClientes.codCondicion      = lista[position]["COD_CONDICION_VENTA"].toString()
         ListaClientes.diasInicial       = lista[position]["DIAS_INICIAL"].toString()
         ListaClientes.codVendedor       = lista[position]["COD_VENDEDOR"].toString()
+        ListaClientes.codSucursalCliente= lista[position]["COD_SUCURSAL"].toString()
         Pedidos.vent                    = "N"
         Pedidos.totalPedido             = lista[position]["TOT_COMPROBANTE"].toString()
     }

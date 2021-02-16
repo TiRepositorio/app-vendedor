@@ -46,6 +46,12 @@
                     android:padding="5dp"
                     android:background="@color/fondoFooter">
 
+                    <EditText
+                        android:id="@+id/accion"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"/>
+
                     <TextView
                         android:layout_width="40dp"
                         android:gravity="end"

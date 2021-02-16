@@ -361,11 +361,10 @@ class Marcacion : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun marcarSalida(cb: CheckBox){
-        if (cb.isChecked)
-        {
+        if (cb.isChecked) {
             if (!validacion("Salida")){
                 cb.isChecked =  false
-//                return
+                return
             }
             if (!validaEntrada()){
                 cb.isChecked =  false
@@ -376,8 +375,7 @@ class Marcacion : AppCompatActivity() {
                 return
             }
             marcar(cb)
-        }
-        else {
+        } else {
             desmarcar(cb)
         }
         cargarMarcaciones()
@@ -483,6 +481,7 @@ class Marcacion : AppCompatActivity() {
         }
         dialogMarcarPresenciaCliente.chkSalida.setOnClickListener{
             if (!validacion("PRE-SALIDA")){
+                dialogMarcarPresenciaCliente.chkSalida.isChecked = false
                 return@setOnClickListener
             }
             marcarSalida(dialogMarcarPresenciaCliente.chkSalida)

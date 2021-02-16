@@ -12,13 +12,14 @@ import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.dialogo_bonificacion_combo.*
 import kotlinx.android.synthetic.main.ven_con_consulta_detalle.*
 
-class DialogoPedidos(var context: Context, var numero: Int) {
+class DialogoPedidos(var context: Context, var numero: Int, listaDePrecio: String) {
 
     var lista: ArrayList<HashMap<String,String>> = ArrayList()
     var listaDetalle: ArrayList<HashMap<String,String>> = ArrayList()
     var funcion : FuncionesUtiles = FuncionesUtiles(context)
     lateinit var adapter: Adapter.AdapterGenericoDetalle
     lateinit var dialogo: Dialog
+    var listaDePrecios = listaDePrecio
 
     fun mostrarDialogo(){
         dialogo = Dialog(context)
@@ -39,6 +40,8 @@ class DialogoPedidos(var context: Context, var numero: Int) {
                 +  "   AND a.COD_EMPRESA  = b.COD_EMPRESA "
                 +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
                 +  "   AND a.COD_VENDEDOR = b.COD_VENDEDOR "
+                +  "   AND b.COD_LISTA_PRECIO = '$listaDePrecios' "
+                +  " "
                 +  " ")
 
         lista = ArrayList()

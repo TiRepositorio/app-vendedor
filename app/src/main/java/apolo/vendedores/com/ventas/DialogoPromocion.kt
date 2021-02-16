@@ -50,6 +50,7 @@ class DialogoPromocion(
     }
 
     fun dialogoComboBonificacion(nroPromocion: String){
+        posicion = 0
         funcion = FuncionesUtiles(context)
         dialogo = Dialog(context)
         dialogo.setContentView(R.layout.dialogo_bonificacion_combo)
@@ -224,13 +225,13 @@ class DialogoPromocion(
         sql +=  "  FROM svm_promociones_art_cab a, svm_articulos_precios b " +
                 " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  " +
                 "   AND a.COD_ARTICULO = b.COD_ARTICULO " +
-                "   AND (a.COD_LISTA_PRECIO = '${Promociones.codListaPrecio}' or trim(a.COD_LISTA_PRECIO) = '' ) " +
-                "   AND (b.COD_LISTA_PRECIO = '${Promociones.codListaPrecio}' or trim(b.COD_LISTA_PRECIO) = '' ) " +
+                "   AND (a.COD_LISTA_PRECIO = '${Promociones.codListaPrecio}' or trim(a.COD_LISTA_PRECIO) = '' or a.COD_LISTA_PRECIO IS NULL ) " +
+                "   AND (b.COD_LISTA_PRECIO = '${Promociones.codListaPrecio}' or trim(b.COD_LISTA_PRECIO) = '' or b.COD_LISTA_PRECIO IS NULL ) " +
                 "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                 "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
-                "   AND (a.COD_CONDICION_VENTA = '${Promociones.condicionVenta}' or trim(a.COD_CONDICION_VENTA) = '' ) " +
+                "   AND (a.COD_CONDICION_VENTA = '${Promociones.condicionVenta}' or trim(a.COD_CONDICION_VENTA) = '' or a.COD_CONDICION_VENTA IS NULL ) " +
                 "   AND  a.NRO_PROMOCION = '$nroPromocion' " +
-                "   AND (a.TIP_CLIENTE   = '${ListaClientes.tipCliente}' or trim(a.TIP_CLIENTE) = '' ) " +
+                "   AND (a.TIP_CLIENTE   = '${ListaClientes.tipCliente}' or trim(a.TIP_CLIENTE) = '' or a.TIP_CLIENTE IS NULL ) " +
                 " GROUP BY a.COD_ARTICULO "
 
         if (condicion != ""){
@@ -257,6 +258,7 @@ class DialogoPromocion(
     }
 
     private fun mostrar(lvBusqueda: ListView){
+        posicion = 0
         funcion.vistas = intArrayOf(R.id.tvb1,R.id.tvb2,R.id.tvb3,R.id.tvb4)
         funcion.valores = arrayOf("COD_ARTICULO","DESC_ARTICULO","CANT_VENTA","PREC_CAJA")
         adapter = Adapter.AdapterDialogoPromociones(context
@@ -276,6 +278,7 @@ class DialogoPromocion(
     }
 
     private fun mostrarDescuento(lvBusqueda: ListView){
+        posicion = 0
         funcion.vistas = intArrayOf(R.id.tvb1,R.id.tvb2,R.id.tvb3)
         funcion.valores = arrayOf("COD_ARTICULO","DESC_ARTICULO","PREC_CAJA")
         adapter = Adapter.AdapterDialogoPromociones(context
@@ -646,8 +649,12 @@ class DialogoPromocion(
         listaDetallesInsertar = ArrayList()
         var multiplo = 1000
         cargaDatosCabecera()
+        var cantidad = 0.0
         for (i in 0 until lista.size){
-            val bonificado : Double = lista[i]["CANTIDAD"].toString().toDouble() / lista[i]["CANT_VENTA"].toString().toDouble()
+            cantidad += funcion.entero(lista[i]["CANTIDAD"].toString()).toDouble()
+        }
+        for (i in 0 until lista.size){
+            val bonificado : Double = cantidad / lista[i]["CANT_VENTA"].toString().toDouble()
             if (bonificado<1){
                 funcion.mensaje(context,"¡Atención!",
                         "Debe vender un mínimo de ${lista[i]["CANT_VENTA"]} del artículo ${lista[i]["COD_ARTICULO"]}.")
@@ -684,6 +691,7 @@ class DialogoPromocion(
         insertarBonificacion()
         dialogo.dismiss()
         Pedidos.etAccionPedidos.setText("actualizarDetalle")
+        Pedidos.etAccionPedidos.setText("recalcularTotal")
 //            funcion.insertar("vt_pedidos_det", values)
     }
 

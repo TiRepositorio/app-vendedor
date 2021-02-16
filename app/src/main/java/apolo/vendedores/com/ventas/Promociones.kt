@@ -54,17 +54,30 @@ class Promociones : AppCompatActivity() {
     private fun buscarPromociones(){
         seleccionaPromociones()
 
-        val campos : String = " DISTINCT NRO_PROMOCION, TIP_CLIENTE, DESCRIPCION, COMENTARIO, COD_CONDICION_VENTA," +
-                            " FEC_VIGENCIA , IND_TIPO   ,  IND_COMBO "
-        val groupBy : String  = " NRO_PROMOCION, TIP_CLIENTE, DESCRIPCION, COMENTARIO, COD_CONDICION_VENTA," +
-                             " FEC_VIGENCIA , IND_TIPO   , CANT_VENTA , IND_COMBO "
+        val campos : String = " DISTINCT z.NRO_PROMOCION, z.TIP_CLIENTE, z.DESCRIPCION, z.COMENTARIO, z.COD_CONDICION_VENTA," +
+                            " z.FEC_VIGENCIA , z.IND_TIPO   ,  z.IND_COMBO "
+        val groupBy : String  = " z.NRO_PROMOCION, z.TIP_CLIENTE, z.DESCRIPCION, z.COMENTARIO, z.COD_CONDICION_VENTA," +
+                             " z.FEC_VIGENCIA , z.IND_TIPO   , z.CANT_VENTA , z.IND_COMBO "
         val orderBy = " CAST(NRO_PROMOCION AS INTEGER) asc "
-        val tabla = " svm_promociones_art_cab "
-        var where : String  = (" AND (COD_CONDICION_VENTA   = '$condicionVenta'             or trim(COD_CONDICION_VENTA)  = '' or COD_CONDICION_VENTA IS NULL) "
-                            +  "    AND (TIP_CLIENTE        = '${ListaClientes.tipCliente}' or trim(TIP_CLIENTE)          = '' or TIP_CLIENTE IS NULL)"
-                            +  "    AND (COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(COD_LISTA_PRECIO)     = '' or COD_LISTA_PRECIO IS NULL)"
-                            +  "    AND  COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
-                            +  "    AND  NRO_PROMOCION IN ($inNro)"
+        val tabla = " svm_promociones_art_cab z "
+        var where : String  = (" AND (z.COD_CONDICION_VENTA   = '$condicionVenta'             or trim(z.COD_CONDICION_VENTA)  = '' or z.COD_CONDICION_VENTA IS NULL) "
+                            +  "    AND (z.TIP_CLIENTE        = '${ListaClientes.tipCliente}' or trim(z.TIP_CLIENTE)          = '' or z.TIP_CLIENTE IS NULL)"
+                            +  "    AND (z.COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(z.COD_LISTA_PRECIO)     = '' or z.COD_LISTA_PRECIO IS NULL)"
+                            +  "    AND  z.COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
+                            +  "    AND  z.NRO_PROMOCION IN ($inNro)"
+                            +  "    AND EXISTS ("
+                            +  " SELECT 1 FROM svm_promociones_art_cab a, svm_articulos_precios b "
+                            +  " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  "
+                            +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
+                            +  "   AND (a.COD_LISTA_PRECIO = '$codListaPrecio' or trim(a.COD_LISTA_PRECIO) = '' or a.COD_LISTA_PRECIO IS NULL ) "
+                            +  "   AND (b.COD_LISTA_PRECIO = '$codListaPrecio' or trim(b.COD_LISTA_PRECIO) = '' or b.COD_LISTA_PRECIO IS NULL ) "
+                            +  "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                            +  "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                            +  "   AND (a.COD_CONDICION_VENTA = '$condicionVenta' or trim(a.COD_CONDICION_VENTA) = '' or a.COD_CONDICION_VENTA IS NULL ) "
+                            +  "   AND  a.NRO_PROMOCION = z.NRO_PROMOCION "
+                            +  "   AND (a.TIP_CLIENTE   = '${ListaClientes.tipCliente}' or trim(a.TIP_CLIENTE) = '' or a.TIP_CLIENTE IS NULL ) "
+                            +  " GROUP BY a.COD_ARTICULO "
+                            +  " )"
                 )
         where += if (codArticulo.isNotEmpty()){
             " and IND_ART = 'S' "
@@ -114,17 +127,30 @@ class Promociones : AppCompatActivity() {
         posPromocion = 0
         seleccionaPromociones()
 
-        val campos : String = " DISTINCT NRO_PROMOCION, TIP_CLIENTE, DESCRIPCION, COMENTARIO, COD_CONDICION_VENTA," +
-                " FEC_VIGENCIA , IND_TIPO   , IND_COMBO "
-        val groupBy : String  = " NRO_PROMOCION, TIP_CLIENTE, DESCRIPCION, COMENTARIO, COD_CONDICION_VENTA," +
-                " FEC_VIGENCIA , IND_TIPO   , CANT_VENTA , IND_COMBO "
-        val orderBy = " CAST(NRO_PROMOCION AS INTEGER) asc "
-        val tabla = " svm_promociones_art_cab "
-        var where : String  = (" AND (COD_CONDICION_VENTA   = '$condicionVenta'             or trim(COD_CONDICION_VENTA)  = '' or COD_CONDICION_VENTA IS NULL) "
-                +  "    AND (TIP_CLIENTE        = '${ListaClientes.tipCliente}' or trim(TIP_CLIENTE)          = '' or TIP_CLIENTE IS NULL)"
-                +  "    AND (COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(COD_LISTA_PRECIO)     = '' or COD_LISTA_PRECIO IS NULL)"
-                +  "    AND  COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
-                +  "    AND  NRO_PROMOCION IN ($inNro)"
+        val campos : String = " DISTINCT z.NRO_PROMOCION, z.TIP_CLIENTE, z.DESCRIPCION, z.COMENTARIO, z.COD_CONDICION_VENTA," +
+                " z.FEC_VIGENCIA , z.IND_TIPO   , z.IND_COMBO "
+        val groupBy : String  = " z.NRO_PROMOCION, z.TIP_CLIENTE, z.DESCRIPCION, z.COMENTARIO, z.COD_CONDICION_VENTA," +
+                " z.FEC_VIGENCIA , z.IND_TIPO   , z.CANT_VENTA , z.IND_COMBO "
+        val orderBy = " CAST(z.NRO_PROMOCION AS INTEGER) asc "
+        val tabla = " svm_promociones_art_cab z "
+        var where : String  = (" AND (z.COD_CONDICION_VENTA   = '$condicionVenta'             or trim(z.COD_CONDICION_VENTA)  = '' or z.COD_CONDICION_VENTA IS NULL) "
+                +  "    AND (z.TIP_CLIENTE        = '${ListaClientes.tipCliente}' or trim(z.TIP_CLIENTE)          = '' or z.TIP_CLIENTE IS NULL)"
+                +  "    AND (z.COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(z.COD_LISTA_PRECIO)     = '' or z.COD_LISTA_PRECIO IS NULL)"
+                +  "    AND  z.COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
+                +  "    AND  z.NRO_PROMOCION IN ($inNro) "
+                +  "    AND EXISTS ("
+                +  " SELECT 1 FROM svm_promociones_art_cab a, svm_articulos_precios b "
+                +  " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  "
+                +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
+                +  "   AND (a.COD_LISTA_PRECIO = '$codListaPrecio' or trim(a.COD_LISTA_PRECIO) = '' or a.COD_LISTA_PRECIO IS NULL ) "
+                +  "   AND (b.COD_LISTA_PRECIO = '$codListaPrecio' or trim(b.COD_LISTA_PRECIO) = '' or b.COD_LISTA_PRECIO IS NULL ) "
+                +  "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                +  "   AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                +  "   AND (a.COD_CONDICION_VENTA = '$condicionVenta' or trim(a.COD_CONDICION_VENTA) = '' or a.COD_CONDICION_VENTA IS NULL ) "
+                +  "   AND  a.NRO_PROMOCION = z.NRO_PROMOCION "
+                +  "   AND (a.TIP_CLIENTE   = '${ListaClientes.tipCliente}' or trim(a.TIP_CLIENTE) = '' or a.TIP_CLIENTE IS NULL ) "
+                +  " GROUP BY a.COD_ARTICULO "
+                +  " )"
                 )
         if (view.id != cbCombo.id){
             cbBonificacion.isChecked = false
@@ -215,6 +241,7 @@ class Promociones : AppCompatActivity() {
             lvPromocionCabecera.invalidateViews()
             return
         }
+        DialogoPromocion.posicion = 0
         val dialogo = DialogoPromocion(
             this,
             "NRO_PROMOCION",
@@ -246,6 +273,9 @@ class Promociones : AppCompatActivity() {
     }
 
     private fun verificaPromoCargada(position: Int):Boolean{
+        if (Pedidos.nuevo){
+            return true
+        }
         val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                 +  " WHERE NUMERO = '${Pedidos.maximo}' "
                 +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "

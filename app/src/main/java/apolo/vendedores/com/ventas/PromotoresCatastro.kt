@@ -39,6 +39,7 @@ class PromotoresCatastro : AppCompatActivity() {
     }
 
     fun inicializarElementos(){
+        funcion.inicializaContadores()
         funcion.addItemSpinner(this,"Codigo-Nombre","a.COD_VENDEDOR-a.DESC_VENDEDOR")
         funcion.inicializaContadores()
         funcion.cargarTitulo(R.drawable.ic_persona,"Lista de vendedores")
@@ -71,6 +72,7 @@ class PromotoresCatastro : AppCompatActivity() {
     }
 
     fun mostrar(){
+        funcion.inicializaContadores()
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
         funcion.valores = arrayOf("COD_VENDEDOR", "DESC_VENDEDOR")
         val adapter: Adapter.AdapterGenericoCabecera =

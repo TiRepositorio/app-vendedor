@@ -47,7 +47,7 @@ class DialogoMenu(var context: Context) {
         try {
             lista.add(item((R.drawable.ic_venta).toString(),"Realizar venta",Intent(context,apolo.vendedores.com.ventas.Promotores::class.java)))
             lista.add(item((R.drawable.ic_buscar).toString(),"Datos de clientes",Intent(context,apolo.vendedores.com.ventas.ConsultaDatosDeCliente::class.java)))
-            lista.add(item((R.drawable.ic_buscar).toString(),"Clientes no visitados",Intent(context,apolo.vendedores.com.ventas.ConsultaClientesNoPositivados::class.java)))
+            lista.add(item((R.drawable.ic_buscar).toString(),"Clientes no positivados",Intent(context,apolo.vendedores.com.ventas.ConsultaClientesNoPositivados::class.java)))
             lista.add(item((R.drawable.ic_catastrar).toString(),"Catastar",Intent(context,apolo.vendedores.com.ventas.PromotoresCatastro::class.java)))
             lista.add(item((R.drawable.ic_baja).toString(),"Dar de baja",Intent(context,apolo.vendedores.com.ventas.PromotoresBaja::class.java)))
         } catch (e :Exception) {

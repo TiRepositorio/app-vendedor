@@ -1625,12 +1625,15 @@ class Adapter{
         }
 
         private fun verificaPromoCargada(position:Int):Boolean{
+            if (Pedidos.nuevo){
+                return true
+            }
             val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                     +  " WHERE NUMERO = '${Pedidos.maximo}' "
                     +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
                     +  "   AND NRO_PROMOCION = '${dataSource.get(position).get("NRO_PROMOCION")}' "
                     +  " ")
-            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            val funcion = FuncionesUtiles(context)
             if (funcion.consultar(sql).count > 0){
                 return false
             }
@@ -1674,9 +1677,9 @@ class Adapter{
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
 
-            for (i in 0 until vistas.size){
+            for (i in vistas.indices){
                 try {
-                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).text = dataSource[position][valores[i]]
                     rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
                     if (verificaCargado(position)){
                         rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
@@ -1708,28 +1711,32 @@ class Adapter{
             var totalValor: Int = 0
 
             for (i in 0 until dataSource.size) {
-                totalValor = totalValor + Integer.parseInt(dataSource.get(i).get(parametro).toString().replace(".","",false))
+                totalValor += Integer.parseInt(dataSource[i][parametro].toString().replace(".", "", false))
             }
 
             return totalValor
         }
 
         fun getTotalDecimal(parametro: String):Double{
-            var totalPorcCump: Double = 0.0
+            var totalPorcCump = 0.0
 
             for (i in 0 until dataSource.size) {
-                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
+                    .replace(",", ".").replace("%", "").toDouble()
             }
             return totalPorcCump
         }
 
         private fun verificaCargado(position:Int):Boolean{
+            if (Pedidos.nuevo){
+                return true
+            }
             val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                     +  " WHERE NUMERO = '${Pedidos.maximo}' "
                     +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND COD_ARTICULO = '${dataSource.get(position).get("COD_ARTICULO")}' "
+                    +  "   AND COD_ARTICULO = '${dataSource[position]["COD_ARTICULO"]}' "
                     +  " ")
-            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            val funcion = FuncionesUtiles(context)
             if (funcion.consultar(sql).count > 0){
                 return false
             }

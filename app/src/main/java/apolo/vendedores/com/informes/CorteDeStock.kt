@@ -5,11 +5,16 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.database.Cursor
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.*
 import apolo.vendedores.com.utilidades.Adapter
+import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.SentenciasSQL
 import kotlinx.android.synthetic.main.activity_corte_de_stock.*
+import kotlinx.android.synthetic.main.activity_corte_de_stock.accion
+import kotlinx.android.synthetic.main.activity_corte_de_stock.contMenu
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -45,8 +50,14 @@ class CorteDeStock : Activity() {
         funcion.listaVendedores("COD_VENDEDOR","DESC_VENDEDOR", "ven_svm_pedidos_sin_stock_rep")
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)
+        inicializarETAccion()
         validacion()
         cargar()
+        if (lista.size == 0){
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAccion("finish",accion,"No hay datos para mostrar.","¡Atención!","OK",false)
+            return
+        }
         mostrar()
     }
 
@@ -95,6 +106,10 @@ class CorteDeStock : Activity() {
             lista[i]["PRECIO_UNITARIO"] =
                 funcion.decimal(lista[i]["PRECIO_UNITARIO"]!!, lista[i]["DECIMALES"]!!.toInt())
         }
+        if (lista.size == 0){
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAccion("finish",accion,"No hay datos para mostrar.","¡Atención!","OK")
+        }
     }
 
     fun mostrar(){
@@ -126,5 +141,19 @@ class CorteDeStock : Activity() {
     companion object {
         lateinit var adapter: Adapter.AdapterGenericoCabecera
     }
+
+    fun inicializarETAccion(){
+        accion.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString() == "finish"){
+                    finish()
+                }
+            }
+
+        })
+    }
+
 
 }

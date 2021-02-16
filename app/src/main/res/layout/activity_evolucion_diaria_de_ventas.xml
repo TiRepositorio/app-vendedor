@@ -59,7 +59,7 @@
                         android:gravity="end" />
 
                     <TextView
-                        android:id="@+id/tv1"
+                        android:id="@+id/tv2"
                         style="@style/cabeceraTabla"
                         android:layout_width="280dp"
                         android:layout_height="wrap_content"
@@ -161,38 +161,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         android:text="Cobertura" />
-
-                    <TextView
-                        android:id="@+id/tv15"
-                        style="@style/cabeceraTabla"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:text="Ef. Visita" />
-
-                    <TextView
-                        android:id="@+id/tv16"
-                        style="@style/cabeceraTabla"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:text="Días Trab" />
-
-                    <TextView
-                        android:id="@+id/tv17"
-                        style="@style/cabeceraTabla"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:text="IPDV" />
-
-                    <TextView
-                        android:id="@+id/tv18"
-                        style="@style/cabeceraTabla"
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:text="Surt. Efic." />
 
                 </TableRow>
 

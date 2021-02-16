@@ -111,6 +111,8 @@ class Pedidos : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.N)
     fun inicializarElementos(){
+        posProducto = 0
+        posDetalle = 0
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         tvCodCliente.text = ListaClientes.codCliente + "-" + ListaClientes.codSubcliente
@@ -497,6 +499,10 @@ class Pedidos : AppCompatActivity() {
                 }
                 if (etAccion.text.toString().trim() == "actualizarDetalle") {
                     cargarDetalle()
+                    return
+                }
+                if (etAccion.text.toString().trim() == "recalcularTotal") {
+                    recalcularTotal()
                     return
                 }
                 if (etAccion.text.toString().trim() == "eliminarDetallePromocion") {
@@ -1239,6 +1245,7 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun promociones(view: View){
+        Promociones.posPromocion = 0
         if (view.id == btnPromociones.id){
             Promociones.codArticulo = ""
         } else {
@@ -1265,6 +1272,7 @@ class Pedidos : AppCompatActivity() {
                          +  "   AND a.COD_EMPRESA  = b.COD_EMPRESA "
                          +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
                          +  "   AND a.COD_VENDEDOR = b.COD_VENDEDOR "
+                         +  "   AND b.COD_LISTA_PRECIO  = '${spListaPrecios.getDato("COD_LISTA_PRECIO")}'"
                          +  " ")
         listaDetalles = funcion.cargarDatos(funcion.consultar(sql))
         for (i in 0 until listaDetalles.size){
@@ -1279,6 +1287,9 @@ class Pedidos : AppCompatActivity() {
         cargarAtriculosDetalle()
         lvProductos.invalidateViews()
         habilitaDescuentoFinanciero()
+        if (listaDetalles.isNotEmpty()){
+            recalcularTotal()
+        }
     }
 
     private fun cargarAtriculosDetalle(){
@@ -1374,7 +1385,7 @@ class Pedidos : AppCompatActivity() {
     }
 
     private fun recalcularTotal(){
-        val sql = ("SELECT SUM(CAST(MONTO_TOTAL AS INTEGER)) MONTO_TOTAL FROM vt_pedidos_det " + " WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ")
+        val sql = ("SELECT SUM(CAST(MONTO_TOTAL_CONIVA AS INTEGER)) MONTO_TOTAL FROM vt_pedidos_det " + " WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ")
         val cursor = funcion.consultar(sql)
         val total = funcion.entero(funcion.dato(cursor, "MONTO_TOTAL"))
         etSubtotal.setText(total)
@@ -2002,13 +2013,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun enviarPedido(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
-//        if (etDescVarios.text.toString().trim().equals("0")){etDescVarios.setText("")}
-//        if (etDescFin.text.toString().trim().equals("0")){etDescFin.setText("")}
-//        ubicacion.obtenerUbicacion(lm)
-//        cargarCabeceraCierre()
         val sql = "SELECT * FROM vt_pedidos_cab " +
                 " WHERE TRIM(NUMERO)             = '$maximo'                                 " +
                 "   AND TRIM(COD_CLIENTE)        = '${ListaClientes.codCliente.trim()}'      " +

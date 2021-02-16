@@ -215,12 +215,12 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                             horaAlta
                         )
                         noVenta = "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
-                                "'" + codCliente + "'," + "'" + codSubcliente + "'," + "'" + ListaClientes.codVendedor + "'," +
+                                "'" + codCliente + "','" + codSubcliente + "','" + ListaClientes.codVendedor + "'," +
                                 "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
                                 "'" + observacion.text.toString() + "'," + "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
                                 "to_date('" + fecha.substring(0, 10) +
                                 " " + horaAlta + "','dd/MM/yyyy hh24:mi:ss')," +
-                                "'" + ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
+                                "'" + ubicacion.latitud + "','" + ubicacion.longitud + "'"
                         if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
                             if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
                                 cerrarSalidaCliente()
@@ -315,7 +315,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             conSpinner.setSelection(positionMotivo)
             conSpinner.isEnabled = nuevo
             if (modificacion && editable) {
-                alertMotivos.setPositiveButton("OK") { dialog, _ ->
+                alertMotivos.setPositiveButton("Enviar") { dialog, _ ->
                     if (consultar) {
                         dialog.cancel()
                     } else {
@@ -489,4 +489,5 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         values.put("LONGITUD", ubicacion.longitud)
         MainActivity2.bd!!.insert("vt_marcacion_ubicacion", null, values)
     }
+
 }

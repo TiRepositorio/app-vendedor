@@ -67,8 +67,8 @@
 
                     <TextView
                         android:id="@+id/d1"
-                        android:layout_width="70sp"
-                        android:gravity="left|center_vertical"
+                        android:layout_width="95dp"
+                        android:gravity="center|center_vertical"
                         android:text="Fecha"
                         style="@style/cabeceraTabla" />
 
@@ -102,9 +102,10 @@
 
 
                     <TextView
-                        android:layout_width="180sp"
+                        android:layout_width="250dp"
                         android:gravity="left|center_vertical"
                         android:text="Observacion"
+                        android:scrollHorizontally="true"
                         style="@style/cabeceraTabla" />
                 </TableRow>
 

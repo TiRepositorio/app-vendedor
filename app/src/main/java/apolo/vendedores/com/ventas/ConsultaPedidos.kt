@@ -29,6 +29,7 @@ class ConsultaPedidos : AppCompatActivity() {
     }
 
     fun inicializarElementos(){
+        funcion.inicializaContadores()
         consultor = FuncionesConsultor(this,etDesde,etHasta,rbPendiente,rbEnviado,rbTodo,imgBuscar,btModificar,btConsultar,btEliminar,rgFiltro)
         consultor.setRadioButtonText("Pendiente-ESTADO = 'P'","Enviado-ESTADO = 'E'","Todo-ESTADO LIKE '%%'")
         etDesde.setText(funcion.getFechaActual())
@@ -48,6 +49,7 @@ class ConsultaPedidos : AppCompatActivity() {
     }
 
     private fun mostrar(){
+        funcion.inicializaContadores()
         posicion = 0
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7,R.id.tv8)
         funcion.valores = arrayOf("NUMERO","COD_CLIENTE","DESC_CLIENTE","FECHA","COD_MONEDA","COD_LISTA_PRECIO","TOT_COMPROBANTE","ESTADO")
@@ -99,7 +101,7 @@ class ConsultaPedidos : AppCompatActivity() {
     }
 
     private fun consultar(){
-        val dialogo = DialogoPedidos(this, lista[posicion]["NUMERO"].toString().toInt())
+        val dialogo = DialogoPedidos(this, lista[posicion]["NUMERO"].toString().toInt(),lista[posicion]["COD_LISTA_PRECIO"].toString())
         dialogo.mostrarDialogo()
 //        etDesde.setText(0)
     }

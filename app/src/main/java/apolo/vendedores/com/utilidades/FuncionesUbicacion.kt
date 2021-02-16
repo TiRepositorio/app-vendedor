@@ -170,7 +170,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
             }
             if (count == 2) {
                 try {
-                    Thread.sleep(2500)
+//                    Thread.sleep(2500)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
@@ -185,6 +185,74 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
         }
         return true
     }
+
+    @SuppressLint("MissingPermission")
+    fun validaUbicacionSimulada2(lm:LocationManager): Boolean {
+        if (Build.VERSION.SDK_INT > 22) {
+            var count = 0
+            try {
+                lm.removeTestProvider(LocationManager.GPS_PROVIDER)
+                if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0f, listener)
+                count++
+            } catch (e: java.lang.Exception) {
+                var err = e.message
+                err += ""
+                if (err != null) {
+                    if (err.indexOf("not allowed") > -1) {
+                        Toast.makeText( context,"Debe habilitar las ubicaciones simuladas para esta aplicacion",Toast.LENGTH_LONG).show()
+                        return false
+                    }
+                }
+                if (err != null) {
+                    if (err.indexOf("unknow") > -1) {
+                        count++
+                    }
+                }
+            }
+            try {
+                lm.removeTestProvider(LocationManager.NETWORK_PROVIDER)
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0f,listener)
+                count++
+            } catch (e: java.lang.Exception) {
+                var err = e.message
+                err += ""
+                if (err != null) {
+                    if (err.indexOf("not allowed") > -1) {
+                        Toast.makeText(context,"Debe habilitar las ubicaciones simuladas para esta aplicacion",Toast.LENGTH_LONG).show()
+                        return false
+                    }
+                }
+                if (err != null) {
+                    if (err.indexOf("unknow") > -1) {
+                        count++
+                    } else {
+                        Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            if (count == 2) {
+                try {
+                    Thread.sleep(3500)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+                return true
+            }
+            return false
+        } else {
+            if (Settings.Secure.getString(context.contentResolver,Settings.Secure.ALLOW_MOCK_LOCATION) != "0") {
+                Toast.makeText(context,"Debe deshabilitar las ubicaciones simuladas",Toast.LENGTH_LONG).show()
+                return false
+            }
+        }
+        return true
+    }
+
 
     fun obtenerUbicacion(latitud:String,longitud:String,tabla:String,where:String):String{
         val sql : String = "SELECT DISTINCT " + latitud + "," + longitud + " " +
