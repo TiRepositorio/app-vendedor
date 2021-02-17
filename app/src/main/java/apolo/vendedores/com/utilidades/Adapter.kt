@@ -1703,6 +1703,10 @@ class Adapter{
                 rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
             }
 
+            if (dataSource[position]["PREC_CAJA"].toString().trim() == "0"){
+                rowView.findViewById<TextView>(R.id.tvb3).visibility = View.GONE
+            }
+
             return rowView
         }
 

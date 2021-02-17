@@ -31,7 +31,7 @@
         <TextView
             android:id="@+id/tvd4"
             android:layout_width="80dp"
-            android:text="Vendido"
+            android:text="Vta. Pres."
             android:gravity="end"
             style="@style/textoTabla"
             />
@@ -39,7 +39,7 @@
         <TextView
             android:id="@+id/tvd5"
             android:layout_width="80dp"
-            android:text="No venta"
+            android:text="Vendido"
             android:gravity="end"
             style="@style/textoTabla"
             />
@@ -47,13 +47,21 @@
         <TextView
             android:id="@+id/tvd6"
             android:layout_width="80dp"
-            android:text="No Aten."
+            android:text="No venta"
             android:gravity="end"
             style="@style/textoTabla"
             />
 
         <TextView
             android:id="@+id/tvd7"
+            android:layout_width="80dp"
+            android:text="No Aten."
+            android:gravity="end"
+            style="@style/textoTabla"
+            />
+
+        <TextView
+            android:id="@+id/tvd8"
             android:layout_width="80dp"
             android:text="Porc."
             android:gravity="end"

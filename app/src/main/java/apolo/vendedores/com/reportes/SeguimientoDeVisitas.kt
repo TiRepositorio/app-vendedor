@@ -105,31 +105,19 @@ class SeguimientoDeVisitas : AppCompatActivity(){
         val sql: String = "SELECT IFNULL(a.COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(b.DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
                           "       IFNULL(a.CANTIDAD,'0')        AS CANTIDAD      , IFNULL(a.CANT_VENDIDO,'0')       AS CANT_VENDIDO           , " +
                           "       IFNULL(a.CANT_NO_VENDIDO,'0') AS CANT_NO_VENTA , IFNULL(a.CANT_NO_VISITADO,'0')   AS CANT_NO_VISITADO       , " +
-                          "       IFNULL(a.PORC,'0.0') PORC " +
+                          "       IFNULL(a.PORC,'0.0') AS PORC                   , IFNULL(a.CANT_VENDIDO,'0') - IFNULL(a.CANT_NO_VISITADO,'0') AS VENTA_PRESENCIAL " +
                           "  FROM svm_seg_visitas_semanal a, ven_svm_seg_visitas_semanal b " +
                           " WHERE a.SEMANA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["SEMANA"] + "' " +
                           " ORDER BY a.COD_VENDEDOR "
-        cursor = funcion.consultar(sql)
         FuncionesUtiles.listaDetalle = ArrayList()
-        for (i in 0 until cursor.count) {
-            datos = HashMap()
-            datos["COD_VENDEDOR"] = funcion.dato(cursor, "COD_VENDEDOR")
-            datos["NOMBRE_VENDEDOR"] = funcion.dato(cursor, "NOMBRE_VENDEDOR")
-            datos["CANTIDAD"] = funcion.entero(funcion.dato(cursor, "CANTIDAD"))
-            datos["CANT_VENDIDO"] = funcion.entero(funcion.dato(cursor, "CANT_VENDIDO"))
-            datos["CANT_NO_VENTA"] = funcion.entero(funcion.dato(cursor, "CANT_NO_VENTA"))
-            datos["CANT_NO_VISITADO"] = funcion.entero(funcion.dato(cursor, "CANT_NO_VISITADO"))
-            datos["PORC"] = funcion.decimal(funcion.dato(cursor, "PORC"))
-            FuncionesUtiles.listaDetalle.add(datos)
-            cursor.moveToNext()
-        }
+        funcion.cargarLista(FuncionesUtiles.listaDetalle,funcion.consultar(sql))
     }
 
     private fun mostrarDetalle(){
-        funcion.subVistas = intArrayOf(R.id.tvd1, R.id.tvd2, R.id.tvd3, R.id.tvd4, R.id.tvd5, R.id.tvd6, R.id.tvd7)
-        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         ,
-                                     "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" ,
-                                     "PORC")
+        funcion.subVistas = intArrayOf(R.id.tvd1, R.id.tvd2, R.id.tvd3, R.id.tvd4,
+                                       R.id.tvd5, R.id.tvd6, R.id.tvd7,R.id.tvd8)
+        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         , "VENTA_PRESENCIAL",
+                                     "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" , "PORC"            )
 //        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         ,
 //            "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" ,
 //            "PORC")

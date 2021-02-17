@@ -110,24 +110,31 @@
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
                             android:gravity="end"
-                            android:text="Vendido" />
+                            android:text="Vta. Pres." />
 
                         <TextView
                             android:id="@+id/tvd5"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
                             android:gravity="end"
-                            android:text="No venta" />
+                            android:text="Vendido" />
 
                         <TextView
                             android:id="@+id/tvd6"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
                             android:gravity="end"
-                            android:text="No Aten." />
+                            android:text="No venta" />
 
                         <TextView
                             android:id="@+id/tvd7"
+                            style="@style/cabeceraTabla"
+                            android:layout_width="80dp"
+                            android:gravity="end"
+                            android:text="No Aten." />
+
+                        <TextView
+                            android:id="@+id/tvd8"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
                             android:gravity="end"

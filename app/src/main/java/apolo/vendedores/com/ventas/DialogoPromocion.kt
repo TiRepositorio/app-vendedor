@@ -127,7 +127,7 @@ class DialogoPromocion(
         dialogo.setContentView(R.layout.dialogo_descuento)
         buscar(nroPromocion)
         mostrarDescuento(dialogo.lvPromocionDescuento)
-        if (lista[0]["IND_COMBO"].toString() == "S"){
+        if (lista[0]["IND_COMBO"].toString() == "S" && lista[0]["IND_TIPO"] != "M"){
             dialogo.trCombo.visibility = View.VISIBLE
             dialogo.tvdCantidadPromo.isEnabled = false
         }
@@ -188,6 +188,10 @@ class DialogoPromocion(
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         })
+
+        if (lista[0]["IND_TIPO"].toString().trim() == "M"){
+            dialogo.tvTituloPrecio.visibility = View.GONE
+        }
 
 //        seleccionar(dialogo.btAgregarPromocion,tvResultado)
         dialogo.show()
@@ -513,7 +517,7 @@ class DialogoPromocion(
     private fun cargarDetalleF(lista:ArrayList<HashMap<String,String>>){
         val cantidad: Int
         var precioFinal = 0
-        if (lista[0]["IND_TIPO"] == "F" && (listaDetalle[0]["IND_TIPO"] == "P" || listaDetalle[0]["IND_TIPO"] == "C")){
+        if (lista[0]["IND_TIPO"].toString().trim() == "F" && (listaDetalle[0]["IND_TIPO"] == "M" || listaDetalle[0]["IND_TIPO"] == "P" || listaDetalle[0]["IND_TIPO"] == "C")){
             cantidad = adapter.getTotalEntero("CANTIDAD")
             precioFinal = 0
         } else {
@@ -584,8 +588,12 @@ class DialogoPromocion(
                 try {
                     if (Pedidos.spListaPrecios.getDato("DECIMALES") == "0") {
                         var precio = lista[i]["PREC_CAJA"].toString().replace(".","").trim().toDouble()
-                        if (listaDetalle[0]["IND_TIPO"] != "C"){
+                        if (listaDetalle[0]["IND_TIPO"] != "C" && listaDetalle[0]["IND_TIPO"] != "M"){
                             precio = floor(precio - ((precio * descuento)/100))
+                        } else {
+                            if (listaDetalle[0]["IND_TIPO"] == "M"){
+                                precio = floor(precio - listaDetalle[0]["DESCUENTO"].toString().replace(".","").trim().toDouble())
+                            }
                         }
                         val subtotal = precio * lista[i]["CANTIDAD"].toString().trim().toInt()
                         values.put("PRECIO_UNITARIO", precio)
@@ -650,11 +658,18 @@ class DialogoPromocion(
         var multiplo = 1000
         cargaDatosCabecera()
         var cantidad = 0.0
-        for (i in 0 until lista.size){
-            cantidad += funcion.entero(lista[i]["CANTIDAD"].toString()).toDouble()
+        if (lista[0]["IND_COMBO"]=="S"){
+            cantidad = dialogo.tvdCantidadCombo.text.toString().toDouble()
+        } else {
+            for (i in 0 until lista.size){
+                cantidad += funcion.entero(lista[i]["CANTIDAD"].toString()).toDouble()
+            }
         }
         for (i in 0 until lista.size){
-            val bonificado : Double = cantidad / lista[i]["CANT_VENTA"].toString().toDouble()
+            var bonificado : Double = cantidad / lista[i]["CANT_VENTA"].toString().toDouble()
+            if (lista[0]["IND_COMBO"] == "S"){
+                bonificado = cantidad
+            }
             if (bonificado<1){
                 funcion.mensaje(context,"¡Atención!",
                         "Debe vender un mínimo de ${lista[i]["CANT_VENTA"]} del artículo ${lista[i]["COD_ARTICULO"]}.")
