@@ -65,9 +65,10 @@ class EvolucionDiariaDeVentas : AppCompatActivity() {
             FuncionesUtiles.listaCabecera[i]["TOTAL_FACT"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_FACT"].toString())
             FuncionesUtiles.listaCabecera[i]["META_VENTA"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["META_VENTA"].toString())
             FuncionesUtiles.listaCabecera[i]["META_LOGRADA"]     = funcion.enteroCliente(FuncionesUtiles.listaCabecera[i]["META_LOGRADA"].toString())
-            FuncionesUtiles.listaCabecera[i]["PROY_VENTA"]       = funcion.entero(FuncionesUtiles.listaCabecera[i]["PROY_VENTA"].toString())
-            FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"]     = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"].toString())
-            FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"] = funcion.entero(FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"].toString())
+            FuncionesUtiles.listaCabecera[i]["PROY_VENTA"]       = funcion.numero("2",FuncionesUtiles.listaCabecera[i]["PROY_VENTA"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"]     = funcion.numero("2",FuncionesUtiles.listaCabecera[i]["TOTAL_REBOTE"].toString())
+            FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"] = funcion.numero("2",FuncionesUtiles.listaCabecera[i]["TOTAL_DEVOLUCION"].toString())
+            FuncionesUtiles.listaCabecera[i]["COBERTURA"]        = funcion.numero("2",FuncionesUtiles.listaCabecera[i]["COBERTURA"].toString())
         }
     }
 

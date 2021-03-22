@@ -102,10 +102,11 @@ class SeguimientoDeVisitas : AppCompatActivity(){
             FuncionesUtiles.listaDetalle = ArrayList()
             return
         }
-        val sql: String = "SELECT IFNULL(a.COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(b.DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
+        val sql: String = "SELECT DISTINCT IFNULL(a.COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(b.DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
                           "       IFNULL(a.CANTIDAD,'0')        AS CANTIDAD      , IFNULL(a.CANT_VENDIDO,'0')       AS CANT_VENDIDO           , " +
                           "       IFNULL(a.CANT_NO_VENDIDO,'0') AS CANT_NO_VENTA , IFNULL(a.CANT_NO_VISITADO,'0')   AS CANT_NO_VISITADO       , " +
-                          "       IFNULL(a.PORC,'0.0') AS PORC                   , IFNULL(a.CANT_VENDIDO,'0') - IFNULL(a.CANT_NO_VISITADO,'0') AS VENTA_PRESENCIAL " +
+                          "       IFNULL(a.PORC,'0.0') AS PORC                   , " +
+                          "       IFNULL(a.CANTIDAD,'0') - IFNULL(a.CANT_NO_VENDIDO,'0') - IFNULL(a.CANT_NO_VISITADO,'0') AS VENTA_PRESENCIAL   " +
                           "  FROM svm_seg_visitas_semanal a, ven_svm_seg_visitas_semanal b " +
                           " WHERE a.SEMANA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["SEMANA"] + "' " +
                           " ORDER BY a.COD_VENDEDOR "

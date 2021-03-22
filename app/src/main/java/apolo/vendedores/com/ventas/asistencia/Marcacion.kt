@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.activity_marcacion.*
 import kotlinx.android.synthetic.main.ven_asis_dialogo_marcacion_cliente.*
 import kotlin.math.roundToInt
 
-
 class Marcacion : AppCompatActivity() {
     companion object{
         lateinit var latitud : String
@@ -51,6 +50,7 @@ class Marcacion : AppCompatActivity() {
     private lateinit var listaMarcaciones: ArrayList<HashMap<String, String>>
     private lateinit var adaptador: Adapter.AdapterGenericoDetalle2
     private var saveMarcacion = 0
+    private var autorizacion = ""
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,12 @@ class Marcacion : AppCompatActivity() {
         lm2 = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (!validacion("Abrir")){
-            finish()
+            if (verificaMarcacionCliente()){
+//                val dialogoAutorizacion = DialogoAutorizacion(this)
+//                dialogoAutorizacion.dialogoAutorizacion("Abrir","noAbrir",accion,"NO SE ENCUENTRA EN EL CLIENTE.")
+            } else {
+                finish()
+            }
         }
         inicializaElementos()
         cargarMarcaciones()
@@ -68,7 +73,10 @@ class Marcacion : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun validacion(trigger: String) : Boolean {
-        if (!ubicacion.validaUbicacionSimulada(lm)) { return false }
+        if (!ubicacion.validaUbicacionSimulada(lm)) {
+            EnviarMarcacion.anomalia = "\nAtención! La ubicación simulada fue utilizada en otra aplicación."
+            return false
+        }
         if (!dispositivo.horaAutomatica()) { return false }
         if (!dispositivo.modoAvion()){ return false }
         if (!dispositivo.zonaHoraria()){ return false }
@@ -113,8 +121,8 @@ class Marcacion : AppCompatActivity() {
                     if (trigger.trim() == "Abrir"){
                         return false
                     }
-                    val autorizacion = DialogoAutorizacion(this)
-                        autorizacion.dialogoAutorizacion(trigger, accion)
+                    val autorizacionDialogo = DialogoAutorizacion(this)
+                        autorizacionDialogo.dialogoAutorizacionCod(trigger, accion)
                 }else{
                     funcion.toast(
                         this,
@@ -129,6 +137,20 @@ class Marcacion : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializaElementos(){
+//        if (funcion.consultar("select * from vt_marcacion_ubicacion where COD_CLIENTE = '44932' and FECHA = '08/03/2021 11:22:15'").count == 0
+//            && funcion.getFechaActual().trim() == "08/03/2021"){
+//            funcion.ejecutar("insert into vt_marcacion_ubicacion (COD_EMPRESA,FECHA,COD_PROMOTOR,COD_CLIENTE,COD_SUBCLIENTE,TIPO,ESTADO," +
+//                    "LATITUD,LONGITUD,IND_RRHH,IND_GC,IND_COORD,IND_SUBSOORD) values (" +
+//                    "'1','08/03/2021 11:22:15','5507','44932','1','S','P','-25.50476833333333','-54.64225666666666','N','N','N','N'" +
+//                    ")",this)
+//        funcion.ejecutar("insert into vt_marcacion_ubicacion (COD_EMPRESA,FECHA,COD_PROMOTOR,COD_CLIENTE,COD_SUBCLIENTE,TIPO,ESTADO,LATITUD,LONGITUD,IND_RRHH,IND_GC,IND_COORD,IND_SUBSOORD) values (" +
+//                "'1','05/03/2021 10:22:15','5507','16978','1','E','P','-25.506336410869647','-54.65745440559634','N','N','N','N'" +
+//                ")",this)
+//        }
+        autorizacion = ""
+        funcion.ejecutar("update vt_marcacion_ubicacion set COD_EMPRESA = TRIM(COD_EMPRESA)," +
+                " COD_PROMOTOR = TRIM(COD_PROMOTOR), COD_CLIENTE = TRIM(COD_CLIENTE), COD_SUBCLIENTE = TRIM(COD_SUBCLIENTE)," +
+                " TIPO = TRIM(TIPO), ESTADO = TRIM(ESTADO)",this)
         ListaClientes.indPresencial = "S"
         inicializar()
     }
@@ -137,9 +159,9 @@ class Marcacion : AppCompatActivity() {
         var estado = false
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
                 + "  from vt_marcacion_ubicacion             			"
-                + " where TIPO           IN ('E','S')                 	"
-                + "   and COD_CLIENTE    = '" + codCliente      + "' "
-                + "   and COD_SUBCLIENTE = '" + codSubcliente   + "' "
+                + " where TRIM(TIPO)           IN ('E','S')             "
+                + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim()      + "' "
+                + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim()   + "' "
                 + " order by id desc                        		 ")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
@@ -153,19 +175,19 @@ class Marcacion : AppCompatActivity() {
 
     private fun validaVisitaCliente(): Boolean {
         var sql = ("Select *" + " from vt_pedidos_cab "
-                + " where COD_CLIENTE = '" + ListaClientes.codCliente + "'"
-                + " and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'"
-                + " and FEC_ALTA = '" + funcion.getFechaActual() + "'"
-                + " and ESTADO IN ('P','E')")
+                + " where TRIM(COD_CLIENTE) = '" + ListaClientes.codCliente.trim() + "'"
+                + " and TRIM(COD_SUBCLIENTE) = '" + ListaClientes.codSubcliente.trim() + "'"
+                + " and TRIM(FEC_ALTA) = '" + funcion.getFechaActual().trim() + "'"
+                + " and TRIM(ESTADO) IN ('P','E')")
         var cursor: Cursor = funcion.consultar(sql)
         var nreg = cursor.count
         return if (nreg == 0) {
             sql = ("Select *" + " from vt_marcacion_visita "
-                    + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
-                    + "   and COD_CLIENTE    = '" + ListaClientes.codCliente + "'"
-                    + "   and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'"
-                    + "   and FECHA = '" + funcion.getFechaActual() + "'"
-                    + "   and ESTADO IN ('P','E')")
+                    + " where TRIM(COD_VENDEDOR)   = '" + ListaClientes.codVendedor.trim() + "' "
+                    + "   and TRIM(COD_CLIENTE)    = '" + ListaClientes.codCliente.trim() + "'"
+                    + "   and TRIM(COD_SUBCLIENTE) = '" + ListaClientes.codSubcliente.trim() + "'"
+                    + "   and TRIM(FECHA) = '" + funcion.getFechaActual().trim() + "'"
+                    + "   and TRIM(ESTADO) IN ('P','E')")
             cursor = funcion.consultar(sql)
             nreg = cursor.count
             if (nreg == 0) {
@@ -246,11 +268,11 @@ class Marcacion : AppCompatActivity() {
             ("Select a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, case when a.TIPO = 'E' then 'ENTRADA' else 'SALIDA' end TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
                     + "  from vt_marcacion_ubicacion a,"
                     + "		  svm_cliente_vendedor b "
-                    + "  where a.COD_CLIENTE    = '$codCliente'"
-                    + "    and a.COD_SUBCLIENTE = '$codSubcliente'"
-                    + "    and a.COD_CLIENTE    = b.COD_CLIENTE"
-                    + "    and a.COD_SUBCLIENTE = b.COD_SUBCLIENTE "
-                    + "    and ( a.TIPO = 'E' or a.TIPO = 'S' ) "
+                    + "  where TRIM(a.COD_CLIENTE)    = '${codCliente.trim()}'"
+                    + "    and TRIM(a.COD_SUBCLIENTE) = '${codSubcliente.trim()}'"
+                    + "    and TRIM(a.COD_CLIENTE)    = TRIM(b.COD_CLIENTE)"
+                    + "    and TRIM(a.COD_SUBCLIENTE) = TRIM(b.COD_SUBCLIENTE) "
+                    + "    and ( TRIM(a.TIPO) = 'E' or TRIM(a.TIPO) = 'S' ) "
                     + "    and a.FECHA like '%${funcion.getFechaActual()}%' "
                     + "  group by a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE "
                     + "  order by a.id desc ")
@@ -281,13 +303,13 @@ class Marcacion : AppCompatActivity() {
     private fun validaMarcacionPendiente():Boolean{
         val select = ("Select COD_CLIENTE, COD_SUBCLIENTE, FECHA, TIPO "
                 + "  from vt_marcacion_ubicacion "
-                + "  where TIPO in ('E','S')"
+                + "  where TRIM(TIPO) in ('E','S')"
                 + "  order by id desc ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count > 0) {
             val codCliente = funcion.dato(cursor, "COD_CLIENTE")
             val codSubcliente = funcion.dato(cursor, "COD_SUBCLIENTE")
-            if (funcion.dato(cursor, "TIPO") != "S") {
+            if (funcion.dato(cursor, "TIPO").trim() != "S") {
                 Toast.makeText(
                     this,
                     "Debe marcar la salida del cliente $codCliente - $codSubcliente",
@@ -308,14 +330,17 @@ class Marcacion : AppCompatActivity() {
         //INSERTA CABECERA
         val values = ContentValues()
         values.put("COD_EMPRESA", "1")
-        values.put("COD_PROMOTOR", ListaClientes.codVendedor)
-        values.put("COD_CLIENTE", codCliente)
-        values.put("COD_SUBCLIENTE", codSubcliente)
+        values.put("COD_PROMOTOR", ListaClientes.codVendedor.trim())
+        values.put("COD_CLIENTE", codCliente.trim())
+        values.put("COD_SUBCLIENTE", codSubcliente.trim())
         values.put("ESTADO", "P")
         values.put("FECHA", fecha)
-        values.put("TIPO", tipo)
+        values.put("TIPO", tipo.trim())
         values.put("LATITUD", ubicacion.latitud)
         values.put("LONGITUD", ubicacion.longitud)
+        if (autorizacion != ""){
+            values.put("OBSERVACION", "Autorizacion: $autorizacion")
+        }
         funcion.insertar("vt_marcacion_ubicacion", values)
     }
 
@@ -324,9 +349,9 @@ class Marcacion : AppCompatActivity() {
         val select = (" SELECT id, COD_EMPRESA, COD_PROMOTOR, COD_CLIENTE, COD_SUBCLIENTE, "
                 + "   ESTADO, FECHA, TIPO, LATITUD, LONGITUD "
                 + " FROM vt_marcacion_ubicacion  "
-                + " WHERE COD_CLIENTE       = '" + codCliente       + "'"
-                + "   AND COD_SUBCLIENTE    = '" + codSubcliente    + "'"
-                + "   AND TIPO = '$tipo' "
+                + " WHERE TRIM(COD_CLIENTE)       = '" + codCliente.trim()       + "'"
+                + "   AND TRIM(COD_SUBCLIENTE)    = '" + codSubcliente.trim()    + "'"
+                + "   AND TRIM(TIPO) = '${tipo.trim()}' "
                 + " ORDER BY id DESC ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count > 0)
@@ -384,9 +409,9 @@ class Marcacion : AppCompatActivity() {
     private fun validaEntrada() : Boolean{
         val select = ("Select FECHA, TIPO "
                 + "  from vt_marcacion_ubicacion "
-                + "  where COD_CLIENTE 	  = '" + codCliente+ "'"
-                + "    and COD_SUBCLIENTE = '" + codSubcliente + "'"
-                + "    and TIPO in ('S','E')"
+                + "  where TRIM(COD_CLIENTE) 	  = '" + codCliente.trim()+ "'"
+                + "    and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim() + "'"
+                + "    and TRIM(TIPO) in ('S','E')"
                 + "  order by id desc ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count == 0) {
@@ -394,7 +419,7 @@ class Marcacion : AppCompatActivity() {
             dialogMarcarPresenciaCliente.chkSalida.isChecked = false
             return false
         } else {
-            if (funcion.dato(cursor, "TIPO") != "E") {
+            if (funcion.dato(cursor, "TIPO").trim() != "E") {
                 funcion.toast(this, "Debe marcar la entrada al cliente")
                 dialogMarcarPresenciaCliente.chkSalida.isChecked = false
                 return false
@@ -436,15 +461,16 @@ class Marcacion : AppCompatActivity() {
                 + "a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
                 + "  from vt_marcacion_ubicacion a,"
                 + "		  svm_cliente_vendedor b "
-                + "  where a.COD_EMPRESA    = b.COD_EMPRESA "
-                + "    and a.COD_CLIENTE    = '" + codCliente + "'"
-                + "    and a.COD_SUBCLIENTE = '" + codSubcliente + "'"
-                + "    and a.COD_CLIENTE    = b.COD_CLIENTE  "
-                + "    and a.COD_SUBCLIENTE = b.COD_SUBCLIENTE "
-                + "    and ( a.TIPO = 'E' or a.TIPO = 'S' ) "
+                + "  where TRIM(a.COD_EMPRESA)    = TRIM(b.COD_EMPRESA) "
+                + "    and TRIM(a.COD_CLIENTE)    = '" + codCliente.trim() + "'"
+                + "    and TRIM(a.COD_SUBCLIENTE) = '" + codSubcliente.trim() + "'"
+                + "    and TRIM(a.COD_CLIENTE)    = TRIM(b.COD_CLIENTE)  "
+                + "    and TRIM(a.COD_SUBCLIENTE) = TRIM(b.COD_SUBCLIENTE) "
+                + "    and ( TRIM(a.TIPO) = 'E' or TRIM(a.TIPO) = 'S' ) "
+                + "    and FECHA LIKE '%${funcion.getFechaActual()}%' "
                 + "  GROUP BY a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, "
                 + "           a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
-                + "  order by a.id desc ")
+                + "  order by a.id desc, cast(FECHA AS DATE) DESC")
         val cursor: Cursor = funcion.consultar(sql)
         val cod = "$codCliente - $codSubcliente"
         val desc = descCliente
@@ -454,21 +480,23 @@ class Marcacion : AppCompatActivity() {
             dialogMarcarPresenciaCliente.chkSalida.isEnabled = false
             dialogMarcarPresenciaCliente.chkEntrada.isEnabled = true
         } else {
-            if (cursor.count % 2 == 0){
+            cursor.moveToFirst()
+            if (cursor.count % 2 == 0 && funcion.dato(cursor,"TIPO").trim() == "S"){
                 dialogMarcarPresenciaCliente.chkSalida.isChecked = false
                 dialogMarcarPresenciaCliente.chkEntrada.isChecked = false
                 dialogMarcarPresenciaCliente.chkSalida.isEnabled = false
                 dialogMarcarPresenciaCliente.chkEntrada.isEnabled = true
             } else {
-                dialogMarcarPresenciaCliente.chkEntrada.isChecked = true
-                dialogMarcarPresenciaCliente.chkEntrada.isEnabled = false
-                dialogMarcarPresenciaCliente.chkEntrada.text = cursor.getString(
-                    cursor.getColumnIndex(
-                        "FECHA"
+                cursor.moveToFirst()
+                if (funcion.dato(cursor,"TIPO").trim() == "E"){
+                    dialogMarcarPresenciaCliente.chkEntrada.isChecked = true
+                    dialogMarcarPresenciaCliente.chkEntrada.isEnabled = false
+                    dialogMarcarPresenciaCliente.chkEntrada.text = cursor.getString(
+                        cursor.getColumnIndex("FECHA")
                     )
-                )
-                dialogMarcarPresenciaCliente.chkSalida.isEnabled = true
-                dialogMarcarPresenciaCliente.chkSalida.isChecked = false
+                    dialogMarcarPresenciaCliente.chkSalida.isEnabled = true
+                    dialogMarcarPresenciaCliente.chkSalida.isChecked = false
+                }
             }
         }
         dialogMarcarPresenciaCliente.tvCodCliente.text = cod
@@ -505,22 +533,29 @@ class Marcacion : AppCompatActivity() {
                     cargarMarcaciones()
                     et.setText("")
                 }
-                if (s.toString() == "Abrir") {
+                if (s.toString().split("*")[0].trim() == "Abrir") {
                     et.setText("")
                 }
-                if (s.toString() == "noAbrir") {
+                if (s.toString().split("*")[0].trim() == "noAbrir") {
                     finish()
                 }
-                if (s.toString() == "Entrada") {
+                if (s.toString().split("*")[0].trim() == "Entrada") {
+                    dialogMarcarPresenciaCliente.chkEntrada.isChecked = true
                     marcar(dialogMarcarPresenciaCliente.chkEntrada)
                     et.setText("")
                 }
-                if (s.toString() == "noEntrada") {
+                if (s.toString().split("*")[0].trim() == "noEntrada") {
                     et.setText("")
                 }
-                if (s.toString() == "Salida") {
+                if (s.toString().split("*")[0].trim() == "PRE-SALIDA") {
+                    if (s.toString().split("*").size>1){
+                        autorizacion = s.toString().split("*")[1]
+                    }
+                    dialogMarcarPresenciaCliente.chkSalida.isChecked = true
                     marcar(dialogMarcarPresenciaCliente.chkSalida)
+                    et.setText("cargarMarcaciones")
                     et.setText("")
+                    autorizacion = ""
                 }
                 if (s.toString() == "noSalida") {
                     et.setText("")

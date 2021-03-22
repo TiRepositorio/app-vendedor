@@ -165,14 +165,14 @@
                             style="@style/cabeceraTabla"/>
 
                         <TextView
-                            android:id="@+id/tvCanCliTotalPorcCump"
+                            android:id="@+id/tvCanCliTotalTotalPercibir"
                             android:layout_width="120dp"
                             android:text="0"
                             android:gravity="end"
                             style="@style/cabeceraTabla"/>
-
+                        
                         <TextView
-                            android:id="@+id/tvCanCliTotalTotalPercibir"
+                            android:id="@+id/tvCanCliTotalPorcCump"
                             android:layout_width="120dp"
                             android:text="0"
                             android:gravity="end"

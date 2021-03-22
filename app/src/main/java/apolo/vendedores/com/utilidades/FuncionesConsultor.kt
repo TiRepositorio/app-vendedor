@@ -125,6 +125,13 @@ class FuncionesConsultor {
         return funcion.consultar(sql)
     }
 
+    fun buscar(tabla:String,campoFecha:String,campo:String,valor:String):Cursor{
+        val sql : String = "SELECT * FROM " + tabla + " " +
+                " WHERE CAST(substr(" + campoFecha + ",7,10) || substr(" + campoFecha + ",4,2) || substr(" + campoFecha + ",0,3) AS DATE) BETWEEN CAST(substr('" + etDesde.text + "',7,10) || substr('" + etDesde.text + "',4,2) || substr('" + etDesde.text + "',0,3) AS DATE) AND CAST(substr('" + etHasta.text + "',7,10) || substr('" + etHasta.text + "',4,2) || substr('" + etHasta.text + "',0,3) AS DATE)" +
+                "   AND " + this.where[rgFiltro.checkedRadioButtonId.toString()] + " AND $campo = '$valor'"
+        return funcion.consultar(sql)
+    }
+
     fun buscar(tabla:String,campoFecha:String,campos:String):Cursor{
         val sql : String = "SELECT " + campos + " FROM " + tabla + " " +
                 " WHERE CAST(" + campoFecha + " AS DATE) BETWEEN CAST('" + etDesde.text + "' AS DATE) AND CAST('" + etHasta.text + "' AS DATE)" +

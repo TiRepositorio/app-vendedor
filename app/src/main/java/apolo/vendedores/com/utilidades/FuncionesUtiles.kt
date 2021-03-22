@@ -672,7 +672,17 @@ class FuncionesUtiles {
     fun numero(decimales: String, numero: String):String{
         formatoGenerico.minimumFractionDigits = decimales.toInt()
         formatoGenerico.maximumFractionDigits = decimales.toInt()
-        return formatoGenerico.format(numero.replace(",", ".").toDouble())
+        var numeroF = numero.replace(".", "")
+        numeroF = numeroF.replace(",", ".")
+        val result = formatoGenerico.format(numeroF.toDouble())
+        return result
+    }
+    fun numero(decimales: String, numero: String,punto:Boolean):String{
+        formatoGenerico.minimumFractionDigits = decimales.toInt()
+        formatoGenerico.maximumFractionDigits = decimales.toInt()
+        var numeroF = numero.replace(",", ".")
+        val result = formatoGenerico.format(numeroF.toDouble())
+        return result
     }
     fun porcentaje(decimal: String):String{
         return decimal(decimal) + "%"

@@ -9,6 +9,8 @@
       <w>ajustado</w>
       <w>alcanzado</w>
       <w>animacion</w>
+      <w>anulado</w>
+      <w>aplicación</w>
       <w>asignada</w>
       <w>asignarlo</w>
       <w>bancaria</w>
@@ -20,6 +22,7 @@
       <w>cancelado</w>
       <w>cargada</w>
       <w>cargados</w>
+      <w>carteras</w>
       <w>catastrado</w>
       <w>catastrados</w>
       <w>cilente</w>
@@ -31,6 +34,7 @@
       <w>contacto</w>
       <w>controla</w>
       <w>convertir</w>
+      <w>coord</w>
       <w>correcciones</w>
       <w>corto</w>
       <w>cuadricula</w>
@@ -40,6 +44,7 @@
       <w>departamentos</w>
       <w>derecho</w>
       <w>descripción</w>
+      <w>deshabilitado</w>
       <w>destino</w>
       <w>diciembre</w>
       <w>dimensiona</w>
@@ -79,6 +84,7 @@
       <w>inválido</w>
       <w>jefe</w>
       <w>jueves</w>
+      <w>julianday</w>
       <w>junio</w>
       <w>lateinit</w>
       <w>limpia</w>
@@ -113,10 +119,12 @@
       <w>reasignar</w>
       <w>reporte</w>
       <w>resumen</w>
+      <w>rrhh</w>
       <w>rápidos</w>
       <w>sabado</w>
       <w>sacar</w>
       <w>segundos</w>
+      <w>seguro</w>
       <w>selec</w>
       <w>selecciona</w>
       <w>separador</w>
@@ -124,6 +132,7 @@
       <w>siguiente</w>
       <w>sincronizado</w>
       <w>sinergia</w>
+      <w>subsoord</w>
       <w>subtitulo</w>
       <w>sugerido</w>
       <w>tarde</w>
@@ -134,7 +143,9 @@
       <w>tomar</w>
       <w>tradicional</w>
       <w>trae</w>
+      <w>utilizada</w>
       <w>validando</w>
+      <w>versiones</w>
       <w>viernes</w>
       <w>volvemos</w>
     </words>

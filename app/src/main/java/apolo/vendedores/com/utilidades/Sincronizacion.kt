@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package apolo.vendedores.com.utilidades
 
 import android.annotation.SuppressLint
@@ -5,7 +7,6 @@ import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -31,6 +32,7 @@ class Sincronizacion : AppCompatActivity() {
 
     companion object{
         var tipoSinc: String = "T"
+        @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         var primeraVez = false
         var nf = DecimalFormat("000")
@@ -54,7 +56,7 @@ class Sincronizacion : AppCompatActivity() {
 
         if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
-//            finish()
+            finish()
         }
         try {
             preparaSincornizacion().execute()
@@ -99,6 +101,9 @@ class Sincronizacion : AppCompatActivity() {
                     tvImei.text = "Ocurrio un error"
                     return null
                 } else {
+                    if (imeiBD.trim() == "X"){
+                        return null
+                    }
                     if (!validaVersion(imeiBD)){
                         return null
                     }
@@ -113,6 +118,7 @@ class Sincronizacion : AppCompatActivity() {
                     runOnUiThread {
                         imeiBD += "\n\nError al generar archivos"
                         tvImei.text = "\n\nError al generar archivos"
+                        tvImei.text = "\n\n${ConexionWS.resultados}"
                         Toast.makeText(this@Sincronizacion, "Error al generar archivos", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -124,6 +130,7 @@ class Sincronizacion : AppCompatActivity() {
                         if (tvImei.text.toString().indexOf("Espere")>-1){
                             imeiBD += "\n\nError al obtener archivos"
                             tvImei.text = "\n\nError al obtener archivos"
+                            tvImei.text = "\n\n${ConexionWS.resultados}"
                             Toast.makeText(this@Sincronizacion, "Error al obtener archivos", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -132,11 +139,17 @@ class Sincronizacion : AppCompatActivity() {
             return null
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             progressDialog.dismiss()
             runOnUiThread {
                 if (tvImei.text.toString().indexOf("Espere")<0){
+                    if (imeiBD.trim() == "X"){
+                        runOnUiThread {
+                            tvImei.text = tvImei.text.toString() + "\n\nConfigure correctamente las versiones en todas las carteras y vuelva a intentar."
+                        }
+                    }
                     btFinalizar.visibility = View.VISIBLE
                 } else {
                     cargarRegistros()
@@ -151,7 +164,7 @@ class Sincronizacion : AppCompatActivity() {
         }
     }
 
-    private fun borrarTablasTodo(listaTablas: Vector<String>){
+    private fun borrarTablasTodo(listaTablas: ArrayList<String>){
         for (i in 0 until listaTablas.size){
             val sql: String = "DROP TABLE IF EXISTS " + listaTablas[i].split(" ")[5]
             try {
@@ -171,109 +184,15 @@ class Sincronizacion : AppCompatActivity() {
             borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables())
             obtenerArchivosMasivo(
                 MainActivity.tablasSincronizacion.listaSQLCreateTables(),
-                MainActivity.tablasSincronizacion.listaCamposSincronizacion()
+                MainActivity.tablasSincronizacion.listaCamposSincronizacion(),
+                MainActivity.tablasSincronizacion.listaSQLCreateIndexes()
             )
         }
         th.start()
     }
 
     @SuppressLint("SetTextI18n", "SdCardPath")
-    private fun obtenerArchivosTodo(listaSQLCreateTable: Vector<String>, listaCampos: Vector<Vector<String>>):Boolean{
-        runOnUiThread {
-            pbTabla.progress = 0
-            pbProgresoTotal.progress = 0
-        }
-        for (i in 0 until listaSQLCreateTable.size){
-                MainActivity.bd!!.beginTransaction()
-                try {
-
-                    //Leer el archivo desde la direccion asignada
-                    var archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
-                    var leeArchivo  = FileReader(archivo)
-                    var buffer      = BufferedReader(leeArchivo)
-                    val sql         : String            = listaSQLCreateTable[i]
-
-                    try {
-                        MainActivity.bd!!.execSQL(sql)
-                    } catch (e: Exception) {
-                        return false
-                    }
-
-                    //Obtiene cantidad de lineas
-                    var numeroLineas = 0
-                    var linea: String? = buffer.readLine()
-                    while (linea != null){
-                        numeroLineas++
-                        linea = buffer.readLine()
-                    }
-
-                    archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
-                    leeArchivo  = FileReader(archivo)
-                    buffer      = BufferedReader(leeArchivo)
-
-                    //Extrae valor de los campo e inserta a la BD
-                    linea = buffer.readLine()
-                    var cont = 0
-                    runOnUiThread {
-                        tvImei.text = tvImei.text.toString() + "\n${nf.format(i)} - " + listaSQLCreateTable[i].split(" ")[5]
-                    }
-                    while (linea != null){
-                        val valores : ArrayList<String> = linea.split("|") as ArrayList<String>
-                        val values = ContentValues()
-                        for (j in 0 until listaCampos[i].size){
-                            if (valores[j] == "null" || valores[j] == "" || valores[j].isEmpty()){
-                                values.put(listaCampos[i][j], " ")
-                            } else {
-                                values.put(listaCampos[i][j], valores[j])
-                            }
-
-                        }
-
-                        //inserta valores en tablas especificas
-                        if (listaSQLCreateTable[i].split(" ")[5] == "svm_vendedor_pedido") {
-                            values.put("ULTIMA_SINCRO",values.get("FECHA").toString())
-                        }
-
-                        try {
-                            MainActivity.bd!!.insert(listaSQLCreateTable[i].split(" ")[5],null,values)
-                        } catch (e: Exception) {
-                            return false
-                        }
-                        linea = buffer.readLine()
-                        runOnUiThread {
-                            cont++
-                            var progreso : Double = (100/numeroLineas.toDouble())*(cont)
-                            if (cont == numeroLineas){
-                                progreso = 100.0
-                            }
-                            pbTabla.progress = progreso.toInt()
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        tvImei.text = tvImei.text.toString() + "\n\n" + e.message
-                    }
-                    return false
-                }
-                runOnUiThread {
-                    pbProgresoTotal.progress = (100/listaSQLCreateTable.size)*(i+1)
-                }
-            MainActivity.bd!!.setTransactionSuccessful()
-                MainActivity.bd!!.endTransaction()
-        }
-        runOnUiThread {
-            pbProgresoTotal.progress = 100
-            btFinalizar.visibility = View.VISIBLE
-        }
-        if (tipoSinc == "T"){
-//            cargarSvm_vendedor_pedido_venta()
-        }
-        return true
-    }
-
-    @SuppressLint("SetTextI18n", "SdCardPath")
-    private fun obtenerArchivosMasivo(listaSQLCreateTable: Vector<String>, listaCampos: Vector<Vector<String>>):Boolean{
+    private fun obtenerArchivosMasivo(listaSQLCreateTable: ArrayList<String>, listaCampos: ArrayList<ArrayList<String>>,listaIndices: ArrayList<String>):Boolean{
         runOnUiThread {
             pbTabla.progress = 0
             pbProgresoTotal.progress = 0
@@ -349,8 +268,6 @@ class Sincronizacion : AppCompatActivity() {
                     }
 
                     if (ins == 50){
-                        val buffer2 = buffer
-//                        if (buffer2.readLine()!=null){
                             try {
                                 MainActivity.bd!!.execSQL(sql2)
                             } catch (e: Exception) {
@@ -369,7 +286,6 @@ class Sincronizacion : AppCompatActivity() {
                                 }
                             }
                             sql2 += " values "
-//                        }
                         ins = 0
                     }
 
@@ -409,7 +325,6 @@ class Sincronizacion : AppCompatActivity() {
                 try {
                     MainActivity.bd!!.execSQL("update svm_vendedor_pedido set ULTIMA_SINCRO = '${MainActivity2.funcion.getFechaHoraActual()}'")
                 } catch (e:java.lang.Exception){
-                    e.message
                     runOnUiThread{
                         tvImei.text = tvImei.text.toString() + "\n\n" + e.message
                     }
@@ -417,15 +332,17 @@ class Sincronizacion : AppCompatActivity() {
             }
         }
         runOnUiThread {
+            for (i in 0 until listaIndices.size){
+                try {
+                    MainActivity2.bd!!.execSQL(listaIndices[i])
+                } catch (e : java.lang.Exception){
+                    if (e.message.toString().trim() != "" && e.message != null && e.message.toString().trim() != "null"){
+                        tvImei.text = tvImei.text.toString() + "\n\n" + e.message
+                    }
+                }
+            }
             pbProgresoTotal.progress = 100
             btFinalizar.visibility = View.VISIBLE
-        }
-        if (tipoSinc == "T"){
-//            cargarSvm_vendedor_pedido_venta()
-//            cargarSurtidoEficiente(funcion.consultar("SELECT DISTINCT COD_CLIENTE || '-' || COD_SUBCLIENTE || '-' || TIP_CLIENTE AS CAMPO FROM svm_surtido_eficiente"))
-//            cargarSvmArticulosPrecios(funcion.consultar("SELECT DISTINCT cod_vendedor CAMPO FROM svm_cliente_vendedor "),
-//                                      funcion.consultar("SELECT DISTINCT COD_LISTA_PRECIO CAMPO FROM cliente_list_prec "),
-//                                      funcion.consultar("SELECT DISTINCT TIP_CLIENTE CAMPO FROM svm_cliente_vendedor "))
         }
         return true
     }
@@ -478,76 +395,4 @@ class Sincronizacion : AppCompatActivity() {
         return true
     }
 
-
-    fun cargarSurtidoEficiente(cursor:Cursor){
-        for (i in 0 until cursor.count){
-            val codCliente    : String = funcion.dato(cursor,"CAMPO").toString().split("-")[0]
-            val codSubcliente : String = funcion.dato(cursor,"CAMPO").toString().split("-")[1]
-            val tipCliente    : String = funcion.dato(cursor,"CAMPO").toString().split("-")[2]
-            val tabla : String = "svm_surtido_eficiente_" + tipCliente.replace(".","") + codCliente + codSubcliente
-            var sql : String = "DROP TABLE IF EXISTS $tabla "
-            funcion.ejecutar(sql,this)
-            sql = "CREATE TABLE IF NOT EXISTS $tabla AS SELECT * FROM svm_surtido_eficiente " +
-                  "WHERE TIP_CLIENTE = '$tipCliente' AND COD_CLIENTE = '$codCliente' AND COD_SUBCLIENTE = '$codSubcliente'"
-            funcion.ejecutar(sql,this)
-            cursor.moveToNext()
-        }
-    }
-
-    fun cargarSvmArticulosPrecios(cursor: Cursor, cursor2: Cursor, cursor3: Cursor){
-        for (i in 0 until cursor.count){
-            cursor2.moveToFirst()
-            for (j in 0 until cursor2.count) {
-                cursor3.moveToFirst()
-                for (k in 0 until cursor3.count) {
-
-                    val codVendedor: String = MainActivity.funcion.dato(cursor, "CAMPO")
-                    val codListaPrecio: String = MainActivity.funcion.dato(cursor2, "CAMPO")
-                    val tipCliente: String = MainActivity.funcion.dato(cursor3, "CAMPO")
-                    //            var codCondicion   : String = funcion.dato(cursor,"CAMPO").toString().split("-")[3]
-                    val tabla: String =
-                        "svm_articulos_precios_$codVendedor$codListaPrecio" + tipCliente.replace(
-                            ".",
-                            ""
-                        )
-                    var sql: String = "DROP TABLE IF EXISTS $tabla "
-                    MainActivity.funcion.ejecutar(sql, this)
-                    sql = "CREATE TABLE IF NOT EXISTS $tabla AS SELECT * FROM svm_articulos_precios " +
-                            "WHERE (cod_vendedor = '$codVendedor' or trim(cod_vendedor) = '')  AND (trim(cod_lista_precio) = '$codListaPrecio' or tirm(cod_lista_precio) = '') "
-                    MainActivity.funcion.ejecutar(sql, this)
-                    val tablaCab: String =
-                        "svm_promociones_art_cab_s" + tipCliente.replace(
-                            ".",
-                            ""
-                        ) + codListaPrecio + codVendedor
-                    sql = "DROP TABLE IF EXISTS $tablaCab "
-                    MainActivity.funcion.ejecutar(sql, this)
-                    sql = "CREATE TABLE IF NOT EXISTS $tablaCab AS SELECT * FROM svm_promociones_art_cab " +
-                            "WHERE (trim(TIP_CLIENTE) IN ('$tipCliente','','null')) " +
-                            "  AND (trim(COD_LISTA_PRECIO) IN ('$codListaPrecio','','null')) " +
-                            "  AND (trim(COD_VENDEDOR) = '$codVendedor') AND IND_ART = 'S'"
-                    MainActivity.funcion.ejecutar(sql, this)
-                    val tablaDet: String =
-                        "svm_promociones_art_det_s" + tipCliente.replace(
-                            ".",
-                            ""
-                        ) + codListaPrecio + codVendedor
-                    sql = "DROP TABLE IF EXISTS $tablaDet "
-                    MainActivity.funcion.ejecutar(sql, this)
-                    sql = "CREATE TABLE IF NOT EXISTS $tablaDet AS SELECT * FROM svm_promociones_art_det " +
-                            "WHERE NRO_PROMOCION IN (SELECT DISTINCT NRO_PROMOCION FROM $tablaCab) "
-                    MainActivity.funcion.ejecutar(sql, this)
-                    sql = "UPDATE $tabla SET IND_PROMO_ACT = 'N'"
-                    MainActivity.funcion.ejecutar(sql, this)
-                    sql = "UPDATE $tabla SET IND_PROMO_ACT = 'S' " +
-                            " WHERE cod_articulo in (SELECT DISTINCT COD_ARTICULO FROM $tablaCab)" +
-                            "    OR cod_articulo in (SELECT DISTINCT COD_ARTICULO FROM $tablaDet)"
-                    MainActivity.funcion.ejecutar(sql, this)
-                    cursor3.moveToNext()
-                }
-                cursor2.moveToNext()
-            }
-            cursor.moveToNext()
-        }
-    }
 }

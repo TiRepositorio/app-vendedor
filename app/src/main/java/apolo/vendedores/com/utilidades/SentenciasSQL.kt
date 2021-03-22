@@ -14,7 +14,6 @@ class SentenciasSQL {
                     " VERSION TEXT                          , MIN_FOTOS   TEXT  , " +
                     " MAX_FOTOS TEXT                        , COD_PERSONA TEXT);"
         }
-
         fun insertUsuario(usuario: HashMap<String, String>):String{
             return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION/*, MIN_FOTOS, MAX_FOTOS*/ ) VALUES " +
                     "('" + usuario["NOMBRE"] + "'," +
@@ -27,7 +26,6 @@ class SentenciasSQL {
 //                     "'" +  usuario.get("MAX_FOTOS")         + "' " +
                      ")"
         }
-
 
         //Sincronizacion
         fun createTableClienteListPrec(): String {
@@ -50,8 +48,7 @@ class SentenciasSQL {
                     + " COMENTARIO TEXT						 , IND_ESP TEXT 		, CATEGORIA TEXT   , TELEFONO2 TEXT		,"
                     + " LATITUD TEXT						 , LONGITUD TEXT		, CERCA_DE TEXT	   , IND_CADUCADO TEXT  ,"
                     + " IND_VITRINA TEXT 					 , ESTADO TEXT 			, FOTO_FACHADA TEXT, TIEMPO_MIN TEXT    ,"
-                    + " TIEMPO_MAX TEXT 					 , SOL_TARG TEXT        , DESC_VENDEDOR TEXT); "
-                    + " CREATE INDEX if not exists cliente_vendedor on cli_vendedor(COD_VENDEDOR, COD_CLIENTE, DESC_CLIENTE, DESC_SUBCLIENTE, DESC_CIUDAD, FEC_VISITA)")
+                    + " TIEMPO_MAX TEXT 					 , SOL_TARG TEXT        , DESC_VENDEDOR TEXT); ")
         }
 
         fun createTableSvmCondicionVenta(): String {
@@ -59,15 +56,6 @@ class SentenciasSQL {
                     " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_CONDICION_VENTA TEXT," +
                     " DESCRIPCION TEXT                     , TIPO_CONDICION TEXT, ABREVIATURA TEXT        ," +
                     " DIAS_INICIAL TEXT                    , PORC_DESC TEXT     , MONTO_MIN_DESC TEXT);"
-        }
-
-        fun createTableSvmUltimaVentaCliente(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_ultima_venta_cliente "
-                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CLIENTE TEXT    , COD_SUBCLIENTE TEXT ,"
-                    + " FEC_COMPROBANTE TEXT                , COD_ARTICULO TEXT   , DESC_ARTICULO TEXT  ,"
-                    + " PRECIO_UNITARIO TEXT                , CANTIDAD NUMBER     , DESC_UNIDAD TEXT    ,"
-                    + " SIGLAS TEXT                         , DECIMALES TEXT      , COD_VENDEDOR TEXT   ,"
-                    + " DESC_VENDEDOR); ")
         }
 
         fun createTableSvmDeudaCliente(): String {
@@ -101,9 +89,7 @@ class SentenciasSQL {
                     " PREC_CAJA NUMBER                     , COD_UNIDAD_MEDIDA TEXT, PORC_IVA NUMBER      , REFERENCIA TEXT  , " +
                     " MULT NUMBER                          , DIV NUMBER            , IND_LIM_VENTA NUMBER , COD_LINEA TEXT   , " +
                     " COD_FAMILIA TEXT                     , COD_BARRA TEXT        , PORC_DESCUENTO NUMBER,                    " +
-                    " CANT_MINIMA NUMBER                   , IND_PROMO_ACT TEXT DEFAULT 'N');" +
-                    " CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_articulos_precios(COD_ARTICULO) ;" +
-                    " CREATE INDEX IF NOT EXISTS ind_art_prec on svm_articulos_precios (DESC_ARTICULO, COD_VENDEDOR, COD_LISTA_PRECIO);"
+                    " CANT_MINIMA NUMBER                   , IND_PROMO_ACT TEXT DEFAULT 'N');"
         }
 
         fun createTableSvmStArticulos(): String {
@@ -111,17 +97,7 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA  TEXT , COD_ARTICULO TEXT, DESC_ARTICULO TEXT,"
                     + " COD_UNIDAD_REL TEXT                  , REFERENCIA TEXT   , MULT NUMBER      , DIV  NUMBER       ,"
                     + " COD_IVA TEXT                         , PORC_IVA TEXT     , COD_LINEA TEXT   , COD_FAMILIA TEXT  ,"
-                    + " IND_BASICO TEXT                      , CANT_MINIMA NUMBER, CANT_EXIST TEXT  , COD_BARRA TEXT);"
-                    + " CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_st_articulos(COD_ARTICULO) ;"
-                    + " CREATE INDEX IF NOT EXISTS IND_DESC_ARTICULO ON svm_st_articulos(DESC_ARTICULO) ;"
-                    + " CREATE INDEX IF NOT EXISTS IND_COD_BARRA ON svm_st_articulos(COD_BARRA) ;")
-        }
-
-        fun createTableSvmPromArticulosTarCred(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_prom_articulos_tar_cred"
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT , NRO_PROMOCION TEXT,"
-                    + "  COD_CONDICION_VENTA TEXT			 , COD_ARTICULO TEXT, DESC_ARTICULO TEXT,"
-                    + "  PORC_DESCUENTO TEXT				 , DESCRIPCION TEXT , COMENTARIO TEXT )")
+                    + " IND_BASICO TEXT                      , CANT_MINIMA NUMBER, CANT_EXIST TEXT  , COD_BARRA TEXT);")
         }
 
         fun createTableSvmMetasPuntoPorLinea(): String {
@@ -234,14 +210,6 @@ class SentenciasSQL {
                     + " COD_VENDEDOR TEXT                    , DESC_VENDEDOR TEXT)")
         }
 
-        fun createTableSvmDiasVisitaCliente(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_dias_visita_cliente "
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CLIENTE TEXT     , DESC_CLIENTE TEXT      ,"
-                    + " COD_SUBCLIENTE TEXT                  , DESC_SUBCLIENTE TEXT , COD_VISITA_ACTUAL TEXT ,"
-                    + " DESC_VISITA_ACTUAL TEXT              , COD_VISITA_NUEVO TEXT, DESC_VISITA_NUEVO TEXT ,"
-                    + " IND_ENVIADO TEXT                     , COD_VENDEDOR TEXT    , DESC_VENDEDOR TEXT)")
-        }
-
         fun createTableSvmCondVentaVendedor(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_cond_venta_vendedor "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT   , COD_EMPRESA TEXT          , COD_VENDEDOR TEXT ,"
@@ -274,13 +242,6 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT		, COD_CATEGORIA TEXT, DESC_CATEGORIA TEXT,"
                     + "	 COD_SEGMENTO TEXT					 , DESC_SEGMENTO TEXT	, ORDEN TEXT		, TIPO TEXT		 	 , "
                     + "  COD_TIP_CLIENTE TEXT                , COD_VENDEDOR TEXT)")
-        }
-
-        fun createTableSpmRetornoComentario(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_retorno_comentario"
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , FEC_ENTRADA TEXT   , FEC_SALIDA TEXT   , "
-                    + "  COD_PROMOTOR TEXT					 , COD_CLIENTE TEXT   , COD_SUBCLIENTE TEXT, COD_CATEGORIA TEXT, "
-                    + "  COD_SEGMENTO TEXT					 , TIPO TEXT 		  , PUNTUACION TEXT    , COMENTARIO_SUPERVISOR TEXT);")
         }
 
         fun createTableSpmMotivoNoVenta(): String {
@@ -320,11 +281,6 @@ class SentenciasSQL {
                     + "  DESC_VENDEDOR TEXT )")
         }
 
-        fun createTableCcvMotivoSolTarjCred(): String {
-            return ("CREATE TABLE IF NOT EXISTS ccv_motivo_sol_tarj_cred"
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_MOTIVO TEXT    	 , DESC_MOTIVO TEXT, IND_FOTO TEXT )")
-        }
-
         fun createTableSvmPromocionesArtCab(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_promociones_art_cab"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT			, NRO_PROMOCION TEXT	,"
@@ -352,7 +308,7 @@ class SentenciasSQL {
                     + " ( id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT , RESULTADO TEXT, IND_LOGRADO TEXT)")
         }
 
-        fun createTableSvmSurtidoEficiente(): String? {
+        fun createTableSvmSurtidoEficiente(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_surtido_eficiente "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT  	, COD_CLIENTE TEXT	, "
                     + " COD_SUBCLIENTE TEXT					 , TIP_CLIENTE TEXT 	, COD_ARTICULO TEXT	, "
@@ -369,7 +325,7 @@ class SentenciasSQL {
                     + " CLIENTES_VISITADOS TEXT   , COD_VENDEDOR TEXT    , DESC_VENDEDOR TEXT )")
         }
 
-        fun createTableSvmProduccionSemanalVend(): String? {
+        fun createTableSvmProduccionSemanalVend(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_produccion_semanal_vend "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA    TEXT  , CANTIDAD       NUMBER  , "
                     + " SEMANA         TEXT  , FECHA          TEXT    , "
@@ -428,12 +384,6 @@ class SentenciasSQL {
                     + " DESC_VENDEDOR TEXT) ")
         }
 
-
-
-
-
-
-
         //NO SINCRONIZADOS
         private fun createTableVtMarcacionUbicacion(): String {
             return "CREATE TABLE IF NOT EXISTS vt_marcacion_ubicacion" +
@@ -442,25 +392,6 @@ class SentenciasSQL {
                     "  LATITUD TEXT    					    , LONGITUD TEXT	        , OBSERVACION TEXT  , IND_RRHH TEXT DEFAULT 'N'," +
                     "  IND_GC TEXT DEFAULT 'N'              , IND_COORD TEXT DEFAULT 'N'                , IND_SUBSOORD TEXT DEFAULT 'N' );"
         }
-
-        fun createTableSvm_fotos_cab(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_fotos_cab "
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_PROMOTOR TEXT, COD_CLIENTE TEXT	,"
-                    + "  COD_SUBCLIENTE TEXT, ESTADO TEXT    , FECHA_ENTRADA TEXT , HORA_ENTRADA TEXT, LATITUD TEXT	 	,"
-                    + "  LONGITUD TEXT						 , FECHA_ENVIO TEXT );")
-        }
-
-        fun createTableSvm_fotos_det(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_fotos_det "
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, ID_CAB INTEGER,  COD_CATEGORIA TEXT, TIPO TEXT,"
-                    + "  COMENTARIO TEXT 					 , COD_SEGMENTO TEXT );")
-        }
-
-        fun createTableSvm_imagenes_det(): String {
-            return ("CREATE TABLE IF NOT EXISTS svm_imagenes_det "
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, ID_DET INTEGER, IMAGEN BLOB, NRO_ITEM TEXT )")
-        }
-
         private fun createTableSvmModificaCatastro(): String {
             return  ("CREATE TABLE IF NOT EXISTS svm_modifica_catastro "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT	, COD_CLIENTE TEXT		,"
@@ -469,7 +400,6 @@ class SentenciasSQL {
                     + " LONGITUD TEXT						 , ESTADO TEXT		, FECHA TEXT		    ,"
                     + " FOTO_FACHADA BLOB		 			 , TIPO TEXT        )")
         }
-
         private fun createTableSvmCatastroCliente(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_catastro_cliente "
                     + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CLIENTE TEXT      , COD_VENDEDOR TEXT       ,"
@@ -484,7 +414,6 @@ class SentenciasSQL {
                     + " TEL_REF_BANCARIA TEXT               , COMENTARIO TEXT       , LIMITE_CREDITO TEXT	  ,"
                     + " LATITUD TEXT						, LONGITUD TEXT			, FOTO_FACHADA BLOB		 )")
         }
-
         private fun createTableSvmPedidosCab(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_pedidos_cab"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT     , COD_CLIENTE TEXT  , COD_SUBCLIENTE TEXT        ,"
@@ -497,33 +426,6 @@ class SentenciasSQL {
                     + " LONGITUD TEXT						 , IND_PRESENCIAL TEXT  , HORA_ALTA TEXT    , NRO_AUTORIZACION_DESC TEXT ,"
                     + " HORA_REGISTRO DATETIME default (datetime('now','localtime'))) ")
         }
-
-        fun renameTablePedidoCab(): String {
-            return "alter table 'vt_pedidos_cab' rename to 'vt_pedidos_prov';"
-        }
-
-        fun fillTablePedidoCab(): String {
-            return ("insert into vt_pedidos_cab "
-                    + " (id					, COD_EMPRESA 		, COD_CLIENTE	, COD_SUBCLIENTE		,"
-                    + " COD_VENDEDOR		, COD_LISTA_PRECIO	, FECHA			, FECHA_INT				,"
-                    + " NUMERO				, NRO_ORDEN_COMPRA	, COD_CONDICION	, TIP_CAMBIO			,"
-                    + " TOT_COMPROBANTE		, ESTADO			, COD_MONEDA	, DECIMALES				,"
-                    + " COMENTARIO			, PORC_DESC_VAR		, PORC_DESC_FIN	, DESCUENTO_VAR			,"
-                    + " DESCUENTO_FIN		, TOT_DESCUENTO		, DESC_CLIENTE	, DIAS_INICIAL			,"
-                    + " COD_CONDICION_VENTA	, NRO_AUTORIZACION	, FEC_ALTA		, LATITUD				,"
-                    + " LONGITUD			, IND_PRESENCIAL	, HORA_ALTA		, NRO_AUTORIZACION_DESC)"
-                    + " "
-                    + " select id			, COD_EMPRESA 		, COD_CLIENTE	, COD_SUBCLIENTE		,"
-                    + " COD_VENDEDOR		, COD_LISTA_PRECIO	, FECHA			, FECHA_INT				,"
-                    + " NUMERO				, NRO_ORDEN_COMPRA	, COD_CONDICION	, TIP_CAMBIO			,"
-                    + " TOT_COMPROBANTE		, ESTADO			, COD_MONEDA	, DECIMALES				,"
-                    + " COMENTARIO			, PORC_DESC_VAR		, PORC_DESC_FIN	, DESCUENTO_VAR			,"
-                    + " DESCUENTO_FIN		, TOT_DESCUENTO		, DESC_CLIENTE	, DIAS_INICIAL			,"
-                    + " COD_CONDICION_VENTA	, NRO_AUTORIZACION	, FEC_ALTA		, LATITUD				,"
-                    + " LONGITUD			, IND_PRESENCIAL	, HORA_ALTA		, NRO_AUTORIZACION_DESC"
-                    + " from vt_pedidos_prov;")
-        }
-
         private fun createTableSvmPedidosDet(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_pedidos_det"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT       , NUMERO NUMBER               , COD_ARTICULO TEXT        ,"
@@ -539,7 +441,7 @@ class SentenciasSQL {
         }
 
         //SD
-        private fun createTableSvm_solicitud_dev_cab(): String {
+        private fun createTableSvmSolicitudDevCab(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_solicitud_dev_cab "
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT    	, COD_VENDEDOR TEXT 	,"
                     + " NRO_COMPROBANTE TEXT				 , COD_CLIENTE TEXT    	, COD_SUBCLIENTE TEXT 	,"
@@ -547,8 +449,7 @@ class SentenciasSQL {
                     + " SIGLAS TEXT         				 , OBSERVACIONES TEXT	, EST_ENVIO TEXT 		,"
                     + " NRO_REGISTRO_REF TEXT 				 , FECHA TEXT )")
         }
-
-        private fun createTableSvm_solicitud_dev_det(): String {
+        private fun createTableSvmSolicitudDevDet(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_solicitud_dev_det"
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT	, COD_EMPRESA TEXT	 	, TIP_PLANILLA TEXT	, "
                     + " NRO_PLANILLA TEXT						, SER_COMP TEXT			, TIP_COMP TEXT		, "
@@ -560,7 +461,7 @@ class SentenciasSQL {
                     + " COD_PENALIDAD TEXT						, GRABADO_CAB TEXT		, EST_ENVIO TEXT 	, "
                     + " FECHA TEXT	)")
         }
-        private fun createTableVtMarcacionVisita(): String? {
+        private fun createTableVtMarcacionVisita(): String {
             return ("CREATE TABLE IF NOT EXISTS vt_marcacion_visita "
                     + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT   , COD_SUCURSAL TEXT, "
                     + " COD_CLIENTE TEXT					, COD_SUBCLIENTE TEXT, COD_VENDEDOR TEXT, "
@@ -568,7 +469,6 @@ class SentenciasSQL {
                     + " LATITUD TEXT	  					, LONGITUD TEXT		 , ESTADO TEXT	    ,"
                     + " HORA_ALTA TEXT		)")
         }
-
         private fun createTableCcClientesBajaProv():String{
             return ("CREATE TABLE IF NOT EXISTS cc_clientes_baja_prov (" +
                     "       id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -584,13 +484,11 @@ class SentenciasSQL {
                     "       FOTO_FACHADA BLOB       " +
                     ");")
         }
-
-
-        fun listaSQLCreateTable(): Vector<String> {
-            val lista : Vector<String> = Vector()
+        fun listaSQLCreateTable(): ArrayList<String> {
+            val lista : ArrayList<String> = ArrayList()
             lista.add(0, createTableSvmModificaCatastro())
-            lista.add(1, createTableSvm_solicitud_dev_det())
-            lista.add(2, createTableSvm_solicitud_dev_cab())
+            lista.add(1, createTableSvmSolicitudDevDet())
+            lista.add(2, createTableSvmSolicitudDevCab())
             lista.add(3, createTableVtMarcacionUbicacion())
             lista.add(4, createTableVtMarcacionVisita())
             lista.add(5, createTableSvmPedidosCab())
@@ -631,6 +529,42 @@ class SentenciasSQL {
                     " WHERE A.COD_EMPRESA = B.COD_EMPRESA " +
                     "   AND A.COD_VENDEDOR= B.COD_VENDEDOR;"
         }
+
+        //INDICES
+        fun createIndexSvmClienteVendedor():String{
+            return ("CREATE INDEX if not exists ind_svm_cliente_vendedor on svm_cliente_vendedor"
+            + "(COD_VENDEDOR, COD_CLIENTE, DESC_CLIENTE, DESC_SUBCLIENTE, DESC_CIUDAD, FEC_VISITA);")
+        }
+        fun createIndexArticuloPrecioSvmArticulosPrecios():String{
+            return ("CREATE INDEX IF NOT EXISTS ind_art_prec on svm_articulos_precios (DESC_ARTICULO, COD_VENDEDOR, COD_LISTA_PRECIO);")
+        }
+        fun createIndexCodArticuloSvmArticulosPrecios():String{
+            return ("CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_articulos_precios(COD_ARTICULO) ;" )
+        }
+        fun createIndexCodArticuloSvmStArticulos():String{
+            return ("CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_st_articulos(COD_ARTICULO) ;")
+        }
+        fun createIndexDescArticuloSvmStArticulos():String{
+            return ("CREATE INDEX IF NOT EXISTS IND_DESC_ARTICULO ON svm_st_articulos(DESC_ARTICULO) ;")
+        }
+        fun createIndexCodBarraStArticulos():String{
+            return ("CREATE INDEX IF NOT EXISTS IND_COD_BARRA ON svm_st_articulos(COD_BARRA) ;")
+        }
+//        fun createIndexCodArticuloSurtidoEficiente():String{
+//            return ("CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_surtido_eficiente(COD_ARTICULO) ;")
+//        }
+//        fun createIndexCodClienteSurtidoEficiente():String{
+//            return ("CREATE INDEX IF NOT EXISTS IND_COD_CLIENTE ON svm_surtido_eficiente(COD_CLIENTE) ;")
+//        }
+//        fun createIndexCodSubclienteSurtidoEficiente():String{
+//            return ("CREATE INDEX IF NOT EXISTS IND_COD_SUBCLIENTE ON svm_surtido_eficiente(COD_SUBCLIENTE) ;")
+//        }
+//        fun createIndexTipClienteSurtidoEficiente():String{
+//            return ("CREATE INDEX IF NOT EXISTS IND_TIP_CLIENTE ON svm_surtido_eficiente(TIP_CLIENTE) ;")
+//        }
+//        fun createIndexIndSurtidoEficiente():String{
+//            return ("CREATE INDEX IF NOT EXISTS IND_SURTIDO_EFICIENTE ON svm_surtido_eficiente(COD_EMPRESA,COD_CLIENTE,COD_SUBCLIENTE,TIP_CLIENTE,COD_ARTICULO) ;")
+//        }
 
 
     }

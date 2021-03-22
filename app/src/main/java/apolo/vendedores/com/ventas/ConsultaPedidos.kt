@@ -20,7 +20,6 @@ class ConsultaPedidos : AppCompatActivity() {
     lateinit var lista : ArrayList<HashMap<String,String>>
     private lateinit var listaCliente : ArrayList<HashMap<String,String>>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consulta_pedidos)
@@ -40,16 +39,18 @@ class ConsultaPedidos : AppCompatActivity() {
         btModificar.setOnClickListener{modificar()}
         btConsultar.setOnClickListener{consultar()}
         btEliminar.setOnClickListener{eliminar()}
+        funcion.ejecutar("update vt_pedidos_cab set estado = 'A' where  julianday(datetime('now','localtime')) - julianday(hora_registro)  > 2",this)
     }
 
     private fun buscarPedidos(){
         lista = ArrayList()
-        funcion.cargarLista(lista,consultor.buscar("vt_pedidos_cab","FECHA"))
+        funcion.cargarLista(lista,consultor.buscar("vt_pedidos_cab","FECHA",
+                                                  "COD_VENDEDOR", ListaClientes.codVendedor))
         mostrar()
     }
 
     private fun mostrar(){
-        funcion.inicializaContadores()
+        FuncionesUtiles.posicionDetalle = 0
         posicion = 0
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2,R.id.tv3,R.id.tv4,R.id.tv5,R.id.tv6,R.id.tv7,R.id.tv8)
         funcion.valores = arrayOf("NUMERO","COD_CLIENTE","DESC_CLIENTE","FECHA","COD_MONEDA","COD_LISTA_PRECIO","TOT_COMPROBANTE","ESTADO")
@@ -84,6 +85,7 @@ class ConsultaPedidos : AppCompatActivity() {
         ListaClientes.tipCondicion      = listaCliente[0]["TIPO_CONDICION"].toString()
         ListaClientes.codCondicion      = lista[position]["COD_CONDICION_VENTA"].toString()
         ListaClientes.diasInicial       = lista[position]["DIAS_INICIAL"].toString()
+        Pedidos.indPresencial           = lista[position]["IND_PRESENCIAL"].toString().trim()
         Pedidos.vent                    = "N"
         Pedidos.totalPedido             = lista[position]["TOT_COMPROBANTE"].toString()
     }
@@ -92,6 +94,10 @@ class ConsultaPedidos : AppCompatActivity() {
         if (lista.size>0){
             if (lista[posicion]["ESTADO"].toString().trim() == "E"){
                 funcion.toast(this,"El pedido ya fue enviado.")
+                return
+            }
+            if (lista[posicion]["ESTADO"].toString().trim() == "A"){
+                funcion.toast(this,"El pedido ya fue anulado.")
                 return
             }
             Pedidos.nuevo = false
@@ -107,8 +113,20 @@ class ConsultaPedidos : AppCompatActivity() {
     }
 
     private fun eliminar(){
+        if (lista.size==0){
+            return
+        }
+        if (lista[posicion]["ESTADO"].toString().trim() == "E"){
+            funcion.toast(this,"El pedido ya fue enviado.")
+            return
+        }
+        if (lista[posicion]["ESTADO"].toString().trim() == "A"){
+            funcion.toast(this,"El pedido ya fue anulado.")
+            return
+        }
         funcion.ejecutar("DELETE FROM vt_pedidos_det WHERE NUMERO = '${lista[posicion]["NUMERO"]}' AND COD_VENDEDOR = '${lista[posicion]["COD_VENDEDOR"]}'",this)
         funcion.ejecutar("DELETE FROM vt_pedidos_cab WHERE id = '${lista[posicion]["id"]}'",this)
         buscarPedidos()
     }
+
 }

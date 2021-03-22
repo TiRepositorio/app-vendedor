@@ -27,7 +27,9 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
               private val latitud:String, private val longitud: String) {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var context  : Context
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
         var resultado = ""
         var noVenta  = ""
@@ -128,6 +130,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 				"
                 + "  from vt_marcacion_ubicacion             			"
                 + " where TIPO           IN ('E')                 	"
+                + "   and COD_PROMOTOR   = '" + ListaClientes.codVendedor + "' "
                 + "   and COD_CLIENTE    = '" + codCliente + "' "
                 + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
                 + "   and FECHA          = '${funcion.getFechaActual()}'}"
@@ -263,6 +266,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun modificaMarcacionVisita2(sql: String, consultar: Boolean) {
         try {
             val codMotivo2: String

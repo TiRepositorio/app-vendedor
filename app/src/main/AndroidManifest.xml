@@ -26,7 +26,7 @@
         android:required="true" />
 
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="Vendedores"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

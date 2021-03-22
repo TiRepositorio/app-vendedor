@@ -229,17 +229,24 @@ class Pedidos : AppCompatActivity() {
         codListaPrecio = spListaPrecios.getDato("COD_LISTA_PRECIO")
         codMoneda = spListaPrecios.getDato("COD_MONEDA")
         decimales = spListaPrecios.getDato("DECIMALES")
+        for (i in 0 until spListaPrecios.valores.size){
+            if (spListaPrecios.valores[i]["IND_DEFECTO"].toString().trim() == "S"){
+                spListaPrecio.setSelection(i)
+                codListaPrecio = spListaPrecios.getDato("COD_LISTA_PRECIO")
+                codMoneda = spListaPrecios.getDato("COD_MONEDA")
+                decimales = spListaPrecios.getDato("DECIMALES")
+                actualizaIndiceDePromocion()
+                return
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun spReferencias(){
         val campos : String = " distinct a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
                               " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
-                              " (b.CANT_MINIMA/a.mult) CANT_MINIMA  , (IFNULL(b.PREC_CAJA,1)/IFNULL(b.MULT,1)) * a.MULT " +
-                              " /*CASE  WHEN TRIM(a.IND_BASICO) = 'S' THEN " +
-                              "            ((CASE WHEN CAST(a.MULT AS NUMBER) = 1 THEN b.PREC_UNID ELSE CAST(b.PREC_CAJA AS NUMBER) / CAST(${listaProductos[posProducto]["MULT"]} AS NUMBER) END) * CAST(a.MULT AS NUMBER) )" +
-                              "       ELSE CASE WHEN CAST(a.COD_UNIDAD_REL AS NUMBER) > 2 THEN CAST(b.PREC_CAJA AS NUMBER) / CAST(${listaProductos[posProducto]["MULT"]} AS NUMBER) * CAST(a.MULT AS NUMBER)  ELSE b.PREC_CAJA END END */ " +
-                              " AS PRECIO" //+
+                              " (CAST(b.CANT_MINIMA as integer)/CAST(a.mult as integer)) CANT_MINIMA  , " +
+                              " CAST((CAST(IFNULL(b.PREC_CAJA,1) AS DOUBLE)/CAST(IFNULL(b.MULT,1) AS DOUBLE)) * CAST(IFNULL(a.MULT,1) AS DOUBLE) AS DOUBLE) PRECIO "
         val tabla = " svm_st_articulos a, svm_articulos_precios b "
         val where : String = "     a.COD_ARTICULO = '" + listaProductos[posProducto]["COD_ARTICULO"] + "' " +
                              " and a.COD_ARTICULO = b.COD_ARTICULO and b.COD_VENDEDOR = '" + ListaClientes.codVendedor + "' " +
@@ -272,25 +279,25 @@ class Pedidos : AppCompatActivity() {
         for (i in 0 until lista.size){
             when (i){
                 0 -> {
-                    tvUM1.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    tvUM1.text = funcion.numero(decimales,lista[i]["PRECIO"].toString(),false)
                     cbUM1.text = lista[i]["REFERENCIA"]
                     tvUM1.visibility = View.VISIBLE
                     cbUM1.visibility = View.VISIBLE
                 }
                 1 -> {
-                    tvUM2.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    tvUM2.text = funcion.numero(decimales,lista[i]["PRECIO"].toString(),false)
                     cbUM2.text = lista[i]["REFERENCIA"]
                     tvUM2.visibility = View.VISIBLE
                     cbUM2.visibility = View.VISIBLE
                 }
                 2 -> {
-                    tvUM3.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    tvUM3.text = funcion.numero(decimales,lista[i]["PRECIO"].toString(),false)
                     cbUM3.text = lista[i]["REFERENCIA"]
                     tvUM3.visibility = View.VISIBLE
                     cbUM3.visibility = View.VISIBLE
                 }
                 3 -> {
-                    tvUM4.text = funcion.entero(lista[i]["PRECIO"].toString().toInt())
+                    tvUM4.text = funcion.numero(decimales,lista[i]["PRECIO"].toString(),false)
                     cbUM4.text = lista[i]["REFERENCIA"]
                     tvUM4.visibility = View.VISIBLE
                     cbUM4.visibility = View.VISIBLE
@@ -696,7 +703,7 @@ class Pedidos : AppCompatActivity() {
 //        }
         tvdCod.text = listaProductos[posProducto]["COD_ARTICULO"]
         btCodigo.text = "Cod.: ${listaProductos[posProducto]["COD_ARTICULO"]}"
-        tvdPrecioReferencia.text = funcion.entero(spReferencias.getDato("PRECIO"))
+        tvdPrecioReferencia.text = funcion.numero(decimales,spReferencias.getDato("PRECIO"),false)
         tvdDesc.setText(tvdPrecioReferencia.text)
         btCantMinima.text = "Cant. Min.: " + spReferencias.getDato("CANT_MINIMA")
         cantidadMinima = spReferencias.getDato("CANT_MINIMA").toInt()
@@ -764,7 +771,11 @@ class Pedidos : AppCompatActivity() {
         if (indActualizado){
             return
         }
-        val codCondicion : String = spCondicionDeVenta.getDato("cod_condicion_venta")
+        val codCondicion : String = try {
+            spCondicionDeVenta.getDato("COD_CONDICION_VENTA")
+        } catch (e:java.lang.Exception){
+            ListaClientes.codCondicion
+        }
         val lista : String = spListaPrecios.getDato("COD_LISTA_PRECIO")
 //        val tabla : String = "svm_promociones_art_cab_s" + ListaClientes.tipCliente.replace(".","") + codListaPrecio + ListaClientes.codVendedor
         val tablaCab = "svm_promociones_art_cab"
@@ -903,8 +914,8 @@ class Pedidos : AppCompatActivity() {
         nf.minimumFractionDigits = decimales.toInt()
         nf.maximumFractionDigits = decimales.toInt()
         var desc = 0.toFloat()
-        if (etDescFin.text.toString() != "") {
-            desc += etDescVarios.text.toString().replace(",", ".").toFloat()
+        if (etDescFin.text.toString().trim() != "") {
+            desc += funcion.numero("2",etDescFin.text.toString().trim()).replace(",", ".").toFloat()
         }
         if (etDescVarios.text.toString() != "") {
             desc += etDescVarios.text.toString().replace(",", ".").toFloat()
@@ -1280,8 +1291,8 @@ class Pedidos : AppCompatActivity() {
             if (listaDetalles[i]["IND_BLOQUEADO"].toString() == "S"){
                 indBloqueado = "N"
             }
-            listaDetalles[i]["PRECIO_UNITARIO"] = funcion.numero("0",listaDetalles[i]["PRECIO_UNITARIO"].toString())
-            listaDetalles[i]["MONTO_TOTAL"] = funcion.numero("0",listaDetalles[i]["MONTO_TOTAL"].toString())
+            listaDetalles[i]["PRECIO_UNITARIO"] = funcion.numero(decimales,listaDetalles[i]["PRECIO_UNITARIO"].toString())
+            listaDetalles[i]["MONTO_TOTAL"] = funcion.numero(decimales,listaDetalles[i]["MONTO_TOTAL"].toString())
         }
         mostrarDetalle()
         cargarAtriculosDetalle()
@@ -1990,8 +2001,8 @@ class Pedidos : AppCompatActivity() {
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         etSubtotal.setText(lista[0]["TOT_COMPROBANTE"])
         etTotalDesc.setText(lista[0]["TOT_DESCUENTO"])
-        etDescFin.setText(lista[0]["DESCUENTO_FIN"])
-        etDescVarios.setText(lista[0]["DESCUENTO_VAR"])
+        etDescFin.setText(lista[0]["PORC_DESC_FIN"])
+        etDescVarios.setText(lista[0]["PORC_DESC_VAR"])
         etFecha.setText(lista[0]["FECHA"])
         etObservacion.setText(lista[0]["COMENTARIO"])
         etNroPedido.setText(maximo.toString())

@@ -28,8 +28,12 @@ class ListaClientes : AppCompatActivity() {
 
     companion object{
         var datos: HashMap<String, String> = HashMap()
+        @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
+        @SuppressLint("StaticFieldLeak")
         lateinit var ubicacion: FuncionesUbicacion
+        @SuppressLint("StaticFieldLeak")
+        lateinit var dispositivo : FuncionesDispositivo
         var codVendedor : String = ""
         var codCliente : String = ""
         var codSubcliente : String = ""
@@ -47,11 +51,13 @@ class ListaClientes : AppCompatActivity() {
         var lista : ArrayList<HashMap<String,String>> = ArrayList()
         var indPresencial = "N"
         var claveAutorizacion = ""
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion: EditText
     }
 
     private lateinit var lm : LocationManager
     private lateinit var telMgr : TelephonyManager
+    private var posCliente = 0
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +70,7 @@ class ListaClientes : AppCompatActivity() {
         funcion = FuncionesUtiles(imgTitulo,tvTitulo)
         funcion = FuncionesUtiles(this,imgTitulo,tvTitulo,llBuscar,spBuscar,etBuscar,btBuscar)
         ubicacion = FuncionesUbicacion(this)
+        dispositivo = FuncionesDispositivo(this)
 
         inicializarElementos()
     }
@@ -153,6 +160,7 @@ class ListaClientes : AppCompatActivity() {
 
     fun mostrar(){
         funcion.inicializaContadores()
+        posCliente = 0
         funcion.vistas  = intArrayOf(R.id.tv1 ,R.id.tv2 ,R.id.tv3 ,R.id.tv4 ,R.id.tv5 ,R.id.tv6 ,
                                      R.id.tv7 ,R.id.tv8 ,R.id.tv9 ,R.id.tv10,R.id.tv11,R.id.tv12,
                                      R.id.tv13,R.id.tv14,R.id.tv15,R.id.tv16,R.id.tv17 )
@@ -169,6 +177,7 @@ class ListaClientes : AppCompatActivity() {
         lvClientes.adapter = adapter
         lvClientes.setOnItemClickListener { _: ViewGroup, view: View, position: Int, _: Long ->
             FuncionesUtiles.posicionDetalle  = position
+            posCliente = position
             view.setBackgroundColor(Color.parseColor("#aabbaa"))
             lvClientes.invalidateViews()
             cargarDatos(position)
@@ -227,6 +236,7 @@ class ListaClientes : AppCompatActivity() {
     private fun inicializaETAccion(et: EditText){
         etAccion = et
         et.addTextChangedListener(object : TextWatcher {
+            @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             override fun afterTextChanged(s: Editable) {
                 if (et.text.toString() == "cliente"){
                     verCliente()
@@ -262,6 +272,19 @@ class ListaClientes : AppCompatActivity() {
                     return
                 }
                 if (et.text.toString().trim() == "marcacion") {
+                    if (!ubicacion.validaUbicacionSimulada(lm)){
+                        return
+                    }
+                    if (!ubicacion.validaUbicacionSimulada2(lm)){
+                        return
+                    }
+                    if (!ubicacion.ubicacionActivada(lm)){
+                        return
+                    }
+                    ubicacion.obtenerUbicacion(lm)
+                    if (!ubicacion.ubicacionEncontrada()){
+                        return
+                    }
                     entradaSalida()
                     return
                 }
@@ -328,7 +351,7 @@ class ListaClientes : AppCompatActivity() {
                 + "   and FECHA 	     LIKE '" + funcion.getFechaActual() + "%'"
                 + " ORDER BY CAST(id AS INTEGER) DESC")
         val cursor = funcion.consultar(sql)
-        if (cursor.count > 2) {
+        if (cursor.count > 4) {
             if (funcion.dato(cursor, "TIPO") == "S") {
                 return true
             }
@@ -376,14 +399,15 @@ class ListaClientes : AppCompatActivity() {
         noVenta.cargarDialogo()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun entradaSalida(){
-        Marcacion.latitud       = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["LATITUD"].toString()
-        Marcacion.longitud      = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["LONGITUD"].toString()
-        Marcacion.codCliente    = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_CLIENTE"].toString()
-        Marcacion.codSubcliente = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_SUBCLIENTE"].toString()
-        Marcacion.descCliente   = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["DESC_CLIENTE"].toString()
-        Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MIN"].toString()
-        Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIEMPO_MAX"].toString()
+        Marcacion.latitud       = FuncionesUtiles.listaDetalle[posCliente]["LATITUD"].toString()
+        Marcacion.longitud      = FuncionesUtiles.listaDetalle[posCliente]["LONGITUD"].toString()
+        Marcacion.codCliente    = FuncionesUtiles.listaDetalle[posCliente]["COD_CLIENTE"].toString()
+        Marcacion.codSubcliente = FuncionesUtiles.listaDetalle[posCliente]["COD_SUBCLIENTE"].toString()
+        Marcacion.descCliente   = FuncionesUtiles.listaDetalle[posCliente]["DESC_CLIENTE"].toString()
+        Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MIN"].toString()
+        Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MAX"].toString()
         val ubicacion = FuncionesUbicacion(this)
         if (!ubicacion.validaUbicacionSimulada2(lm)){
             return
@@ -395,6 +419,11 @@ class ListaClientes : AppCompatActivity() {
         if (!ubicacion.ubicacionEncontrada()){
             return
         }
+        if (!dispositivo.horaAutomatica()) { return }
+        if (!dispositivo.modoAvion()){ return }
+        if (!dispositivo.zonaHoraria()){ return }
+        if (!dispositivo.fechaCorrecta()){ return }
+        if (!dispositivo.tarjetaSim(telMgr)){ return }
         ubicacion.obtenerUbicacion(lm)
         startActivity(Intent(this,Marcacion::class.java))
     }

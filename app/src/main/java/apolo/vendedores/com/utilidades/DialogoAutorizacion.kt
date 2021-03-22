@@ -20,8 +20,8 @@ class DialogoAutorizacion(var context: Context) {
 
     fun dialogoAutorizacion(accion:String, cargaAcion : EditText){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
-//        val claveTemp : String = claves.generaClave()
-        val claveTemp = "54127854"
+        val claveTemp : String = claves.generaClave()
+//        val claveTemp = "54127854"
         dialogo.setTitle("Solicitar autorizacion")
 
         dialogo.setMessage(claveTemp)
@@ -38,6 +38,33 @@ class DialogoAutorizacion(var context: Context) {
                 } else {
                     funcion.mensaje(context,"Error","La clave no es valida")
                     cargaAcion.setText("no$accion")
+                }
+            }
+        }
+        dialogo.setCancelable(false)
+        dialogo.show()
+    }
+
+    fun dialogoAutorizacionCod(accion:String, cargaAcion : EditText){
+        val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
+        val claveTemp : String = claves.generaClave()
+//        val claveTemp = "54127854"
+        dialogo.setTitle("Solicitar autorizacion")
+
+        dialogo.setMessage(claveTemp)
+        val contraClave = EditText(context)
+        contraClave.inputType = InputType.TYPE_CLASS_NUMBER
+        dialogo.setView(contraClave)
+        dialogo.setPositiveButton("OK") { _: DialogInterface, _: Int ->
+            if (contraClave.text.isEmpty()||contraClave.text.length != 8){
+                funcion.mensaje("Error","Clave incorrecta")
+            } else {
+                if (contraClave.text.toString().trim() == claves.contraClave(claveTemp).trim()){
+                    cargaAcion.setText(accion + "*" + claves.contraClave(claveTemp).trim() + "*")
+                    funcion.mensaje(context,"Correcto","La clave fue aceptada")
+                } else {
+                    funcion.mensaje(context,"Error","La clave no es valida")
+                    cargaAcion.setText("no$accion*${claves.contraClave(claveTemp).trim()}*")
                 }
             }
         }

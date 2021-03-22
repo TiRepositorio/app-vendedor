@@ -69,7 +69,7 @@ class ActualizarVersion {
                 dialogoAccion.dialogoAccion("ACTUALIZAR",MainActivity2.etAccion,mensaje,"Atención!","OK")
             } else {
                 mensaje = "Fallo al bajar la actualización!!\n"
-                mensaje += ConexionWS.resultado
+                mensaje += ConexionWS.resultados
                 MainActivity2.funcion.mensaje(context,"Error!",mensaje)
             }
         }

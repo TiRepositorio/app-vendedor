@@ -52,6 +52,8 @@ class Promociones : AppCompatActivity() {
 
     @SuppressLint("Recycle")
     private fun buscarPromociones(){
+        FuncionesUtiles.posicionCabecera = 0
+        posPromocion = 0
         seleccionaPromociones()
 
         val campos : String = " DISTINCT z.NRO_PROMOCION, z.TIP_CLIENTE, z.DESCRIPCION, z.COMENTARIO, z.COD_CONDICION_VENTA," +

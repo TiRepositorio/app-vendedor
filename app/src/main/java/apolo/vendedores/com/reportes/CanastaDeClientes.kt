@@ -17,7 +17,8 @@ import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.SentenciasSQL
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_canasta_de_clientes.*
-import kotlinx.android.synthetic.main.activity_canasta_de_marcas2.*
+import kotlinx.android.synthetic.main.activity_canasta_de_clientes2.barraMenu
+import kotlinx.android.synthetic.main.activity_canasta_de_clientes2.contMenu
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import java.text.DecimalFormat
 

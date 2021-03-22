@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.os.AsyncTask
 import android.widget.EditText
+import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.ventas.ListaClientes
@@ -19,6 +20,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
         private lateinit var dialogo : ProgressDialog
         lateinit var etAccion: EditText
         var accion = ""
+        var anomalia = ""
     }
 
     fun enviar(){
@@ -55,7 +57,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
             val fecha: String = cursor.getString(cursor.getColumnIndex("FECHA"))
             val latitud: String = cursor.getString(cursor.getColumnIndex("LATITUD"))
             val longitud: String = cursor.getString(cursor.getColumnIndex("LONGITUD"))
-            val observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION"))
+            val observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION")) + "SISTEMA DE VENDEDORES VERSION ${MainActivity.version}." + anomalia
             cadena += "${detalle()}'$codEmpresa','$codVendedor','$codClienteC','$codSubclienteC"
             cadena += "','" + tipo + "',to_date('" + fecha + "','dd/MM/yyyy hh24:mi:ss'),'" + latitud + "','" + longitud + "','" + FuncionesUtiles.usuario["LOGIN"] + "','" + observacion + "') "
             cursor.moveToNext()
@@ -97,6 +99,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
                 if (mensaje[0] == "01") {
                     val update = "update vt_marcacion_ubicacion set ESTADO = 'E' where ESTADO = 'P' and TIPO in ('E','S')"
                     MainActivity2.funcion.ejecutar(update, contexto)
+                    anomalia = ""
                 }
                 MainActivity2.funcion.mensaje(contexto,"Resultado", mensaje[1])
             }

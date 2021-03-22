@@ -21,7 +21,7 @@ class ConexionWS {
 
     companion object{
         lateinit var context : Context
-        var resultado : String = ""
+        var resultados : String = ""
         private const val NAMESPACE: String = "http://edsystem/servidor"
         private var METHOD_NAME = ""
         private const val URL = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
@@ -84,7 +84,7 @@ class ConexionWS {
                 return false
             }
         } catch (e: Exception){
-            e.message.toString()
+            resultados = e.message.toString()
             return false
         }
         return true
@@ -112,11 +112,11 @@ class ConexionWS {
             transporte.call(SOAP_ACTION, envelope)
             resultado = envelope.response as Vector<*>
         } catch (e: Exception) {
-            e.message
+            resultados = e.message.toString()
             return false
         }
         try {
-            val listaTablas : Vector<String> = MainActivity.tablasSincronizacion.listaSQLCreateTables()
+            val listaTablas : ArrayList<String> = MainActivity.tablasSincronizacion.listaSQLCreateTables()
             if (resultado.size>4){
                 extraerDatos(resultado, listaTablas)
             }
@@ -150,7 +150,7 @@ class ConexionWS {
     }
 
     @SuppressLint("SdCardPath")
-    fun extraerDatos(resultado: Vector<*>, listaTablas: Vector<String>) : Boolean{
+    fun extraerDatos(resultado: Vector<*>, listaTablas: ArrayList<String>) : Boolean{
         lateinit var fos : FileOutputStream
         try {
             for (i in 0 until resultado.size){
@@ -300,7 +300,7 @@ class ConexionWS {
         codVendedor: String?,
         clientes: String,
         FotoFachada: String?
-    ): String? {
+    ): String {
         setMethodName("ProcesaActualizaClienteFinal")
         val solicitud: SoapObject?
         val resultado: String?
@@ -393,11 +393,11 @@ class ConexionWS {
         try {
             transporte.call(SOAP_ACTION, envelope)
             val sp = envelope.response as SoapPrimitive
-            resultado = sp.toString()
+            resultados = sp.toString()
             val fos: FileOutputStream?
 //            fos = FileOutputStream("/sdcard/apolo_02.apk")
             fos = FileOutputStream(MainActivity2.nombre)
-            fos.write(Base64.decode(resultado.toByteArray(), 0))
+            fos.write(Base64.decode(resultados.toByteArray(), 0))
             fos.close()
         } catch (e: java.lang.Exception) {
             return false
@@ -460,11 +460,11 @@ class ConexionWS {
             transporte.call(SOAP_ACTION, envelope)
             val resultadoXml = envelope.response as SoapPrimitive
             res = resultadoXml.toString()
-            resultado = res
+            resultados = res
         } catch (e: java.lang.Exception) {
-            resultado = e.message.toString()
+            resultados = e.message.toString()
         }
-        return resultado
+        return resultados
     }
 
     fun enviarBaja(codVendedor: String, codCliente: String, codSubcliente: String, cliente: String, fotoFachada: String): String {

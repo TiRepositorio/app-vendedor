@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         var codPersona : String = ""
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "60"
+        const val version : String = "61"
         var nombre : String = ""
         lateinit var etAccion : EditText
         lateinit var dispositivo : FuncionesDispositivo

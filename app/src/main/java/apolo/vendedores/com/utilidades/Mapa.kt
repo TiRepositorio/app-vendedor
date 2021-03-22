@@ -2,6 +2,7 @@ package apolo.vendedores.com.utilidades
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
@@ -258,12 +259,14 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
 //                return
             }
 
-            ListaClientes.etAccion.setText("recargar")
+//            ListaClientes.etAccion.setText("recargar")
 
             if (respuesta.indexOf("07*")>-1){
                 respuesta = "07*Verifique su conexión a internet y vuelva a intentarlo."
             }
 
+//            val dialogo = DialogoAutorizacion(this@Mapa)
+//            dialogo.dialogoAccion("recargar",ListaClientes.etAccion,respuesta.substring(3),"","OK",false)
             funcion.mensaje("",respuesta.substring(3))
         }
 

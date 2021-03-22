@@ -68,6 +68,8 @@ class EnviarPedido(
         if (Pedidos.etTotalPedidos.toString() == "" || Pedidos.etTotalPedidos.toString() == "0") {
             return
         }
+        descVarios = Pedidos.etDescVariosPedidos.text.toString().trim()
+        descFin = Pedidos.etDescFinancPedidos.text.toString().trim()
         if (descVarios == "0"){descVarios = ""}
         if (descFin == "0"){descFin=""}
         contexto = context

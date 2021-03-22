@@ -103,8 +103,8 @@ class DialogoPromocion(
                     }
                 } else {
                     for (i in 0 until lista.size){
-                        val subtotal = dialogo.tvdPrecioReferenciaPromo.text.toString().replace(".","").toInt() * s.toString().toInt()
                         val cantidad = lista[i]["CANT_VENTA"].toString().toInt() * s.toString().toInt()
+                        val subtotal = lista[i]["PREC_CAJA"].toString().replace(".","").toInt() * cantidad
                         dialogo.tvdTotalPromo.text = funcion.entero(subtotal)
                         lista[i]["CANTIDAD"] = cantidad.toString()
                         lista[i]["SUBTOTAL"] = subtotal.toString()
