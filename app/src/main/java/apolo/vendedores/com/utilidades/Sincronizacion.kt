@@ -4,7 +4,6 @@ package apolo.vendedores.com.utilidades
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
@@ -56,7 +55,7 @@ class Sincronizacion : AppCompatActivity() {
 
         if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
-            finish()
+//            finish()
         }
         try {
             preparaSincornizacion().execute()
@@ -353,6 +352,7 @@ class Sincronizacion : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     fun cerrar(view: View) {
+        view.id
         startActivity(Intent(this,MainActivity2::class.java))
         finish()
     }

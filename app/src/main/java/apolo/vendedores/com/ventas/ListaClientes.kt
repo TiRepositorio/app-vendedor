@@ -150,9 +150,9 @@ class ListaClientes : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-            datos["LIMITE_CREDITO"] = funcion.enteroCliente(datos["LIMITE_CREDITO"].toString())
-            datos["TOT_DEUDA"] = funcion.enteroCliente(datos["TOT_DEUDA"].toString())
-            datos["SALDO"] = funcion.enteroCliente(datos["SALDO"].toString())
+            datos["LIMITE_CREDITO"] = funcion.enteroLargoLong(datos["LIMITE_CREDITO"].toString())
+            datos["TOT_DEUDA"] = funcion.enteroLargoLong(datos["TOT_DEUDA"].toString())
+            datos["SALDO"] = funcion.enteroLargoLong(datos["SALDO"].toString())
             FuncionesUtiles.listaDetalle.add(datos)
             cursor.moveToNext()
         }
@@ -351,7 +351,7 @@ class ListaClientes : AppCompatActivity() {
                 + "   and FECHA 	     LIKE '" + funcion.getFechaActual() + "%'"
                 + " ORDER BY CAST(id AS INTEGER) DESC")
         val cursor = funcion.consultar(sql)
-        if (cursor.count > 4) {
+        if (cursor.count > 6) {
             if (funcion.dato(cursor, "TIPO") == "S") {
                 return true
             }

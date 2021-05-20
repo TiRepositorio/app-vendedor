@@ -33,7 +33,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:allowBackup="false"
+        tools:ignore="AllowBackup">
         <activity android:name=".informes.CorteDeStock" />
         <activity android:name=".informes.EstadoDePedidos" />
 

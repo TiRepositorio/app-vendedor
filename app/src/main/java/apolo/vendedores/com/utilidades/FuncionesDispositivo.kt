@@ -25,7 +25,7 @@ class FuncionesDispositivo(var context: Context) {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun modoAvion():Boolean{
         val valor : Int = Global.getInt(context.contentResolver, Global.AIRPLANE_MODE_ON, 0)
-        return if (valor != 0){
+        return if (valor != 0) {
             Toast.makeText(context,"Debe desactivar el modo avion", Toast.LENGTH_LONG).show()
             false
         } else {
@@ -157,10 +157,10 @@ class FuncionesDispositivo(var context: Context) {
     fun verificaRoot():Boolean{
         return try {
             Runtime.getRuntime().exec("su")
-            funcion.mensaje(context,"Atención","El teléfono está rooteado.")
-            false
-        } catch (e : java.lang.Exception) {
+//            funcion.mensaje(context,"Atención","El teléfono está rooteado.")
             true
+        } catch (e : java.lang.Exception) {
+            false
         }
     }
 

@@ -14,6 +14,7 @@ import android.telephony.TelephonyManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesDispositivo
 import apolo.vendedores.com.utilidades.FuncionesUbicacion
@@ -73,6 +74,9 @@ class EnviarPedido(
         if (descVarios == "0"){descVarios = ""}
         if (descFin == "0"){descFin=""}
         contexto = context
+        if (MainActivity2.rooteado){
+            cabeceraHash["COMENTARIO"] = "El telefono esta rooteado." + "\n" + cabeceraHash["COMENTARIO"]
+        }
         try {
             var vIntoCab: String
 

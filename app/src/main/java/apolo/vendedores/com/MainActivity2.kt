@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.telephony.TelephonyManager
@@ -22,13 +21,13 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.configurar.ActualizarVersion
 import apolo.vendedores.com.configurar.CalcularClavePrueba
 import apolo.vendedores.com.configurar.ConfigurarUsuario
-import apolo.vendedores.com.informes.EvolucionDiariaDeVentas
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
@@ -39,7 +38,6 @@ import kotlinx.android.synthetic.main.ven_pri_evol_diaria_de_venta.*
 import kotlinx.android.synthetic.main.ventana_principal.*
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 
 class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,11 +45,13 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var utilidadesBD: UtilidadesBD? = null
         var bd: SQLiteDatabase? = null
         var codPersona : String = ""
+        @SuppressLint("StaticFieldLeak")
         val funcion : FuncionesUtiles = FuncionesUtiles()
-        const val version : String = "1"
         var nombre : String = ""
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
         var rooteado : Boolean = false
+        @SuppressLint("StaticFieldLeak")
         var conexionWS : ConexionWS = ConexionWS()
     }
 
@@ -65,7 +65,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private lateinit var grafico : Graficos
     private var subInforme1 = SubVentasPorMarcas()
-    private var subInforme2 = SubVentasPorClientes()
+//    private var subInforme2 = SubVentasPorClientes()
     private var subInforme3 = SubAvanceDeComisiones()
     private var cerrar = false
 
@@ -98,11 +98,9 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         etAccion = accion
 
         dispositivo = FuncionesDispositivo(this)
-        rooteado = !dispositivo.verificaRoot()
+        rooteado = dispositivo.verificaRoot()
 
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-
-        dispositivo.verificaRoot()
 
         subInforme1.cargarVentasPorMarcas()
         subInforme1.cargarDatosX("DESC_GTE_MARKETIN")
@@ -386,12 +384,13 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    private fun evolucionDiaria(){
-        val evolucion = ConsultasInicio(this)
-        evolucion.evolucionDiariaDeVenta(lvEvolucionDiariaDeVentas)
-    }
+//    private fun evolucionDiaria(){
+//        val evolucion = ConsultasInicio(this)
+//        evolucion.evolucionDiariaDeVenta(lvEvolucionDiariaDeVentas)
+//    }
 
     fun mostrarMenu(view: View) {
+        view.id
         if (drawer_layout_aplicacion.isDrawerOpen(GravityCompat.START)) {
             drawer_layout_aplicacion.closeDrawer(GravityCompat.START)
         } else {

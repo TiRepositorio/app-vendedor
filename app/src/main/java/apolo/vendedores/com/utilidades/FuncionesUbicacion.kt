@@ -273,7 +273,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
     }
 
     class MyLocationListener : LocationListener {
-        override fun onLocationChanged(loc: Location?) {
+        override fun onLocationChanged(loc: Location) {
             try {
                 if (loc != null) {
                     lati = loc.latitude.toString()

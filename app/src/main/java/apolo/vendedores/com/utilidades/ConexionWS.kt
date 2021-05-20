@@ -20,6 +20,7 @@ import java.util.zip.GZIPInputStream
 class ConexionWS {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var context : Context
         var resultados : String = ""
         private const val NAMESPACE: String = "http://edsystem/servidor"
@@ -260,40 +261,40 @@ class ConexionWS {
         return resultado
     }
 
-    fun procesaEnviaNuevaUbicacionCliente(
-        codVendedor: String,
-        codCliente: String,
-        imagenFachada: String
-    ) : String{
-        setMethodName("ProcesaActualizaClienteFinal")
-
-        lateinit var solicitud : SoapObject
-        lateinit var resultado : String
-
-        try {
-            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
-            solicitud.addProperty("usuario", "edsystem")
-            solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("vcodVendedor", codVendedor)
-            solicitud.addProperty("vclientes", codCliente.replace("''", "").replace("'", ""))
-            solicitud.addProperty("vfoto_fachada", imagenFachada)
-//        request.addProperty("codEmpresa", "1")
-        } catch (e: Exception){
-            return e.message.toString()
-        }
-
-        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
-        envelope.dotNet = false
-        envelope.setOutputSoapObject(solicitud)
-        val transporte = HttpTransportSE(URL, 240000)
-        try {
-            transporte.call(SOAP_ACTION, envelope)
-            resultado = envelope.response.toString()
-        } catch (e: Exception){
-            return e.message.toString()
-        }
-        return resultado
-    }
+//    fun procesaEnviaNuevaUbicacionCliente(
+//        codVendedor: String,
+//        codCliente: String,
+//        imagenFachada: String
+//    ) : String{
+//        setMethodName("ProcesaActualizaClienteFinal")
+//
+//        lateinit var solicitud : SoapObject
+//        lateinit var resultado : String
+//
+//        try {
+//            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
+//            solicitud.addProperty("usuario", "edsystem")
+//            solicitud.addProperty("password", "#edsystem@polo")
+//            solicitud.addProperty("vcodVendedor", codVendedor)
+//            solicitud.addProperty("vclientes", codCliente.replace("''", "").replace("'", ""))
+//            solicitud.addProperty("vfoto_fachada", imagenFachada)
+////        request.addProperty("codEmpresa", "1")
+//        } catch (e: Exception){
+//            return e.message.toString()
+//        }
+//
+//        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+//        envelope.dotNet = false
+//        envelope.setOutputSoapObject(solicitud)
+//        val transporte = HttpTransportSE(URL, 240000)
+//        try {
+//            transporte.call(SOAP_ACTION, envelope)
+//            resultado = envelope.response.toString()
+//        } catch (e: Exception){
+//            return e.message.toString()
+//        }
+//        return resultado
+//    }
 
     //Enviar datos modificados del cliente
     fun procesaActualizaDatosClienteFinal(
@@ -406,7 +407,7 @@ class ConexionWS {
     }
 
     fun procesaNoVenta(noVenta: String, codVendedor: String): String {
-        setMethodName("ProcesaNoVenta")
+            setMethodName("ProcesaNoVenta")
         val request: SoapObject
         try {
             request = SoapObject(NAMESPACE, METHOD_NAME)
@@ -438,7 +439,7 @@ class ConexionWS {
         return res
     }
 
-    fun enviarPedido(cabecera: String, detalle: String, nroComprobante: String, codVendedor: String): String? {
+    fun enviarPedido(cabecera: String, detalle: String, nroComprobante: String, codVendedor: String): String {
         setMethodName("ProcesaPedido")
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")

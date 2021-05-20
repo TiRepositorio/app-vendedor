@@ -57,7 +57,10 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
             val fecha: String = cursor.getString(cursor.getColumnIndex("FECHA"))
             val latitud: String = cursor.getString(cursor.getColumnIndex("LATITUD"))
             val longitud: String = cursor.getString(cursor.getColumnIndex("LONGITUD"))
-            val observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION")) + "SISTEMA DE VENDEDORES VERSION ${MainActivity.version}." + anomalia
+            var observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION")) + "Version de Sistema: ${MainActivity.version}.20210520" + anomalia
+            if (MainActivity2.rooteado){
+                observacion = "El teléfono está rooteado.\n$observacion"
+            }
             cadena += "${detalle()}'$codEmpresa','$codVendedor','$codClienteC','$codSubclienteC"
             cadena += "','" + tipo + "',to_date('" + fecha + "','dd/MM/yyyy hh24:mi:ss'),'" + latitud + "','" + longitud + "','" + FuncionesUtiles.usuario["LOGIN"] + "','" + observacion + "') "
             cursor.moveToNext()

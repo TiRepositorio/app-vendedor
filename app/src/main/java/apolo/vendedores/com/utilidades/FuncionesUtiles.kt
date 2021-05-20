@@ -358,8 +358,8 @@ class FuncionesUtiles {
         var listaDetalle2: ArrayList<HashMap<String, String>> = ArrayList()
         var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
         var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList()
-        val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###.##")
-        val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
+        val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###,###.##")
+        val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,###,##0.00")
         var formatoGenerico: NumberFormat = NumberFormat.getInstance()
         var ultimaVenta : Int = -1
     }
@@ -624,6 +624,15 @@ class FuncionesUtiles {
             return "0"
         }
         return formatoNumeroEntero.format(entero.replace(".","").replace("null","0").trim().toInt())
+    }
+    fun enteroLargoLong(entero: String):String{
+        if (entero.trim() == ""){
+            return "0"
+        }
+        if (entero.trim().indexOf(".")>-1){
+            return "0"
+        }
+        return formatoNumeroEntero.format(entero.replace(".","").replace("null","0").trim().toLong())
     }
     fun decimal(decimal: String):String{
         if (decimal.trim() == "" || decimal.trim() == "null"){

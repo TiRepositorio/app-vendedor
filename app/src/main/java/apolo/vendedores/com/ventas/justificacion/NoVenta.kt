@@ -21,7 +21,6 @@ import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.ListaClientes
 import kotlin.math.roundToInt
 
-@Suppress("NAME_SHADOWING")
 class NoVenta(private val codCliente: String, private val codSubcliente:String,
               private val lm:LocationManager?, private val telMgr: TelephonyManager?,
               private val latitud:String, private val longitud: String) {
@@ -37,8 +36,8 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         var editable = false
         var nuevo = true
         var id = ""
-        fun actualizaEstadoEnvioMarcacion(idMarcacion: String) {
-            var idMarcacion = idMarcacion
+        fun actualizaEstadoEnvioMarcacion(idMarcaciones: String) {
+            var idMarcacion = idMarcaciones
             val cursorMarcacionesVisitaBuscar: Cursor
             if (idMarcacion == "") {
                 val select = ("Select id "
@@ -127,22 +126,24 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     }
 
     private fun verificaMarcacionCliente(): Boolean {
-        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 				"
+        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TRIM(TIPO) 				"
                 + "  from vt_marcacion_ubicacion             			"
-                + " where TIPO           IN ('E')                 	"
-                + "   and COD_PROMOTOR   = '" + ListaClientes.codVendedor + "' "
-                + "   and COD_CLIENTE    = '" + codCliente + "' "
-                + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
-                + "   and FECHA          = '${funcion.getFechaActual()}'}"
+                + " where TRIM(TIPO)           IN ('E')                 	"
+                + "   and TRIM(COD_PROMOTOR)   = '" + ListaClientes.codVendedor.trim() + "' "
+                + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim() + "' "
+                + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim() + "' "
+                + "   and TRIM(FECHA)          = '${funcion.getFechaActual().trim()}'}"
                 + " order by id desc                        				")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
         if (cursor.count > 0) {
-            if (funcion.dato(cursor, "TIPO") == "E") {
+            if (funcion.dato(cursor, "TIPO").trim() == "E") {
                 return true
             }
+        } else {
+            funcion.toast(context,"Debe marcar entrada al cliente")
+            return false
         }
-        funcion.toast(context,"Debe marcar entrada al cliente")
         return false
     }
 

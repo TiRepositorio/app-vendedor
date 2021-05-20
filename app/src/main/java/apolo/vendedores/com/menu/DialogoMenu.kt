@@ -173,7 +173,7 @@ class DialogoMenu(var context: Context) {
     }
     private fun vendedor37():Boolean{
         val sql = "SELECT DISTINCT COD_VENDEDOR FROM svm_vendedor_pedido where COD_VENDEDOR LIKE '3%' OR COD_VENDEDOR LIKE '6%' OR COD_VENDEDOR LIKE '7%'" +
-                " AND NOT IN ('3002','3003','7002','7003')"
+                " AND NOT IN ('3002','3003','3007','7002','7003')"
         return MainActivity2.funcion.consultar(sql).count>0
     }
     private fun vendedor6():Boolean{

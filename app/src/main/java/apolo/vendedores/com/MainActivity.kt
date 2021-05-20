@@ -1,5 +1,6 @@
 package apolo.vendedores.com
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -19,13 +20,17 @@ class MainActivity : AppCompatActivity() {
     companion object{
         var utilidadesBD: UtilidadesBD? = null
         var bd: SQLiteDatabase? = null
+        @SuppressLint("StaticFieldLeak")
         val conexionWS: ConexionWS = ConexionWS()
         var codPersona : String = ""
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
+        @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
         const val version : String = "61"
         var nombre : String = ""
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var dispositivo : FuncionesDispositivo
         lateinit var telMgr : TelephonyManager
     }
