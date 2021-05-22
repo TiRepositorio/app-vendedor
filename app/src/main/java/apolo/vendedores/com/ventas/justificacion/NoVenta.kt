@@ -36,6 +36,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         var editable = false
         var nuevo = true
         var id = ""
+        var fechaMod = ""
         fun actualizaEstadoEnvioMarcacion(idMarcaciones: String) {
             var idMarcacion = idMarcaciones
             val cursorMarcacionesVisitaBuscar: Cursor
@@ -66,7 +67,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun cargarDialogo(){
         if (lm != null) {
-            if (verificaMarcacionCliente()){
+            if (!verificaMarcacionCliente() && nuevo){
                 return
             }
             if (!validacion("Abrir")) {
@@ -112,7 +113,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 ubicacion.longitud.toDouble(),
                 longitud.toDouble())
             if (distanciaCliente > funcion.getRangoDistancia()) {
-                if(verificaMarcacionCliente()){
+                if(!verificaMarcacionCliente() && nuevo){
                     funcion.toast(context,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
                     val autorizacion = DialogoAutorizacion(context)
                     autorizacion.dialogoAutorizacion(trigger, etAccion)
@@ -126,54 +127,76 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     }
 
     private fun verificaMarcacionCliente(): Boolean {
-        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TRIM(TIPO) 				"
+        val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TRIM(TIPO) TIPO 				"
                 + "  from vt_marcacion_ubicacion             			"
-                + " where TRIM(TIPO)           IN ('E')                 	"
+                + " where TRIM(TIPO)           IN ('E','S')                 	"
                 + "   and TRIM(COD_PROMOTOR)   = '" + ListaClientes.codVendedor.trim() + "' "
                 + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim() + "' "
                 + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim() + "' "
-                + "   and TRIM(FECHA)          = '${funcion.getFechaActual().trim()}'}"
+                + "   and TRIM(FECHA)          LIKE '${funcion.getFechaActual().trim()}%'"
                 + " order by id desc                        				")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
-        if (cursor.count > 0) {
+        return if (cursor.count > 0) {
             if (funcion.dato(cursor, "TIPO").trim() == "E") {
-                return true
+                true
+            } else {
+                funcion.toast(context,"Ya marcó salida en el cliente.")
+                false
             }
         } else {
             funcion.toast(context,"Debe marcar entrada al cliente")
-            return false
+            false
         }
-        return false
     }
 
     @SuppressLint("SetTextI18n")
     private fun marcarNoVenta() {
         val cursorNoVenta: Cursor
         try {
+            val fechaModificacion = if (fechaMod.isNullOrEmpty()){
+                                        funcion.getFechaActual().substring(0, 10)
+                                    } else {
+                                        fechaMod
+                                    }
             val select =
                 ("Select id, COD_EMPRESA, COD_SUCURSAL, COD_CLIENTE, COD_SUBCLIENTE, COD_VENDEDOR, COD_MOTIVO, OBSERVACION, FECHA, LATITUD, LONGITUD, ESTADO, HORA_ALTA "
                         + " from vt_marcacion_visita "
                         + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
                         + "   and COD_CLIENTE    = '" + codCliente + "' "
                         + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
-                        + "   and FECHA 	     = '" + funcion.getFechaActual().substring(0, 10) + "'"
+                        + "   and FECHA 	     = '" + fechaModificacion + "'"
+//                        + "   and id             = '" + id + "' "
                         + "   and COD_MOTIVO NOT IN ('16')")
+            fechaMod = ""
             cursorNoVenta = funcion.consultar(select)
-            id = ""
             if (ListaClientes.estado.trim() != "" || cursorNoVenta.count > 0) {
-                val estado = funcion.dato(cursorNoVenta,"ESTADO")
-                if (estado != "E") {
-                    modificaMarcacionVisita2(select, false)
-                } else {
-                    val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-                    builder.setTitle("Atención")
-                    builder.setMessage("Ya se cargo la marcación de visita de este cliente")
-                    builder.setCancelable(false)
-                    builder.setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> return@OnClickListener })
-                    val alert: AlertDialog = builder.create()
-                    alert.show()
+                if(id==""){
+                    id = funcion.dato(cursorNoVenta,"id")
                 }
+//                if(!nuevo) {
+                    val sql = ("Select id, COD_EMPRESA, COD_SUCURSAL, COD_CLIENTE, COD_SUBCLIENTE, COD_VENDEDOR, COD_MOTIVO, OBSERVACION, FECHA, LATITUD, LONGITUD, ESTADO, HORA_ALTA "
+                            + " from vt_marcacion_visita "
+                            + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
+                            + "   and COD_CLIENTE    = '" + codCliente + "' "
+                            + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
+//                            + "   and FECHA 	     = '" + fechaModificacion + "'"
+                            + "   and id             = '" + id + "' "
+                            + "   and COD_MOTIVO NOT IN ('16')")
+                    val cursorModificacion = funcion.consultar(sql)
+                    val estado = funcion.dato(cursorModificacion,"ESTADO")
+                    if (estado != "E" || !editable) {
+                        modificaMarcacionVisita2(sql, false)
+                    } else {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                        builder.setTitle("Atención")
+                        builder.setMessage("Ya se cargo la marcación de visita de este cliente")
+                        builder.setCancelable(false)
+                        builder.setPositiveButton("OK", DialogInterface.OnClickListener { _, _ -> return@OnClickListener })
+                        val alert: AlertDialog = builder.create()
+                        alert.show()
+                    }
+//                }
             } else {
                 ListaClientes.claveAutorizacion = ""
                 val alertMotivos: AlertDialog.Builder = AlertDialog.Builder(context)
@@ -204,59 +227,12 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 conSpinner.setSelection(0)
                 if (modificacion && editable){
                     alertMotivos.setPositiveButton("Enviar") { _, _ ->
-                        val horaAlta: String = funcion.getHoraActual()!!
-                        guardaMarcacionVisita(
-                            "1",
-                            ListaClientes.codSucursalCliente,
-                            codCliente,
-                            codSubcliente,
-                            ListaClientes.codVendedor,
-                            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
-                            observacion.text.toString(),
-                            fecha.substring(0, 10),
-                            ubicacion.latitud,
-                            ubicacion.longitud,
-                            horaAlta
-                        )
-                        noVenta = "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
-                                "'" + codCliente + "','" + codSubcliente + "','" + ListaClientes.codVendedor + "'," +
-                                "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
-                                "'" + observacion.text.toString() + "'," + "to_date('" + fecha.substring(0, 10) + "','DD/MM/YYYY')," +
-                                "to_date('" + fecha.substring(0, 10) +
-                                " " + horaAlta + "','dd/MM/yyyy hh24:mi:ss')," +
-                                "'" + ubicacion.latitud + "','" + ubicacion.longitud + "'"
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
-                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
-                                cerrarSalidaCliente()
-                            }
-                        }
-                        EnviarPositivacion2().execute()
+                        enviarNuevo(conSpinner,observacion,fecha,nuevo)
                     }
                 }
                 if (modificacion && editable) {
                     alertMotivos.setNeutralButton("Guardar") { _, _ ->
-                        val horaAlta: String = funcion.getHoraActual()!!
-                        guardaMarcacionVisita(
-                            "1",
-                            ListaClientes.codSucursalCliente,
-                            ListaClientes.codCliente,
-                            ListaClientes.codSubcliente,
-                            ListaClientes.codVendedor,
-                            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
-                            observacion.text.toString(),
-                            fecha.substring(0, 10),
-                            ubicacion.latitud,
-                            ubicacion.longitud,
-                            horaAlta
-                        )
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString()
-                                .trim() != ""
-                        ) {
-                            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
-                                cerrarSalidaCliente()
-                            }
-                        }
-                        Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
+                        guardar(conSpinner,observacion,fecha)
                     }
                 }
                 alertMotivos.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
@@ -265,6 +241,80 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             }
         } catch (e: NumberFormatException) {
         }
+    }
+
+    fun enviarNuevo(conSpinner:Spinner,observacion:EditText,fecha:String,nuevos:Boolean){
+        val horaAlta: String = funcion.getHoraActual()!!
+        if (nuevos){
+            guardaMarcacionVisita(
+                "1",
+                ListaClientes.codSucursalCliente,
+                codCliente,
+                codSubcliente,
+                ListaClientes.codVendedor,
+                listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
+                observacion.text.toString(),
+                fecha.substring(0, 10),
+                ubicacion.latitud,
+                ubicacion.longitud,
+                horaAlta
+            )
+            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
+                if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                    cerrarSalidaCliente()
+                }
+            }
+            noVenta =
+                "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                        "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
+                        "'" + ListaClientes.codVendedor + "'," +
+                        "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!! + "'," +
+                        "'" + observacion.text.toString() + "'," +
+                        "to_date('" + fecha + "','DD/MM/YYYY')," +
+                        "to_date('" + fecha + " " +
+                        horaAlta + "','dd/MM/yyyy hh24:mi:ss')," + "'" +
+                        ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
+            id = maxId()
+            EnviarPositivacion2().execute()
+        } else {
+            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
+                if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                    cerrarSalidaCliente()
+                }
+            }
+            EnviarPositivacion2().execute()
+        }
+    }
+
+    fun guardar(conSpinner: Spinner,observacion: EditText,fecha: String){
+        val horaAlta: String = funcion.getHoraActual()!!
+        guardaMarcacionVisita(
+            "1",
+            ListaClientes.codSucursalCliente,
+            ListaClientes.codCliente,
+            ListaClientes.codSubcliente,
+            ListaClientes.codVendedor,
+            listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!!,
+            observacion.text.toString(),
+            fecha.substring(0, 10),
+            ubicacion.latitud,
+            ubicacion.longitud,
+            horaAlta
+        )
+        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString()
+                .trim() != ""
+        ) {
+            if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
+                cerrarSalidaCliente()
+            }
+        }
+        Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
+    }
+
+    fun maxId():String{
+        val sql = "select max(id) id from vt_marcacion_visitas " +
+                "where COD_CLIENTE = '${ListaClientes.codCliente}' and COD_SUBCLIENTE = '${ListaClientes.codSubcliente}'"
+        return funcion.dato(funcion.consultar(sql),"id")
     }
 
     @SuppressLint("SetTextI18n")
@@ -276,7 +326,6 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             val horaAlta: String
             var positionMotivo = 0
             val cursorMarcaciones: Cursor = funcion.consultar(sql)
-            id = cursorMarcaciones.getString(cursorMarcaciones.getColumnIndex("id"))
             codMotivo2 = cursorMarcaciones.getString(cursorMarcaciones.getColumnIndex("COD_MOTIVO"))
             observacion2 = cursorMarcaciones.getString(cursorMarcaciones.getColumnIndex("OBSERVACION"))
             fecha = cursorMarcaciones.getString(cursorMarcaciones.getColumnIndex("FECHA"))
@@ -284,7 +333,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             ListaClientes.claveAutorizacion = ""
             val alertMotivos = AlertDialog.Builder(context)
             alertMotivos.setTitle("         Marcación de visita")
-            alertMotivos.setMessage("Realizada el " + funcion.getFechaActual())
+            alertMotivos.setMessage("Realizada el $fecha")
             listaMotivos = ArrayList()
             val cursorMotivos: Cursor = funcion.consultar("select * from spm_motivo_no_venta order by DESC_MOTIVO")
             val descMotivo = arrayOfNulls<String>(cursorMotivos.count)
@@ -334,9 +383,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                                     "to_date('" + fecha.substring(0, 10) + " " +
                                     horaAlta + "','dd/MM/yyyy hh24:mi:ss')," + "'" +
                                     ubicacion.latitud + "'," + "'" + ubicacion.longitud + "'"
-                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString()
-                                .trim() != ""
-                        ) {
+                        if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].toString().trim() != "") {
                             if (listaMotivos[conSpinner.selectedItemPosition]["CIERRA"].equals("S")) {
                                 cerrarSalidaCliente()
                             }
@@ -410,6 +457,8 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         MainActivity2.bd!!.insert("vt_marcacion_visita", null, cv)
     }
 
+
+
     private fun actualizaMarcacionVisita(codEmpresa: String, codSucursal: String,
                                          codCliente: String, codSubcliente: String,
                                          codVendedor: String, codMotivo: String,
@@ -462,11 +511,13 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         try {
                             MainActivity2.bd!!.update("vt_marcacion_visita", values,
                                 " COD_CLIENTE = '" + ListaClientes.codCliente + "'" +
-                                        "  and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'",
+                                        "  and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'" +
+                                        "  and id = '$id'",
                                 null
                             )
                             ListaClientes.estado = "E"
                             actualizaEstadoEnvioMarcacion(id)
+                            id = ""
                         } catch (e: java.lang.Exception) {
                             e.printStackTrace()
                         }
@@ -493,6 +544,59 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         values.put("LATITUD", ubicacion.latitud)
         values.put("LONGITUD", ubicacion.longitud)
         MainActivity2.bd!!.insert("vt_marcacion_ubicacion", null, values)
+    }
+
+    fun enviarPendientesDiaAnterior(){
+        val fecha = funcion.getFechaActual()
+        val sql = "select * from vt_marcacion_visita where FECHA not like '$fecha%' and ESTADO = 'P' "
+        val ca = funcion.consultar(sql)
+        for (i in 0 until ca.count){
+            noVenta = "'1'," + "'" + funcion.dato(ca,"COD_SUCURSAL") + "'," +
+                    "'" + funcion.dato(ca,"COD_CLIENTE")+
+                    "','" + funcion.dato(ca,"COD_SUBCLIENTE") +
+                    "','" + funcion.dato(ca,"COD_VENDEDOR")+ "'," +
+                    "'" + funcion.dato(ca,"COD_MOTIVO") + "'," +
+                    "'" + funcion.dato(ca,"OBSERVACION") + "'," +
+                    "to_date('" + funcion.dato(ca,"FECHA") + "','DD/MM/YYYY')," +
+                    "to_date('" + funcion.dato(ca,"FECHA") +
+                    " " + funcion.dato(ca,"HORA_ALTA") + "','dd/MM/yyyy hh24:mi:ss')," +
+                    "'" + funcion.dato(ca,"LATITUD") + "','" + funcion.dato(ca,"LONGITUD") + "'"
+            ListaClientes.codVendedor   = funcion.dato(ca,"COD_PROMOTOR")
+            ListaClientes.codCliente    = funcion.dato(ca,"COD_CLIENTE")
+            ListaClientes.codSubcliente = funcion.dato(ca,"COD_SUBCLIENTE")
+            id = funcion.dato(ca,"id")
+            try {
+                enviarAnteriores()
+                ListaClientes.codVendedor   = ""
+                ListaClientes.codCliente    = ""
+                ListaClientes.codSubcliente = ""
+                ca.moveToNext()
+                id = funcion.dato(ca,"id")
+            } catch (e : Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun enviarAnteriores(){
+        resultado = MainActivity2.conexionWS.procesaNoVenta(noVenta,ListaClientes.codVendedor)
+        if (resultado.indexOf("01*") >= 0) {
+            val values: ContentValues?
+            values = ContentValues()
+            values.put("ESTADO", "E")
+            try {
+                MainActivity2.bd!!.update(
+                    "vt_marcacion_visita", values,
+                    " COD_CLIENTE = '" + ListaClientes.codCliente + "'" +
+                            "  and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'" +
+                            "  and id = '" + id + "'",
+                    null
+                )
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
     }
 
 }

@@ -390,6 +390,8 @@ class ListaClientes : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun noVenta(){
+        NoVenta.id           = ""
+        NoVenta.fechaMod     = funcion.getFechaActual()
         NoVenta.modificacion = true
         NoVenta.editable     = true
         NoVenta.nuevo        = true

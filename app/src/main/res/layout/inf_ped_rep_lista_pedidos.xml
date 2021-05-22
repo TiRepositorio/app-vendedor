@@ -31,14 +31,14 @@
                 android:id="@+id/tv1"
                 style="@style/textoTablaDesplegable"
                 android:layout_weight="1"
-                android:text="Repartidor"
+                android:text="Nro. Planilla"
                 android:gravity="start"/>
 
             <TextView
                 android:id="@+id/tv2"
-                android:layout_width="120dp"
-                android:text="Tel.:"
-                android:gravity="end"
+                android:layout_weight="1"
+                android:text="Fecha de planilla"
+                android:gravity="center"
                 style="@style/textoTablaDesplegable"
                 />
 
@@ -65,25 +65,15 @@
                     android:layout_height="wrap_content"
                     android:background="@color/verdeApoloCabecera" >
 
-                    <TextView
-                        android:text="Planilla"
-                        android:layout_width="80dp"
-                        style="@style/cabeceraSubTabla"/>
+<!--                    <TextView-->
+<!--                        android:text="Planilla"-->
+<!--                        android:layout_width="80dp"-->
+<!--                        style="@style/cabeceraSubTabla"/>-->
 
-                    <TextView
-                        android:text="Fec. Planilla"
-                        android:layout_width="100dp"
-                        style="@style/cabeceraSubTabla"/>
-
-                    <TextView
-                        android:text="Nro. Compr."
-                        android:layout_width="100dp"
-                        style="@style/cabeceraSubTabla"/>
-
-                    <TextView
-                        android:text="Fec. Compr."
-                        android:layout_width="100dp"
-                        style="@style/cabeceraSubTabla"/>
+<!--                    <TextView-->
+<!--                        android:text="Fec. Planilla"-->
+<!--                        android:layout_width="100dp"-->
+<!--                        style="@style/cabeceraSubTabla"/>-->
 
                     <TextView
                         android:text="Cliente"
@@ -94,6 +84,16 @@
                         android:text="Cliente"
                         android:layout_width="250dp"
                         android:gravity="start"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Nro. Compr."
+                        android:layout_width="100dp"
+                        style="@style/cabeceraSubTabla"/>
+
+                    <TextView
+                        android:text="Fec. Compr."
+                        android:layout_width="100dp"
                         style="@style/cabeceraSubTabla"/>
 
                     <TextView

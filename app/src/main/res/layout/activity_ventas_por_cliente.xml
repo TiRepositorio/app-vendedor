@@ -42,7 +42,7 @@
                         style="@style/cabeceraSubTabla"/>
                     <TextView
                         android:id="@+id/tvMes2"
-                        android:layout_width="260dp"
+                        android:layout_width="180dp"
                         android:text="Fec. visita"
                         style="@style/cabeceraSubTabla"/>
                 </LinearLayout>
@@ -103,12 +103,6 @@
                         android:text="Mix"
                         android:gravity="end|center_vertical"
                         style="@style/cabeceraSubTabla"/>
-                    <TextView
-                        android:id="@+id/tv10"
-                        android:layout_width="80dp"
-                        android:text="Surt. Efi."
-                        android:gravity="end|center_vertical"
-                        style="@style/cabeceraSubTabla"/>
                 </LinearLayout>
 
                 <ListView
@@ -166,12 +160,6 @@
                         android:id="@+id/tvMix4"
                         android:layout_width="60dp"
                         android:text="Mix"
-                        android:gravity="end|center_vertical"
-                        style="@style/cabeceraSubTabla"/>
-                    <TextView
-                        android:id="@+id/tvSurtidoEficiente"
-                        android:layout_width="80dp"
-                        android:text="Surt. Efi."
                         android:gravity="end|center_vertical"
                         style="@style/cabeceraSubTabla"/>
                 </LinearLayout>

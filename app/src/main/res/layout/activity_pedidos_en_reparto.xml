@@ -70,13 +70,13 @@
                     <TextView
                         style="@style/cabeceraTabla"
                         android:layout_weight="1"
-                        android:text="Repartidor"
+                        android:text="Nro. Planilla"
                         android:gravity="start"/>
 
                     <TextView
-                        android:layout_width="120dp"
-                        android:text="Tel.:"
-                        android:gravity="end"
+                        android:layout_weight="1"
+                        android:text="Fecha de planilla"
+                        android:gravity="center"
                         style="@style/cabeceraTabla"
                         />
 

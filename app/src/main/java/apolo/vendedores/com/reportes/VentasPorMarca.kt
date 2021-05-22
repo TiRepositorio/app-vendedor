@@ -101,8 +101,11 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         cargarCodigos()
 
-        var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, CAST(sum(MAYOR_VENTA) AS INTEGER) MAYOR_VENTA, CAST(sum(VENTA_MES1) AS INTEGER) VENTA_MES1, "
-                            +   "		   CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , CAST(sum(META) AS INTEGER) META, ((CAST(SUM(VENTA_MES2) AS DOUBLE)*100)/CAST(SUM(META) AS DOUBLE)) AS PORC "
+        var sql : String    = ( "select DESC_GTE_MARKETIN, DESC_MODULO, CAST(sum(MAYOR_VENTA) AS INTEGER) MAYOR_VENTA, "
+                            +   "       CAST(sum(VENTA_MES1) AS INTEGER) VENTA_MES1, "
+                            +   "		CAST(sum(VENTA_MES2) AS INTEGER) VENTA_MES2  , "
+                            +   "       CAST(sum(META) AS INTEGER) META, "
+                            +   "       ((CAST(SUM(VENTA_MES2) AS DOUBLE)*100)/CAST(SUM(META) AS DOUBLE)) AS PORC "
                             +   "  from svm_metas_punto_por_linea "
                             +   " where COD_VENDEDOR = '$codVendedor'"
                             +   " group by DESC_GTE_MARKETIN ")
@@ -133,13 +136,18 @@ class VentasPorMarca : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         sublistasVentasPorMarcas = ArrayList()
 
         for (i in 0 until listaVentasPorMarca.size){
-            sql = ("select DESC_MODULO  	  , SUM(MAYOR_VENTA) AS MAYOR_VENTA     , SUM(VENTA_MES1) AS VENTA_MES1 , SUM(VENTA_MES2) AS VENTA_MES2     ,"
-                    + " SUM(META) AS META  	  , SUM(MES_1) AS MES_1		            , SUM(MES_2) AS MES_2           ,  printf(\"%.2f\",(SUM(CAST(VENTA_MES2 AS DOUBLE))*100)/SUM(CAST(META AS DOUBLE))) AS PORC  "
+            sql = ("select DESC_MODULO  	                , SUM(MAYOR_VENTA) AS MAYOR_VENTA       , "
+                    + "    SUM(VENTA_MES1) AS VENTA_MES1    , SUM(VENTA_MES2) AS VENTA_MES2         , "
+                    + "    SUM(META) AS META  	            , SUM(MES_1) AS MES_1		            , "
+                    + "    SUM(MES_2) AS MES_2              ,  "
+                    + "    printf(\"%.2f\",(SUM(CAST(VENTA_MES2 AS DOUBLE))*100)/SUM(CAST(META AS DOUBLE))) AS PORC  "
                     + " from svm_metas_punto_por_linea "
                     + " where DESC_GTE_MARKETIN = '${listaVentasPorMarca[i]["DESC_GTE_MARKETIN"]}'"
                     + "   AND COD_VENDEDOR = '$codVendedor'"
                     + " GROUP BY DESC_MODULO   "
-                    + " Order By cast(ifnull(ORD_GTE_MARK,0) as double), cast(ifnull(NRO_ORD_MAG,0) as double), cast(ifnull(ORD_CATEGORIA,0) as double)")
+                    + " Order By cast(ifnull(ORD_GTE_MARK,0)  as double) , "
+                    + "          cast(ifnull(NRO_ORD_MAG,0)   as double) , "
+                    + "          cast(ifnull(ORD_CATEGORIA,0) as double) " )
 
             try {
                 cursor = MainActivity.bd!!.rawQuery(sql, null)

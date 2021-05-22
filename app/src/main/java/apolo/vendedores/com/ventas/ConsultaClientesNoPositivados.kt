@@ -135,7 +135,7 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
         ListaClientes.codCondicion      = lista[position]["COD_CONDICION_VENTA"].toString()
         ListaClientes.diasInicial       = lista[position]["DIAS_INICIAL"].toString()
         ListaClientes.codVendedor       = lista[position]["COD_VENDEDOR"].toString()
-        ListaClientes.codSucursalCliente= lista[position]["COD_SUCURSAL"].toString()
+        ListaClientes.codSucursalCliente= listaCliente[0]["COD_SUCURSAL"].toString()
         Pedidos.vent                    = "N"
         Pedidos.totalPedido             = lista[position]["TOT_COMPROBANTE"].toString()
     }
@@ -147,11 +147,13 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
                 funcion.toast(this,"Los datos ya fueron enviados.")
                 return
             }
+            NoVenta.id = lista[posicion]["id"].toString().trim()
             NoVenta.editable = true
             NoVenta.modificacion = true
             NoVenta.nuevo = false
             NoVenta.etAccion = accion
             NoVenta.context = this
+            NoVenta.fechaMod = lista[posicion]["FECHA"].toString().trim()
             NoVenta(ListaClientes.codCliente, ListaClientes.codSubcliente, null, null, ListaClientes.latitud, ListaClientes.longitud).cargarDialogo()
         }
     }
@@ -159,6 +161,7 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun consultar(){
         if (lista.size>0){
+            NoVenta.id = lista[posicion]["id"].toString().trim()
             NoVenta.editable = false
             NoVenta.modificacion = true
             NoVenta.nuevo = false

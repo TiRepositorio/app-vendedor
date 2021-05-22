@@ -25,7 +25,7 @@
 
                 <TextView
                     android:id="@+id/tv1"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:text="20"
                     android:gravity="right"
                     style="@style/textoTablaDesplegable"

@@ -86,17 +86,17 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun cargar(){
         cargarCodigos()
-        var sql = "SELECT DISTINCT DESC_REPARTIDOR ,TEL_REPARTIDOR " +
+        var sql = "SELECT DISTINCT NRO_PLANILLA ,FEC_PLANILLA " +
                          "  FROM svm_pedidos_en_reparto " +
                          " WHERE " +
                          "       COD_VENDEDOR   = '$codVendedor'  " +
-                         " ORDER BY DESC_REPARTIDOR ASC"
+                         " ORDER BY CAST(FEC_PLANILLA AS DATE) ASC, CAST(NRO_PLANILLA AS INTEGER) "
         cursor = funcion.consultar(sql)
         FuncionesUtiles.listaCabecera = ArrayList()
         for (i in 0 until cursor.count){
             datos = HashMap()
-            datos["DESC_REPARTIDOR"] = funcion.dato(cursor,"DESC_REPARTIDOR")
-            datos["TEL_REPARTIDOR"] = funcion.dato(cursor,"TEL_REPARTIDOR")
+            datos["NRO_PLANILLA"] = funcion.dato(cursor,"NRO_PLANILLA")
+            datos["FEC_PLANILLA"] = funcion.dato(cursor,"FEC_PLANILLA")
             FuncionesUtiles.listaCabecera.add(datos)
             cursor.moveToNext()
         }
@@ -112,8 +112,8 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     + "  FROM svm_pedidos_en_reparto  "
                     + " WHERE "
 //                    + "       COD_VENDEDOR   = '" + this.tvVendedor.text.toString().split("-")[0] + "'        AND"
-                    + "       DESC_REPARTIDOR= '" + FuncionesUtiles.listaCabecera[i]["DESC_REPARTIDOR"] + "'    "
-                    + " Order By DESC_REPARTIDOR, Cast (NRO_PLANILLA as double) ")
+                    + "       NRO_PLANILLA= '" + FuncionesUtiles.listaCabecera[i]["NRO_PLANILLA"] + "'    "
+                    + " Order By CAST(COD_CLIENTE AS INTEGER), Cast (COD_SUBCLIENTE as INTEGER) ")
 
             cursor = funcion.consultar(sql)
             FuncionesUtiles.listaDetalle = ArrayList()
@@ -137,11 +137,10 @@ class PedidosEnReparto : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     fun mostrar(){
         funcion.vistas  = intArrayOf(R.id.tv1,R.id.tv2)
-        funcion.valores = arrayOf("DESC_REPARTIDOR" ,"TEL_REPARTIDOR")
-        funcion.subVistas  = intArrayOf(R.id.tvs1,R.id.tvs2,R.id.tvs3,R.id.tvs4,R.id.tvs5,R.id.tvs6,R.id.tvs7,R.id.tvs8)
-        funcion.subValores = arrayOf("NRO_PLANILLA"     , "FEC_PLANILLA"    , "NRO_COMPROBANTE" ,
-                                     "FEC_COMPROBANTE"  , "COD_CLIENTE"     , "NOM_SUBCLIENTE"  ,
-                                     "TOT_COMPROBANTE"  , "ESTADO")
+        funcion.valores = arrayOf("NRO_PLANILLA" ,"FEC_PLANILLA")
+        funcion.subVistas  = intArrayOf(R.id.tvs1,R.id.tvs2,R.id.tvs3,R.id.tvs4,R.id.tvs5,R.id.tvs6)
+        funcion.subValores = arrayOf("COD_CLIENTE"      , "NOM_SUBCLIENTE"  , "NRO_COMPROBANTE" ,
+                                     "FEC_COMPROBANTE"  , "TOT_COMPROBANTE" , "ESTADO"          )
 
         val adapter:Adapter.ListaDesplegable =
             Adapter.ListaDesplegable(this,

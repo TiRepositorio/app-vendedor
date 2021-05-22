@@ -3,18 +3,30 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+<!--        <TextView-->
+<!--            android:id="@+id/tvs1"-->
+<!--            android:text="Planilla"-->
+<!--            android:layout_width="80dp"-->
+<!--            style="@style/textoSubTabla"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvs2"-->
+<!--            android:text="Fec. Planilla"-->
+<!--            android:layout_width="100dp"-->
+<!--            style="@style/textoSubTabla"/>-->
+
         <TextView
             android:id="@+id/tvs1"
-            android:text="Planilla"
-            android:layout_width="80dp"
+            android:text="Cliente"
+            android:layout_width="100dp"
             style="@style/textoSubTabla"/>
 
         <TextView
             android:id="@+id/tvs2"
-            android:text="Fec. Planilla"
-            android:layout_width="100dp"
+            android:text="Cliente"
+            android:layout_width="250dp"
+            android:gravity="start"
             style="@style/textoSubTabla"/>
-
         <TextView
             android:id="@+id/tvs3"
             android:text="Nro. Compr."
@@ -29,26 +41,13 @@
 
         <TextView
             android:id="@+id/tvs5"
-            android:text="Cliente"
-            android:layout_width="100dp"
-            style="@style/textoSubTabla"/>
-
-        <TextView
-            android:id="@+id/tvs6"
-            android:text="Cliente"
-            android:layout_width="250dp"
-            android:gravity="start"
-            style="@style/textoSubTabla"/>
-
-        <TextView
-            android:id="@+id/tvs7"
             android:text="Total"
             android:layout_width="130dp"
             android:gravity="end"
             style="@style/textoTabla"/>
 
         <TextView
-            android:id="@+id/tvs8"
+            android:id="@+id/tvs6"
             android:text="Total"
             android:layout_width="130dp"
             android:gravity="start"

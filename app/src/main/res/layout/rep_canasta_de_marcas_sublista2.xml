@@ -17,7 +17,7 @@
 
                 <TextView
                     android:id="@+id/tvs21"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:text="20"
                     android:gravity="right"
                     style="@style/textoSubTabla"

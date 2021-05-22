@@ -17,13 +17,13 @@
                     />
                 <ImageView
                     android:id="@+id/imgAbrir"
-                    android:layout_width="40sp"
+                    android:layout_width="50sp"
                     android:src="@drawable/ic_desplegar"
                     style="@style/textoTabla"
                     />
                 <ImageView
                     android:id="@+id/imgCerrar"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:src="@drawable/ic_ocultar"
                     android:visibility="gone"
                     style="@style/textoTabla"

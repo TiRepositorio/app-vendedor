@@ -141,9 +141,17 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                         return false
                     }
                 }
-                if (err != null) {
-                    if (err.indexOf("unknow") > -1) {
-                        count++
+                if (Build.VERSION.SDK_INT > 29){
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1 || err.indexOf("a null object reference") > -1) {
+                            count++
+                        }
+                    }
+                } else {
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1) {
+                            count++
+                        }
                     }
                 }
             }
@@ -178,6 +186,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
             }
             return false
         } else {
+            @Suppress("DEPRECATION")
             if (Settings.Secure.getString(context.contentResolver,Settings.Secure.ALLOW_MOCK_LOCATION) != "0") {
                 Toast.makeText(context,"Debe deshabilitar las ubicaciones simuladas",Toast.LENGTH_LONG).show()
                 return false
@@ -209,7 +218,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                     }
                 }
                 if (err != null) {
-                    if (err.indexOf("unknow") > -1) {
+                    if (err.indexOf("unknow") > -1 || err.indexOf("a null object reference") > -1) {
                         count++
                     }
                 }
@@ -227,11 +236,17 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                         return false
                     }
                 }
-                if (err != null) {
-                    if (err.indexOf("unknow") > -1) {
-                        count++
-                    } else {
-                        Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+                if (Build.VERSION.SDK_INT > 29){
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1 || err.indexOf("a null object reference") > -1) {
+                            count++
+                        }
+                    }
+                } else {
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1) {
+                            count++
+                        }
                     }
                 }
             }
@@ -245,6 +260,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
             }
             return false
         } else {
+            @Suppress("DEPRECATION")
             if (Settings.Secure.getString(context.contentResolver,Settings.Secure.ALLOW_MOCK_LOCATION) != "0") {
                 Toast.makeText(context,"Debe deshabilitar las ubicaciones simuladas",Toast.LENGTH_LONG).show()
                 return false
@@ -253,12 +269,11 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
         return true
     }
 
-
-    fun obtenerUbicacion(latitud:String,longitud:String,tabla:String,where:String):String{
-        val sql : String = "SELECT DISTINCT " + latitud + "," + longitud + " " +
-                           "  FROM " + tabla + " " + where
-        return funcion.dato(funcion.consultar(sql),latitud) + "|" + funcion.dato(funcion.consultar(sql),longitud)
-    }
+//    fun obtenerUbicacion(latitud:String,longitud:String,tabla:String,where:String):String{
+//        val sql : String = "SELECT DISTINCT " + latitud + "," + longitud + " " +
+//                           "  FROM " + tabla + " " + where
+//        return funcion.dato(funcion.consultar(sql),latitud) + "|" + funcion.dato(funcion.consultar(sql),longitud)
+//    }
 
     fun distanciaMinima(lat:String,long:String,distanciaMaxima:Int):Boolean{
         var distanciaReal : Double = calculaDistanciaCoordenadas(lat.toDouble(),latitud.toDouble(),long.toDouble(),longitud.toDouble())
@@ -275,10 +290,8 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
     class MyLocationListener : LocationListener {
         override fun onLocationChanged(loc: Location) {
             try {
-                if (loc != null) {
-                    lati = loc.latitude.toString()
-                    long = loc.longitude.toString()
-                }
+                lati = loc.latitude.toString()
+                long = loc.longitude.toString()
             } catch (e: Exception) {
                 return
             }

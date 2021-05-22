@@ -82,7 +82,7 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val sql =
             ("select DESC_VENDEDOR    , CODIGO         , NOM_SUBCLIENTE  , CIUDAD        , COD_SUPERVISOR , DESC_SUPERVISOR ,"
                     + "       LISTA_PRECIO     , MAYOR_VENTA    , VENTA_3         , MIX_3         , VENTA_4        , MIX_4           ,"
-                    + "       METAS            , MES_1          , MES_2           , TOT_SURTIDO "
+                    + "       METAS            , MES_1          , MES_2           "
                     + "  FROM svm_metas_punto_por_cliente  "
                     + " WHERE COD_VENDEDOR = '$codVendedor'  "
                     + " ORDER BY CAST (CODIGO AS DOUBLE) ")
@@ -103,12 +103,6 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
             mix4 += FuncionesUtiles.listaCabecera[i]["VENTA_4"].toString().replace(".", "")
                 .toDouble()
             FuncionesUtiles.listaCabecera[i]["MIX_4"] = funcion.entero(mix)
-            totSurtido += FuncionesUtiles.listaCabecera[i]["TOT_SURTIDO"].toString()
-                .replace(",", ".").toDouble()
-            FuncionesUtiles.listaCabecera[i]["TOT_SURTIDO"] = funcion.decimal(
-                mix * 100 / FuncionesUtiles.listaCabecera[i]["TOT_SURTIDO"].toString()
-                    .replace(",", ".").toDouble()
-            )
         }
         mostrar()
     }
@@ -124,12 +118,12 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
             R.id.tv6,
             R.id.tv7,
             R.id.tv8,
-            R.id.tv9,
-            R.id.tv10
+            R.id.tv9
         )
         funcion.valores = arrayOf(
-            "CODIGO", "NOM_SUBCLIENTE", "CIUDAD", "LISTA_PRECIO", "MAYOR_VENTA", "VENTA_3",
-            "MIX_3" , "VENTA_4"       , "MIX_4" , "TOT_SURTIDO"
+            "CODIGO"        , "NOM_SUBCLIENTE"  , "CIUDAD"      ,
+            "LISTA_PRECIO"  , "MAYOR_VENTA"     , "VENTA_3"     ,
+            "MIX_3"         , "VENTA_4"         , "MIX_4"
         )
         adapter = Adapter.AdapterGenericoCabecera(
             this
@@ -153,7 +147,7 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val sql =
             (" SELECT  COD_EMPRESA   ,COD_VENDEDOR	    ,DESC_VENDEDOR , PEDIDO_2_ATRAS ,PEDIDO_1_ATRAS   ,TOTAL_PEDIDOS ,TOTAL_FACT  	,"
                     + "         META_VENTA    ,META_LOGRADA     ,PROY_VENTA    , TOTAL_REBOTE   ,TOTAL_DEVOLUCION ,CANT_CLIENTES ,CANT_POSIT    ,"
-                    + "         EF_VISITA 	  ,DIA_TRAB	        ,PUNTAJE	   , SURTIDO_EF "
+                    + "         EF_VISITA 	  ,DIA_TRAB	        ,PUNTAJE	   "
                     + "    FROM svm_evol_diaria_venta  ")
         FuncionesUtiles.listaDetalle = ArrayList()
         funcion.cargarLista(FuncionesUtiles.listaDetalle, funcion.consultar(sql))
@@ -173,7 +167,6 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
         tvMix3.text = funcion.entero(adapter.getTotalEntero("MIX_3").toString())
         tvVenta4.text = funcion.entero(adapter.getTotalEntero("VENTA_4").toString())
         tvMix4.text = funcion.entero(adapter.getTotalEntero("MIX_4").toString())
-        tvSurtidoEficiente.text = funcion.decimal(adapter.getTotalEntero("MIX_4") * 100 / totSurtido)
     }
 
     private fun actualizarDatos(imageView: ImageView){
