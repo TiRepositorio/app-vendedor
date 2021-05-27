@@ -145,7 +145,7 @@ class EnviarPedido(
                     + ",'" + cabeceraHash["COMENTARIO"] + "'" // comentario
                     + ",'" + cabeceraHash["NRO_AUTORIZACION"] + "'" // "nro_autorizacion
                     + ",'" + cabeceraHash["IND_PRESENCIAL"].toString().replace("null","") + "'" // "indica venta presencial
-                    + ",to_date('" + funcion.getFechaActual() + " " + funcion.getHoraActual() + "','dd/MM/yyyy hh24:mi:ss')" // "fecha y hora de alta
+                    + ",to_date('" + cabeceraHash["FEC_ALTA"] + " " + cabeceraHash["HORA_ALTA"] + "','dd/MM/yyyy hh24:mi:ss')" // "fecha y hora de alta
                     + ",'" + Pedidos.claveAutorizacion + "'") //numero de autorizacion descuentos varios
             cabecera = vIntoCab
             var vIntoDet: String

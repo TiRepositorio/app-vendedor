@@ -201,7 +201,10 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        if (R.id.vendConfigurar != menuItem.itemId && R.id.vendSincronizar != menuItem.itemId && R.id.vendSalir != menuItem.itemId){
+        if (R.id.vendActualizar  != menuItem.itemId &&
+            R.id.vendConfigurar  != menuItem.itemId &&
+            R.id.vendSincronizar != menuItem.itemId &&
+            R.id.vendSalir       != menuItem.itemId ){
             if (!dispositivo.fechaCorrecta()){
                 funcion.toast(this,"Debe sincronizar para continuar.")
                 return false

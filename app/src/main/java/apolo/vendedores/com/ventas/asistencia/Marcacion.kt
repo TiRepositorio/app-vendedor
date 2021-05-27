@@ -21,7 +21,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
-import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.ListaClientes
@@ -125,6 +124,7 @@ class Marcacion : AppCompatActivity() {
                     }
                     val autorizacionDialogo = DialogoAutorizacion(this)
                         autorizacionDialogo.dialogoAutorizacionCod(trigger, accion)
+                    return true
                 }else{
                     funcion.toast(
                         this,
@@ -145,14 +145,14 @@ class Marcacion : AppCompatActivity() {
                     " COD_PROMOTOR = TRIM(COD_PROMOTOR), COD_CLIENTE = TRIM(COD_CLIENTE), COD_SUBCLIENTE = TRIM(COD_SUBCLIENTE)," +
                     " TIPO = TRIM(TIPO), ESTADO = TRIM(ESTADO)", this
         )
-        if (verificaMarcacionClienteEmergencia()){
-            funcion.ejecutar(
-                "insert into vt_marcacion_ubicacion " +
-                        "(COD_EMPRESA, COD_PROMOTOR, COD_CLIENTE, COD_SUBCLIENTE, TIPO, ESTADO, FECHA, LATITUD, LONGITUD) VALUES " +
-                        "('1','6601', '757', '1', 'S','P','05/05/2021 10:23:36','-24.976981','-54.910484')",
-                this
-            )
-        }
+//        if (verificaMarcacionClienteEmergencia()){
+//            funcion.ejecutar(
+//                "insert into vt_marcacion_ubicacion " +
+//                        "(COD_EMPRESA, COD_PROMOTOR, COD_CLIENTE, COD_SUBCLIENTE, TIPO, ESTADO, FECHA, LATITUD, LONGITUD) VALUES " +
+//                        "('1','6601', '757', '1', 'S','P','05/05/2021 10:23:36','-24.976981','-54.910484')",
+//                this
+//            )
+//        }
         ListaClientes.indPresencial = "S"
         inicializar()
     }
@@ -162,10 +162,8 @@ class Marcacion : AppCompatActivity() {
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
                 + "  from vt_marcacion_ubicacion             			"
                 + " where TRIM(TIPO)           IN ('E','S')             "
-//                + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim()      + "' "
-//                + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim()   + "' "
-                + "   and TRIM(COD_CLIENTE)    = '757' "
-                + "   and TRIM(COD_SUBCLIENTE) = '1' "
+                + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim()      + "' "
+                + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim()   + "' "
                 + " order by id desc                        		 ")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
@@ -176,7 +174,7 @@ class Marcacion : AppCompatActivity() {
         }
         return estado
     }
-    private fun verificaMarcacionClienteEmergencia(): Boolean {
+    /*private fun verificaMarcacionClienteEmergencia(): Boolean {
         var estado = false
         val sql : String = ("Select COD_CLIENTE, COD_SUBCLIENTE, TIPO 	"
                 + "  from vt_marcacion_ubicacion             			"
@@ -194,7 +192,7 @@ class Marcacion : AppCompatActivity() {
         }
         return estado
     }
-
+*/
     private fun validaVisitaCliente(): Boolean {
         var sql = ("Select *" + " from vt_pedidos_cab "
                 + " where TRIM(COD_CLIENTE) = '" + ListaClientes.codCliente.trim() + "'"
@@ -366,7 +364,6 @@ class Marcacion : AppCompatActivity() {
         values.put("TIPO", tipo.trim())
         values.put("LATITUD", ubicacion.latitud)
         values.put("LONGITUD", ubicacion.longitud)
-        val rooteado = "El teléfono está rooteado"
         if (autorizacion != ""){
             values.put("OBSERVACION", "Autorizacion: $autorizacion. Version de Sistema: ${MainActivity.version}.20210520")
             values.put("FECHA", getHoraDeEntrada())
@@ -576,6 +573,7 @@ class Marcacion : AppCompatActivity() {
 
     private fun inicializaETAccion(et: EditText){
         et.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("SetTextI18n")
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString() == "cargarMarcaciones") {
                     cargarMarcaciones()

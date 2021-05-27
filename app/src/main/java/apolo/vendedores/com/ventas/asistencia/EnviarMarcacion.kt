@@ -1,5 +1,6 @@
 package apolo.vendedores.com.ventas.asistencia
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
@@ -14,10 +15,12 @@ import apolo.vendedores.com.ventas.ListaClientes
 class EnviarMarcacion(private val codCliente : String, private val codSubcliente : String) {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var contexto : Context
         var cadena = ""
         var resultado = ""
         private lateinit var dialogo : ProgressDialog
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion: EditText
         var accion = ""
         var anomalia = ""
@@ -57,7 +60,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
             val fecha: String = cursor.getString(cursor.getColumnIndex("FECHA"))
             val latitud: String = cursor.getString(cursor.getColumnIndex("LATITUD"))
             val longitud: String = cursor.getString(cursor.getColumnIndex("LONGITUD"))
-            var observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION")) + "Version de Sistema: ${MainActivity.version}.20210520" + anomalia
+            var observacion: String = cursor.getString(cursor.getColumnIndex("OBSERVACION")) + "v:${MainActivity.version}.${MainActivity.fechaVersion}" + anomalia
             if (MainActivity2.rooteado){
                 observacion = "El teléfono está rooteado.\n$observacion"
             }
@@ -162,8 +165,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
             val fecha: String = funcion.dato(cursor1,"FECHA")
             val latitud: String = funcion.dato(cursor1,"LATITUD")
             val longitud: String = funcion.dato(cursor1,"LONGITUD")
-            val observacion: String = funcion.dato(cursor1,"OBSERVACION")
-            val codPersona : String = FuncionesUtiles.usuario["LOGIN"].toString()
+            val observacion: String = funcion.dato(cursor1,"OBSERVACION") + "\nv: ${MainActivity.version}.${MainActivity.fechaVersion}"
 
             cadena += "'$codEmpresa','$codVendedor','$codCliente','$codSubcliente"
             cadena += "','$tipo',to_date('$fecha','dd/MM/yyyy hh24:mi:ss'),'$latitud','$longitud','$observacion';"
