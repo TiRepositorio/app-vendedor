@@ -232,7 +232,7 @@ class EnviarSD {
                     val dialogo = DialogoAutorizacion(context)
                     dialogo.dialogoAccion("ACTUALIZAR", SolicitudDevolucion.etAccion, respuesta,"Operación existosa!","ok")
                 } else {
-                    funcion.mensaje(context,"Atención", "No se ha podido enviar la información")
+                    funcion.mensaje(context,"Atención", "No se ha podido enviar la información\n$respuesta")
                 }
             } else {
                 funcion.mensaje(context,"Error", respuesta)
