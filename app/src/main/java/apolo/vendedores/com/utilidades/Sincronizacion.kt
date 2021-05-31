@@ -112,7 +112,7 @@ class Sincronizacion : AppCompatActivity() {
                     }
                 }
             }
-            if (Build.VERSION.SDK_INT >= 26){
+            if (Build.VERSION.SDK_INT >= 28){
                 progressDialog.setMessage("Generando Archivos")
             }
             if (tipoSinc == "T"){
@@ -125,7 +125,7 @@ class Sincronizacion : AppCompatActivity() {
                         Toast.makeText(this@Sincronizacion, "Error al generar archivos", Toast.LENGTH_SHORT).show()
                     }
                 }
-                if (Build.VERSION.SDK_INT >= 26){
+                if (Build.VERSION.SDK_INT >= 28){
                     progressDialog.setMessage("Obteniendo Archivos")
                 }
                 if(!MainActivity.conexionWS.obtenerArchivos()){
