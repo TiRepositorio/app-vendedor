@@ -31,6 +31,7 @@ import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
+import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.ven_pri_accesos.*
@@ -68,6 +69,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 //    private var subInforme2 = SubVentasPorClientes()
     private var subInforme3 = SubAvanceDeComisiones()
     private var cerrar = false
+    lateinit var enviarMarcacion : EnviarMarcacion
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,11 +213,16 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
         }
         val menu = DialogoMenu(this)
+        EnviarMarcacion.contexto = this
+        EnviarMarcacion.etAccion = accion
+
+        enviarMarcacion = EnviarMarcacion("","")
         when (menuItem.itemId){
             R.id.vendVenta                  -> menu.mostrarMenu(menuItem,R.layout.menu_cab_visitas)
             R.id.vendReportes               -> menu.mostrarMenu(menuItem,R.layout.menu_cab_reportes)
             R.id.vendInformes               -> menu.mostrarMenu(menuItem,R.layout.menu_cab_informes)
             R.id.vendConfigurar             -> menu.mostrarMenu(menuItem,R.layout.menu_cab_configurar)
+            R.id.vendMarcaciones            -> enviarMarcacion.cargarDatosDelDia()
             R.id.vendSalir                  -> finish()
         }
 

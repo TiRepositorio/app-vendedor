@@ -52,18 +52,31 @@ class Pedidos : AppCompatActivity() {
         var indBloqueado = "N"
         var indPresencial = ""
         var pedidoBloqCond : String = "N"
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccionPedidos   : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etFechaPedido   : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etTotalPedidos  : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etNroOrdenCompra: EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etNroPedidos    : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etSubtotales    : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etObservacionPedido   : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etDescVariosPedidos   : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etDescFinancPedidos   : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var etTotalDescPedidos    : EditText
+        @SuppressLint("StaticFieldLeak")
         lateinit var spListaPrecios     : FuncionesSpinner
+        @SuppressLint("StaticFieldLeak")
         lateinit var spCondicionDeVenta : FuncionesSpinner
+        @SuppressLint("StaticFieldLeak")
         lateinit var spReferencias : FuncionesSpinner
     }
 
@@ -85,7 +98,7 @@ class Pedidos : AppCompatActivity() {
     var codMoneda = ""
     private var diasInicial = 0
     var decimales = ""
-    var indActualizado = false
+    private var indActualizado = false
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -166,9 +179,6 @@ class Pedidos : AppCompatActivity() {
     //Mostrar los layouts correspondientes
     @RequiresApi(Build.VERSION_CODES.N)
     fun mostrarContenido(view: View) {
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         tvPedido.setBackgroundColor(Color.parseColor("#757575"))
         tvDetalle.setBackgroundColor(Color.parseColor("#757575"))
         tvCerrar.setBackgroundColor(Color.parseColor("#757575"))
@@ -187,9 +197,6 @@ class Pedidos : AppCompatActivity() {
     //PEDIDOS
     @RequiresApi(Build.VERSION_CODES.N)
     fun listaPrecio(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val campos = " COD_LISTA_PRECIO,DESC_LISTA,IND_DEFECTO,COD_MONEDA,DECIMALES "
         val tabla = " cliente_list_prec "
         val where : String = " COD_CLIENTE        = '" + ListaClientes.codCliente + "' " +
@@ -268,6 +275,7 @@ class Pedidos : AppCompatActivity() {
         cbReferencias(campos, tabla, where, whereOpcional)
     }
 
+//    private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String){
     private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String){
         var sql : String = "SELECT " + campos +
                 "  FROM " + tabla +
@@ -326,7 +334,7 @@ class Pedidos : AppCompatActivity() {
             if (!cbUM3.isChecked) {cbUM3.isChecked = true}
         }
         cbUM4.setOnClickListener {
-            spReferencia.setSelection(2)
+            spReferencia.setSelection(3)
             cbUM1.isChecked = false
             cbUM2.isChecked = false
             cbUM3.isChecked = false
@@ -369,9 +377,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun generaSpinVenta() {
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val lista : ArrayList<HashMap<String, String>> = ArrayList()
         val cursor: Cursor = funcion.consultar(
             "Select IND_DIRECTA  from svm_cliente_vendedor " + " where cod_cliente  = '"
@@ -413,6 +418,7 @@ class Pedidos : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.N)
     fun condicionDeVenta(){
         val campos = " COD_CONDICION_VENTA,DESCRIPCION,TIPO_CONDICION,DIAS_INICIAL,ABREVIATURA,PORC_DESC,MONTO_MIN_DESC "
@@ -466,9 +472,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun inicializaETAccion(etAccion: EditText){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         etAccion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (etAccion.text.toString() == "condicion") {
@@ -539,6 +542,11 @@ class Pedidos : AppCompatActivity() {
                     cargarDetalle()
                     return
                 }
+                if (etAccion.text.toString().split("*")[0].trim() == "validarPedido") {
+                    val pre =etAccion.text.toString().split("*")[1].trim()
+                    funcion.mensaje(this@Pedidos,"Atención!","El precio del artículo $pre no corresponde.\nVuelva a cargarlo.")
+                    return
+                }
                 if (etAccion.text.toString().split("*")[0].trim() == "cerrarTodo") {
                     finish()
                 }
@@ -557,9 +565,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun seleccionarCondicion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         if (spCondicionDeVenta.getIndex("COD_CONDICION_VENTA", ListaClientes.codCondicion).toString() != spCondicionVenta.selectedItemPosition.toString()
             && spCondicionVenta.selectedItemPosition != ultimaCondicion){
             val dialogo = DialogoAutorizacion(this)
@@ -581,9 +586,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun accionCondicion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         ultimaCondicion = spCondicionVenta.selectedItemPosition
         pedidoBloqCond = "N"
         if (spCondicionDeVenta.getDato("DIAS_INICIAL").toInt() <= ListaClientes.diasInicial.toInt()){
@@ -602,9 +604,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun noAccionCondicion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         spCondicionVenta.setSelection(ultimaCondicion)
         accionPedido.setText("")
     }
@@ -629,9 +628,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun cargarLista(cursor: Cursor){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         listaProductos = ArrayList()
         for (i in 0 until cursor.count){
             val dato : HashMap<String, String> = HashMap()
@@ -685,9 +681,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun verificaCargado(position: Int):Boolean{
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return false
-//        }
         if (articulosDetalle.indexOf("|${listaProductos[position]["COD_ARTICULO"]}|") > -1){
             funcion.toast(this, "El producto ya se ha cargado al pedido.")
             return false
@@ -698,9 +691,6 @@ class Pedidos : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.N)
     private fun cargarDetalleProducto(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         tvdCod.text = listaProductos[posProducto]["COD_ARTICULO"]
         btCodigo.text = "Cod.: ${listaProductos[posProducto]["COD_ARTICULO"]}"
         tvdPrecioReferencia.text = funcion.numero(decimales,spReferencias.getDato("PRECIO"),false)
@@ -717,9 +707,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun calcularSubtotal(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         tvdTotal.text = funcion.entero(
             (tvdDesc.text.toString().replace(".", "").toInt()) * (tvdCantidad.text.toString()
                 .replace(
@@ -731,9 +718,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun inicializaET(et: EditText){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         et.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (et.text.toString().trim().isNotEmpty()) {
@@ -778,7 +762,7 @@ class Pedidos : AppCompatActivity() {
         }
         val lista : String = spListaPrecios.getDato("COD_LISTA_PRECIO")
 //        val tabla : String = "svm_promociones_art_cab_s" + ListaClientes.tipCliente.replace(".","") + codListaPrecio + ListaClientes.codVendedor
-        val tablaCab = "svm_promociones_art_cab"
+//        val tablaCab = "svm_promociones_art_cab"
         var sql = ("SELECT distinct COD_ARTICULO FROM svm_promociones_art_cab c "
                 + "   WHERE (c.COD_CONDICION_VENTA = '" + codCondicion + "' or TRIM(COD_CONDICION_VENTA) = '')"
                 + "    and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or TRIM(TIP_CLIENTE) = '')"
@@ -825,7 +809,7 @@ class Pedidos : AppCompatActivity() {
 
         cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
 
-        nreg = cursorProm.getCount()
+        nreg = cursorProm.count
         cursorProm.moveToFirst()
 
         `in` += ",'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO"))
@@ -859,9 +843,6 @@ class Pedidos : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun insertarPedido(){
         if (!validaciones()){ return }
-//        if (porcDescuentos < 0.0){
-//            porcDescuentos = funcion.maxDescuento()
-//        }
         val porcDescuento : Double = 100 - (funcion.aEntero(tvdDesc.text.toString()) * 100)/(funcion.aEntero(
             tvdPrecioReferencia.text.toString()
         )).toDouble()
@@ -885,12 +866,8 @@ class Pedidos : AppCompatActivity() {
 //        cargarDetalle()
     }
 
-
     @RequiresApi(Build.VERSION_CODES.N)
     private fun guardaDetalle2() {
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         if (tvdCantidad.text.toString() == "") {
             return
         }
@@ -962,9 +939,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun maxPedido(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val sql = "SELECT MAX(NUMERO) MAXIMO from vt_pedidos_cab where COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         val cursor: Cursor = funcion.consultar(sql)
         if (cursor.moveToFirst()) {
@@ -1082,15 +1056,10 @@ class Pedidos : AppCompatActivity() {
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
-//        values.put("COD_LISTA_PRECIO", codListaPrecio)
         values.put("COD_LISTA_PRECIO", codListaPrecio)
         values.put("FECHA", etFecha.text.toString())
         values.put("FECHA_INT", fechaInt)
         values.put("ESTADO", "P")
-//        values.put("COD_CONDICION_VENTA", spCondicionDeVenta.getDato("COD_CONDICION_VENTA"))
-//        values.put("DIAS_INICIAL", spCondicionDeVenta.getDato("DIAS_INICIAL"))
-//        values.put("COD_MONEDA", spListaPrecios.getDato("COD_MONEDA"))
-//        values.put("DECIMALES", spListaPrecios.getDato("DECIMALES"))
         values.put("COD_CONDICION_VENTA", spCondicionDeVenta.getDato("COD_CONDICION_VENTA"))
         values.put("DIAS_INICIAL", diasInicial.toString())
         values.put("COD_MONEDA", codMoneda)
@@ -1292,6 +1261,7 @@ class Pedidos : AppCompatActivity() {
                 indBloqueado = "N"
             }
             listaDetalles[i]["PRECIO_UNITARIO"] = funcion.numero(decimales,listaDetalles[i]["PRECIO_UNITARIO"].toString())
+            listaDetalles[i]["PRECIO_UNITARIO_C_IVA"] = funcion.numero(decimales,listaDetalles[i]["PRECIO_UNITARIO_C_IVA"].toString())
             listaDetalles[i]["MONTO_TOTAL"] = funcion.numero(decimales,listaDetalles[i]["MONTO_TOTAL"].toString())
         }
         mostrarDetalle()
@@ -1318,16 +1288,7 @@ class Pedidos : AppCompatActivity() {
     }
 
     private fun cargarAtriculosDetalleVen(){
-//        var sql = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
-//                +  " WHERE NUMERO       = '${Pedidos.maximo}' "
-//                +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-//                +  " ")
-//        var cursor = funcion.consultar(sql)
-//        articulosDetalle = ""
-//        for (i in 0 until cursor.count){
             articulosDetalle += "|" + tvdCod.text.toString().trim() + "|"
-//            cursor.moveToNext()
-//        }
     }
 
     private fun mostrarDetalle(){
@@ -1341,11 +1302,12 @@ class Pedidos : AppCompatActivity() {
             R.id.tv4,
             R.id.tv5,
             R.id.tv6,
-            R.id.tv7
+            R.id.tv7,
+            R.id.tv8
         )
         funcion.valores = arrayOf(
-            "COD_ARTICULO", "DESC_ARTICULO", "EXISTENCIA_ACTUAL", "CANTIDAD",
-            "PRECIO_UNITARIO", "MONTO_TOTAL", "NRO_PROMOCION"
+            "COD_ARTICULO"      , "DESC_ARTICULO"           , "EXISTENCIA_ACTUAL"   , "CANTIDAD"        ,
+            "COD_UNIDAD_MEDIDA" ,"PRECIO_UNITARIO_C_IVA"    , "MONTO_TOTAL"         , "NRO_PROMOCION"
         )
         val adapter: Adapter.AdapterDetallePedido =
             Adapter.AdapterDetallePedido(
@@ -1385,9 +1347,6 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun eliminarDetallePromocion(){
-//        if (!dispositivo.validaEstadoSim(telMgr)){
-//            return
-//        }
         val sql = "DELETE FROM  vt_pedidos_det " +
                 " WHERE NRO_PROMOCION = '${listaDetalles[posDetalle]["NRO_PROMOCION"]}' " +
                 "   AND NUMERO = '$maximo' "
@@ -1529,8 +1488,7 @@ class Pedidos : AppCompatActivity() {
                         etDescVarios.setText(descVarAnterior)
                         return
                     }
-                    val d2: String
-                    d2 = if (etDescVarios.text.toString() == "") {
+                    val d2: String = if (etDescVarios.text.toString() == "") {
                         "0"
                     } else {
                         descVarios
@@ -1853,7 +1811,6 @@ class Pedidos : AppCompatActivity() {
 
     fun autorizaDescuentosVarios(){
         try {
-//            etSubtotal.setText(totalPedido.toString())
             val calcDesc = etSubtotal.text.toString().replace(".", "")
             sumaDescuento = "0".toFloat()
             if (etDescVarios.text.toString() != "") {

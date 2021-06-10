@@ -24,9 +24,14 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
         lateinit var etAccion: EditText
         var accion = ""
         var anomalia = ""
+        var dia = ""
+        var stCodCliente = ""
+        var stCodSubcliente = ""
     }
 
     fun enviar(){
+        stCodCliente = codCliente
+        stCodSubcliente = codSubcliente
         cargarDatos(MainActivity2.funcion.consultar(sqlMarcaciones()))
     }
 
@@ -72,7 +77,62 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
         if (cursor.count == 0) {
             MainActivity2.funcion.toast(contexto, "No existe ninguna marcacion pendiente de envio")
         } else {
+            dia = ""
             Enviar().execute()
+        }
+    }
+
+    fun cargarDatosDelDia(){
+        cadena = " "
+        val date = MainActivity2.funcion.getFechaActual()
+        val sql  = ("Select a.id, a.COD_EMPRESA, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD   "
+                + "  from vt_marcacion_ubicacion a "
+                + " where a.FECHA like '%$date%'"
+                + " group by a.id, a.COD_EMPRESA, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD "
+                + "  order by a.id desc ")
+        val cursor: Cursor = MainActivity2.funcion.consultar(sql)
+        cursor.moveToFirst()
+        if(cursor.count > 0){
+            val tipo =  cursor.getString(cursor.getColumnIndex("TIPO"))
+            if(tipo == "E"){
+                MainActivity2.funcion.mensaje(contexto,"Atención!","Debe marcar salida del cliente " +
+                                                                       "${MainActivity2.funcion.dato(cursor,"COD_CLIENTE")}-" +
+                                                                       "${MainActivity2.funcion.dato(cursor,"COD_SUBCLIENTE")}.")
+                return
+            }
+        }
+        val query =
+            ("Select a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, ifnull(a.OBSERVACION,'') OBSERVACION   "
+                    + "  from vt_marcacion_ubicacion a "
+                    + "  where a.ESTADO = 'P' "
+                    + "    and a.FECHA like '%$date%'"
+                    + "  group by a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, a.OBSERVACION "
+                    + "  order by a.id desc ")
+
+        val cursor1: Cursor = MainActivity2.funcion.consultar(query)
+        cursor1.moveToFirst()
+        for (i in 1..cursor1.count) {
+            val codEmpresa = "1"
+            val codVendedor: String = MainActivity2.funcion.dato(cursor1,"COD_PROMOTOR")
+            val codCliente: String = MainActivity2.funcion.dato(cursor1,"COD_CLIENTE")
+            val codSubcliente: String = MainActivity2.funcion.dato(cursor1,"COD_SUBCLIENTE")
+            val tipo: String = MainActivity2.funcion.dato(cursor1,"TIPO")
+            val fecha: String = MainActivity2.funcion.dato(cursor1,"FECHA")
+            val latitud: String = MainActivity2.funcion.dato(cursor1,"LATITUD")
+            val longitud: String = MainActivity2.funcion.dato(cursor1,"LONGITUD")
+            val observacion: String = MainActivity2.funcion.dato(cursor1,"OBSERVACION") + "\nv: ${MainActivity.version}.${MainActivity.fechaVersion}"
+
+            cadena += "'$codEmpresa','$codVendedor','$codCliente','$codSubcliente"
+            cadena += "','$tipo',to_date('$fecha','dd/MM/yyyy hh24:mi:ss'),'$latitud','$longitud','$observacion';"
+
+            cursor1.moveToNext()
+        }
+
+        if(cursor1.count > 0){
+            dia = "HOY"
+            Enviar().execute()
+        } else {
+            MainActivity2.funcion.toast(contexto, "No existe ninguna marcacion pendiente de envio")
         }
     }
 
@@ -87,7 +147,11 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
 
         override fun doInBackground(vararg params: Void?): Void? {
             return try {
-                resultado = MainActivity2.conexionWS.procesaMarcacionAsistencia(ListaClientes.codVendedor, cadena)
+                resultado = if (dia == "HOY"){
+                    MainActivity2.conexionWS.procesaMarcacionAsistenciaAct(FuncionesUtiles.usuario["LOGIN"].toString(),cadena)
+                } else {
+                    MainActivity2.conexionWS.procesaMarcacionAsistencia(ListaClientes.codVendedor, cadena)
+                }
 //                resultado = "01*GRABADO CON EXITO"
                 null
             } catch (e: Exception) {
@@ -103,9 +167,23 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
                 MainActivity2.funcion.mensaje(contexto,"Resultado", resultado)
             } else {
                 if (mensaje[0] == "01") {
-                    val update = "update vt_marcacion_ubicacion set ESTADO = 'E' where ESTADO = 'P' and TIPO in ('E','S')"
+                    val update = if (dia == "HOY"){
+                        (" UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
+                                "  WHERE ESTADO = 'P'" +
+                                "    AND FECHA like '%" + MainActivity2.funcion.getFechaActual() + "%'")
+                    } else {
+                        ("update vt_marcacion_ubicacion set ESTADO = 'E' " +
+                                " where ESTADO         = 'P' " +
+                                "   and COD_PROMOTOR   = '" + ListaClientes.codVendedor + "'" +
+                                "   and COD_CLIENTE    = '" + stCodCliente + "'" +
+                                "   and COD_SUBCLIENTE = '" + stCodSubcliente + "'" +
+                                "   and TIPO in ('E','S') ")
+                    }
                     MainActivity2.funcion.ejecutar(update, contexto)
                     anomalia = ""
+                }
+                if ( mensaje[0]=="01"){
+                    mensaje[1]="Datos enviados con éxito."
                 }
                 MainActivity2.funcion.mensaje(contexto,"Resultado", mensaje[1])
             }
@@ -186,4 +264,5 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
             }
         }
     }
+
 }

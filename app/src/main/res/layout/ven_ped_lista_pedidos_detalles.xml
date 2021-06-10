@@ -41,20 +41,27 @@
         />
     <TextView
         android:id="@+id/tv5"
+        android:layout_width="50dp"
+        android:text="UM"
+        android:gravity="center|center_vertical"
+        style="@style/textoSubTabla"
+        />
+    <TextView
+        android:id="@+id/tv6"
         android:layout_width="120dp"
         android:text="P. Unitario"
         android:gravity="end|center_vertical"
         style="@style/textoSubTabla"
         />
     <TextView
-        android:id="@+id/tv6"
+        android:id="@+id/tv7"
         android:layout_width="120dp"
         android:text="Total"
         android:gravity="end|center_vertical"
         style="@style/textoSubTabla"
         />
     <TextView
-        android:id="@+id/tv7"
+        android:id="@+id/tv8"
         android:layout_width="100dp"
         android:text="Prom."
         android:gravity="end|center_vertical"

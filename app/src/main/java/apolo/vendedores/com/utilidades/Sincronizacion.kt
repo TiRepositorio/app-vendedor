@@ -58,7 +58,7 @@ class Sincronizacion : AppCompatActivity() {
 
         if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
-//            finish()
+            finish()
         }
         try {
             preparaSincornizacion().execute()

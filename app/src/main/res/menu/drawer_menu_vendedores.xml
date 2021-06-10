@@ -25,6 +25,10 @@
             android:icon="@drawable/ic_sincronizar"
             android:title="Sincronizar"/>
         <item
+            android:id="@+id/vendMarcaciones"
+            android:icon="@drawable/ic_enviar_marcaciones"
+            android:title="Enviar marcaciones"/>
+        <item
             android:id="@+id/vendActualizar"
             android:icon="@drawable/ic_actualizar"
             android:title="Actualizar versión"/>

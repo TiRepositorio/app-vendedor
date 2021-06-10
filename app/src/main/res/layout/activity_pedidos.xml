@@ -565,6 +565,12 @@
                         style="@style/cabeceraTabla"
                         />
                     <TextView
+                        android:layout_width="50dp"
+                        android:text="UM"
+                        android:gravity="center|center_vertical"
+                        style="@style/cabeceraTabla"
+                        />
+                    <TextView
                         android:layout_width="120dp"
                         android:text="P. Unitario"
                         android:gravity="end|center_vertical"

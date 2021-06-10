@@ -219,7 +219,7 @@ class CatastrarCliente : Activity() {
 
     //	GENERA STRING PARA ENVIAR AL WEB SERVICE
     private fun generaClienteEnviar() {
-        vCliente = "'1'|'" + FuncionesUtiles.usuario["LOGIN"]
+        vCliente = "'1'|'$codVendedor"
         vCliente += "'|'" + etCodigo.text.toString()
         codCliente = etCodigo.text.toString()
         var limit: Int = if (etRazonSocial.text.length < 100) { etRazonSocial.text.length } else { 100 }

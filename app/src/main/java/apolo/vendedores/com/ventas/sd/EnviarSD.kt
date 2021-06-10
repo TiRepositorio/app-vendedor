@@ -45,7 +45,7 @@ class EnviarSD {
                 + "    AND COD_CLIENTE    = '" + codCliente + "' "
                 + "    AND COD_SUBCLIENTE = '" + codSubcliente + "' "
                 + "    AND NRO_PLANILLA   = '" + ListaClientes.codVendedor + "' "
-                + "    AND EST_ENVIO	   = 'N' "
+                + "    AND EST_ENVIO	  = 'N' "
                 + "  GROUP BY COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,"
                 + "		   COD_CLIENTE,COD_SUBCLIENTE,FECHA ")
         insertarCabecera(funcion.consultar(sql))
