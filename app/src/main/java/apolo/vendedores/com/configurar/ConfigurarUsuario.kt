@@ -10,7 +10,9 @@ import apolo.vendedores.com.R
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.utilidades.FuncionesUtiles
+import apolo.vendedores.com.utilidades.SentenciasSQL
 import apolo.vendedores.com.utilidades.Sincronizacion
+import apolo.vendedores.com.utilidades.TablasSincronizacion
 import kotlinx.android.synthetic.main.activity_configurar_usuario.*
 import java.lang.Exception
 
@@ -44,6 +46,7 @@ class ConfigurarUsuario : AppCompatActivity() {
                     e.message.toString()
                 }
             } else {
+                borrarDatos()
                 FuncionesUtiles.usuario["NOMBRE"] = etUsuNombre.text.toString().trim()
                 FuncionesUtiles.usuario["LOGIN"] = etUsuCodigo.text.toString().trim()
                 FuncionesUtiles.usuario["VERSION"] = etUsuVersion.text.toString().trim()
@@ -88,6 +91,18 @@ class ConfigurarUsuario : AppCompatActivity() {
 
     private fun borrarUsuario(){
         MainActivity.bd!!.execSQL("delete from usuarios")
+    }
+
+    private fun borrarDatos(){
+        borrarUsuario()
+        val noSinc = SentenciasSQL.listaSQLCreateTable()
+        for (i in 0 until noSinc.size){
+            MainActivity2.funcion.ejecutar("DELETE FROM " + noSinc[i].split(" ")[5],this)
+        }
+        val sinc = TablasSincronizacion()
+        for (i in 0 until sinc.listaSQLCreateTables().size){
+            MainActivity2.funcion.ejecutar("DELETE FROM " + sinc.listaSQLCreateTables()[i].split(" ")[5],this)
+        }
     }
 
     override fun onBackPressed() {

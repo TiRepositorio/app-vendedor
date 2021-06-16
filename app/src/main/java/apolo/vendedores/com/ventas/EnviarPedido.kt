@@ -229,6 +229,14 @@ class EnviarPedido(
                     "$detalles$sql2;"
                 }
                 cursor.moveToNext()
+                if (!validarPedido(funcion.dato(cursor,"COD_ARTICULO"),
+                                  cabeceraHash["COD_LISTA_PRECIO"].toString(),
+                                  funcion.dato(cursor,"COD_UNIDAD_MEDIDA"),
+                                  funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA")))
+                {
+                    Pedidos.etAccionPedidos.setText("validarPedido*"+funcion.dato(cursor,"COD_ARTICULO"))
+                    return
+                }
             }
             try {
                 val t: Double = Pedidos.etTotalPedidos.text.toString().replace(".", "").replace(",", ".").toDouble()
@@ -240,6 +248,10 @@ class EnviarPedido(
                     return
                 }
             } catch (e: java.lang.Exception) {
+            }
+            if (cabeceraHash["COD_CONDICION"].equals("99")){
+                Toast.makeText(context,"No se permite la condicion de Venta 99 (Bonificación)",Toast.LENGTH_LONG).show()
+                return
             }
             Enviar().execute()
         } catch (e: java.lang.Exception) {
@@ -394,9 +406,25 @@ class EnviarPedido(
 
     }
 
+    private fun validarPedido(codArticulo:String,codListaPrecio:String,um:String,precio:String):Boolean{
+        val sql = " select  distinct a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
+                " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
+                " (CAST(b.CANT_MINIMA as integer)/CAST(a.mult as integer)) CANT_MINIMA  , " +
+                " CAST((CAST(IFNULL(b.PREC_CAJA,1) AS DOUBLE)/CAST(IFNULL(b.MULT,1) AS DOUBLE)) * CAST(IFNULL(a.MULT,1) AS DOUBLE) AS DOUBLE) PRECIO " +
+                " from svm_st_articulos a, svm_articulos_precios b " +
+                "  where   a.COD_ARTICULO = '" + codArticulo + "' " +
+                " and a.COD_ARTICULO = b.COD_ARTICULO and b.COD_VENDEDOR = '" + ListaClientes.codVendedor + "' " +
+                " and b.COD_LISTA_PRECIO = '" + codListaPrecio + "' " +
+                " and a.COD_UNIDAD_REL = '" + um + "' "
+        val curPrecio = funcion.consultar(sql)
+        return(funcion.dato(curPrecio,"PRECIO") == precio)
+    }
+
     init {
         ubicacion.obtenerUbicacion(lm)
     }
+
+
 
 
 }

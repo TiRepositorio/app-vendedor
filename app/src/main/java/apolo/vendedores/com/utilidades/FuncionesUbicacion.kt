@@ -168,13 +168,30 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                         return false
                     }
                 }
-                if (err != null) {
-                    if (err.indexOf("unknow") > -1) {
-                        count++
-                    } else {
-                        Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+                if (Build.VERSION.SDK_INT > 29){
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1 || err.indexOf("a null object reference") > -1) {
+                            count++
+                        } else {
+                            Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else {
+                    if (err != null) {
+                        if (err.indexOf("unknow") > -1) {
+                            count++
+                        } else {
+                            Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
+//                if (err != null) {
+//                    if (err.indexOf("unknow") > -1) {
+//                        count++
+//                    } else {
+//                        Toast.makeText(context,e.message,Toast.LENGTH_LONG).show()
+//                    }
+//                }
             }
             if (count == 2) {
                 try {

@@ -85,7 +85,8 @@ class ConsultaPedidos : AppCompatActivity() {
         ListaClientes.tipCondicion      = listaCliente[0]["TIPO_CONDICION"].toString()
         ListaClientes.codCondicion      = lista[position]["COD_CONDICION_VENTA"].toString()
         ListaClientes.diasInicial       = lista[position]["DIAS_INICIAL"].toString()
-        Pedidos.indPresencial           = lista[position]["IND_PRESENCIAL"].toString().trim()
+//        Pedidos.indPresencial           = lista[position]["IND_PRESENCIAL"].toString().trim()
+        Pedidos.indPresencial           = "N"
         Pedidos.vent                    = "N"
         Pedidos.totalPedido             = lista[position]["TOT_COMPROBANTE"].toString()
     }
