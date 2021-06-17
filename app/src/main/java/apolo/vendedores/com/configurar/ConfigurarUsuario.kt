@@ -55,7 +55,7 @@ class ConfigurarUsuario : AppCompatActivity() {
                 FuncionesUtiles.usuario["COD_EMPRESA"] = "1"
                 FuncionesUtiles.usuario["CONF"] = "S"
                 Sincronizacion.tipoSinc = "T"
-    //                MainActivity.bd!!.execSQL(SentenciasSQL.insertUsuario(FuncionesUtiles.usuario))
+                MainActivity.bd!!.execSQL(SentenciasSQL.insertUsuario(FuncionesUtiles.usuario))
                 val menu2 = Intent(this, Sincronizacion::class.java)
                 startActivity(menu2)
                 finish()

@@ -122,8 +122,14 @@ class Marcacion : AppCompatActivity() {
                     if (trigger.trim() == "Abrir"){
                         return false
                     }
-                    val autorizacionDialogo = DialogoAutorizacion(this)
+                    if (trigger.trim() == "PRE-SALIDA" || trigger.trim() == "PRE-ENTRADA"){
+                        val autorizacionDialogo = DialogoAutorizacion(this)
                         autorizacionDialogo.dialogoAutorizacionCod(trigger, accion)
+                        return false
+                    }
+                    if (trigger.trim() == "Entrada" || trigger.trim() == "Salida"){
+                        return false
+                    }
                     return true
                 }else{
                     funcion.toast(
