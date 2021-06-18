@@ -1423,11 +1423,13 @@ class Pedidos : AppCompatActivity() {
                 }
                 val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
                 println(diffInDays.toString())
-                if (diffInDays > 2) {
+//                if (diffInDays > 2) {
+                val progPedido = funcion.progPedido(ListaClientes.codVendedor)
+                if (diffInDays > progPedido) {
                     funcion.mensaje(
                         this@Pedidos,
                         "¡Atención!",
-                        "La fecha no puede ser mayor a dos días."
+                        "La fecha no puede ser mayor a $progPedido días."
                     )
                     val sdf = SimpleDateFormat("dd/MM/yyyy")
                     etFecha.setText(sdf.format(Date()))

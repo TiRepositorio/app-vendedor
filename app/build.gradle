@@ -6,6 +6,15 @@ android {
     compileSdkVersion 29
     buildToolsVersion '30.0.0'
 
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Android\\Keystore\\key_vendedor.jks')
+            storePassword 'apolo2020'
+            keyAlias 'key_vendedor'
+            keyPassword 'apolo2020'
+        }
+    }
+
     defaultConfig {
         applicationId "apolo.vendedores.com"
         minSdkVersion 16

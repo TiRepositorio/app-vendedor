@@ -344,9 +344,6 @@ class TablasSincronizacion {
         lista.add(26,"VERSION")
 
 
-//        lista.add(25,"")
-//        lista.add(26,"")
-//        lista.add(27,"")
 //        lista.add(28,"ULTIMA_VEZ")
 //        lista.add(29,"ultima_sincro")
         return lista

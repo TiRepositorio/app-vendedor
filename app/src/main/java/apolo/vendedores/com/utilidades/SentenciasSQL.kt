@@ -12,16 +12,18 @@ class SentenciasSQL {
                     " LOGIN TEXT                            , TIPO TEXT         , " +
                     " ACTIVO TEXT                           , COD_EMPRESA TEXT  , " +
                     " VERSION TEXT                          , MIN_FOTOS   TEXT  , " +
-                    " MAX_FOTOS TEXT                        , COD_PERSONA TEXT);"
+                    " MAX_FOTOS TEXT                        , COD_PERSONA TEXT  , " +
+                    " PROG_PEDIDO TEXT);"
         }
         fun insertUsuario(usuario: HashMap<String, String>):String{
-            return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION/*, MIN_FOTOS, MAX_FOTOS*/ ) VALUES " +
+            return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO/*, MIN_FOTOS, MAX_FOTOS*/ ) VALUES " +
                     "('" + usuario["NOMBRE"] + "'," +
                      "'" + usuario["LOGIN"] + "'," +
                      "'" + usuario["TIPO"] + "'," +
                      "'" + usuario["ACTIVO"] + "'," +
                      "'1'," +
                      "'" + usuario["VERSION"] + "'" +
+                     "'" + usuario["PROG_PEDIDO"] + "'"
 //                     "'" +  usuario.get("MIN_FOTOS")         + "'," +
 //                     "'" +  usuario.get("MAX_FOTOS")         + "' " +
                      ")"
@@ -78,7 +80,7 @@ class SentenciasSQL {
                     " VERSION_SISTEMA TEXT 				    , PER_ASISTENCIA TEXT   , FRECUENCIA_RASTREO TEXT   ,       " +
                     " HORA_INICIO TEXT					    , HORA_FIN TEXT         , TIEMPO_ASISTENCIA TEXT    ,       " +
                     " ULTIMA_VEZ TEXT 					    , IND_FOTO TEXT         , MIN_VENTA TEXT            ,       " +
-                    " VENT_CON_MARC TEXT 					, PER_MARC_ASIS TEXT    , DESC_VENDEDOR TEXT);"
+                    " VENT_CON_MARC TEXT 					, PER_MARC_ASIS TEXT    , DESC_VENDEDOR TEXT)       ;"
         }
 
         fun createTableSvmArticulosPrecios(): String {

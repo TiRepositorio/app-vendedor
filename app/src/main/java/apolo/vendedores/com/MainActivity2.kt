@@ -116,15 +116,6 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
         }
 
-//        subInforme2.cargarVentasPorCliente()
-//        subInforme2.cargarDatosX("COD_VENDEDOR")
-//        subInforme2.cargarDatosY("VENTA_4")
-//
-//        grafico = Graficos(graComision,subInforme2.datosX,subInforme2.datosY)
-//        grafico.getGraficoDeBarra("", Color.BLACK,15.toFloat(),Color.WHITE,1500)
-//        graComision.setOnClickListener{
-//            startActivity(Intent(this,VentasPorCliente::class.java))
-//        }
 
         subInforme3.cargarDatos()
         subInforme3.cargarDatosX("TIP_COM")
@@ -154,11 +145,20 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
         }
 
-//        evolucionDiaria()
-//        trCabecera.setOnClickListener(View.OnClickListener { startActivity(Intent(this,EvolucionDiariaDeVentas::class.java)) })
+        agregarProgPedido()
+
         nav_view_menu.setNavigationItemSelectedListener(this)
-//        funcion.ejecutar("drop table if exists vt_pedidos_det",this)
-//        funcion.ejecutar("drop table if exists vt_pedidos_cab",this)
+    }
+
+    private fun agregarProgPedido(){
+        try {
+            bd!!.execSQL("select PROG_PEDIDO FROM usuarios")
+        } catch (e:java.lang.Exception){
+            if (e.message.toString().indexOf("such column")>-1){
+                funcion.ejecutar("alter table usuarios add column PROG_PEDIDO TEXT DEFAULT '0'",this)
+            }
+//            funcion.mensaje(this,"ERROR!",e.message.toString())
+        }
     }
 
     @SuppressLint("SetTextI18n")

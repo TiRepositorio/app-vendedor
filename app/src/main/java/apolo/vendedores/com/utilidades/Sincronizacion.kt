@@ -95,7 +95,11 @@ class Sincronizacion : AppCompatActivity() {
             enviarNoventa.enviarPendientesDiaAnterior()
 
             insertarUsuario()
+            if (imeiBD.isNullOrEmpty()){
+                return null
+            }
             if (imeiBD.length>3 && imeiBD.isNotEmpty()){
+                funcion.ejecutar("update usuarios set PROG_PEDIDO = '${imeiBD.split("-")[3]}'",this@Sincronizacion)
                 if (!validaVersion(imeiBD.split("-")[0],imeiBD.split("-")[1],imeiBD.split("-")[2])){
                     return null
                 }

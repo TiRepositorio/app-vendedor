@@ -82,35 +82,33 @@ class EnviarPedido(
 
             // 25 campos
             ubicacion.obtenerUbicacion(lm)
-            vIntoCab = ("'" + "1" + "'" // cod_empresa
-                    + ",'" + ListaClientes.codSucursalCliente
-                    + "'" // cod_sucursal
-                    + ",to_date('" + Pedidos.etFechaPedido.text
-                    + "','dd/MM/yyyy')" // fec_comprobante
-                    + "," + "'" + "PRO" + "'" // tip_comprobante
-                    + ",'" + ListaClientes.codVendedor + "'" // ser_comprobante
+            vIntoCab = ("'1'" // cod_empresa
+                    + ",'${ListaClientes.codSucursalCliente}'" // cod_sucursal
+                    + ",to_date('${Pedidos.etFechaPedido.text}','dd/MM/yyyy')" // fec_comprobante
+                    + ",'PRO'" // tip_comprobante
+                    + ",'${ListaClientes.codVendedor}'" // ser_comprobante
                     // +","+ et_tot_pedido.getText().toString().replace(".", "")
-                    + ",'" + ListaClientes.codVendedor + "'" // cod_Vendedor
-                    + ",'" + ListaClientes.codCliente + "'" // cod_Cliente
-                    + ",'" + ListaClientes.codSubcliente + "'" // cod_Subcliente
-                    + ",'" + cabeceraHash["COD_CONDICION_VENTA"] + "'" // cod_Condicion_Venta
-                    + ",'" + cabeceraHash["COD_LISTA_PRECIO"] + "'" // cod_Lista_Precio
-                    + ",'" + cabeceraHash["COD_MONEDA"] + "'" // cod_Moneda
-                    + ",'" + "P" + "'" // estado
-                    + ",'" + "PRO" + "'" // tip_Comprobante_Ref
-                    + ",'" + ListaClientes.codVendedor + "'" // ser_Comprobante_Ref
-                    + ",'" + Pedidos.etNroPedidos.text.toString() + "'" // nro_Comprobante_ref
+                    + ",'${ListaClientes.codVendedor}'" // cod_Vendedor
+                    + ",'${ListaClientes.codCliente}'" // cod_Cliente
+                    + ",'${ListaClientes.codSubcliente}'" // cod_Subcliente
+                    + ",'${cabeceraHash["COD_CONDICION_VENTA"]}'" // cod_Condicion_Venta
+                    + ",'${cabeceraHash["COD_LISTA_PRECIO"]}'" // cod_Lista_Precio
+                    + ",'${cabeceraHash["COD_MONEDA"]}'" // cod_Moneda
+                    + ",'P'" // estado
+                    + ",'PRO'" // tip_Comprobante_Ref
+                    + ",'${ListaClientes.codVendedor}'" // ser_Comprobante_Ref
+                    + ",'${Pedidos.etNroPedidos.text.toString()}'" // nro_Comprobante_ref
 //                    					+ ",'" + Aplicacion._lati + "'" // latitud
 //                    					+ ",'" + Aplicacion._longi + "'" // longitud
-                    + ",'" + ubicacion.latitud  + "'" // latitud
-                    + ",'" + ubicacion.longitud + "'" // longitud
+                    + ",'${ubicacion.latitud}'" // latitud
+                    + ",'${ubicacion.longitud}'" // longitud
 //                    + ",''" // latitud
 //                    + ",''" // longitud
-                    + ",'" + Pedidos.etNroOrdenCompra.text.toString() + "'" // nro_Orden_Compra
-                    + ",'" + Pedidos.depo + "'" // ind_Deposito
-                    + ",'" + "S" + "'" // ind_Sistema
-                    + ",'" + descVarios.replace(",",".") + "'" // porc_Desc_Var
-                    + ",'" + descFin.replace(",",".") + "'") // descuento_fin
+                    + ",'${Pedidos.etNroOrdenCompra.text.toString()}'" // nro_Orden_Compra
+                    + ",'${Pedidos.depo}'" // ind_Deposito
+                    + ",'S'" // ind_Sistema
+                    + ",'${descVarios.replace(",",".")}'" // porc_Desc_Var
+                    + ",'${descFin.replace(",",".")}'") // descuento_fin
             if (Pedidos.spListaPrecios.getDato("DECIMALES") == "0") {
                 vIntoCab = if (descVarios != "") {
                     val desVar: Float = "0".toFloat()

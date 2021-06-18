@@ -3,6 +3,7 @@ package apolo.vendedores.com.utilidades
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
@@ -459,6 +460,14 @@ class FuncionesUtiles {
     //            Toast.makeText(context,"Error al ejecutar " + sql,Toast.LENGTH_LONG).show()
             false
         }
+    }fun ejecutarB(sql: String, context: Context): Boolean {
+        return try {
+            MainActivity.bd!!.execSQL(sql)
+            true
+        } catch (e: Exception) {
+//            toast(context,e.message.toString())
+            false
+        }
     }
     fun insertar(tabla: String, valores: ContentValues){
         try {
@@ -908,7 +917,10 @@ class FuncionesUtiles {
         }
         return true
     }
-
+    fun progPedido(codVendedor:String):Int{
+        val sql = "select PROG_PEDIDO from usuarios"
+        return datoEntero(consultar(sql),"PROG_PEDIDO");
+    }
 
     //MENU
     fun mostrarMenu(){

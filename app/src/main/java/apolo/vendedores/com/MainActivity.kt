@@ -55,6 +55,17 @@ class MainActivity : AppCompatActivity() {
 //        mostrarImei()
     }
 
+    private fun agregarProgPedido(){
+        try {
+            MainActivity2.bd!!.execSQL("select PROG_PEDIDO FROM usuarios")
+        } catch (e:java.lang.Exception){
+            if (e.message.toString().indexOf("such column")>-1){
+                MainActivity2.funcion.ejecutar("alter table usuarios add column PROG_PEDIDO TEXT DEFAULT '0'",this)
+            }
+//            funcion.mensaje(this,"ERROR!",e.message.toString())
+        }
+    }
+
     private fun comenzar(){
         if (etCodigoUsuario.text.isEmpty() || etNombreUsuario.text.isEmpty() || etVersionUsuario.text.isEmpty()){
             funcion.mensaje(this,"","Todos los campos son obligatorios")
@@ -92,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         } catch(e:Exception){
             return false
         }
+
 
         if (cursor.moveToFirst()) {
             cursor.moveToLast()
