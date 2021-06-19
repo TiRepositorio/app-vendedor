@@ -227,13 +227,15 @@ class EnviarPedido(
                     "$detalles$sql2;"
                 }
                 cursor.moveToNext()
-                if (!validarPedido(funcion.dato(cursor,"COD_ARTICULO"),
-                                  cabeceraHash["COD_LISTA_PRECIO"].toString(),
-                                  funcion.dato(cursor,"COD_UNIDAD_MEDIDA"),
-                                  funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA")))
-                {
-                    Pedidos.etAccionPedidos.setText("validarPedido*"+funcion.dato(cursor,"COD_ARTICULO"))
-                    return
+                if (funcion.dato(cursor,"NRO_PROMOCION").isNullOrEmpty()){
+                    if (!validarPedido(funcion.dato(cursor,"COD_ARTICULO"),
+                            cabeceraHash["COD_LISTA_PRECIO"].toString(),
+                            funcion.dato(cursor,"COD_UNIDAD_MEDIDA"),
+                            funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA")))
+                    {
+                        Pedidos.etAccionPedidos.setText("validarPedido*"+funcion.dato(cursor,"COD_ARTICULO"))
+                        return
+                    }
                 }
             }
             try {
