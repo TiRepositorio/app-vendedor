@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
             FuncionesUtiles.usuario["ACTIVO"] = "S"
             FuncionesUtiles.usuario["COD_EMPRESA"] = "1"
             FuncionesUtiles.usuario["CONF"] = "S"
+            FuncionesUtiles.usuario["PROG_PEDIDO"] = "0"
             Sincronizacion.tipoSinc = "T"
             Sincronizacion.primeraVez = true
             val menu2 = Intent(this, Sincronizacion::class.java)

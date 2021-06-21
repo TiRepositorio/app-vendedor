@@ -367,7 +367,8 @@ class Sincronizacion : AppCompatActivity() {
 
     fun insertarUsuario(){
         try {
-            MainActivity.bd!!.execSQL(SentenciasSQL.insertUsuario(FuncionesUtiles.usuario))
+            val usuarios = SentenciasSQL.insertUsuario(FuncionesUtiles.usuario)
+            MainActivity.bd!!.execSQL(usuarios)
         } catch (e : Exception) {
             return
         }

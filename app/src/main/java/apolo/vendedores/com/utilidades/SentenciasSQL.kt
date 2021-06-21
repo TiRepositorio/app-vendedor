@@ -16,16 +16,14 @@ class SentenciasSQL {
                     " PROG_PEDIDO TEXT);"
         }
         fun insertUsuario(usuario: HashMap<String, String>):String{
-            return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO/*, MIN_FOTOS, MAX_FOTOS*/ ) VALUES " +
+            return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO) VALUES " +
                     "('" + usuario["NOMBRE"] + "'," +
                      "'" + usuario["LOGIN"] + "'," +
                      "'" + usuario["TIPO"] + "'," +
                      "'" + usuario["ACTIVO"] + "'," +
                      "'1'," +
-                     "'" + usuario["VERSION"] + "'" +
-                     "'" + usuario["PROG_PEDIDO"] + "'"
-//                     "'" +  usuario.get("MIN_FOTOS")         + "'," +
-//                     "'" +  usuario.get("MAX_FOTOS")         + "' " +
+                     "'" + usuario["VERSION"] + "'," +
+                     "'" + usuario["PROG_PEDIDO"] + "'" +
                      ")"
         }
 
