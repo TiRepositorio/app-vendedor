@@ -36,7 +36,10 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
     }
 
     private fun sqlMarcaciones() : String {
-        return ("Select a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, ifnull(a.OBSERVACION,'') OBSERVACION   "
+        return  ( "Select a.id          , a.COD_CLIENTE , a.COD_SUBCLIENTE  "
+                + "   , a.FECHA         , a.COD_PROMOTOR, a.TIPO            "
+                + "   , a.ESTADO        , a.LATITUD     , a.LONGITUD        "
+                + "   , ifnull(a.OBSERVACION,'') OBSERVACION                "
                 + "  from vt_marcacion_ubicacion a "
                 + "  where a.ESTADO         = 'P' "
                 + "    and a.COD_PROMOTOR   = '" + ListaClientes.codVendedor + "'"

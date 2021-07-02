@@ -114,9 +114,11 @@ class Sincronizacion : AppCompatActivity() {
                     if (!validaVersion(imeiBD)){
                         return null
                     }
+                    tvImei.text = "Configure correctamente la versión en el servidor."
+                    return null
                 }
             }
-            if (Build.VERSION.SDK_INT >= 26){
+            if (Build.VERSION.SDK_INT >= 30){
                 progressDialog.setMessage("Generando Archivos")
             }
             if (tipoSinc == "T"){
@@ -129,7 +131,7 @@ class Sincronizacion : AppCompatActivity() {
                         Toast.makeText(this@Sincronizacion, "Error al generar archivos", Toast.LENGTH_SHORT).show()
                     }
                 }
-                if (Build.VERSION.SDK_INT >= 26){
+                if (Build.VERSION.SDK_INT >= 30){
                     progressDialog.setMessage("Obteniendo Archivos")
                 }
                 if(!MainActivity.conexionWS.obtenerArchivos()){
