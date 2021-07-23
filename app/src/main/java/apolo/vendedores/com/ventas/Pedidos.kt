@@ -260,7 +260,7 @@ class Pedidos : AppCompatActivity() {
                              " and b.COD_LISTA_PRECIO = '" + codListaPrecio + "' "
         val whereOpcional = ""
         val group = ""
-        val order = ""
+        val order = " cast(a.COD_UNIDAD_REL AS NUMBER) asc "
         spReferencias = FuncionesSpinner(this, spReferencia)
         spReferencias.generaSpinner(
             campos,
@@ -272,14 +272,15 @@ class Pedidos : AppCompatActivity() {
             "REFERENCIA",
             ""
         )
-        cbReferencias(campos, tabla, where, whereOpcional)
+        cbReferencias(campos, tabla, where, whereOpcional,order)
     }
 
 //    private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String){
-    private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String){
+    private fun cbReferencias(campos: String, tabla: String, where: String, whereOpcional: String,order: String){
         var sql : String = "SELECT " + campos +
                 "  FROM " + tabla +
-                " WHERE " + where
+                " WHERE " + where +
+                " ORDER BY "  + order
         if (whereOpcional.trim() != ""){ sql += whereOpcional }
         val lista : ArrayList<HashMap<String, String>> = ArrayList()
         esconderCB()
@@ -494,8 +495,10 @@ class Pedidos : AppCompatActivity() {
                     tvdDesc.setText(tvdPrecioReferencia.text)
                     return
                 }
-                if (etAccion.text.toString().trim() == "eliminarDetalle") {
-                    eliminarDetalle()
+                if (etAccion.text.toString().trim().split("*")[0] == "eliminarDetalle") {
+                    posDetalle = etAccion.text.toString().trim().split("*")[1].toInt()
+                    lvDetalle.invalidateViews()
+                    eliminarDetalle(etAccion.text.toString().trim().split("*")[1].toInt())
                     cargarDetalle()
                     return
                 }
@@ -515,8 +518,8 @@ class Pedidos : AppCompatActivity() {
                     recalcularTotal()
                     return
                 }
-                if (etAccion.text.toString().trim() == "eliminarDetallePromocion") {
-                    eliminarDetallePromocion()
+                if (etAccion.text.toString().trim().split("*")[0] == "eliminarDetallePromocion") {
+                    eliminarDetallePromocion(etAccion.text.toString().trim().split("*")[1].toInt())
                     cargarDetalle()
                     return
                 }
@@ -1329,16 +1332,17 @@ class Pedidos : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun eliminarDetalle(){
+    private fun eliminarDetalle(posicion:Int){
         val sql: String
         if (listaDetalles[posDetalle]["NRO_PROMOCION"].toString().trim().replace("null", "") == ""){
-            sql = "DELETE FROM  vt_pedidos_det WHERE id = ${listaDetalles[posDetalle]["id"]}"
+            sql = "DELETE FROM  vt_pedidos_det WHERE id = ${listaDetalles[posicion]["id"]}" +
+                  "   AND NUMERO = '$maximo' "
             funcion.ejecutar(sql, this)
             recalcularTotal()
         } else {
             val dialogoAutorizacion = DialogoAutorizacion(this)
             dialogoAutorizacion.dialogoAccionOpcion(
-                "eliminarDetallePromocion", "", accion,
+                "eliminarDetallePromocion*$posicion", "", accion,
                 "El artículo pertenece a una promocion.\nSe eliminarán todos los artículos de la promoción.\n¿Desea continuar?",
                 "¡Atención!", "SI", "NO"
             )
@@ -1346,9 +1350,9 @@ class Pedidos : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun eliminarDetallePromocion(){
+    private fun eliminarDetallePromocion(posicion: Int){
         val sql = "DELETE FROM  vt_pedidos_det " +
-                " WHERE NRO_PROMOCION = '${listaDetalles[posDetalle]["NRO_PROMOCION"]}' " +
+                " WHERE NRO_PROMOCION = '${listaDetalles[posicion]["NRO_PROMOCION"].toString().trim()}' " +
                 "   AND NUMERO = '$maximo' "
         funcion.ejecutar(sql, this)
         recalcularTotal()

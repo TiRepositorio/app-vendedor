@@ -14,13 +14,11 @@ import apolo.vendedores.com.ventas.DialogoPromocion
 import apolo.vendedores.com.ventas.ListaClientes
 import apolo.vendedores.com.ventas.Pedidos
 import apolo.vendedores.com.ventas.Promociones
-import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.imgAbrir
-import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.imgCerrar
+import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.*
 import kotlinx.android.synthetic.main.rep_canasta_de_marcas.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_debitos.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_haberes.view.*
 import kotlinx.android.synthetic.main.ven_lista_sd_detalles.view.*
-import java.lang.Exception
 import java.text.DecimalFormat
 
 class Adapter{
@@ -90,7 +88,7 @@ class Adapter{
 
         fun getPorcDecimal(index: String):Double{
 
-            var totalPorcCump: Double = 0.0
+            var totalPorcCump = 0.0
 
             for (i in 0 until dataSource.size) {
                 if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
@@ -503,7 +501,7 @@ class Adapter{
 
         fun getPorcDecimal(index: String):Double{
 
-            var totalPorcCump: Double = 0.0
+            var totalPorcCump = 0.0
 
             for (i in 0 until dataSource.size) {
                 if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
@@ -697,7 +695,7 @@ class Adapter{
         }
 
         fun getSubTablaHeight(parent: ViewGroup?):Int{
-            var subRowView = inflater.inflate(subMolde, parent, false)
+            val subRowView = inflater.inflate(subMolde, parent, false)
             var subHeight = 0
             for (i in subVistas.indices){
                 if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
@@ -821,6 +819,7 @@ class Adapter{
             return position.toLong()
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
             val adapterSubLista = ListaDesplegable3(context,
@@ -902,7 +901,7 @@ class Adapter{
             var totalValor: Int = 0
 
             for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(dataSource.get(i).get(index).toString().replace(".", "", false))
+                totalValor += Integer.parseInt(dataSource[i][index].toString().replace(".", "", false))
             }
 
             return totalValor
@@ -978,9 +977,10 @@ class Adapter{
             return position.toLong()
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
-            val adapterSubLista = SubLista(context, subDataSource.get(position),subMolde, subVistas, subValores,position)
+            val adapterSubLista = SubLista(context, subDataSource[position],subMolde, subVistas, subValores,position)
             val subLista = rowView.findViewById<ListView>(idSubLista)
             subLista.visibility = View.GONE
 
@@ -1007,26 +1007,27 @@ class Adapter{
             } else {
                 rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
             }
-            rowView.setOnClickListener(View.OnClickListener {
-                FuncionesUtiles.posicionDetalle  = position
+            rowView.setOnClickListener {
+                FuncionesUtiles.posicionDetalle = position
                 FuncionesUtiles.posicionDetalle2 = 0
-                if (rowView.imgAbrir.visibility == View.VISIBLE){
-                    if (layoutSubTabla != null){
-                        rowView.findViewById<LinearLayout>(R.id.llSubTabla2).visibility = View.VISIBLE
+                if (rowView.imgAbrir.visibility == View.VISIBLE) {
+                    if (layoutSubTabla != null) {
+                        rowView.findViewById<LinearLayout>(R.id.llSubTabla2).visibility =
+                            View.VISIBLE
                     }
 //                    rowView.layoutParams.height = (rowView.layoutParams.height) + ((subLista.layoutParams.height / dataSource.size) * subDataSource.get(position).size )
-                    rowView.imgAbrir.visibility  = View.GONE
+                    rowView.imgAbrir.visibility = View.GONE
                     rowView.imgCerrar.visibility = View.VISIBLE
                     subLista.visibility = View.VISIBLE
                 } else {
-                    if (layoutSubTabla != null){
+                    if (layoutSubTabla != null) {
                         rowView.findViewById<LinearLayout>(R.id.llSubTabla2).visibility = View.GONE
                     }
-                    rowView.imgAbrir.visibility  = View.VISIBLE
+                    rowView.imgAbrir.visibility = View.VISIBLE
                     rowView.imgCerrar.visibility = View.GONE
                     subLista.visibility = View.GONE
                 }
-            })
+            }
 
             rowView.setOnFocusChangeListener { v, _ ->  v.invalidate() }
 
@@ -1559,12 +1560,13 @@ class Adapter{
             return position.toLong()
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
 
-            for (i in 0 until vistas.size){
+            for (i in vistas.indices){
                 try {
-                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).text = dataSource[position][valores[i]]
                     rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
                     if (verificaPromoCargada(position)){
                         rowView.findViewById<TextView>(vistas[i]).setTextColor(Color.parseColor("#000000"))
@@ -1593,20 +1595,23 @@ class Adapter{
 
         fun getTotalEntero(parametro:String):Int{
 
-            var totalValor: Int = 0
+            var totalValor = 0
 
             for (i in 0 until dataSource.size) {
-                totalValor = totalValor + Integer.parseInt(dataSource.get(i).get(parametro).toString().replace(".","",false))
+                totalValor += Integer.parseInt(
+                    dataSource[i][parametro].toString().replace(".", "", false)
+                )
             }
 
             return totalValor
         }
 
         fun getTotalDecimal(parametro: String):Double{
-            var totalPorcCump: Double = 0.0
+            var totalPorcCump = 0.0
 
             for (i in 0 until dataSource.size) {
-                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
+                    .replace(",", ".").replace("%", "").toDouble()
             }
             return totalPorcCump
         }
@@ -1615,9 +1620,9 @@ class Adapter{
             val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                     +  " WHERE NUMERO = '${Pedidos.maximo}' "
                     +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND COD_ARTICULO = '${dataSource.get(position).get("COD_ARTICULO")}' "
+                    +  "   AND COD_ARTICULO = '${dataSource[position]["COD_ARTICULO"]}' "
                     +  " ")
-            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            val funcion = FuncionesUtiles(context)
             if (funcion.consultar(sql).count > 0){
                 return false
             }
@@ -1631,7 +1636,7 @@ class Adapter{
             val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                     +  " WHERE NUMERO = '${Pedidos.maximo}' "
                     +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND NRO_PROMOCION = '${dataSource.get(position).get("NRO_PROMOCION")}' "
+                    +  "   AND NRO_PROMOCION = '${dataSource[position]["NRO_PROMOCION"]}' "
                     +  " ")
             val funcion = FuncionesUtiles(context)
             if (funcion.consultar(sql).count > 0){
@@ -1645,7 +1650,8 @@ class Adapter{
             var totalPorcCump: Double = 0.0
 
             for (i in 0 until dataSource.size) {
-                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
+                    .replace(",", ".").replace("%", "").toDouble()
             }
 
             return totalPorcCump/dataSource.size
@@ -1674,6 +1680,7 @@ class Adapter{
             return position.toLong()
         }
 
+        @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
 
@@ -1712,7 +1719,7 @@ class Adapter{
 
         fun getTotalEntero(parametro:String):Int{
 
-            var totalValor: Int = 0
+            var totalValor = 0
 
             for (i in 0 until dataSource.size) {
                 totalValor += Integer.parseInt(dataSource[i][parametro].toString().replace(".", "", false))
@@ -1751,9 +1758,9 @@ class Adapter{
             val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                     +  " WHERE NUMERO = '${Pedidos.maximo}' "
                     +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND NRO_PROMOCION = '${dataSource.get(position).get("NRO_PROMOCION")}' "
+                    +  "   AND NRO_PROMOCION = '${dataSource[position]["NRO_PROMOCION"]}' "
                     +  " ")
-            var funcion : FuncionesUtiles = FuncionesUtiles(context)
+            val funcion = FuncionesUtiles(context)
             if (funcion.consultar(sql).count > 0){
                 return false
             }
@@ -1762,10 +1769,11 @@ class Adapter{
 
         fun getPromedioDecimal(parametro: String):Double{
 
-            var totalPorcCump: Double = 0.0
+            var totalPorcCump = 0.0
 
             for (i in 0 until dataSource.size) {
-                totalPorcCump = totalPorcCump + dataSource.get(i).get(parametro).toString().replace(".","").replace(",",".").replace("%","").toDouble()
+                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
+                    .replace(",", ".").replace("%", "").toDouble()
             }
 
             return totalPorcCump/dataSource.size
@@ -1798,21 +1806,21 @@ class Adapter{
             return position.toLong()
         }
 
+        @SuppressLint("SetTextI18n", "ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val rowView = inflater.inflate(molde, parent, false)
 
-            for (i in 0 until vistas.size){
+            for (i in vistas.indices){
                 try {
-                    rowView.findViewById<TextView>(vistas[i]).setText(dataSource.get(position).get(valores[i]))
+                    rowView.findViewById<TextView>(vistas[i]).text = dataSource[position][valores[i]]
                     rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
                 } catch (e:Exception){
                     e.printStackTrace()
                 }
             }
 
-            rowView.imgEliminar.setOnClickListener(){
-                Pedidos.posDetalle = position
-                etAccion.setText(accion)
+            rowView.imgEliminar.setOnClickListener {
+                etAccion.setText("$accion*$position")
             }
 
             if (position%2==0){

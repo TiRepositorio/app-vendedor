@@ -1,0 +1,536 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 27262976 bytes for Failed to commit area from 0x000000008b400000 to 0x000000008ce00000 of length 27262976.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./src/hotspot/os/windows/os_windows.cpp:3303), pid=26608, tid=19216
+#
+# JRE version: OpenJDK Runtime Environment (11.0.8+10) (build 11.0.8+10-b944.6842174)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.8+10-b944.6842174, mixed mode, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -Xallow-no-source-files -classpath C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\debug\R.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\70b69f018ff8e55d59c786768edda5ad\jetified-ksoap2-android-assembly-3.6.2-jar-with-dependencies.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\65822686645ebbefbf6a8af1588fb9e6\jetified-kotlin-android-extensions-runtime-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\e339e8830f424a51a223b9ab6ff13c9b\jetified-kotlin-stdlib-jdk7-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\b7b8da7012b769d6e1d5e97ec3660eec\jetified-core-ktx-1.2.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\172a37d5aaf6c239d3f3ac4e85e80706\jetified-kotlin-stdlib-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\2cd9eed13f11bee972de9aa70644c376\jetified-kotlin-stdlib-common-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\17dda0cf0629172bdc4ecf5d3bc5b97a\jetified-annotations-13.0.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\c947f03eec3c31e4097ca3d0b32c1cc1\material-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\bf764ed074c0ac103109d1826cf7354a\appcompat-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\74b70178f46f9beb69813f52563b2a97\cardview-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7333204511bb3c05d1650051bbdc5a28\gridlayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\14fd8c3ad82c146d9efd8859e38a0ef8\jetified-play-services-maps-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\8259b828720644cdf6d447b6f0a0b83e\lifecycle-extensions-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\315adbd2afad81e80f5bbf1852a718f2\jetified-play-services-base-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\990e53d49840d4a3304bf3e9e4296c42\jetified-play-services-tasks-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\403014eab9c0958fc26346100d11e617\jetified-play-services-basement-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\1fc704df438e6cdf3413193de7ed392d\fragment-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\33acbb21701a1ade15e4092c70f97025\jetified-appcompat-resources-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\33c20b999289e9299d1cad45fa98c7a6\recyclerview-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\76c75866880fca3b75c921507b105d85\legacy-support-core-ui-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\0e3c66a3359eaa312754fda18d5dfe2e\drawerlayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\c43474b19389b1e03742d2da590ee4a3\legacy-support-core-utils-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\1ecce74702a69f4ef001d8c6bd54834c\transition-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\091c5e1d98085a9d8c1238f7927ad4fe\viewpager-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\71f148104eb89bbfe4e11706029f1cef\loader-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\545b0e463990b84056b5abc523bcaf4b\jetified-activity-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7f1b5fa0f97abb97ce59d6577f60626c\vectordrawable-animated-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\3235186253f0a4fb08ded59c6811268c\vectordrawable-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7627cb98189ffbf04fb6ce4bfc1083aa\coordinatorlayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\8c9caf90f93a830eb2db4e11c3d2e4d6\slidingpanelayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\93bbed8d54bdf409240c2e8603405103\customview-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\3859092948a9f46d091d991580909ae0\swiperefreshlayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\a8282f650cbcd828238c9a81be553138\asynclayoutinflater-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\86f48c18db492a57be3ab23a948885bf\core-1.2.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7aa288b484ec0e6c723a3d20022222b1\cursoradapter-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\12946545c9bb67528535379c9c39c656\versionedparcelable-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\androidx.collection\collection\1.1.0\1f27220b47669781457de0d600849a5de0e89909\collection-1.1.0.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\17fb15fab65cfe32fe47332c1211a1ee\jetified-lifecycle-process-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\9cc75c497fd40dab6202513f6d8823dc\jetified-lifecycle-service-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\2f39c521624e3d32aad3ba1277bc57cd\lifecycle-runtime-2.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\ab041b0964ef1184cb2a7de95305b863\lifecycle-livedata-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7b442f4bd2f6285f4266973425cdde37\lifecycle-livedata-core-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\c1af8ac5e7989a786aa0eb3a09c34082\core-runtime-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\40767bc9a4a49d23f242c58fa10db3e7\jetified-savedstate-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\androidx.arch.core\core-common\2.1.0\b3152fc64428c9354344bd89848ecddc09b6f07e\core-common-2.1.0.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\androidx.lifecycle\lifecycle-common\2.1.0\c67e7807d9cd6c329b9d0218b2ec4e505dd340b7\lifecycle-common-2.1.0.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\600384923bb3ad422417f4bd52348bbe\lifecycle-viewmodel-2.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\3bcd4bef0d8d540ce039d109b69f3fc3\interpolator-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\914074dbbf9cbd6853d634560584eb57\documentfile-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\858129cd4a31c7ff6a4caefa02a9e1b1\localbroadcastmanager-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7f021faa7148dc50164d44c65733ca68\print-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\androidx.annotation\annotation\1.1.0\e3a6fb2f40e3a3842e6b7472628ba4ce416ea4c8\annotation-1.1.0.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\4aa18531fc65d7dd6b7d30f617b0b69f\constraintlayout-1.1.3-api.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\androidx.constraintlayout\constraintlayout-solver\1.1.3\54abe9ffb22cc9019b0b6fcc10f185cc4e67b34e\constraintlayout-solver-1.1.3.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\c0fb18c2ac0d8dccff83b8effb4830af\jetified-MPAndroidChart-v3.0.2.jar;C:\Users\Apolo\AppData\Local\Android\Sdk\platforms\android-29\android.jar;C:\Users\Apolo\AppData\Local\Android\Sdk\build-tools\30.0.2\core-lambda-stubs.jar -d C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\build\tmp\kotlin-classes\debug -Xjava-source-roots=C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\build\generated\source\buildConfig\debug -module-name app_debug -no-jdk -no-reflect -no-stdlib -Xcommon-sources=C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\AcercaDe.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\ActualizarVersion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\CalcularClavePrueba.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\ConfigurarUsuario.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\CorteDeStock.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\EstadoDePedidos.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\EvolucionDiariaDeVentas.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\ListaDePrecios.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\PedidosEnReparto.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\PreciosModificados.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\RebotesPorCliente.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\RuteoSemanal.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\MainActivity.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\MainActivity2.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\menu\DialogoMenu.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\prueba\VentanaAuxiliar.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\AvanceDeComisiones.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CanastaDeClientes.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CanastaDeMarcas.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CoberturaSemanal.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ComprobantesPendientes.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ExtractoDeSalario.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ProduccionSemanal.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SeguimientoDeVisitas.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubAvanceDeComisiones.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubVentasPorClientes.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubVentasPorMarcas.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VariablesMensuales.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VentasPorCliente.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VentasPorMarca.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Adapter.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Clave.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ConexionWS.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ConsultasInicio.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoAutorizacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoBusqueda.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoCalendario.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesConsultor.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesDispositivo.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesFoto.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesSpinner.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesUbicacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesUtiles.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\GenericFileProvider.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Graficos.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ItemAbrir.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Mapa.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\MapaCatastro.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\SentenciasSQL.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Sincronizacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\TablasSincronizacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\UtilidadesBD.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\asistencia\EnviarMarcacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\asistencia\Marcacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\baja\Baja.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\baja\EnviarBaja.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\catastro\CatastrarCliente.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaClientesNoPositivados.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaDatosDeCliente.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaPedidos.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Deuda.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DeudaDeClientes.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DialogoPedidos.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DialogoPromocion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\EnviarModificacion.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\EnviarPedido.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\justificacion\NoVenta.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ListaClientes.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ModificarCliente.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Pedidos.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Promociones.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Promotores.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\PromotoresBaja.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\PromotoresCatastro.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\sd\EnviarSD.kt,C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\sd\SolicitudDevolucion.kt -Xplugin=C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20181211\216c2e14b070f334479d800987affe4054cd563f\trove4j-1.0.20181211.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-android-extensions\1.3.72\ecbb105a12a9766d2188f454b3bc3aab46cb80b6\kotlin-android-extensions-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\1.3.72\fb72232c8fa977d5e07d33c43381ddbdc5edab6\kotlin-compiler-embeddable-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\1.3.72\53bbaa2816dbf6bdb85f629451b1fcc88f2164d2\kotlin-daemon-embeddable-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.3.72\86613e1a669a701b0c660bfd2af4f82a7ae11fca\kotlin-reflect-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\1.3.72\657d8d34d91e1964b4439378c09933e840bfe8d5\kotlin-script-runtime-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.3.72\6ca8bee3d88957eaaaef077c41c908c9940492d8\kotlin-stdlib-common-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.3.72\8032138f12c0180bc4e51fe139d4c52b46db6109\kotlin-stdlib-1.3.72.jar,C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar -P plugin:org.jetbrains.kotlin.android:configuration=rO0ABXeZAAAAAwAIZmVhdHVyZXMAAAABAA92aWV3cyxwYXJjZWxpemUAB3BhY2thZ2UAAAABABRhcG9sby52ZW5kZWRvcmVzLmNvbQAHdmFyaWFudAAAAAEARG1haW47QzpcQW5kcm9pZFxQcm95ZWN0b1xWZW5kZWRvcmVzS1RcQXBvbG9WZW5kZWRvclxhcHBcc3JjXG1haW5ccmVz C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\AcercaDe.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\ActualizarVersion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\CalcularClavePrueba.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\configurar\ConfigurarUsuario.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\CorteDeStock.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\EstadoDePedidos.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\EvolucionDiariaDeVentas.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\ListaDePrecios.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\PedidosEnReparto.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\PreciosModificados.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\RebotesPorCliente.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\informes\RuteoSemanal.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\MainActivity.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\MainActivity2.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\menu\DialogoMenu.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\prueba\VentanaAuxiliar.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\AvanceDeComisiones.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CanastaDeClientes.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CanastaDeMarcas.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\CoberturaSemanal.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ComprobantesPendientes.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ExtractoDeSalario.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\ProduccionSemanal.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SeguimientoDeVisitas.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubAvanceDeComisiones.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubVentasPorClientes.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\SubVentasPorMarcas.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VariablesMensuales.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VentasPorCliente.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\reportes\VentasPorMarca.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Adapter.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Clave.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ConexionWS.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ConsultasInicio.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoAutorizacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoBusqueda.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\DialogoCalendario.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesConsultor.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesDispositivo.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesFoto.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesSpinner.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesUbicacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\FuncionesUtiles.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\GenericFileProvider.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Graficos.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\ItemAbrir.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Mapa.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\MapaCatastro.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\SentenciasSQL.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\Sincronizacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\TablasSincronizacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\utilidades\UtilidadesBD.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\asistencia\EnviarMarcacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\asistencia\Marcacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\baja\Baja.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\baja\EnviarBaja.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\catastro\CatastrarCliente.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaClientesNoPositivados.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaDatosDeCliente.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ConsultaPedidos.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Deuda.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DeudaDeClientes.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DialogoPedidos.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\DialogoPromocion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\EnviarModificacion.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\EnviarPedido.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\justificacion\NoVenta.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ListaClientes.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\ModificarCliente.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Pedidos.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Promociones.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\Promotores.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\PromotoresBaja.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\PromotoresCatastro.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\sd\EnviarSD.kt C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\src\main\java\apolo\vendedores\com\ventas\sd\SolicitudDevolucion.kt
+
+Host: Intel(R) Core(TM) i7-1065G7 CPU @ 1.30GHz, 8 cores, 7G,  Windows 10 , 64 bit Build 19041 (10.0.19041.928)
+Time: Mon May 31 12:36:33 2021 Hora estándar de Paraguay elapsed time: 2 seconds (0d 0h 0m 2s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000228d54e9000):  VMThread "VM Thread" [stack: 0x0000004902c00000,0x0000004902d00000] [id=19216]
+
+Stack: [0x0000004902c00000,0x0000004902d00000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00000228be570f67]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x5de50a]
+V  [jvm.dll+0x7122f5]
+V  [jvm.dll+0x71384d]
+V  [jvm.dll+0x713e65]
+V  [jvm.dll+0x713e1b]
+V  [jvm.dll+0x5dd958]
+V  [jvm.dll+0x5de0f8]
+C  [ntdll.dll+0xa217f]
+C  [ntdll.dll+0x51454]
+C  [ntdll.dll+0xa0cae]
+C  0x00000228be570f67
+
+VM_Operation (0x00000049026fbc50): CollectForMetadataAllocation, mode: safepoint, requested by thread 0x00000228b9431800
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00000228d5ee2fb0, length=12, elements={
+0x00000228b9431800, 0x00000228d5d33800, 0x00000228d5d3f000, 0x00000228d54f6000,
+0x00000228d54f8800, 0x00000228d54f9800, 0x00000228d54fe800, 0x00000228d54ff800,
+0x00000228d5ee1800, 0x00000228d5ee5800, 0x00000228d5f2b000, 0x00000228d5f2c000
+}
+
+Java Threads: ( => current thread )
+  0x00000228b9431800 JavaThread "main" [_thread_blocked, id=17836, stack(0x0000004902600000,0x0000004902700000)]
+  0x00000228d5d33800 JavaThread "Reference Handler" daemon [_thread_blocked, id=25168, stack(0x0000004902d00000,0x0000004902e00000)]
+  0x00000228d5d3f000 JavaThread "Finalizer" daemon [_thread_blocked, id=18324, stack(0x0000004902e00000,0x0000004902f00000)]
+  0x00000228d54f6000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=24284, stack(0x0000004902f00000,0x0000004903000000)]
+  0x00000228d54f8800 JavaThread "Attach Listener" daemon [_thread_blocked, id=14240, stack(0x0000004903000000,0x0000004903100000)]
+  0x00000228d54f9800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=25032, stack(0x0000004903100000,0x0000004903200000)]
+  0x00000228d54fe800 JavaThread "C1 CompilerThread0" daemon [_thread_blocked, id=18900, stack(0x0000004903200000,0x0000004903300000)]
+  0x00000228d54ff800 JavaThread "Sweeper thread" daemon [_thread_blocked, id=19840, stack(0x0000004903300000,0x0000004903400000)]
+  0x00000228d5ee1800 JavaThread "Service Thread" daemon [_thread_blocked, id=17424, stack(0x0000004903400000,0x0000004903500000)]
+  0x00000228d5ee5800 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=20556, stack(0x0000004903600000,0x0000004903700000)]
+  0x00000228d5f2b000 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=19588, stack(0x0000004903700000,0x0000004903800000)]
+  0x00000228d5f2c000 JavaThread "C2 CompilerThread2" daemon [_thread_blocked, id=24324, stack(0x0000004903800000,0x0000004903900000)]
+
+Other Threads:
+=>0x00000228d54e9000 VMThread "VM Thread" [stack: 0x0000004902c00000,0x0000004902d00000] [id=19216]
+  0x00000228d5ee2800 WatcherThread [stack: 0x0000004903500000,0x0000004903600000] [id=26332]
+  0x00000228b9449000 GCTaskThread "GC Thread#0" [stack: 0x0000004902700000,0x0000004902800000] [id=26464]
+  0x00000228d659e800 GCTaskThread "GC Thread#1" [stack: 0x0000004903900000,0x0000004903a00000] [id=22644]
+  0x00000228d659f000 GCTaskThread "GC Thread#2" [stack: 0x0000004903a00000,0x0000004903b00000] [id=10640]
+  0x00000228b9479800 ConcurrentGCThread "G1 Main Marker" [stack: 0x0000004902800000,0x0000004902900000] [id=1528]
+  0x00000228b947b800 ConcurrentGCThread "G1 Conc#0" [stack: 0x0000004902900000,0x0000004902a00000] [id=18752]
+  0x00000228d7094000 ConcurrentGCThread "G1 Conc#1" [stack: 0x0000004903b00000,0x0000004903c00000] [id=20960]
+  0x00000228b94dd800 ConcurrentGCThread "G1 Refine#0" [stack: 0x0000004902a00000,0x0000004902b00000] [id=1296]
+  0x00000228d78c4000 ConcurrentGCThread "G1 Refine#1" [stack: 0x0000004903c00000,0x0000004903d00000] [id=25376]
+  0x00000228da82e800 ConcurrentGCThread "G1 Refine#2" [stack: 0x0000004903d00000,0x0000004903e00000] [id=18052]
+  0x00000228d7a6f800 ConcurrentGCThread "G1 Refine#3" [stack: 0x0000004903e00000,0x0000004903f00000] [id=23724]
+  0x00000228d534e800 ConcurrentGCThread "G1 Young RemSet Sampling" [stack: 0x0000004902b00000,0x0000004902c00000] [id=13208]
+
+Threads with active compile tasks:
+C1 CompilerThread0   2211 2709       3       org.jetbrains.kotlin.lexer._JetLexer::advance (2227 bytes)
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00000228b942e860] Threads_lock - owner thread: 0x00000228d54e9000
+[0x00000228b942ed70] Heap_lock - owner thread: 0x00000228b9431800
+
+Heap address: 0x0000000083600000, size: 1994 MB, Compressed Oops mode: 32-bit
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x0000000100000000
+
+Heap:
+ garbage-first heap   total 155648K, used 21453K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 4 young (4096K), 4 survivors (4096K)
+ Metaspace       used 38380K, capacity 38750K, committed 38960K, reserved 1101824K
+  class space    used 4651K, capacity 4787K, committed 4912K, reserved 1048576K
+Heap Regions: E=young(eden), S=young(survivor), O=old, HS=humongous(starts), HC=humongous(continues), CS=collection set, F=free, A=archive, TAMS=top-at-mark-start (previous, next)
+|   0|0x0000000083600000, 0x0000000083700000, 0x0000000083700000|100%|HS|  |TAMS 0x0000000083700000, 0x0000000083700000| Complete 
+|   1|0x0000000083700000, 0x0000000083800000, 0x0000000083800000|100%|HC|  |TAMS 0x0000000083800000, 0x0000000083800000| Complete 
+|   2|0x0000000083800000, 0x0000000083900000, 0x0000000083900000|100%|HC|  |TAMS 0x0000000083900000, 0x0000000083900000| Complete 
+|   3|0x0000000083900000, 0x0000000083a00000, 0x0000000083a00000|100%| O|  |TAMS 0x0000000083a00000, 0x0000000083a00000| Untracked 
+|   4|0x0000000083a00000, 0x0000000083b00000, 0x0000000083b00000|100%| O|  |TAMS 0x0000000083b00000, 0x0000000083b00000| Untracked 
+|   5|0x0000000083b00000, 0x0000000083c00000, 0x0000000083c00000|100%| O|  |TAMS 0x0000000083c00000, 0x0000000083c00000| Untracked 
+|   6|0x0000000083c00000, 0x0000000083d00000, 0x0000000083d00000|100%| O|  |TAMS 0x0000000083d00000, 0x0000000083d00000| Untracked 
+|   7|0x0000000083d00000, 0x0000000083e00000, 0x0000000083e00000|100%| O|  |TAMS 0x0000000083e00000, 0x0000000083e00000| Untracked 
+|   8|0x0000000083e00000, 0x0000000083f00000, 0x0000000083f00000|100%| O|  |TAMS 0x0000000083f00000, 0x0000000083f00000| Untracked 
+|   9|0x0000000083f00000, 0x0000000084000000, 0x0000000084000000|100%|HS|  |TAMS 0x0000000084000000, 0x0000000084000000| Complete 
+|  10|0x0000000084000000, 0x0000000084100000, 0x0000000084100000|100%|HC|  |TAMS 0x0000000084100000, 0x0000000084100000| Complete 
+|  11|0x0000000084100000, 0x0000000084200000, 0x0000000084200000|100%| O|  |TAMS 0x0000000084200000, 0x0000000084200000| Untracked 
+|  12|0x0000000084200000, 0x0000000084300000, 0x0000000084300000|100%| O|  |TAMS 0x0000000084300000, 0x0000000084300000| Untracked 
+|  13|0x0000000084300000, 0x0000000084400000, 0x0000000084400000|100%| O|  |TAMS 0x0000000084400000, 0x0000000084400000| Untracked 
+|  14|0x0000000084400000, 0x0000000084500000, 0x0000000084500000|100%| O|  |TAMS 0x0000000084500000, 0x0000000084500000| Untracked 
+|  15|0x0000000084500000, 0x0000000084600000, 0x0000000084600000|100%| O|  |TAMS 0x0000000084600000, 0x0000000084600000| Untracked 
+|  16|0x0000000084600000, 0x0000000084700000, 0x0000000084700000|100%| O|  |TAMS 0x0000000084700000, 0x0000000084700000| Untracked 
+|  17|0x0000000084700000, 0x00000000847c6200, 0x0000000084800000| 77%| O|  |TAMS 0x00000000847c6200, 0x00000000847c6200| Untracked 
+|  18|0x0000000084800000, 0x0000000084800000, 0x0000000084900000|  0%| F|  |TAMS 0x0000000084800000, 0x0000000084800000| Untracked 
+|  19|0x0000000084900000, 0x0000000084900000, 0x0000000084a00000|  0%| F|  |TAMS 0x0000000084900000, 0x0000000084900000| Untracked 
+|  20|0x0000000084a00000, 0x0000000084a00000, 0x0000000084b00000|  0%| F|  |TAMS 0x0000000084a00000, 0x0000000084a00000| Untracked 
+|  21|0x0000000084b00000, 0x0000000084b00000, 0x0000000084c00000|  0%| F|  |TAMS 0x0000000084b00000, 0x0000000084b00000| Untracked 
+|  22|0x0000000084c00000, 0x0000000084c00000, 0x0000000084d00000|  0%| F|  |TAMS 0x0000000084c00000, 0x0000000084c00000| Untracked 
+|  23|0x0000000084d00000, 0x0000000084d00000, 0x0000000084e00000|  0%| F|  |TAMS 0x0000000084d00000, 0x0000000084d00000| Untracked 
+|  24|0x0000000084e00000, 0x0000000084e00000, 0x0000000084f00000|  0%| F|  |TAMS 0x0000000084e00000, 0x0000000084e00000| Untracked 
+|  25|0x0000000084f00000, 0x0000000084f00000, 0x0000000085000000|  0%| F|  |TAMS 0x0000000084f00000, 0x0000000084f00000| Untracked 
+|  26|0x0000000085000000, 0x0000000085000000, 0x0000000085100000|  0%| F|  |TAMS 0x0000000085000000, 0x0000000085000000| Untracked 
+|  27|0x0000000085100000, 0x0000000085100000, 0x0000000085200000|  0%| F|  |TAMS 0x0000000085100000, 0x0000000085100000| Untracked 
+|  28|0x0000000085200000, 0x0000000085200000, 0x0000000085300000|  0%| F|  |TAMS 0x0000000085200000, 0x0000000085200000| Untracked 
+|  29|0x0000000085300000, 0x0000000085300000, 0x0000000085400000|  0%| F|  |TAMS 0x0000000085300000, 0x0000000085300000| Untracked 
+|  30|0x0000000085400000, 0x0000000085400000, 0x0000000085500000|  0%| F|  |TAMS 0x0000000085400000, 0x0000000085400000| Untracked 
+|  31|0x0000000085500000, 0x0000000085500000, 0x0000000085600000|  0%| F|  |TAMS 0x0000000085500000, 0x0000000085500000| Untracked 
+|  32|0x0000000085600000, 0x0000000085600000, 0x0000000085700000|  0%| F|  |TAMS 0x0000000085600000, 0x0000000085600000| Untracked 
+|  33|0x0000000085700000, 0x0000000085700000, 0x0000000085800000|  0%| F|  |TAMS 0x0000000085700000, 0x0000000085700000| Untracked 
+|  34|0x0000000085800000, 0x0000000085800000, 0x0000000085900000|  0%| F|  |TAMS 0x0000000085800000, 0x0000000085800000| Untracked 
+|  35|0x0000000085900000, 0x0000000085900000, 0x0000000085a00000|  0%| F|  |TAMS 0x0000000085900000, 0x0000000085900000| Untracked 
+|  36|0x0000000085a00000, 0x0000000085a00000, 0x0000000085b00000|  0%| F|  |TAMS 0x0000000085a00000, 0x0000000085a00000| Untracked 
+|  37|0x0000000085b00000, 0x0000000085b00000, 0x0000000085c00000|  0%| F|  |TAMS 0x0000000085b00000, 0x0000000085b00000| Untracked 
+|  38|0x0000000085c00000, 0x0000000085c00000, 0x0000000085d00000|  0%| F|  |TAMS 0x0000000085c00000, 0x0000000085c00000| Untracked 
+|  39|0x0000000085d00000, 0x0000000085d00000, 0x0000000085e00000|  0%| F|  |TAMS 0x0000000085d00000, 0x0000000085d00000| Untracked 
+|  40|0x0000000085e00000, 0x0000000085e00000, 0x0000000085f00000|  0%| F|  |TAMS 0x0000000085e00000, 0x0000000085e00000| Untracked 
+|  41|0x0000000085f00000, 0x0000000085f00000, 0x0000000086000000|  0%| F|  |TAMS 0x0000000085f00000, 0x0000000085f00000| Untracked 
+|  42|0x0000000086000000, 0x0000000086000000, 0x0000000086100000|  0%| F|  |TAMS 0x0000000086000000, 0x0000000086000000| Untracked 
+|  43|0x0000000086100000, 0x0000000086100000, 0x0000000086200000|  0%| F|  |TAMS 0x0000000086100000, 0x0000000086100000| Untracked 
+|  44|0x0000000086200000, 0x0000000086200000, 0x0000000086300000|  0%| F|  |TAMS 0x0000000086200000, 0x0000000086200000| Untracked 
+|  45|0x0000000086300000, 0x0000000086300000, 0x0000000086400000|  0%| F|  |TAMS 0x0000000086300000, 0x0000000086300000| Untracked 
+|  46|0x0000000086400000, 0x0000000086400000, 0x0000000086500000|  0%| F|  |TAMS 0x0000000086400000, 0x0000000086400000| Untracked 
+|  47|0x0000000086500000, 0x0000000086500000, 0x0000000086600000|  0%| F|  |TAMS 0x0000000086500000, 0x0000000086500000| Untracked 
+|  48|0x0000000086600000, 0x0000000086600000, 0x0000000086700000|  0%| F|  |TAMS 0x0000000086600000, 0x0000000086600000| Untracked 
+|  49|0x0000000086700000, 0x0000000086700000, 0x0000000086800000|  0%| F|  |TAMS 0x0000000086700000, 0x0000000086700000| Untracked 
+|  50|0x0000000086800000, 0x0000000086800000, 0x0000000086900000|  0%| F|  |TAMS 0x0000000086800000, 0x0000000086800000| Untracked 
+|  51|0x0000000086900000, 0x0000000086900000, 0x0000000086a00000|  0%| F|  |TAMS 0x0000000086900000, 0x0000000086900000| Untracked 
+|  52|0x0000000086a00000, 0x0000000086a00000, 0x0000000086b00000|  0%| F|  |TAMS 0x0000000086a00000, 0x0000000086a00000| Untracked 
+|  53|0x0000000086b00000, 0x0000000086b00000, 0x0000000086c00000|  0%| F|  |TAMS 0x0000000086b00000, 0x0000000086b00000| Untracked 
+|  54|0x0000000086c00000, 0x0000000086c00000, 0x0000000086d00000|  0%| F|  |TAMS 0x0000000086c00000, 0x0000000086c00000| Untracked 
+|  55|0x0000000086d00000, 0x0000000086d00000, 0x0000000086e00000|  0%| F|  |TAMS 0x0000000086d00000, 0x0000000086d00000| Untracked 
+|  56|0x0000000086e00000, 0x0000000086e00000, 0x0000000086f00000|  0%| F|  |TAMS 0x0000000086e00000, 0x0000000086e00000| Untracked 
+|  57|0x0000000086f00000, 0x0000000086f00000, 0x0000000087000000|  0%| F|  |TAMS 0x0000000086f00000, 0x0000000086f00000| Untracked 
+|  58|0x0000000087000000, 0x0000000087000000, 0x0000000087100000|  0%| F|  |TAMS 0x0000000087000000, 0x0000000087000000| Untracked 
+|  59|0x0000000087100000, 0x0000000087100000, 0x0000000087200000|  0%| F|  |TAMS 0x0000000087100000, 0x0000000087100000| Untracked 
+|  60|0x0000000087200000, 0x0000000087200000, 0x0000000087300000|  0%| F|  |TAMS 0x0000000087200000, 0x0000000087200000| Untracked 
+|  61|0x0000000087300000, 0x0000000087300000, 0x0000000087400000|  0%| F|  |TAMS 0x0000000087300000, 0x0000000087300000| Untracked 
+|  62|0x0000000087400000, 0x0000000087400000, 0x0000000087500000|  0%| F|  |TAMS 0x0000000087400000, 0x0000000087400000| Untracked 
+|  63|0x0000000087500000, 0x0000000087500000, 0x0000000087600000|  0%| F|  |TAMS 0x0000000087500000, 0x0000000087500000| Untracked 
+|  64|0x0000000087600000, 0x0000000087600000, 0x0000000087700000|  0%| F|  |TAMS 0x0000000087600000, 0x0000000087600000| Untracked 
+|  65|0x0000000087700000, 0x0000000087700000, 0x0000000087800000|  0%| F|  |TAMS 0x0000000087700000, 0x0000000087700000| Untracked 
+|  66|0x0000000087800000, 0x0000000087800000, 0x0000000087900000|  0%| F|  |TAMS 0x0000000087800000, 0x0000000087800000| Untracked 
+|  67|0x0000000087900000, 0x0000000087900000, 0x0000000087a00000|  0%| F|  |TAMS 0x0000000087900000, 0x0000000087900000| Untracked 
+|  68|0x0000000087a00000, 0x0000000087a00000, 0x0000000087b00000|  0%| F|  |TAMS 0x0000000087a00000, 0x0000000087a00000| Untracked 
+|  69|0x0000000087b00000, 0x0000000087b00000, 0x0000000087c00000|  0%| F|  |TAMS 0x0000000087b00000, 0x0000000087b00000| Untracked 
+|  70|0x0000000087c00000, 0x0000000087c00000, 0x0000000087d00000|  0%| F|  |TAMS 0x0000000087c00000, 0x0000000087c00000| Untracked 
+|  71|0x0000000087d00000, 0x0000000087d00000, 0x0000000087e00000|  0%| F|  |TAMS 0x0000000087d00000, 0x0000000087d00000| Untracked 
+|  72|0x0000000087e00000, 0x0000000087e00000, 0x0000000087f00000|  0%| F|  |TAMS 0x0000000087e00000, 0x0000000087e00000| Untracked 
+|  73|0x0000000087f00000, 0x0000000087f00000, 0x0000000088000000|  0%| F|  |TAMS 0x0000000087f00000, 0x0000000087f00000| Untracked 
+|  74|0x0000000088000000, 0x0000000088000000, 0x0000000088100000|  0%| F|  |TAMS 0x0000000088000000, 0x0000000088000000| Untracked 
+|  75|0x0000000088100000, 0x0000000088100000, 0x0000000088200000|  0%| F|  |TAMS 0x0000000088100000, 0x0000000088100000| Untracked 
+|  76|0x0000000088200000, 0x0000000088200000, 0x0000000088300000|  0%| F|  |TAMS 0x0000000088200000, 0x0000000088200000| Untracked 
+|  77|0x0000000088300000, 0x0000000088300000, 0x0000000088400000|  0%| F|  |TAMS 0x0000000088300000, 0x0000000088300000| Untracked 
+|  78|0x0000000088400000, 0x0000000088400000, 0x0000000088500000|  0%| F|  |TAMS 0x0000000088400000, 0x0000000088400000| Untracked 
+|  79|0x0000000088500000, 0x0000000088500000, 0x0000000088600000|  0%| F|  |TAMS 0x0000000088500000, 0x0000000088500000| Untracked 
+|  80|0x0000000088600000, 0x0000000088600000, 0x0000000088700000|  0%| F|  |TAMS 0x0000000088600000, 0x0000000088600000| Untracked 
+|  81|0x0000000088700000, 0x0000000088700000, 0x0000000088800000|  0%| F|  |TAMS 0x0000000088700000, 0x0000000088700000| Untracked 
+|  82|0x0000000088800000, 0x0000000088800000, 0x0000000088900000|  0%| F|  |TAMS 0x0000000088800000, 0x0000000088800000| Untracked 
+|  83|0x0000000088900000, 0x0000000088900000, 0x0000000088a00000|  0%| F|  |TAMS 0x0000000088900000, 0x0000000088900000| Untracked 
+|  84|0x0000000088a00000, 0x0000000088a00000, 0x0000000088b00000|  0%| F|  |TAMS 0x0000000088a00000, 0x0000000088a00000| Untracked 
+|  85|0x0000000088b00000, 0x0000000088b00000, 0x0000000088c00000|  0%| F|  |TAMS 0x0000000088b00000, 0x0000000088b00000| Untracked 
+|  86|0x0000000088c00000, 0x0000000088c00000, 0x0000000088d00000|  0%| F|  |TAMS 0x0000000088c00000, 0x0000000088c00000| Untracked 
+|  87|0x0000000088d00000, 0x0000000088d00000, 0x0000000088e00000|  0%| F|  |TAMS 0x0000000088d00000, 0x0000000088d00000| Untracked 
+|  88|0x0000000088e00000, 0x0000000088e00000, 0x0000000088f00000|  0%| F|  |TAMS 0x0000000088e00000, 0x0000000088e00000| Untracked 
+|  89|0x0000000088f00000, 0x0000000088f00000, 0x0000000089000000|  0%| F|  |TAMS 0x0000000088f00000, 0x0000000088f00000| Untracked 
+|  90|0x0000000089000000, 0x0000000089000000, 0x0000000089100000|  0%| F|  |TAMS 0x0000000089000000, 0x0000000089000000| Untracked 
+|  91|0x0000000089100000, 0x0000000089100000, 0x0000000089200000|  0%| F|  |TAMS 0x0000000089100000, 0x0000000089100000| Untracked 
+|  92|0x0000000089200000, 0x0000000089200000, 0x0000000089300000|  0%| F|  |TAMS 0x0000000089200000, 0x0000000089200000| Untracked 
+|  93|0x0000000089300000, 0x0000000089300000, 0x0000000089400000|  0%| F|  |TAMS 0x0000000089300000, 0x0000000089300000| Untracked 
+|  94|0x0000000089400000, 0x0000000089400000, 0x0000000089500000|  0%| F|  |TAMS 0x0000000089400000, 0x0000000089400000| Untracked 
+|  95|0x0000000089500000, 0x0000000089500000, 0x0000000089600000|  0%| F|  |TAMS 0x0000000089500000, 0x0000000089500000| Untracked 
+|  96|0x0000000089600000, 0x0000000089600000, 0x0000000089700000|  0%| F|  |TAMS 0x0000000089600000, 0x0000000089600000| Untracked 
+|  97|0x0000000089700000, 0x0000000089700000, 0x0000000089800000|  0%| F|  |TAMS 0x0000000089700000, 0x0000000089700000| Untracked 
+|  98|0x0000000089800000, 0x0000000089800000, 0x0000000089900000|  0%| F|  |TAMS 0x0000000089800000, 0x0000000089800000| Untracked 
+|  99|0x0000000089900000, 0x0000000089900000, 0x0000000089a00000|  0%| F|  |TAMS 0x0000000089900000, 0x0000000089900000| Untracked 
+| 100|0x0000000089a00000, 0x0000000089a00000, 0x0000000089b00000|  0%| F|  |TAMS 0x0000000089a00000, 0x0000000089a00000| Untracked 
+| 101|0x0000000089b00000, 0x0000000089b00000, 0x0000000089c00000|  0%| F|  |TAMS 0x0000000089b00000, 0x0000000089b00000| Untracked 
+| 102|0x0000000089c00000, 0x0000000089c00000, 0x0000000089d00000|  0%| F|  |TAMS 0x0000000089c00000, 0x0000000089c00000| Untracked 
+| 103|0x0000000089d00000, 0x0000000089d00000, 0x0000000089e00000|  0%| F|  |TAMS 0x0000000089d00000, 0x0000000089d00000| Untracked 
+| 104|0x0000000089e00000, 0x0000000089e00000, 0x0000000089f00000|  0%| F|  |TAMS 0x0000000089e00000, 0x0000000089e00000| Untracked 
+| 105|0x0000000089f00000, 0x0000000089f2d548, 0x000000008a000000| 17%| S|CS|TAMS 0x0000000089f00000, 0x0000000089f00000| Complete 
+| 106|0x000000008a000000, 0x000000008a000000, 0x000000008a100000|  0%| F|  |TAMS 0x000000008a000000, 0x000000008a000000| Untracked 
+| 107|0x000000008a100000, 0x000000008a100000, 0x000000008a200000|  0%| F|  |TAMS 0x000000008a100000, 0x000000008a100000| Untracked 
+| 108|0x000000008a200000, 0x000000008a300000, 0x000000008a300000|100%| S|CS|TAMS 0x000000008a200000, 0x000000008a200000| Complete 
+| 109|0x000000008a300000, 0x000000008a400000, 0x000000008a400000|100%| S|CS|TAMS 0x000000008a300000, 0x000000008a300000| Complete 
+| 110|0x000000008a400000, 0x000000008a500000, 0x000000008a500000|100%| S|CS|TAMS 0x000000008a400000, 0x000000008a400000| Complete 
+| 111|0x000000008a500000, 0x000000008a500000, 0x000000008a600000|  0%| F|  |TAMS 0x000000008a500000, 0x000000008a500000| Untracked 
+| 112|0x000000008a600000, 0x000000008a600000, 0x000000008a700000|  0%| F|  |TAMS 0x000000008a600000, 0x000000008a600000| Untracked 
+| 113|0x000000008a700000, 0x000000008a700000, 0x000000008a800000|  0%| F|  |TAMS 0x000000008a700000, 0x000000008a700000| Untracked 
+| 114|0x000000008a800000, 0x000000008a800000, 0x000000008a900000|  0%| F|  |TAMS 0x000000008a800000, 0x000000008a800000| Untracked 
+| 115|0x000000008a900000, 0x000000008a900000, 0x000000008aa00000|  0%| F|  |TAMS 0x000000008a900000, 0x000000008a900000| Untracked 
+| 116|0x000000008aa00000, 0x000000008aa00000, 0x000000008ab00000|  0%| F|  |TAMS 0x000000008aa00000, 0x000000008aa00000| Untracked 
+| 117|0x000000008ab00000, 0x000000008ab00000, 0x000000008ac00000|  0%| F|  |TAMS 0x000000008ab00000, 0x000000008ab00000| Untracked 
+| 118|0x000000008ac00000, 0x000000008ac00000, 0x000000008ad00000|  0%| F|  |TAMS 0x000000008ac00000, 0x000000008ac00000| Untracked 
+| 119|0x000000008ad00000, 0x000000008ad00000, 0x000000008ae00000|  0%| F|  |TAMS 0x000000008ad00000, 0x000000008ad00000| Untracked 
+| 120|0x000000008ae00000, 0x000000008ae00000, 0x000000008af00000|  0%| F|  |TAMS 0x000000008ae00000, 0x000000008ae00000| Untracked 
+| 121|0x000000008af00000, 0x000000008af00000, 0x000000008b000000|  0%| F|  |TAMS 0x000000008af00000, 0x000000008af00000| Untracked 
+| 122|0x000000008b000000, 0x000000008b000000, 0x000000008b100000|  0%| F|  |TAMS 0x000000008b000000, 0x000000008b000000| Untracked 
+| 123|0x000000008b100000, 0x000000008b100000, 0x000000008b200000|  0%| F|  |TAMS 0x000000008b100000, 0x000000008b100000| Untracked 
+| 124|0x000000008b200000, 0x000000008b200000, 0x000000008b300000|  0%| F|  |TAMS 0x000000008b200000, 0x000000008b200000| Untracked 
+| 125|0x000000008b300000, 0x000000008b300000, 0x000000008b400000|  0%| F|  |TAMS 0x000000008b300000, 0x000000008b300000| Untracked 
+
+Card table byte_map: [0x00000228ce3c0000,0x00000228ce7b0000] _byte_map_base: 0x00000228cdfa5000
+
+Marking Bits (Prev, Next): (CMBitMap*) 0x00000228b9470e78, (CMBitMap*) 0x00000228b9470eb0
+ Prev Bits: [0x00000228ceba0000, 0x00000228d0ac8000)
+ Next Bits: [0x00000228d0ad0000, 0x00000228d29f8000)
+
+Polling page: 0x00000228b94e0000
+
+Metaspace:
+
+Usage:
+  Non-class:     33.17 MB capacity,    32.94 MB (>99%) used,   181.58 KB ( <1%) free+waste,    52.19 KB ( <1%) overhead. 
+      Class:      4.67 MB capacity,     4.54 MB ( 97%) used,   112.66 KB (  2%) free+waste,    22.63 KB ( <1%) overhead. 
+       Both:     37.84 MB capacity,    37.48 MB (>99%) used,   294.23 KB ( <1%) free+waste,    74.81 KB ( <1%) overhead. 
+
+Virtual space:
+  Non-class space:       52.00 MB reserved,      33.25 MB ( 64%) committed 
+      Class space:        1.00 GB reserved,       4.80 MB ( <1%) committed 
+             Both:        1.05 GB reserved,      38.05 MB (  4%) committed 
+
+Chunk freelists:
+   Non-Class:  85.00 KB
+       Class:  13.00 KB
+        Both:  98.00 KB
+
+MaxMetaspaceSize: 17179869184.00 GB
+CompressedClassSpaceSize: 1.00 GB
+
+CodeHeap 'non-profiled nmethods': size=120000Kb used=1124Kb max_used=1124Kb free=118875Kb
+ bounds [0x00000228c6040000, 0x00000228c62b0000, 0x00000228cd570000]
+CodeHeap 'profiled nmethods': size=120000Kb used=5223Kb max_used=5223Kb free=114776Kb
+ bounds [0x00000228beb10000, 0x00000228bf030000, 0x00000228c6040000]
+CodeHeap 'non-nmethods': size=5760Kb used=1155Kb max_used=1194Kb free=4604Kb
+ bounds [0x00000228be570000, 0x00000228be7e0000, 0x00000228beb10000]
+ total_blobs=3185 nmethods=2709 adapters=387
+ compilation: enabled
+              stopped_count=0, restarted_count=0
+ full_count=0
+
+Compilation events (20 events):
+Event: 2.188 Thread 0x00000228d54fe800 nmethod 2700 0x00000228bf027f90 code [0x00000228bf028160, 0x00000228bf028498]
+Event: 2.188 Thread 0x00000228d54fe800 2702       3       org.jetbrains.kotlin.com.intellij.util.text.ImmutableText$Leaf8BitNode::byteToChar (7 bytes)
+Event: 2.188 Thread 0x00000228d54fe800 nmethod 2702 0x00000228bf028610 code [0x00000228bf0287c0, 0x00000228bf0288b8]
+Event: 2.188 Thread 0x00000228d54fe800 2703       3       org.jetbrains.kotlin.lexer._JetLexer::ZZ_CMAP (34 bytes)
+Event: 2.188 Thread 0x00000228d54fe800 nmethod 2703 0x00000228bf028990 code [0x00000228bf028b60, 0x00000228bf028cf8]
+Event: 2.188 Thread 0x00000228d54fe800 2701       3       org.jetbrains.kotlin.com.intellij.util.text.ImmutableText$Leaf8BitNode::charAt (10 bytes)
+Event: 2.188 Thread 0x00000228d54fe800 nmethod 2701 0x00000228bf028e90 code [0x00000228bf029040, 0x00000228bf0291d8]
+Event: 2.188 Thread 0x00000228d54fe800 2706   !   3       org.jetbrains.kotlin.com.intellij.lexer.FlexAdapter::locateToken (108 bytes)
+Event: 2.188 Thread 0x00000228d5f2c000 2707       4       org.jetbrains.kotlin.lexer._JetLexer::ZZ_CMAP (34 bytes)
+Event: 2.188 Thread 0x00000228d54fe800 nmethod 2706 0x00000228bf029310 code [0x00000228bf029540, 0x00000228bf029b68]
+Event: 2.188 Thread 0x00000228d54fe800 2709       3       org.jetbrains.kotlin.lexer._JetLexer::advance (2227 bytes)
+Event: 2.189 Thread 0x00000228d54f9800 2714       4       java.lang.Character::charCount (12 bytes)
+Event: 2.189 Thread 0x00000228d5f2c000 nmethod 2707 0x00000228c6157e10 code [0x00000228c6157fa0, 0x00000228c6158078]
+Event: 2.189 Thread 0x00000228d54f9800 nmethod 2714 0x00000228c6158190 code [0x00000228c6158320, 0x00000228c6158378]
+Event: 2.189 Thread 0x00000228d5f2b000 2715       4       java.lang.Character::codePointAt (51 bytes)
+Event: 2.189 Thread 0x00000228d54f9800 2716       4       org.jetbrains.kotlin.com.intellij.util.text.ImmutableText::charAt (50 bytes)
+Event: 2.189 Thread 0x00000228d5f2c000 2717       4       org.jetbrains.kotlin.com.intellij.util.text.ImmutableText$Leaf8BitNode::charAt (10 bytes)
+Event: 2.189 Thread 0x00000228d5f2c000 nmethod 2717 0x00000228c6158410 code [0x00000228c61585a0, 0x00000228c6158638]
+Event: 2.190 Thread 0x00000228d54f9800 nmethod 2716 0x00000228c6158710 code [0x00000228c61588c0, 0x00000228c61589f8]
+Event: 2.191 Thread 0x00000228d5f2b000 nmethod 2715 0x00000228c6158b90 code [0x00000228c6158d60, 0x00000228c6158fb8]
+
+GC Heap History (9 events):
+Event: 0.503 GC heap before
+{Heap before GC invocations=0 (full 0):
+ garbage-first heap   total 129024K, used 27648K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 24 young (24576K), 0 survivors (0K)
+ Metaspace       used 12512K, capacity 12622K, committed 12800K, reserved 1060864K
+  class space    used 1207K, capacity 1248K, committed 1280K, reserved 1048576K
+}
+Event: 0.507 GC heap after
+{Heap after GC invocations=1 (full 0):
+ garbage-first heap   total 129024K, used 6229K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 3 young (3072K), 3 survivors (3072K)
+ Metaspace       used 12512K, capacity 12622K, committed 12800K, reserved 1060864K
+  class space    used 1207K, capacity 1248K, committed 1280K, reserved 1048576K
+}
+Event: 1.004 GC heap before
+{Heap before GC invocations=1 (full 0):
+ garbage-first heap   total 129024K, used 40021K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 37 young (37888K), 3 survivors (3072K)
+ Metaspace       used 20849K, capacity 21126K, committed 21296K, reserved 1069056K
+  class space    used 2235K, capacity 2317K, committed 2352K, reserved 1048576K
+}
+Event: 1.009 GC heap after
+{Heap after GC invocations=2 (full 0):
+ garbage-first heap   total 129024K, used 9422K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 7 young (7168K), 7 survivors (7168K)
+ Metaspace       used 20849K, capacity 21126K, committed 21296K, reserved 1069056K
+  class space    used 2235K, capacity 2317K, committed 2352K, reserved 1048576K
+}
+Event: 1.700 GC heap before
+{Heap before GC invocations=3 (full 0):
+ garbage-first heap   total 129024K, used 63694K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 54 young (55296K), 7 survivors (7168K)
+ Metaspace       used 31048K, capacity 31398K, committed 31536K, reserved 1077248K
+  class space    used 3464K, capacity 3597K, committed 3632K, reserved 1048576K
+}
+Event: 1.714 GC heap after
+{Heap after GC invocations=4 (full 0):
+ garbage-first heap   total 129024K, used 17928K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 7 young (7168K), 7 survivors (7168K)
+ Metaspace       used 31048K, capacity 31398K, committed 31536K, reserved 1077248K
+  class space    used 3464K, capacity 3597K, committed 3632K, reserved 1048576K
+}
+Event: 1.937 GC heap before
+{Heap before GC invocations=4 (full 0):
+ garbage-first heap   total 129024K, used 35336K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 25 young (25600K), 7 survivors (7168K)
+ Metaspace       used 35182K, capacity 35500K, committed 35632K, reserved 1081344K
+  class space    used 4211K, capacity 4366K, committed 4400K, reserved 1048576K
+}
+Event: 1.947 GC heap after
+{Heap after GC invocations=5 (full 0):
+ garbage-first heap   total 129024K, used 20248K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 2 young (2048K), 2 survivors (2048K)
+ Metaspace       used 35182K, capacity 35500K, committed 35632K, reserved 1081344K
+  class space    used 4211K, capacity 4366K, committed 4400K, reserved 1048576K
+}
+Event: 2.191 GC heap before
+{Heap before GC invocations=6 (full 0):
+ garbage-first heap   total 129024K, used 34584K [0x0000000083600000, 0x0000000100000000)
+  region size 1024K, 17 young (17408K), 2 survivors (2048K)
+ Metaspace       used 38380K, capacity 38750K, committed 38960K, reserved 1101824K
+  class space    used 4651K, capacity 4787K, committed 4912K, reserved 1048576K
+}
+
+Deoptimization events (20 events):
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: trap_request=0xffffff4d fr.pc=0x00000228c6120714 relative=0x00000000000009d4
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000228c6120714 method=java.lang.StringCoding.encodeUTF8(B[BZ)[B @ 2 c2
+Event: 2.123 Thread 0x00000228b9431800 DEOPT PACKING pc=0x00000228c6120714 sp=0x00000049026f5e50
+Event: 2.123 Thread 0x00000228b9431800 DEOPT UNPACKING pc=0x00000228be57822f sp=0x00000049026f5af8 mode 2
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: trap_request=0xffffff4d fr.pc=0x00000228c6123f04 relative=0x0000000000000264
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000228c6123f04 method=sun.net.www.ParseUtil.firstEncodeIndex(Ljava/lang/String;)I @ 27 c2
+Event: 2.123 Thread 0x00000228b9431800 DEOPT PACKING pc=0x00000228c6123f04 sp=0x00000049026f5ef0
+Event: 2.123 Thread 0x00000228b9431800 DEOPT UNPACKING pc=0x00000228be57822f sp=0x00000049026f5d48 mode 2
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: trap_request=0xffffff4d fr.pc=0x00000228c60e2a90 relative=0x00000000000001f0
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000228c60e2a90 method=java.lang.String.indexOf(II)I @ 4 c2
+Event: 2.123 Thread 0x00000228b9431800 DEOPT PACKING pc=0x00000228c60e2a90 sp=0x00000049026f5bb0
+Event: 2.123 Thread 0x00000228b9431800 DEOPT UNPACKING pc=0x00000228be57822f sp=0x00000049026f5b60 mode 2
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: trap_request=0xffffff4d fr.pc=0x00000228c60e67b0 relative=0x0000000000000190
+Event: 2.123 Thread 0x00000228b9431800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000228c60e67b0 method=java.lang.String.startsWith(Ljava/lang/String;I)Z @ 46 c2
+Event: 2.123 Thread 0x00000228b9431800 DEOPT PACKING pc=0x00000228c60e67b0 sp=0x00000049026f5cb0
+Event: 2.123 Thread 0x00000228b9431800 DEOPT UNPACKING pc=0x00000228be57822f sp=0x00000049026f5c18 mode 2
+Event: 2.136 Thread 0x00000228b9431800 Uncommon trap: trap_request=0xffffffde fr.pc=0x00000228c60e5fec relative=0x000000000000030c
+Event: 2.136 Thread 0x00000228b9431800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000228c60e5fec method=gnu.trove.TObjectHash.equals(Ljava/lang/Object;Ljava/lang/Object;)Z @ 6 c2
+Event: 2.136 Thread 0x00000228b9431800 DEOPT PACKING pc=0x00000228c60e5fec sp=0x00000049026fd610
+Event: 2.136 Thread 0x00000228b9431800 DEOPT UNPACKING pc=0x00000228be57822f sp=0x00000049026fd4c8 mode 2
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (16 events):
+Event: 0.173 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008b076d48}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeSpecialIFC(java.lang.Object, java.lang.Object, int)'> (0x000000008b076d48) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 0.878 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x00000000898f1f08}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x00000000898f1f08) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 0.881 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008972df48}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, int)'> (0x000000008972df48) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 0.897 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008969ae38}: 'long java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object)'> (0x000000008969ae38) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 0.898 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008969dc90}: 'long java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object)'> (0x000000008969dc90) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 0.936 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008925dbc8}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object)'> (0x000000008925dbc8) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.000 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088fbee80}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x0000000088fbee80) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.001 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088fcce88}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x0000000088fcce88) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, l
+Event: 1.002 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088fdc6d0}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object, int, int, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x0000000088fdc6d0) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.002 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088fdff08}: 'java.lang.Object java.lang.invoke.DelegatingMethodHandle$Holder.reinvoke_L(java.lang.Object, int, int, java.lang.Object, java.lang.Object, java.lang.Object)'> (0x0000000088fdff08) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.003 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088fe4388}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeStatic(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, int)'> (0x0000000088fe4388) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.070 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008b052658}: 'void java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial(java.lang.Object, java.lang.Object)'> (0x000000008b052658) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.094 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008aed6a10}: 'void java.lang.invoke.DirectMethodHandle$Holder.invokeStaticInit(java.lang.Object, java.lang.Object)'> (0x000000008aed6a10) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.098 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008ad147c0}: 'void java.lang.invoke.DirectMethodHandle$Holder.invokeInterface(java.lang.Object, java.lang.Object)'> (0x000000008ad147c0) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.161 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x000000008a9be8c8}: 'int java.lang.invoke.DirectMethodHandle$Holder.invokeVirtual(java.lang.Object, java.lang.Object)'> (0x000000008a9be8c8) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+Event: 1.598 Thread 0x00000228b9431800 Exception <a 'java/lang/NoSuchMethodError'{0x0000000088564ab0}: 'java.lang.Object java.lang.invoke.DirectMethodHandle$Holder.invokeVirtual(java.lang.Object, java.lang.Object, java.lang.Object)'> (0x0000000088564ab0) thrown at [./src/hotspot/share/interpreter/linkResolver.cpp, line 773]
+
+Events (20 events):
+Event: 2.187 loading class org/jetbrains/kotlin/com/intellij/lang/impl/PsiBuilderImpl$Token done
+Event: 2.187 loading class org/jetbrains/kotlin/com/intellij/lang/impl/TokenSequence$Builder
+Event: 2.187 loading class org/jetbrains/kotlin/com/intellij/lang/impl/TokenSequence$Builder done
+Event: 2.187 loading class org/jetbrains/kotlin/com/intellij/util/text/ImmutableText$InnerLeaf
+Event: 2.187 loading class org/jetbrains/kotlin/com/intellij/util/text/ImmutableText$InnerLeaf done
+Event: 2.188 loading class org/jetbrains/kotlin/lexer/_JetLexer$State
+Event: 2.188 loading class org/jetbrains/kotlin/lexer/_JetLexer$State done
+Event: 2.190 loading class org/jetbrains/kotlin/com/intellij/lang/impl/TokenSequence
+Event: 2.190 loading class org/jetbrains/kotlin/com/intellij/lang/impl/TokenSequence done
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/KotlinParser
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/KotlinParser done
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/SemanticWhitespaceAwarePsiBuilder
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/SemanticWhitespaceAwarePsiBuilder done
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/SemanticWhitespaceAwarePsiBuilderImpl
+Event: 2.190 loading class org/jetbrains/kotlin/parsing/SemanticWhitespaceAwarePsiBuilderImpl done
+Event: 2.190 loading class org/jetbrains/kotlin/com/intellij/lang/impl/PsiBuilderAdapter
+Event: 2.190 loading class org/jetbrains/kotlin/com/intellij/lang/impl/PsiBuilderAdapter done
+Event: 2.191 loading class org/jetbrains/kotlin/parsing/KotlinParsing
+Event: 2.191 loading class org/jetbrains/kotlin/parsing/KotlinParsing done
+Event: 2.191 Executing VM operation: CollectForMetadataAllocation
+
+
+Dynamic libraries:
+0x00007ff6cd2f0000 - 0x00007ff6cd2fa000 	C:\Program Files\Android\Android Studio\jre\bin\java.exe
+0x00007ffe97b30000 - 0x00007ffe97d25000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ffe97990000 - 0x00007ffe97a4d000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ffe957b0000 - 0x00007ffe95a78000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ffe952a0000 - 0x00007ffe953a0000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ffe8cb40000 - 0x00007ffe8cb57000 	C:\Program Files\Android\Android Studio\jre\bin\VCRUNTIME140.dll
+0x00007ffe7f190000 - 0x00007ffe7f1a9000 	C:\Program Files\Android\Android Studio\jre\bin\jli.dll
+0x00007ffe977e0000 - 0x00007ffe97980000 	C:\WINDOWS\System32\USER32.dll
+0x00007ffe95270000 - 0x00007ffe95292000 	C:\WINDOWS\System32\win32u.dll
+0x00007ffe95ed0000 - 0x00007ffe95efa000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ffe95a80000 - 0x00007ffe95b8b000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ffe95580000 - 0x00007ffe9561d000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ffe77740000 - 0x00007ffe779da000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.844_none_ca00b6081b84eb1d\COMCTL32.dll
+0x00007ffe96bd0000 - 0x00007ffe96c6e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ffe97a50000 - 0x00007ffe97a80000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffe5ff10000 - 0x00007ffe5ffad000 	C:\Program Files\Android\Android Studio\jre\bin\msvcp140.dll
+0x00007ffe3c8c0000 - 0x00007ffe3d37c000 	C:\Program Files\Android\Android Studio\jre\bin\server\jvm.dll
+0x00007ffe95b90000 - 0x00007ffe95c3c000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ffe95e30000 - 0x00007ffe95ecb000 	C:\WINDOWS\System32\sechost.dll
+0x00007ffe96160000 - 0x00007ffe9628b000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ffe97980000 - 0x00007ffe97988000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ffe71ff0000 - 0x00007ffe71ff9000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ffe97a80000 - 0x00007ffe97aeb000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ffe79930000 - 0x00007ffe79957000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ffe94e00000 - 0x00007ffe94e0a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ffe93ad0000 - 0x00007ffe93ae2000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007ffe7ec20000 - 0x00007ffe7ec31000 	C:\Program Files\Android\Android Studio\jre\bin\verify.dll
+0x00007ffe93050000 - 0x00007ffe93234000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007ffe71850000 - 0x00007ffe7187c000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007ffe95620000 - 0x00007ffe956a0000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ffe7df00000 - 0x00007ffe7df29000 	C:\Program Files\Android\Android Studio\jre\bin\java.dll
+0x00007ffe8c2d0000 - 0x00007ffe8c2db000 	C:\Program Files\Android\Android Studio\jre\bin\jimage.dll
+0x00007ffe7e280000 - 0x00007ffe7e298000 	C:\Program Files\Android\Android Studio\jre\bin\zip.dll
+0x00007ffe962a0000 - 0x00007ffe969e2000 	C:\WINDOWS\System32\SHELL32.dll
+0x00007ffe93330000 - 0x00007ffe93ac0000 	C:\WINDOWS\SYSTEM32\windows.storage.dll
+0x00007ffe96c70000 - 0x00007ffe96fc5000 	C:\WINDOWS\System32\combase.dll
+0x00007ffe94c70000 - 0x00007ffe94c9c000 	C:\WINDOWS\SYSTEM32\Wldp.dll
+0x00007ffe95c40000 - 0x00007ffe95cee000 	C:\WINDOWS\System32\SHCORE.dll
+0x00007ffe97780000 - 0x00007ffe977d5000 	C:\WINDOWS\System32\shlwapi.dll
+0x00007ffe951b0000 - 0x00007ffe951cf000 	C:\WINDOWS\SYSTEM32\profapi.dll
+0x00007ffe7a930000 - 0x00007ffe7a94a000 	C:\Program Files\Android\Android Studio\jre\bin\net.dll
+0x00007ffe7d5b0000 - 0x00007ffe7d6bb000 	C:\WINDOWS\SYSTEM32\WINHTTP.dll
+0x00007ffe949e0000 - 0x00007ffe94a4a000 	C:\WINDOWS\system32\mswsock.dll
+0x00007ffe785d0000 - 0x00007ffe785e4000 	C:\Program Files\Android\Android Studio\jre\bin\nio.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Android\Android Studio\jre\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.844_none_ca00b6081b84eb1d;C:\Program Files\Android\Android Studio\jre\bin\server
+
+VM Arguments:
+java_command: org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -Xallow-no-source-files -classpath C:\Android\Proyecto\VendedoresKT\ApoloVendedor\app\build\intermediates\compile_and_runtime_not_namespaced_r_class_jar\debug\R.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\70b69f018ff8e55d59c786768edda5ad\jetified-ksoap2-android-assembly-3.6.2-jar-with-dependencies.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\65822686645ebbefbf6a8af1588fb9e6\jetified-kotlin-android-extensions-runtime-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\e339e8830f424a51a223b9ab6ff13c9b\jetified-kotlin-stdlib-jdk7-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\b7b8da7012b769d6e1d5e97ec3660eec\jetified-core-ktx-1.2.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\172a37d5aaf6c239d3f3ac4e85e80706\jetified-kotlin-stdlib-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\2cd9eed13f11bee972de9aa70644c376\jetified-kotlin-stdlib-common-1.3.72.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\17dda0cf0629172bdc4ecf5d3bc5b97a\jetified-annotations-13.0.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\c947f03eec3c31e4097ca3d0b32c1cc1\material-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\bf764ed074c0ac103109d1826cf7354a\appcompat-1.1.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\74b70178f46f9beb69813f52563b2a97\cardview-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\7333204511bb3c05d1650051bbdc5a28\gridlayout-1.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\14fd8c3ad82c146d9efd8859e38a0ef8\jetified-play-services-maps-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\8259b828720644cdf6d447b6f0a0b83e\lifecycle-extensions-2.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\315adbd2afad81e80f5bbf1852a718f2\jetified-play-services-base-17.0.0-api.jar;C:\Users\Apolo\.gradle\caches\transforms-2\files-2.1\990e53d4
+java_class_path (initial): C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-compiler-embeddable\1.3.72\fb72232c8fa977d5e07d33c43381ddbdc5edab6\kotlin-compiler-embeddable-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-reflect\1.3.72\86613e1a669a701b0c660bfd2af4f82a7ae11fca\kotlin-reflect-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.3.72\8032138f12c0180bc4e51fe139d4c52b46db6109\kotlin-stdlib-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-script-runtime\1.3.72\657d8d34d91e1964b4439378c09933e840bfe8d5\kotlin-script-runtime-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-daemon-embeddable\1.3.72\53bbaa2816dbf6bdb85f629451b1fcc88f2164d2\kotlin-daemon-embeddable-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.intellij.deps\trove4j\1.0.20181211\216c2e14b070f334479d800987affe4054cd563f\trove4j-1.0.20181211.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.3.72\6ca8bee3d88957eaaaef077c41c908c9940492d8\kotlin-stdlib-common-1.3.72.jar;C:\Users\Apolo\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 132120576                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 2090860544                                {product} {ergonomic}
+   size_t MaxNewSize                               = 1254096896                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5836300                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122910970                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122910970                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+PATH=C:\orant\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\orant\jdk\bin;C:\Program Files (x86)\Intel\Intel(R) Memory And Storage Tool\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\instantclient_12_1\;C:\Users\Apolo\AppData\Local\Microsoft\WindowsApps;C:\Users\Apolo\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Apolo\AppData\Roaming\npm;C:\Users\Apolo\AppData\Local\atom\bin;
+USERNAME=Apolo
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 126 Stepping 5, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 19041 (10.0.19041.928)
+OS uptime: 10 days 3:40 hours
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 126 stepping 5, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx, evex, sha, fma
+
+Memory: 4k page, system-wide physical 7973M (512M free)
+TotalPageFile size 11461M (AvailPageFile size 4M)
+current process WorkingSet (physical memory assigned to process): 210M, peak: 210M
+current process commit charge ("private bytes"): 297M, peak: 323M
+
+vm_info: OpenJDK 64-Bit Server VM (11.0.8+10-b944.6842174) for windows-amd64 JRE (11.0.8+10-b944.6842174), built on Sep 19 2020 01:11:42 by "builder" with MS VC++ 14.0 (VS2015)
+
+END.

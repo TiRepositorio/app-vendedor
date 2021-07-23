@@ -644,6 +644,7 @@
                         android:layout_weight="1"
                         android:inputType="number"
                         android:background="@color/textoClaro"
+                        android:enabled="false"
                         style="@style/etEditable"/>
                     <EditText
                         android:id="@+id/etOrdenCompra"
