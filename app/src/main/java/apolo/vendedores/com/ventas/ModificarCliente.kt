@@ -7,7 +7,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
@@ -104,7 +107,7 @@ class ModificarCliente : AppCompatActivity() {
         if (validaDatos()){
             if (idCat == "") {
                 val cv = ContentValues()
-                cv.put("COD_EMPRESA", "1")
+                cv.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
                 cv.put("COD_CLIENTE", codCliente)
                 cv.put("COD_SUBCLIENTE", codSubcliente)
                 cv.put("TELEFONO1", etTel1.text.toString())
@@ -119,7 +122,7 @@ class ModificarCliente : AppCompatActivity() {
                 funcion.insertar("svm_modifica_catastro", cv)
             } else {
                 val cv = ContentValues()
-                cv.put("COD_EMPRESA", "1")
+                cv.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
                 cv.put("COD_CLIENTE", codCliente)
                 cv.put("COD_SUBCLIENTE", codSubcliente)
                 cv.put("TELEFONO1", etTel1.text.toString())
@@ -165,6 +168,87 @@ class ModificarCliente : AppCompatActivity() {
         EnviarModificacion.accion = accion
         val enviarModificacion = EnviarModificacion()
         enviarModificacion.enviar()
+        procesoEnviar()
+    }
+
+    private fun procesoEnviar(){
+        val progressDialog =  apolo.vendedores.com.utilidades.ProgressDialog(EnviarModificacion.context)
+        val thread = Thread{
+            runOnUiThread{ progressDialog.cargarDialogo("Comprobando conexion",false) }
+            EnviarModificacion.respuesta = try {
+                MainActivity2.conexionWS.procesaVersion()
+            } catch (e: Exception) {
+                e.message.toString()
+            }
+            runOnUiThread { progressDialog.cerrarDialogo() }
+            if (EnviarModificacion.respuesta != "null") {
+                try {
+                    runOnUiThread { progressDialog.cargarDialogo("Enviando la actualizacion al servidor...",false) }
+                    EnviarModificacion.respuesta = MainActivity.conexionWS.procesaActualizaDatosClienteFinal(ListaClientes.codVendedor,
+                        EnviarModificacion.vCliente,
+                        EnviarModificacion.fotoFachada
+                    )
+                    if (EnviarModificacion.respuesta.indexOf("01*") >= 0 || EnviarModificacion.respuesta.indexOf("03*") >= 0) {
+                        val values = ContentValues()
+                        values.put("ESTADO", "E")
+                        MainActivity.bd!!.update("svm_modifica_catastro",values,
+                            " COD_CLIENTE = '${EnviarModificacion.codCliente}' and COD_SUBCLIENTE = '${EnviarModificacion.codSubcliente}' and ESTADO = 'P'",
+                            null)
+                    }
+                    if (EnviarModificacion.respuesta.indexOf("Unable to resolve host") > -1) {
+                        EnviarModificacion.respuesta = "07*" + "Verifique su conexion a internet y vuelva a intentarlo"
+                    }
+                    runOnUiThread {
+                        val gatillo = DialogoAutorizacion(EnviarModificacion.context)
+                        gatillo.dialogoAccion("cerrar",
+                            EnviarModificacion.accion,
+                            EnviarModificacion.respuesta,"","OK")
+                        progressDialog.cerrarDialogo()
+                    }
+                    return@Thread
+                } catch (e: Exception) {
+                    runOnUiThread { progressDialog.cerrarDialogo() }
+                    e.message
+                }
+            } else {
+                try {
+                    runOnUiThread { progressDialog.cargarDialogo("Enviando la actualizacion al servidor...",false) }
+                    EnviarModificacion.respuesta = MainActivity.conexionWS.procesaActualizaDatosClienteFinal(ListaClientes.codVendedor,
+                        EnviarModificacion.vCliente,
+                        EnviarModificacion.fotoFachada
+                    )
+                    if (EnviarModificacion.respuesta.indexOf("01*") >= 0 || EnviarModificacion.respuesta.indexOf("03*") >= 0) {
+                        val values = ContentValues()
+                        values.put("ESTADO", "E")
+                        MainActivity.bd!!.update("svm_modifica_catastro",values,
+                            " COD_CLIENTE = '${EnviarModificacion.codCliente}' and COD_SUBCLIENTE = '${EnviarModificacion.codSubcliente}' and ESTADO = 'P'",
+                            null)
+                    }
+                    if (EnviarModificacion.respuesta.indexOf("Unable to resolve host") > -1) {
+                        EnviarModificacion.respuesta = "07*" + "Verifique su conexion a internet y vuelva a intentarlo"
+                    }
+                    runOnUiThread {
+                        val gatillo = DialogoAutorizacion(EnviarModificacion.context)
+                        gatillo.dialogoAccion("cerrar",
+                            EnviarModificacion.accion,
+                            EnviarModificacion.respuesta,"","OK")
+                        progressDialog.cerrarDialogo()
+                    }
+                    return@Thread
+                } catch (e: Exception) {
+                    runOnUiThread { progressDialog.cerrarDialogo() }
+                    e.message
+                }
+            }
+            runOnUiThread {
+                progressDialog.cerrarDialogo()
+                Toast.makeText(
+                    EnviarModificacion.context,"Verifique su conexion a internet y vuelva a intentarlo",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+        thread.start()
+
     }
 
     private fun habilitar(estado: Boolean){

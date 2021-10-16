@@ -1,18 +1,14 @@
 package apolo.vendedores.com.utilidades
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
 import android.provider.Settings.Global
 import android.provider.Settings.System
-import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -102,17 +98,25 @@ class FuncionesDispositivo(var context: Context) {
                 Toast.makeText(context, "Insertar SIM para realizar la operacion", Toast.LENGTH_SHORT).show()
                 state = false
             }
+            TelephonyManager.SIM_STATE_CARD_IO_ERROR -> { }
+            TelephonyManager.SIM_STATE_CARD_RESTRICTED -> { }
+            TelephonyManager.SIM_STATE_NETWORK_LOCKED -> { }
+            TelephonyManager.SIM_STATE_NOT_READY -> { }
+            TelephonyManager.SIM_STATE_PERM_DISABLED -> { }
+            TelephonyManager.SIM_STATE_PIN_REQUIRED -> { }
+            TelephonyManager.SIM_STATE_PUK_REQUIRED -> { }
+            TelephonyManager.SIM_STATE_READY -> { }
         }
         return state
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /*@RequiresApi(Build.VERSION_CODES.O)
     fun imei(telMgr:TelephonyManager) : String {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return "No tiene permisos"
         }
         return telMgr.deviceId
-    }
+    }*/
 
     fun horaAutomatica(): Boolean {
         if (System.getInt(context.contentResolver, System.AUTO_TIME, 0) != 1
@@ -125,7 +129,7 @@ class FuncionesDispositivo(var context: Context) {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun validaEstadoSim(telMgr:TelephonyManager):Boolean{
+    /*fun validaEstadoSim(telMgr:TelephonyManager):Boolean{
         try {
 
             if (ActivityCompat.checkSelfPermission(context,
@@ -153,7 +157,7 @@ class FuncionesDispositivo(var context: Context) {
         }
         return true
     }
-
+*/
     fun verificaRoot():Boolean{
         return try {
             Runtime.getRuntime().exec("su")

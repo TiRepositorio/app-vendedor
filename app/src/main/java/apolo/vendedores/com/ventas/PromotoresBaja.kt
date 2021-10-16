@@ -12,7 +12,6 @@ import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.SentenciasSQL
 import apolo.vendedores.com.ventas.baja.Baja
-import apolo.vendedores.com.ventas.catastro.CatastrarCliente
 import kotlinx.android.synthetic.main.activity_promotores.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 

@@ -1,5 +1,6 @@
 package apolo.vendedores.com.ventas.baja
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
@@ -14,22 +15,10 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
-import apolo.vendedores.com.ventas.catastro.CatastrarCliente
 import kotlinx.android.synthetic.main.activity_baja_cliente.*
-import kotlinx.android.synthetic.main.activity_baja_cliente.btBuscarEnMapa
-import kotlinx.android.synthetic.main.activity_baja_cliente.btVolver
-import kotlinx.android.synthetic.main.activity_baja_cliente.etCelular
-import kotlinx.android.synthetic.main.activity_baja_cliente.etCercaDe
-import kotlinx.android.synthetic.main.activity_baja_cliente.etCiudad
-import kotlinx.android.synthetic.main.activity_baja_cliente.etCodigo
-import kotlinx.android.synthetic.main.activity_baja_cliente.etLimiteCredito
-import kotlinx.android.synthetic.main.activity_baja_cliente.etRUC
-import kotlinx.android.synthetic.main.activity_baja_cliente.imgBuscarCliente
-import kotlinx.android.synthetic.main.activity_baja_cliente.ivFachada
-import kotlinx.android.synthetic.main.activity_baja_cliente.tvLatitud
-import kotlinx.android.synthetic.main.activity_baja_cliente.tvLongitud
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -38,6 +27,7 @@ class Baja: AppCompatActivity() {
 
     companion object{
         var codVendedor = ""
+        @SuppressLint("StaticFieldLeak")
         lateinit var foto : FuncionesFoto
         var codCliente    = ""
         var codSubcliente = ""
@@ -47,10 +37,11 @@ class Baja: AppCompatActivity() {
     private lateinit var ubicacion: FuncionesUbicacion
     private lateinit var dispositivo : FuncionesDispositivo
     private lateinit var lm : LocationManager
-    private var fotoFachada : String = ""
     private var tipoFoto : String = ""
     var nombre : String = ""
-    var imagenFachada: String? = null
+    private var imagenFachada: String? = null
+    private lateinit var thread: Thread
+    private lateinit var dialogo:ProgressDialog
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -217,9 +208,10 @@ class Baja: AppCompatActivity() {
         EnviarBaja.context = this
         EnviarBaja.accion  = etAccion
         EnviarBaja.fotoFachada = imagenFachada!!
-        EnviarBaja.comentario = etComentario.text.toString().toUpperCase(Locale.ROOT)
+        EnviarBaja.comentario = etComentario.text.toString().uppercase(Locale.ROOT)
         val enviar = EnviarBaja()
         enviar.cargar()
+        enviarN()
     }
 
     @Throws(IOException::class)
@@ -258,13 +250,52 @@ class Baja: AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        imagenFachada = foto.foto1(requestCode, resultCode, data, nombre, ivFachada, tipoFoto)
+        imagenFachada = foto.foto1(requestCode, nombre, ivFachada, tipoFoto)
         if (imagenFachada!!.isEmpty()){
-            imagenFachada = foto.foto2(requestCode, resultCode, data, ivFachada, ivFachada, nombre, tipoFoto)
+            imagenFachada = foto.foto2(requestCode, data, ivFachada, ivFachada, nombre, tipoFoto)
         }
         if (!imagenFachada.isNullOrEmpty()){
             ivFachada.visibility = View.VISIBLE
         }
+    }
+
+    private fun enviarN(){
+        dialogo = ProgressDialog(this)
+        thread = Thread{
+            runOnUiThread{ dialogo.cargarDialogo("Comprobando conexion",false) }
+            try {
+                EnviarBaja.resultado = MainActivity2.conexionWS.enviarBaja(codVendedor,codCliente,codSubcliente,
+                    EnviarBaja.cliente,
+                    EnviarBaja.fotoFachada
+                )
+            } catch (e: java.lang.Exception) {
+                EnviarBaja.resultado = e.message.toString()
+            }
+            runOnUiThread {
+                dialogo.cerrarDialogo()
+                if (EnviarBaja.resultado.split("*")[0].trim() == "01") {
+                    MainActivity2.funcion.mensaje(
+                        EnviarBaja.context,
+                        "Atención",
+                        "Se guardó correctamente"
+                    )
+                } else {
+                    MainActivity2.funcion.mensaje(
+                        EnviarBaja.context,
+                        "Error al intentar enviar",
+                        "No se ha podido enviar el archivo, intente más tarde.\n${EnviarBaja.resultado}"
+                    )
+                }
+            }
+            if (EnviarBaja.resultado != "null") {
+                return@Thread
+            }
+            runOnUiThread {
+                funcion.toast(this,"Verifique su conexion a internet y vuelva a intentarlo")
+                finish()
+            }
+        }
+        thread.start()
     }
 
 }

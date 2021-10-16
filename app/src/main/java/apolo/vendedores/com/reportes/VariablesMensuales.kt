@@ -34,6 +34,7 @@ class VariablesMensuales : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         var funcion:FuncionesUtiles = FuncionesUtiles()
         var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor

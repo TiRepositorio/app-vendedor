@@ -58,7 +58,7 @@ class Sincronizacion : AppCompatActivity() {
 
         if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
-            finish()
+//            finish()
         }
         try {
             preparaSincornizacion().execute()
@@ -95,10 +95,18 @@ class Sincronizacion : AppCompatActivity() {
             enviarNoventa.enviarPendientesDiaAnterior()
 
             insertarUsuario()
-            if (imeiBD.isNullOrEmpty()){
+            if (imeiBD.isEmpty()){
+                return null
+            }
+            if(imeiBD.isEmpty()){
+                tvImei.text = "Configure correctamente la versión en el servidor."
                 return null
             }
             if (imeiBD.length>3 && imeiBD.isNotEmpty()){
+                if (imeiBD.split("-").size < 3){
+                    tvImei.text = imeiBD
+                    return null
+                }
                 funcion.ejecutar("update usuarios set PROG_PEDIDO = '${imeiBD.split("-")[3]}'",this@Sincronizacion)
                 if (!validaVersion(imeiBD.split("-")[0],imeiBD.split("-")[1],imeiBD.split("-")[2])){
                     return null

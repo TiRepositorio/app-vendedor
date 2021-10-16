@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.barra_vendedores.*
 class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         var funcion : FuncionesUtiles = FuncionesUtiles()
         var datos: HashMap<String, String> = HashMap()
         lateinit var cursor: Cursor
@@ -85,6 +86,7 @@ class AvanceDeComisiones : AppCompatActivity(), NavigationView.OnNavigationItemS
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun cargarCodigos(){
         try {
             codVendedor = tvVendedor.text!!.toString().split("-")[0]

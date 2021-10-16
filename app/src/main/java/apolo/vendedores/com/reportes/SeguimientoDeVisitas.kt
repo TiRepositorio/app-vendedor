@@ -1,26 +1,24 @@
 package apolo.vendedores.com.reportes
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.SentenciasSQL
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas.*
-import kotlinx.android.synthetic.main.activity_seguimiento_de_visitas2.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
 class SeguimientoDeVisitas : AppCompatActivity(){
 
     companion object {
         var datos: HashMap<String, String> = HashMap()
+        @SuppressLint("StaticFieldLeak")
         lateinit var funcion: FuncionesUtiles
         lateinit var cursor: Cursor
     }

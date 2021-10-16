@@ -5,24 +5,17 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Base64
 import android.widget.ImageView
 import java.io.*
 
 
-class FuncionesFoto {
+class FuncionesFoto(var context: Context) {
 
-    constructor(context: Context){
-        this.context = context
-    }
-
-    var context : Context
     private var foto1 : String = ""
-    var foto2 : String = ""
-    var fotoFachada : String = ""
+    private var foto2 : String = ""
+    private var fotoFachada : String = ""
 
     fun stringToByte2(imagen: String): ByteArray? {
         var resultado: ByteArray? = null
@@ -34,7 +27,7 @@ class FuncionesFoto {
         return resultado
     }
 
-    fun byteToString2(imagen: ByteArray): String? {
+    private fun byteToString2(imagen: ByteArray): String {
         var doc = ""
         try {
             doc = String(imagen, Charsets.ISO_8859_1)
@@ -44,7 +37,7 @@ class FuncionesFoto {
         }
         return doc
     }
-    fun byteToString3(imagen: ByteArray): String? {
+    private fun byteToString3(imagen: ByteArray): String {
         var doc = ""
         try {
             doc = Base64.encodeToString(imagen,0)
@@ -55,7 +48,7 @@ class FuncionesFoto {
         return doc
     }
 
-    fun resizeImage(ruta_archivo: String?, w: Int, h: Int): Drawable? {
+    /*fun resizeImage(ruta_archivo: String?, w: Int, h: Int): Drawable {
 
         // cargamos la imagen de origen
         val BitmapOrg = BitmapFactory.decodeFile(ruta_archivo)
@@ -82,8 +75,8 @@ class FuncionesFoto {
         // objeto drawable y así asignarlo a un botón, imageview...
         return BitmapDrawable(resizedBitmap)
     }
-
-    fun resizeImage(ctx: Context?, img: Bitmap, w: Int, h: Int): Bitmap? {
+*/
+    private fun resizeImage(img: Bitmap, w: Int, h: Int): Bitmap? {
         val width = img.width
         val height = img.height
 
@@ -98,21 +91,20 @@ class FuncionesFoto {
         matrix.postScale(scaleWidth, scaleHeight)
 
         // volvemos a crear la imagen con los nuevos valores
-        val resizedBitmap = Bitmap.createBitmap(
-            img, 0, 0, width, height,
-            matrix, true
-        )
-        if (resizedBitmap == img) {
-            var como = "son iguales"
-        }
+        /*if (resizedBitmap == img) {
+            "son iguales"
+        }*/
 
         // si queremos poder mostrar nuestra imagen tenemos que crear un
         // objeto drawable y así asignarlo a un botón, imageview...
-        return resizedBitmap
+        return Bitmap.createBitmap(
+            img, 0, 0, width, height,
+            matrix, true
+        )
     }
 
     @Throws(IOException::class)
-    fun readBytes(uri: Uri?, inputStream: InputStream): ByteArray? {
+    fun readBytes(inputStream: InputStream): ByteArray? {
 
         // this dynamically extends to take the bytes you read
 
@@ -125,8 +117,8 @@ class FuncionesFoto {
 
         // we need to know how may bytes were read to write them to the
         // byteBuffer
-        var len = 0
-        while (inputStream.read(buffer).also({ len = it }) != -1) {
+        var len: Int
+        while (inputStream.read(buffer).also { len = it } != -1) {
             byteBuffer.write(buffer, 0, len)
         }
 
@@ -134,9 +126,14 @@ class FuncionesFoto {
         return byteBuffer.toByteArray()
     }
 
-    fun foto1 (requestCode: Int, resultCode: Int, data: Intent?, nombre:String, ivFachada: ImageView,tipoFoto:String):String{
-        if (tipoFoto.equals("1")) {
-            if (requestCode === 1) {
+    fun foto1 (
+        requestCode: Int,
+        nombre: String,
+        ivFachada: ImageView,
+        tipoFoto: String
+    ):String{
+        if (tipoFoto == "1") {
+            if (requestCode == 1) {
                 try {
                     if (File(nombre).exists()) {
                         try {
@@ -146,17 +143,16 @@ class FuncionesFoto {
                             var bm = BitmapFactory.decodeStream(fis, null, options)
                             options.inJustDecodeBounds = true
                             BitmapFactory.decodeFile(nombre, options)
-                            var w = 0
-                            var h = 0
-                            w = options.outWidth
-                            h = options.outHeight
+                            val w: Int = options.outWidth
+                            val h: Int = options.outHeight
                             bm = if (w < h) {
                                 val y = h.toFloat() / 768
-                                resizeImage(context,bm!!,(w / y).toInt(),(h / y).toInt()
+                                resizeImage(
+                                    bm!!, (w / y).toInt(), (h / y).toInt()
                                 )
                             } else {
                                 val x = w.toFloat() / 768
-                                resizeImage(context,bm!!,(w / x).toInt(),(h / x).toInt())
+                                resizeImage(bm!!, (w / x).toInt(), (h / x).toInt())
                             }
                             var out: FileOutputStream? = null
                             try {
@@ -168,9 +164,7 @@ class FuncionesFoto {
                                 e.printStackTrace()
                             } finally {
                                 try {
-                                    if (out != null) {
-                                        out.close()
-                                    }
+                                    out?.close()
                                 } catch (e: IOException) {
                                     e.printStackTrace()
                                 }
@@ -179,17 +173,13 @@ class FuncionesFoto {
 //									Bitmap bm = BitmapFactory.decodeFile(name);
                             ivFachada.setImageBitmap(bm)
                         } catch (e2: java.lang.Exception) {
-                            var err = e2.message
-                            err = err + ""
+                            e2.message
                         }
                         val output =
                             Uri.fromFile(File(nombre))
-                        val inputStream: InputStream?
-                        var imagen: ByteArray? = null
-                        var strImagen = ""
-                        inputStream = context.contentResolver.openInputStream(output)
-                        imagen = readBytes(output, inputStream!!)
-                        strImagen = byteToString3(imagen!!).toString()
+                        val inputStream: InputStream? = context.contentResolver.openInputStream(output)
+                        val imagen: ByteArray? = readBytes(inputStream!!)
+                        val strImagen: String = byteToString3(imagen!!)
                         fotoFachada = strImagen
                         File(nombre).delete()
                         return strImagen
@@ -203,12 +193,18 @@ class FuncionesFoto {
         return ""
     }
 
-    fun foto2 (requestCode: Int, resultCode: Int, data: Intent?,ivFoto1:ImageView,ivFoto2:ImageView,nombre:String,tipoFoto: String) : String{
+    fun foto2 (
+        requestCode: Int,
+        data: Intent?,
+        ivFoto1: ImageView,
+        ivFoto2: ImageView,
+        nombre: String,
+        tipoFoto: String
+    ) : String{
         if (tipoFoto == "2") {
-            if (requestCode === 1) {
+            if (requestCode == 1) {
                 if (data == null) {
-                    var iv: ImageView? = null
-                    iv = if (nombre.contains("/foto1.jpg")) { ivFoto1 } else { ivFoto2 }
+                    val iv: ImageView = if (nombre.contains("/foto1.jpg")) { ivFoto1 } else { ivFoto2 }
                     try {
                         if (File(nombre).exists()) {
                             try {
@@ -218,16 +214,14 @@ class FuncionesFoto {
                                 var bm = BitmapFactory.decodeStream(fis, null, options)
                                 options.inJustDecodeBounds = true
                                 BitmapFactory.decodeFile(nombre, options)
-                                val w: Int
-                                val h: Int
-                                w = options.outWidth
-                                h = options.outHeight
+                                val w: Int = options.outWidth
+                                val h: Int = options.outHeight
                                 bm = if (w < h) {
                                     val y = h.toFloat() / 768
-                                    resizeImage(context,bm!!,(w / y).toInt(),(h / y).toInt())
+                                    resizeImage(bm!!, (w / y).toInt(), (h / y).toInt())
                                 } else {
                                     val x = w.toFloat() / 768
-                                    resizeImage(context,bm!!,(w / x).toInt(),(h / x).toInt())
+                                    resizeImage(bm!!, (w / x).toInt(), (h / x).toInt())
                                 }
                                 var out: FileOutputStream? = null
                                 try {
@@ -248,16 +242,12 @@ class FuncionesFoto {
 //									Bitmap bm = BitmapFactory.decodeFile(name);
                                 iv.setImageBitmap(bm)
                             } catch (e2: java.lang.Exception) {
-                                var err = e2.message
-                                err = err + ""
+                                e2.message
                             }
                             val output = Uri.fromFile(File(nombre))
-                            val inputStream: InputStream?
-                            val imagen: ByteArray?
-                            var strImagen = ""
-                            inputStream = context.contentResolver.openInputStream(output)
-                            imagen = readBytes(output, inputStream!!)
-                            strImagen = byteToString2(imagen!!).toString()
+                            val inputStream: InputStream? = context.contentResolver.openInputStream(output)
+                            val imagen: ByteArray? = readBytes(inputStream!!)
+                            val strImagen: String = byteToString2(imagen!!)
                             if (nombre.contains("/foto1.jpg")) {
                                 foto1 = strImagen
                             } else {

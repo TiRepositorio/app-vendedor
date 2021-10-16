@@ -41,9 +41,9 @@ class ConexionWS {
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
         request.addProperty("password", "#edsystem@polo")
+        request.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
         request.addProperty("codPersona", FuncionesUtiles.usuario["LOGIN"])
         request.addProperty("version", MainActivity.version)
-        request.addProperty("codEmpresa", "1")
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(request)
@@ -60,6 +60,40 @@ class ConexionWS {
         return resultado
     }
 
+    /*fun generaArchivos()  : Boolean{
+        setMethodName("GeneraArchivosGestor")
+        lateinit var solicitud : SoapObject
+        lateinit var resultado : String
+        try {
+            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
+            solicitud.addProperty("usuario", "edsystem")
+            solicitud.addProperty("password", "#edsystem@polo")
+            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_EMPRESA"])
+            solicitud.addProperty("codEmpresa", "1")
+//            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_PERSONA"])
+        } catch (e: Exception){
+            return false
+        }
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = true
+        envelope.xsd = SoapSerializationEnvelope.XSD
+        envelope.enc = SoapSerializationEnvelope.ENC
+        MarshalHashtable().register(envelope)
+        envelope.setOutputSoapObject(solicitud)
+        val transporte = HttpTransportSE(URL, 600000)
+        try {
+            transporte.call(SOAP_ACTION, envelope)
+            resultado = envelope.response.toString()
+            if (resultado.indexOf("01*") <= -1){
+                return false
+            }
+        } catch (e: Exception){
+            resultados = e.message.toString()
+            return false
+        }
+        return true
+    }
+*/
     fun generaArchivos()  : Boolean{
         setMethodName("GeneraArchivosGestor")
         lateinit var solicitud : SoapObject
@@ -69,7 +103,7 @@ class ConexionWS {
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
             solicitud.addProperty("codPersona", FuncionesUtiles.usuario["LOGIN"])
-            solicitud.addProperty("codEmpresa", "1")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
 //            solicitud.addProperty("codPersona", FuncionesUtiles.usuario["COD_PERSONA"])
         } catch (e: Exception){
             return false
@@ -100,8 +134,8 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
             solicitud.addProperty("codVendedor", FuncionesUtiles.usuario["LOGIN"])
-            solicitud.addProperty("codEmpresa", "1")
         } catch (e: Exception){
             return false
         }
@@ -181,7 +215,7 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", "1")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
         } catch (e: Exception){
@@ -210,7 +244,7 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", "1")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
         } catch (e: Exception){
@@ -240,7 +274,7 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", "1")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
             solicitud.addProperty("codRepartidor", codRepartidor)
             solicitud.addProperty("cabecera", cabecera)
             solicitud.addProperty("detalle", detalle)
@@ -261,41 +295,6 @@ class ConexionWS {
         return resultado
     }
 
-//    fun procesaEnviaNuevaUbicacionCliente(
-//        codVendedor: String,
-//        codCliente: String,
-//        imagenFachada: String
-//    ) : String{
-//        setMethodName("ProcesaActualizaClienteFinal")
-//
-//        lateinit var solicitud : SoapObject
-//        lateinit var resultado : String
-//
-//        try {
-//            solicitud = SoapObject(NAMESPACE, METHOD_NAME)
-//            solicitud.addProperty("usuario", "edsystem")
-//            solicitud.addProperty("password", "#edsystem@polo")
-//            solicitud.addProperty("vcodVendedor", codVendedor)
-//            solicitud.addProperty("vclientes", codCliente.replace("''", "").replace("'", ""))
-//            solicitud.addProperty("vfoto_fachada", imagenFachada)
-////        request.addProperty("codEmpresa", "1")
-//        } catch (e: Exception){
-//            return e.message.toString()
-//        }
-//
-//        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
-//        envelope.dotNet = false
-//        envelope.setOutputSoapObject(solicitud)
-//        val transporte = HttpTransportSE(URL, 240000)
-//        try {
-//            transporte.call(SOAP_ACTION, envelope)
-//            resultado = envelope.response.toString()
-//        } catch (e: Exception){
-//            return e.message.toString()
-//        }
-//        return resultado
-//    }
-
     //Enviar datos modificados del cliente
     fun procesaActualizaDatosClienteFinal(
         codVendedor: String?,
@@ -312,7 +311,6 @@ class ConexionWS {
             solicitud.addProperty("vcodVendedor", codVendedor)
             solicitud.addProperty("vclientes", clientes.replace("''", " ").replace("'", ""))
             solicitud.addProperty("vfoto_fachada", FotoFachada)
-//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             var err = e.message
             err = "" + err
@@ -351,7 +349,6 @@ class ConexionWS {
             request.addProperty("vcodCliente", cod_cliente)
             request.addProperty("vclientes", vcliente.replace("''", " ").replace("'", ""))
             request.addProperty("vfoto_fachada", vFotoFachada)
-//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             var err = e.message
             err = "" + err
@@ -383,7 +380,6 @@ class ConexionWS {
             request.addProperty("usuario", "edsystem")
             request.addProperty("password", "#edsystem@polo")
             request.addProperty("version", vers)
-//        request.addProperty("codEmpresa", "1")
         } catch (e: java.lang.Exception) {
             return false
         }
@@ -413,7 +409,7 @@ class ConexionWS {
             request = SoapObject(NAMESPACE, METHOD_NAME)
             request.addProperty("usuario", "edsystem")
             request.addProperty("password", "#edsystem@polo")
-            request.addProperty("vcodEmpresa", "1")
+            request.addProperty("vcodEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
             request.addProperty("vcodVendedor", codVendedor)
             request.addProperty("nopositivado", noVenta)
         } catch (e: java.lang.Exception) {
@@ -444,7 +440,7 @@ class ConexionWS {
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
         request.addProperty("password", "#edsystem@polo")
-        request.addProperty("codEmpresa", "1")
+        request.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
         request.addProperty("tipComprobante", "PRO")
         request.addProperty("serComprobante", codVendedor)
         request.addProperty("nroComprobante", nroComprobante)
@@ -476,7 +472,6 @@ class ConexionWS {
             request = SoapObject(NAMESPACE, METHOD_NAME)
             request.addProperty("usuario", "edsystem")
             request.addProperty("password", "#edsystem@polo")
-//            request.addProperty("codEmpresa", "1")
             request.addProperty("vcodVendedor", codVendedor)
             request.addProperty("vcodCliente", codCliente)
             request.addProperty("vcodSubcliente", codSubcliente)

@@ -9,11 +9,10 @@ import android.widget.EditText
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class DialogoCalendario(var context: Context) {
 
-    private val DATE_DIALOG_ID : Int = 1
+    private val dateDialogId : Int = 1
     private var mYear : Int = 0
     private var mMonth : Int = 0
     private var mDay : Int = 0
@@ -32,13 +31,6 @@ class DialogoCalendario(var context: Context) {
             }
         }
 
-    private val mDateSetListenerSimple = OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-        mYear = year
-        mMonth = monthOfYear
-        mDay = dayOfMonth
-        fechaDesde(etACargar)
-    }
-
     fun onCreateDialog(id: Int,etACargar:EditText, etDesde: EditText): Dialog? {
         this.etACargar = etACargar
         this.etDesde = etDesde
@@ -46,18 +38,7 @@ class DialogoCalendario(var context: Context) {
         mMonth = etACargar.text.toString().split("/")[1].toInt()-1
         mDay = etACargar.text.toString().split("/")[0].toInt()
         when (id) {
-            DATE_DIALOG_ID -> return DatePickerDialog(context, mDateSetListener, mYear, mMonth,mDay)
-        }
-        return null
-    }
-
-    fun onCreateDialogSimple(id: Int,etACargar:EditText): Dialog? {
-        this.etACargar = etACargar
-        mYear = etACargar.text.toString().split("/")[2].toInt()
-        mMonth = etACargar.text.toString().split("/")[1].toInt()
-        mDay = etACargar.text.toString().split("/")[0].toInt()
-        when (id) {
-            DATE_DIALOG_ID -> return DatePickerDialog(context, mDateSetListenerSimple, mYear, mMonth,mDay)
+            dateDialogId -> return DatePickerDialog(context, mDateSetListener, mYear, mMonth,mDay)
         }
         return null
     }
@@ -143,7 +124,7 @@ class DialogoCalendario(var context: Context) {
 
     }
 
-    fun fechasProxSemana():ArrayList<String>{
+    /*fun fechasProxSemana():ArrayList<String>{
         val fechas : ArrayList<String> = ArrayList()
         val year : Int = funcion.getFechaActual().split("/")[2].toInt()
         val mes : Int = funcion.getFechaActual().split("/")[1].toInt()
@@ -164,13 +145,13 @@ class DialogoCalendario(var context: Context) {
         }
         return fechas
     }
-
-    fun fechasSemana(fec:String):ArrayList<String>{
-        var fechas : ArrayList<String> = ArrayList<String>()
-        var year : Int = fec.split("/")[2].toInt()
-        var mes  : Int = fec.split("/")[1].toInt()
-        var dia  : Int = fec.split("/")[0].toInt()
-        var fecha : Calendar = Calendar.getInstance()
+*/
+    /*fun fechasSemana(fecTemp:String):ArrayList<String>{
+        val fechas : ArrayList<String> = ArrayList()
+        val year : Int = fecTemp.split("/")[2].toInt()
+        val mes  : Int = fecTemp.split("/")[1].toInt()
+        val dia  : Int = fecTemp.split("/")[0].toInt()
+        val fecha : Calendar = Calendar.getInstance()
         fecha.set(year,mes-1,dia)
         while (fecha.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY){
             fecha.add(Calendar.DATE,-1)
@@ -186,5 +167,5 @@ class DialogoCalendario(var context: Context) {
         }
         return fechas
     }
-
+*/
 }

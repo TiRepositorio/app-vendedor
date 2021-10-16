@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.ListaClientes
@@ -45,6 +46,8 @@ class Marcacion : AppCompatActivity() {
     private lateinit var lm : LocationManager
     private lateinit var lm2 : LocationManager
     private lateinit var telMgr : TelephonyManager
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var thread: Thread
 
     //Dialog Marcacion
     private lateinit var dialogMarcarPresenciaCliente: Dialog
@@ -244,7 +247,8 @@ class Marcacion : AppCompatActivity() {
         tvCliente.text = "$codCliente-$codSubcliente $descCliente"
         tvTiempoMin.text = "$tiempoMin min."
         tvTiempoMax.text = "$tiempoMax min."
-        btnEnviar.setOnClickListener { enviar() }
+//        btnEnviar.setOnClickListener { enviar() }
+        btnEnviar.setOnClickListener { enviarMarcacion() }
         btnCancelar.setOnClickListener { finish() }
         ibtnAgregar.setOnClickListener{ agregar() }
         ibtnEliminar.setOnClickListener{
@@ -362,7 +366,7 @@ class Marcacion : AppCompatActivity() {
         dialogMarcarPresenciaCliente.chkSalida.isEnabled = cb.id == dialogMarcarPresenciaCliente.chkEntrada.id
         //INSERTA CABECERA
         val values = ContentValues()
-        values.put("COD_EMPRESA", "1")
+        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"])
         values.put("COD_PROMOTOR", ListaClientes.codVendedor.trim())
         values.put("COD_CLIENTE", codCliente.trim())
         values.put("COD_SUBCLIENTE", codSubcliente.trim())
@@ -569,12 +573,77 @@ class Marcacion : AppCompatActivity() {
         dialogMarcarPresenciaCliente.show()
     }
 
-    private fun enviar(){
+    /*private fun enviar(){
         val enviar = EnviarMarcacion(codCliente, codSubcliente)
         EnviarMarcacion.contexto = this
         EnviarMarcacion.etAccion = accion
         EnviarMarcacion.accion = "cargarMarcaciones"
-        enviar.enviar()
+//        enviar.enviar()
+    }*/
+
+    private fun enviarMarcacion(){
+        thread = Thread{
+            progressDialog = ProgressDialog(this)
+            runOnUiThread { progressDialog.cargarDialogo("Enviando marcaciones...",false) }
+            val enviar = EnviarMarcacion(codCliente, codSubcliente)
+            EnviarMarcacion.contexto = this
+            EnviarMarcacion.etAccion = accion
+            EnviarMarcacion.accion = "cargarMarcaciones"
+            if (!enviar.enviar()){
+                runOnUiThread {
+                    funcion.toast(this,EnviarMarcacion.resultado)
+                    progressDialog.cerrarDialogo()
+                }
+                return@Thread
+            }
+            try {
+                EnviarMarcacion.resultado = if (EnviarMarcacion.dia == "HOY"){
+                    MainActivity2.conexionWS.procesaMarcacionAsistenciaAct(FuncionesUtiles.usuario["LOGIN"].toString(),
+                        EnviarMarcacion.cadena
+                    )
+                } else {
+                    MainActivity2.conexionWS.procesaMarcacionAsistencia(ListaClientes.codVendedor,
+                        EnviarMarcacion.cadena
+                    )
+                }
+//                resultado = "01*GRABADO CON EXITO"
+            } catch (e: Exception) {
+                EnviarMarcacion.resultado = e.message.toString()
+            }
+            val mensaje: Array<String> = EnviarMarcacion.resultado.split("*").toTypedArray()
+            if (mensaje.size == 1) {
+                runOnUiThread{
+                    progressDialog.cerrarDialogo()
+                    funcion.mensaje(EnviarMarcacion.contexto,"Resultado",EnviarMarcacion.resultado)
+                }
+            } else {
+                if (mensaje[0] == "01") {
+                    val update = if (EnviarMarcacion.dia == "HOY"){
+                        (" UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
+                                "  WHERE ESTADO = 'P'" +
+                                "    AND FECHA like '%" + MainActivity2.funcion.getFechaActual() + "%'")
+                    } else {
+                        ("update vt_marcacion_ubicacion set ESTADO = 'E' " +
+                                " where ESTADO         = 'P' " +
+                                "   and COD_PROMOTOR   = '" + ListaClientes.codVendedor + "'" +
+                                "   and COD_CLIENTE    = '" + EnviarMarcacion.stCodCliente + "'" +
+                                "   and COD_SUBCLIENTE = '" + EnviarMarcacion.stCodSubcliente + "'" +
+                                "   and TIPO in ('E','S') ")
+                    }
+                    runOnUiThread { funcion.ejecutar(update, EnviarMarcacion.contexto) }
+                    EnviarMarcacion.anomalia = ""
+                }
+                if ( mensaje[0]=="01"){
+                    mensaje[1]="Datos enviados con éxito."
+                }
+                runOnUiThread {
+                    funcion.mensaje(EnviarMarcacion.contexto,"Resultado", mensaje[1])
+                    progressDialog.cerrarDialogo()
+                }
+            }
+            runOnUiThread { EnviarMarcacion.etAccion.setText(EnviarMarcacion.accion) }
+        }
+        thread.start()
     }
 
     private fun inicializaETAccion(et: EditText){
@@ -618,4 +687,5 @@ class Marcacion : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
 }

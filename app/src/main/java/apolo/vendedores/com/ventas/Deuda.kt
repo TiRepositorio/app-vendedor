@@ -1,5 +1,6 @@
 package apolo.vendedores.com.ventas
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import android.graphics.Color
 import android.os.Bundle
@@ -18,6 +19,7 @@ class Deuda : AppCompatActivity() {
         var codigo : String = ""
         var nombre : String = ""
         var codVen : String = ""
+        @SuppressLint("StaticFieldLeak")
         var funcion : FuncionesUtiles = FuncionesUtiles()
     }
 

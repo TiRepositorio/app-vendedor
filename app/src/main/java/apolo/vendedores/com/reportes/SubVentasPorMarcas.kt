@@ -31,9 +31,7 @@ class SubVentasPorMarcas{
         }
 
         lista = ArrayList()
-        if (cursor != null){
-            MainActivity2.funcion.cargarLista(lista,cursor)
-        }
+        MainActivity2.funcion.cargarLista(lista,cursor)
         if (lista.size==0){
             datoAuxiliar(lista)
         }

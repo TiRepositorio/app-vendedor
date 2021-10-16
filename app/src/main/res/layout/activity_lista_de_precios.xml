@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/barra_vendedores"
-                />
+                tools:ignore="InefficientWeight" />
         </LinearLayout>
 
         <LinearLayout
@@ -37,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"
-                android:background="@color/fondoFooter">
+                android:background="@color/fondoFooter"
+                tools:ignore="RtlHardcoded,RtlSymmetry,UselessParent">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -49,20 +50,23 @@
                         android:layout_width="40dp"
                         android:gravity="end"
                         android:text="Cod:"
-                        style="@style/tvTitulo"/>
+                        style="@style/tvTitulo"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvdCod"
                         android:layout_width="50dp"
                         android:gravity="start"
                         android:text="Cod:"
-                        style="@style/tvDetalle"/>
+                        style="@style/tvDetalle"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:layout_width="40dp"
                         android:gravity="end"
                         android:text="Ref:"
-                        style="@style/tvTitulo"/>
+                        style="@style/tvTitulo"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvdRef"
@@ -70,7 +74,8 @@
                         android:gravity="start"
                         android:text="Cod:"
                         android:layout_weight="1"
-                        style="@style/tvDetalle"/>
+                        style="@style/tvDetalle"
+                        tools:ignore="HardcodedText" />
 
                 </TableRow>
 
@@ -84,7 +89,8 @@
                         android:layout_width="40dp"
                         android:gravity="end"
                         android:text="Desc:"
-                        style="@style/tvTitulo"/>
+                        style="@style/tvTitulo"
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvdDesc"
@@ -93,7 +99,8 @@
                         android:text="Desc:"
                         android:layout_span="3"
                         android:layout_weight="1"
-                        style="@style/tvDetalle"/>
+                        style="@style/tvDetalle"
+                        tools:ignore="HardcodedText" />
 
                 </TableRow>
 
@@ -107,14 +114,12 @@
             android:orientation="vertical"
             android:layout_weight="1">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
                 <TableLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
 
                     <TableRow
                         android:layout_width="match_parent"
@@ -126,24 +131,27 @@
                             android:layout_width="60dp"
                             android:text="Codigo"
                             android:gravity="end"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
                             style="@style/cabeceraSubTabla"
-                            />
+                            tools:ignore="HardcodedText" />
 
                         <TextView
-                            android:id="@+id/tv1"
-                            android:layout_width="280dp"
+                            android:id="@+id/tv2"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
                             android:text="Articulo"
                             android:gravity="start"
                             style="@style/cabeceraSubTabla"
-                            />
+                            tools:ignore="HardcodedText" />
 
                         <TextView
                             android:id="@+id/tv3"
-                            android:layout_width="180dp"
-                            android:text="UM - Descripcion"
-                            android:gravity="start"
+                            android:layout_width="80dp"
+                            android:text="UM"
+                            android:gravity="center"
                             style="@style/cabeceraSubTabla"
-                            />
+                            tools:ignore="HardcodedText" />
 
                     </TableRow>
 
@@ -154,7 +162,6 @@
 
                 </TableLayout>
 
-            </HorizontalScrollView>
 
         </LinearLayout>
 
@@ -168,7 +175,8 @@
             <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -180,7 +188,7 @@
                         android:text="Lista"
                         android:gravity="end"
                         style="@style/cabeceraSubTabla"
-                        />
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvd2"
@@ -189,14 +197,14 @@
                         android:gravity="start"
                         android:layout_weight="1"
                         style="@style/cabeceraSubTabla"
-                        />
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvd3"
                         android:layout_width="60dp"
                         android:text="Siglas"
                         style="@style/cabeceraSubTabla"
-                        />
+                        tools:ignore="HardcodedText" />
 
                     <TextView
                         android:id="@+id/tvd4"
@@ -204,7 +212,7 @@
                         android:text="Precio"
                         android:gravity="end"
                         style="@style/cabeceraSubTabla"
-                        />
+                        tools:ignore="HardcodedText" />
 
                 </TableRow>
 

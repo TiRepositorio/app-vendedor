@@ -303,7 +303,7 @@ class ListaClientes : AppCompatActivity() {
 
     private fun mapa(){
         val dialogo = DialogoAutorizacion(this)
-        dialogo.dialogoMapa("",accion)
+        dialogo.dialogoMapa(accion)
     }
 
     private fun modificar(){

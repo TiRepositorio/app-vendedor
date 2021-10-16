@@ -1,5 +1,6 @@
 package apolo.vendedores.com.configurar
 
+import android.annotation.SuppressLint
 import android.app.ActionBar
 import android.app.Dialog
 import android.content.Context
@@ -18,8 +19,10 @@ import apolo.vendedores.com.utilidades.DialogoAutorizacion
 class ActualizarVersion {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var context : Context
         lateinit var dialogoDescarga : Dialog
+        @SuppressLint("StaticFieldLeak")
         lateinit var progressBar: ProgressBar
         var estado : Boolean = false
         var arx : Double = 0.0
@@ -79,7 +82,7 @@ class ActualizarVersion {
         override fun onPreExecute() {}
         override fun doInBackground(vararg params: Void?): Void? {
             try {
-                val th = Thread(Runnable {
+                val th = Thread {
                     progressBar.progress = 0
                     var c = 0
                     var pr: Int
@@ -99,7 +102,7 @@ class ActualizarVersion {
                         progressBar.progress = pr
                         Thread.sleep(500)
                     }
-                })
+                }
                 th.start()
                 return null
             } catch (e: Exception) {

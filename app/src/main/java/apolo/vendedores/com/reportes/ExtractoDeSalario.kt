@@ -124,8 +124,9 @@ private var totalHaberes: Int = 0
     }
 
     private fun mostrarDebitos(){
-        val adapterDebitos: Adapter.ExtractoDeSalarioDebitos = Adapter.ExtractoDeSalarioDebitos(this,
-            listaDebitos, totalHaberes
+        val adapterDebitos: Adapter.ExtractoDeSalarioDebitos = Adapter.ExtractoDeSalarioDebitos(
+            this,
+            listaDebitos
         )
         lvDebitos.adapter = adapterDebitos
         lvDebitos.setOnItemClickListener { _: ViewGroup, _: View, position: Int, _: Long ->

@@ -59,6 +59,9 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
     }
 
+    private lateinit var dialogo: apolo.vendedores.com.utilidades.ProgressDialog
+    private lateinit var thread: Thread
+
     private val ubicacion   = FuncionesUbicacion(context)
     private val dispositivo = FuncionesDispositivo(context)
     private val funcion     = FuncionesUtiles(context)
@@ -154,7 +157,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     private fun marcarNoVenta() {
         val cursorNoVenta: Cursor
         try {
-            val fechaModificacion = if (fechaMod.isNullOrEmpty()){
+            val fechaModificacion = if (fechaMod.isEmpty()){
                                         funcion.getFechaActual().substring(0, 10)
                                     } else {
                                         fechaMod
@@ -243,11 +246,11 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
     }
 
-    fun enviarNuevo(conSpinner:Spinner,observacion:EditText,fecha:String,nuevos:Boolean){
-        val horaAlta: String = funcion.getHoraActual()!!
+    private fun enviarNuevo(conSpinner:Spinner, observacion:EditText, fecha:String, nuevos:Boolean){
+        val horaAlta: String = funcion.getHoraActual()
         if (nuevos){
             guardaMarcacionVisita(
-                "1",
+                FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
                 ListaClientes.codSucursalCliente,
                 codCliente,
                 codSubcliente,
@@ -265,7 +268,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 }
             }
             noVenta =
-                "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + ListaClientes.codSucursalCliente + "'," +
                         "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
                         "'" + ListaClientes.codVendedor + "'," +
                         "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!! + "'," +
@@ -286,10 +289,10 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
     }
 
-    fun guardar(conSpinner: Spinner,observacion: EditText,fecha: String){
-        val horaAlta: String = funcion.getHoraActual()!!
+    private fun guardar(conSpinner: Spinner, observacion: EditText, fecha: String){
+        val horaAlta: String = funcion.getHoraActual()
         guardaMarcacionVisita(
-            "1",
+            FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
             ListaClientes.codSucursalCliente,
             ListaClientes.codCliente,
             ListaClientes.codSubcliente,
@@ -311,7 +314,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         Toast.makeText(context, "Guardado con exito", Toast.LENGTH_LONG).show()
     }
 
-    fun maxId():String{
+    private fun maxId():String{
         val sql = "select max(id) id from vt_marcacion_visitas " +
                 "where COD_CLIENTE = '${ListaClientes.codCliente}' and COD_SUBCLIENTE = '${ListaClientes.codSubcliente}'"
         return funcion.dato(funcion.consultar(sql),"id")
@@ -374,7 +377,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         dialog.cancel()
                     } else {
                         noVenta =
-                            "'1'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                            "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + ListaClientes.codSucursalCliente + "'," +
                                     "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
                                     "'" + ListaClientes.codVendedor + "'," +
                                     "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
@@ -397,7 +400,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 alertMotivos.setNeutralButton("Guardar") { _, _ ->
                         try {
                             actualizaMarcacionVisita(
-                                "1",
+                                FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
                                 ListaClientes.codSucursalCliente,
                                 codCliente,
                                 codSubcliente,
@@ -530,11 +533,17 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
 
     }
 
+    fun enviarPositivacion(){
+        thread = Thread{
+
+        }
+    }
+
     private fun cerrarSalidaCliente() {
         val fecEntrada: String = funcion.getFechaActual() + " " + funcion.getHoraActual()
         // INSERTA CABECERA
         val values = ContentValues()
-        values.put("COD_EMPRESA", "1")
+        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
         values.put("COD_PROMOTOR", ListaClientes.codVendedor)
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
@@ -551,7 +560,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         val sql = "select * from vt_marcacion_visita where FECHA not like '$fecha%' and ESTADO = 'P' "
         val ca = funcion.consultar(sql)
         for (i in 0 until ca.count){
-            noVenta = "'1'," + "'" + funcion.dato(ca,"COD_SUCURSAL") + "'," +
+            noVenta = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + funcion.dato(ca,"COD_SUCURSAL") + "'," +
                     "'" + funcion.dato(ca,"COD_CLIENTE")+
                     "','" + funcion.dato(ca,"COD_SUBCLIENTE") +
                     "','" + funcion.dato(ca,"COD_VENDEDOR")+ "'," +

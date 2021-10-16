@@ -12,12 +12,4 @@ class ItemAbrir(private var valor: HashMap<String, String>, private var intent: 
         return this.intent
     }
 
-    fun setValor(valor: HashMap<String, String>){
-        this.valor = valor
-    }
-
-    fun setIntent(intent: Intent){
-        this.intent = intent
-    }
-
 }

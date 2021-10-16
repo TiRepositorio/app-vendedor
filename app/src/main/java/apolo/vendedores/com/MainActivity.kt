@@ -12,7 +12,6 @@ import android.text.TextWatcher
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.utilidades.*
-import kotlinx.android.synthetic.main.activity_configurar_usuario.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,12 +21,12 @@ class MainActivity : AppCompatActivity() {
         var bd: SQLiteDatabase? = null
         @SuppressLint("StaticFieldLeak")
         val conexionWS: ConexionWS = ConexionWS()
-        var codPersona : String = ""
+//        var codPersona : String = ""
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "67"
-        const val fechaVersion : String = "20210723"
+        const val version : String = "68"
+        const val fechaVersion : String = "20211015"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
@@ -52,18 +51,6 @@ class MainActivity : AppCompatActivity() {
         etAccion()
         dispositivo = FuncionesDispositivo(this)
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-//        mostrarImei()
-    }
-
-    private fun agregarProgPedido(){
-        try {
-            MainActivity2.bd!!.execSQL("select PROG_PEDIDO FROM usuarios")
-        } catch (e:java.lang.Exception){
-            if (e.message.toString().indexOf("such column")>-1){
-                MainActivity2.funcion.ejecutar("alter table usuarios add column PROG_PEDIDO TEXT DEFAULT '0'",this)
-            }
-//            funcion.mensaje(this,"ERROR!",e.message.toString())
-        }
     }
 
     private fun comenzar(){
@@ -90,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun crearTablas(){
         for (i in 0 until SentenciasSQL.listaSQLCreateTable().size){
-            funcion.ejecutar(SentenciasSQL.listaSQLCreateTable()[i],this)
+            funcion.ejecutarB(SentenciasSQL.listaSQLCreateTable()[i],this)
         }
     }
 
@@ -126,20 +113,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun iniciar(){
-        if (usuarioGuardado()){
-            try {
-                funcion.ejecutar("UPDATE usuarios SET NOMBRE = '" + etUsuNombre.text.toString().trim() + "'" +
-                        ", VERSION = '" + etUsuVersion.text.toString().trim() + "' " +
-                        "    WHERE LOGIN = '" + etUsuCodigo.text.toString().trim() + "' "  ,this)
-            } catch (e : java.lang.Exception) {
-            }
-        } else {
+        if (!usuarioGuardado()){
+            FuncionesUtiles.usuario["COD_EMPRESA"] = etCodEmpresa.text.toString().trim()
             FuncionesUtiles.usuario["NOMBRE"] = etNombreUsuario.text.toString().trim()
             FuncionesUtiles.usuario["LOGIN"] = etCodigoUsuario.text.toString().trim()
             FuncionesUtiles.usuario["VERSION"] = etVersionUsuario.text.toString().trim()
             FuncionesUtiles.usuario["TIPO"] = "U"
             FuncionesUtiles.usuario["ACTIVO"] = "S"
-            FuncionesUtiles.usuario["COD_EMPRESA"] = "1"
             FuncionesUtiles.usuario["CONF"] = "S"
             FuncionesUtiles.usuario["PROG_PEDIDO"] = "0"
             Sincronizacion.tipoSinc = "T"
@@ -154,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         return try {
             val cursor = funcion.consultar("SELECT * FROM usuarios")
             cursor.moveToLast()
-            cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")) == etUsuCodigo.text.toString().trim()
+            cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")) == etCodigoUsuario.text.toString().trim()
         } catch (e : java.lang.Exception) {
             e.message
             false

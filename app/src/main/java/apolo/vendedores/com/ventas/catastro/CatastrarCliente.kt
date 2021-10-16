@@ -2,16 +2,13 @@ package apolo.vendedores.com.ventas.catastro
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.app.DatePickerDialog.OnDateSetListener
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -34,52 +31,51 @@ import kotlin.collections.ArrayList
 
 class CatastrarCliente : Activity() {
     //	VARIABLES PARA LISTA DE CONDICION DE VENTA
-    var ultCodFormaPago: String? = ""
-    var consulta = false
+    private var ultCodFormaPago: String? = ""
+    private var consulta = false
 
-    private var fotoFachada : String = ""
     private var tipoFoto : String = ""
     var nombre : String = ""
 
     //	VARIABLES PARA LISTA DE TIPO DE CLIENTE
-    var ultCodTipoCliente: String? = ""
+    private var ultCodTipoCliente: String? = ""
 
     //	VARIABLES PARA LISTA DE DIAS DE VISITA
-    var ultCodDiasVisita: String? = ""
+    private var ultCodDiasVisita: String? = ""
 
     //	VARIABLES PARA LISTA DE DEPARTAMENTOS
-    var ultCodDep: String? = ""
-    var ultCodPaisDep: String? = ""
+    private var ultCodDep: String? = ""
+    private var ultCodPaisDep: String? = ""
 
-    var ultCodCiudad: String? = ""
-    var codClienteComp = 0
+    private var ultCodCiudad: String? = ""
+    private var codClienteComp = 0
 
     //	VARIABLES PARA BUSCADOR DE CLIENTES CATASTRADOS
-    var dialog_clientes_catastrados: Dialog? = null
-    var list_view_clientes_catastrados: ListView? = null
-    var save_clientes_catastrados = -1
+    private lateinit var dialogClientesCatastrados: Dialog
+    private var listViewClientesCatastrados: ListView? = null
+    var saveClientesCatastrados = -1
     var cursor: Cursor? = null
-    private lateinit var alist_cliente_catastrado: ArrayList<HashMap<String, String>>
-    lateinit var cod_cliente_composicion: Array<String?>
-    lateinit var estado_cliente_catastrado: Array<String?>
+    private lateinit var alistClienteCatastrado: ArrayList<HashMap<String, String>>
+    private lateinit var codClienteComposicion: Array<String?>
+    private lateinit var estadoClienteCatastrado: Array<String?>
 
-    var ultCodListaPrecios: String = ""
-    private var fecDesde: TextView? = null
-    private var fecHasta: TextView? = null
-    private var mYear = 0
-    private var mMonth = 0
-    private var mDay = 0
-    private var fecha = 0
+    private var ultCodListaPrecios: String = ""
+    private lateinit var fecDesde: EditText
+    private lateinit var fecHasta: EditText
 
     //	VARIABLES PARA EL WEB SERVICE
-    var vCliente = ""
+    private var vCliente = ""
     var codCliente = ""
-    var respuestaWS = ""
+    private var respuestaWS = ""
     var name = ""
-    var imagenFachada: String? = null
+    private var imagenFachada: String? = null
+
+    //VARIABLES DE EJECUCION DE ENVIO
+    private lateinit var progressDialog: apolo.vendedores.com.utilidades.ProgressDialog
+    private lateinit var thread: Thread
 
     val funcion = FuncionesUtiles(this)
-    private val dispositivo = FuncionesDispositivo(this)
+    @SuppressLint("SourceLockedOrientationActivity", "SetTextI18n")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -158,7 +154,7 @@ class CatastrarCliente : Activity() {
                 guardarCatastro()
                 vCliente = ""
                 codCliente = ""
-                ProbarConexion().execute()
+                enviar()
             }
         }
         ibtFotoFachada.setOnClickListener {
@@ -167,8 +163,72 @@ class CatastrarCliente : Activity() {
     }
 
     var resultado: String = ""
-    lateinit var pbarDialog: ProgressDialog
+//    lateinit var pbarDialog: ProgressDialog
 
+    @SuppressLint("SetTextI18n")
+    private fun enviar(){
+        thread = Thread{
+            progressDialog = apolo.vendedores.com.utilidades.ProgressDialog(this)
+            runOnUiThread { progressDialog.cargarDialogo("Comprobando conexion",false) }
+            resultado = try {
+                MainActivity2.conexionWS.procesaVersion()
+            } catch (e: Exception) {
+                e.message.toString()
+            }
+            if (resultado != "null") {
+                try {
+                    generaClienteEnviar()
+                    runOnUiThread {
+                        progressDialog.cerrarDialogo()
+                        progressDialog.cargarDialogo("Enviando el catastro al servidor...",false)
+                    }
+                    respuestaWS = MainActivity2.conexionWS.procesaCatastroClienteFinal(
+                        codCliente,
+                        vCliente,
+                        imagenFachada.toString()
+                    )
+                    runOnUiThread { progressDialog.cerrarDialogo() }
+                    if (respuestaWS.indexOf("01*") >= 0 || respuestaWS.indexOf("03*") >= 0) {
+                        val values = ContentValues()
+                        values.put("ESTADO", "E")
+                        MainActivity2.bd!!.update(
+                            "svm_catastro_cliente",
+                            values,
+                            "COD_CLIENTE = '$codCliente'",
+                            null
+                        )
+                    }
+                    if (respuestaWS.indexOf("Unable to resolve host") > -1) {
+                        respuestaWS = "07*" + "Verifique su conexion a internet y vuelva a intentarlo"
+                    }
+                    runOnUiThread {
+                        val builder = AlertDialog.Builder(this@CatastrarCliente)
+                        builder.setMessage(respuestaWS.substring(3))
+                        builder.setCancelable(false)
+                        builder.setPositiveButton("OK") { _, _ ->
+                            if (respuestaWS.indexOf("01*") >= 0 || respuestaWS.indexOf("03*") >= 0) {
+                                runOnUiThread {
+                                    limpiarTodo()
+                                    obtieneCodCliente(codVendedor)
+                                    etCodigo.setText("$codVendedor-$codClienteComp")
+                                }
+                            }
+                        }
+                        val alert = builder.create()
+                        alert.show()
+                    }
+                    return@Thread
+                } catch (e: Exception) {
+                    var err = e.message
+                    err += ""
+                }
+            }
+            runOnUiThread { funcion.toast(this,"Verifique su conexion a internet y vuelva a intentarlo") }
+        }
+        thread.start()
+    }
+
+    /*@SuppressLint("StaticFieldLeak")
     private inner class ProbarConexion :
         AsyncTask<Void?, Void?, Void?>() {
         override fun onPreExecute() {
@@ -214,56 +274,62 @@ class CatastrarCliente : Activity() {
             ).show()
             return
         }
-
     }
-
+*/
     //	GENERA STRING PARA ENVIAR AL WEB SERVICE
     private fun generaClienteEnviar() {
-        vCliente = "'1'|'$codVendedor"
+        vCliente = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'|'$codVendedor"
         vCliente += "'|'" + etCodigo.text.toString()
         codCliente = etCodigo.text.toString()
         var limit: Int = if (etRazonSocial.text.length < 100) { etRazonSocial.text.length } else { 100 }
-        vCliente += "'|'" + etRazonSocial.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etRazonSocial.text.toString().uppercase(Locale.ROOT).substring(0, limit)
         limit = if (etNombreFantasia.text.length < 100) { etNombreFantasia.text.length } else { 100 }
-        vCliente += "'|'" + etNombreFantasia.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etNombreFantasia.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         limit = if (etDireccionComercial.text.length < 100) { etDireccionComercial.text.length } else { 100 }
-        vCliente += "'|'" + etDireccionComercial.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etDireccionComercial.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         vCliente += "'|'PAR"
-        vCliente += "'|'${etDepartamento.text.toString().split("-")[0].trim().toUpperCase()}"
-        vCliente += "'|'${etCiudad.text.toString().split("-")[0].trim().toUpperCase()}"
+        vCliente += "'|'${etDepartamento.text.toString().split("-")[0].trim().uppercase(Locale.ROOT)}"
+        vCliente += "'|'${etCiudad.text.toString().split("-")[0].trim().uppercase(Locale.ROOT)}"
         limit = if (etBarrio.text.length < 100) { etBarrio.text.length } else { 100 }
-        vCliente += "'|'" + etBarrio.text.toString().toUpperCase().substring(0, limit)
-        vCliente += "'|'" + etRUC.text.toString().toUpperCase()
-        vCliente += "'|'" + etCI.text.toString().toUpperCase()
-        vCliente += "'|'" + etCelular.text.toString().toUpperCase()
-        vCliente += "'|'" + etLineaBaja.text.toString().toUpperCase()
-        vCliente += "'|'${etFormaPago.text.toString().toUpperCase().split("-")[0].trim()}"
-        vCliente += "'|'${etTipoCliente.text.toString().toUpperCase().split("-")[0].trim()}"
-        vCliente += "'|'${etDiasVisita.text.toString().toUpperCase().split(" ")[0].trim()}"
+        vCliente += "'|'" + etBarrio.text.toString().uppercase(Locale.ROOT).substring(0, limit)
+        vCliente += "'|'" + etRUC.text.toString().uppercase(Locale.ROOT)
+        vCliente += "'|'" + etCI.text.toString().uppercase(Locale.ROOT)
+        vCliente += "'|'" + etCelular.text.toString().uppercase(Locale.ROOT)
+        vCliente += "'|'" + etLineaBaja.text.toString().uppercase(Locale.ROOT)
+        vCliente += "'|'${etFormaPago.text.toString().uppercase(Locale.ROOT).split("-")[0].trim()}"
+        vCliente += "'|'${etTipoCliente.text.toString().uppercase(Locale.ROOT).split("-")[0].trim()}"
+        vCliente += "'|'${etDiasVisita.text.toString().uppercase(Locale.ROOT).split(" ")[0].trim()}"
         limit = if (etCercaDe.text.length < 100) { etCercaDe.text.length } else { 100 }
-        vCliente += "'|'" + etCercaDe.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etCercaDe.text.toString().uppercase(Locale.ROOT).substring(0, limit)
         limit = if (etEmail.text.length < 100) { etEmail.text.length } else { 100 }
-        vCliente += "'|'" + etEmail.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etEmail.text.toString().uppercase(Locale.ROOT).substring(0, limit)
         limit = if (etLimiteCredito.text.length < 100) { etLimiteCredito.text.length } else { 100 }
-        vCliente += "'|'" + etLimiteCredito.text.toString().toUpperCase().substring(0, limit)
-        vCliente += "'|'${etListaPrecio.text.toString().toUpperCase().split("-")[0].trim()}"
+        vCliente += "'|'" + etLimiteCredito.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
+        vCliente += "'|'${etListaPrecio.text.toString().uppercase(Locale.ROOT).split("-")[0].trim()}"
         limit = if (etNomRefComercial.text.length < 100) { etNomRefComercial.text.length } else { 100 }
-        vCliente += "'|'" + etNomRefComercial.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etNomRefComercial.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         limit = if (etTelRefComercial.text.length < 100) { etTelRefComercial.text.length } else { 100 }
-        vCliente += "'|'" + etTelRefComercial.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etTelRefComercial.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         limit = if (etNomRefBancaria.text.length < 100) { etNomRefBancaria.text.length } else { 100 }
-        vCliente += "'|'" + etNomRefBancaria.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etNomRefBancaria.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         limit = if (etTelRefBancaria.text.length < 100) { etTelRefBancaria.text.length } else { 100 }
-        vCliente += "'|'" + etTelRefBancaria.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + etTelRefBancaria.text.toString().uppercase(Locale.ROOT)
+            .substring(0, limit)
         limit = if (tvLatitud.text.length < 100) { tvLatitud.text.length } else { 100 }
-        vCliente += "'|'" + tvLatitud.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + tvLatitud.text.toString().uppercase(Locale.ROOT).substring(0, limit)
         limit = if (tvLongitud.text.length < 100) { tvLongitud.text.length } else { 100 }
-        vCliente += "'|'" + tvLongitud.text.toString().toUpperCase().substring(0, limit)
+        vCliente += "'|'" + tvLongitud.text.toString().uppercase(Locale.ROOT).substring(0, limit)
         limit = if (etComentario.text.length < 200) { etComentario.text.length } else { 200 }
-        vCliente += "'|'" + etComentario.text.toString().toUpperCase().substring(0, limit) + "'"
+        vCliente += "'|'" + etComentario.text.toString().uppercase(Locale.ROOT).substring(0, limit) + "'"
 
 
-        /* vCliente = "'1'|'$codVendedor"
+        /* vCliente = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'|'$codVendedor"
         vCliente += "'|'" + etCodigo.text.toString()
         codCliente = etCodigo.text.toString()
         var limit: Int = if (etRazonSocial.text.length < 100) { etRazonSocial.text.length } else { 100 }
@@ -303,11 +369,12 @@ class CatastrarCliente : Activity() {
         limit = if (tvLongitud.text.length < 100) { tvLongitud.text.length } else { 100 }
         vCliente += "'|'" + tvLongitud.text.toString().substring(0, limit)
         limit = if (etComentario.text.length < 100) { etComentario.text.length } else { 100 }
-        vCliente += "'|'" + etComentario.text.toString().substring(0, limit) + "'"*/
-        Enviar().execute()
+        vCliente += "'|'" + etComentario.text.toString().substring(0, limit) + "'"
+        Enviar().execute()*/
     }
 
     //	PROCESO DE ENVIAR CLIENTE AL WEB SERVICE
+    /*@SuppressLint("StaticFieldLeak")
     private inner class Enviar :
         AsyncTask<Void?, Void?, Void?>() {
         private var pbarDialog: ProgressDialog? = null
@@ -362,48 +429,49 @@ class CatastrarCliente : Activity() {
             alert.show()
         }
     }
-
+*/
     // ABRE LA VENTANA PARA BUSCAR CLIENTES CATASTRADOS
+    @SuppressLint("SimpleDateFormat")
     private fun consultarClientesCatastrados() {
         try {
-            dialog_clientes_catastrados!!.dismiss()
+            dialogClientesCatastrados.dismiss()
         } catch (e: Exception) {
         }
-        dialog_clientes_catastrados = Dialog(this@CatastrarCliente)
-        dialog_clientes_catastrados!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog_clientes_catastrados!!.setContentView(R.layout.list_clientes_catastrados5)
+        dialogClientesCatastrados = Dialog(this@CatastrarCliente)
+        dialogClientesCatastrados.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialogClientesCatastrados.setContentView(R.layout.list_clientes_catastrados5)
 
-        list_view_clientes_catastrados =
-            dialog_clientes_catastrados!!.findViewById<View>(R.id.lvdClientes) as ListView
-        val imgBuscar = dialog_clientes_catastrados!!.findViewById<View>(R.id.imgBuscar) as ImageButton
+        listViewClientesCatastrados =
+            dialogClientesCatastrados.findViewById<View>(R.id.lvdClientes) as ListView
+        val imgBuscar = dialogClientesCatastrados.findViewById<View>(R.id.imgBuscar) as ImageButton
         imgBuscar.setOnClickListener {
-            save_clientes_catastrados = -1
+            saveClientesCatastrados = -1
             buscaClienteCatastrado()
         }
-        val btModificar = dialog_clientes_catastrados!!.findViewById<View>(R.id.btModificar) as Button
+        val btModificar = dialogClientesCatastrados.findViewById<View>(R.id.btModificar) as Button
         btModificar.setOnClickListener {
-            if (save_clientes_catastrados != -1) {
-                if (estado_cliente_catastrado[save_clientes_catastrados] == "P") {
+            if (saveClientesCatastrados != -1) {
+                if (estadoClienteCatastrado[saveClientesCatastrados] == "P") {
                     consulta = true
-                    cargarDatosCliente(cod_cliente_composicion[save_clientes_catastrados]!!, true)
-                    dialog_clientes_catastrados!!.dismiss()
-                    save_clientes_catastrados = -1
+                    cargarDatosCliente(codClienteComposicion[saveClientesCatastrados]!!, true)
+                    dialogClientesCatastrados.dismiss()
+                    saveClientesCatastrados = -1
                 }
             }
         }
-        val btConsultar = dialog_clientes_catastrados!!.findViewById<View>(R.id.btConsultar) as Button
+        val btConsultar = dialogClientesCatastrados.findViewById<View>(R.id.btConsultar) as Button
         btConsultar.setOnClickListener {
-            if (save_clientes_catastrados != -1) {
+            if (saveClientesCatastrados != -1) {
                 consulta = true
-                cargarDatosCliente(cod_cliente_composicion[save_clientes_catastrados]!!, false)
-                dialog_clientes_catastrados!!.dismiss()
-                save_clientes_catastrados = -1
+                cargarDatosCliente(codClienteComposicion[saveClientesCatastrados]!!, false)
+                dialogClientesCatastrados.dismiss()
+                saveClientesCatastrados = -1
             }
         }
-        val btCancelar = dialog_clientes_catastrados!!.findViewById<View>(R.id.btEliminar) as Button
+        val btCancelar = dialogClientesCatastrados.findViewById<View>(R.id.btEliminar) as Button
         btCancelar.setOnClickListener {
-            if (save_clientes_catastrados != -1) {
-                if (estado_cliente_catastrado[save_clientes_catastrados] == "P") {
+            if (saveClientesCatastrados != -1) {
+                if (estadoClienteCatastrado[saveClientesCatastrados] == "P") {
                     val myAlertDialog =
                         AlertDialog.Builder(this@CatastrarCliente)
                     myAlertDialog.setMessage("¿Desea cancelar el catastro?")
@@ -413,10 +481,10 @@ class CatastrarCliente : Activity() {
                         try {
                             MainActivity2.bd!!.delete(
                                 "svm_catastro_cliente",
-                                "COD_CLIENTE = '" + cod_cliente_composicion[save_clientes_catastrados] + "'",
+                                "COD_CLIENTE = '" + codClienteComposicion[saveClientesCatastrados] + "'",
                                 null
                             )
-                            save_clientes_catastrados = -1
+                            saveClientesCatastrados = -1
                             buscaClienteCatastrado()
                             Toast.makeText(
                                 applicationContext,
@@ -438,99 +506,20 @@ class CatastrarCliente : Activity() {
                 }
             }
         }
-        fecDesde = dialog_clientes_catastrados!!.findViewById<View>(R.id.etDesde) as EditText
-        fecHasta = dialog_clientes_catastrados!!.findViewById<View>(R.id.fecHasta) as EditText
+        fecDesde = dialogClientesCatastrados.findViewById<View>(R.id.etDesde) as EditText
+        fecHasta = dialogClientesCatastrados.findViewById<View>(R.id.fecHasta) as EditText
         val sdf = SimpleDateFormat("dd/MM/yyyy")
-        fecDesde!!.text = sdf.format(Date())
-        fecHasta!!.text = sdf.format(Date())
-        fecDesde!!.setOnClickListener {
-            val c = Calendar.getInstance()
-            mYear = c[Calendar.YEAR]
-            mMonth = c[Calendar.MONTH]
-            mDay = c[Calendar.DAY_OF_MONTH]
-            showDialog(DATE_DIALOG_ID)
-            fecha = 0
-            fechaDesde()
+        fecDesde.setText(sdf.format(Date()).toString())
+        fecHasta.setText(sdf.format(Date()).toString())
+        fecDesde.setOnClickListener {
+            val calendario = DialogoCalendario(this)
+            calendario.onCreateDialog(1, fecDesde, fecDesde)!!.show()
         }
-        fecHasta!!.setOnClickListener {
-            val c = Calendar.getInstance()
-            mYear = c[Calendar.YEAR]
-            mMonth = c[Calendar.MONTH]
-            mDay = c[Calendar.DAY_OF_MONTH]
-            showDialog(DATE_DIALOG_ID)
-            fecha = 1
-            fechaHasta()
+        fecHasta.setOnClickListener {
+            val calendario = DialogoCalendario(this)
+            calendario.onCreateDialog(1, fecHasta, fecDesde)!!.show()
         }
-        dialog_clientes_catastrados!!.show()
-    }
-
-    //	CONTROLA CALENDARIO Y FECHA
-    override fun onCreateDialog(id: Int): DatePickerDialog? {
-        when (id) {
-            DATE_DIALOG_ID -> return DatePickerDialog(
-                this,
-                mDateSetListener,
-                mYear, mMonth, mDay
-            )
-        }
-        return null
-    }
-
-    override fun onPrepareDialog(id: Int, dialog: Dialog) {
-        when (id) {
-            DATE_DIALOG_ID -> (dialog as DatePickerDialog).updateDate(
-                mYear,
-                mMonth,
-                mDay
-            )
-        }
-    }
-
-    private val mDateSetListener = OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            mYear = year
-            mMonth = monthOfYear
-            mDay = dayOfMonth
-            if (fecha == 0) {
-                fechaDesde()
-            } else {
-                fechaHasta()
-            }
-        }
-
-    private fun fechaDesde() {
-        mMonth += 1
-        val mes: String = if (mMonth <= 9) {
-            "0" + StringBuilder().append(mMonth)
-        } else {
-            "" + StringBuilder().append(mMonth)
-        }
-        val dia: String = if (mDay <= 9) {
-            "0" + StringBuilder().append(mDay)
-        } else {
-            "" + StringBuilder().append(mDay)
-        }
-        fecDesde!!.text = StringBuilder()
-            .append(dia).append("/")
-            .append(mes).append("/")
-            .append(mYear).append(" ")
-    }
-
-    private fun fechaHasta() {
-        mMonth += 1
-        val mes: String = if (mMonth <= 9) {
-            "0" + StringBuilder().append(mMonth)
-        } else {
-            "" + StringBuilder().append(mMonth)
-        }
-        val dia: String = if (mDay <= 9) {
-            "0" + StringBuilder().append(mDay)
-        } else {
-            "" + StringBuilder().append(mDay)
-        }
-        fecHasta!!.text = StringBuilder()
-            .append(dia).append("/")
-            .append(mes).append("/")
-            .append(mYear).append(" ")
+        dialogClientesCatastrados.show()
     }
 
     //	OBTIENE DATOS DEL CLIENTE SELECCIONADO
@@ -636,22 +625,27 @@ class CatastrarCliente : Activity() {
     }
 
     //	EVENTO AL PRESIONAR BUSCAR
+    @SuppressLint("Recycle")
     private fun buscaClienteCatastrado() {
-        alist_cliente_catastrado = ArrayList()
+        alistClienteCatastrado = ArrayList()
         try {
-            val rbPendiente: RadioButton = dialog_clientes_catastrados!!.findViewById<View>(R.id.rbPendiente) as RadioButton
-            val rbEnviado: RadioButton = dialog_clientes_catastrados!!.findViewById<View>(R.id.rbEnviado) as RadioButton
-            val rbTodo: RadioButton = dialog_clientes_catastrados!!.findViewById<View>(R.id.rbTodo) as RadioButton
+            val rbPendiente: RadioButton = dialogClientesCatastrados.findViewById<View>(R.id.rbPendiente) as RadioButton
+            val rbEnviado: RadioButton = dialogClientesCatastrados.findViewById<View>(R.id.rbEnviado) as RadioButton
+            val rbTodo: RadioButton = dialogClientesCatastrados.findViewById<View>(R.id.rbTodo) as RadioButton
             var filterEstado = ""
-            if (rbPendiente.isChecked) {
-                filterEstado = " = 'P'"
-            } else if (rbEnviado.isChecked) {
-                filterEstado = " = 'E'"
-            } else if (rbTodo.isChecked) {
-                filterEstado = " <> 'X'"
+            when {
+                rbPendiente.isChecked -> {
+                    filterEstado = " = 'P'"
+                }
+                rbEnviado.isChecked -> {
+                    filterEstado = " = 'E'"
+                }
+                rbTodo.isChecked -> {
+                    filterEstado = " <> 'X'"
+                }
             }
-            val desde: String? = funcion.convertirFechatoSQLFormat(fecDesde!!.text.toString())
-            val hasta: String? = funcion.convertirFechatoSQLFormat(fecHasta!!.text.toString())
+            val desde: String = funcion.convertirFechatoSQLFormat(fecDesde.text.toString())
+            val hasta: String = funcion.convertirFechatoSQLFormat(fecHasta.text.toString())
             val select = ("Select COD_CLIENTE, RAZON_SOCIAL, NOM_FANTASIA,"
                     + "RUC        , CI         , ESTADO  "
                     + " from svm_catastro_cliente "
@@ -661,17 +655,17 @@ class CatastrarCliente : Activity() {
                     + " Order By date(FEC_ALTA) DESC")
             cursor = MainActivity2.bd!!.rawQuery(select, null)
         } catch (e: Exception) {
-            var err = e.message
-            err = "" + err
+            val err = e.message
+            "" + err
         }
         val nreg = cursor!!.count
-        save_clientes_catastrados = if (nreg > 0) {
+        saveClientesCatastrados = if (nreg > 0) {
             0
         } else {
             -1
         }
-        cod_cliente_composicion = arrayOfNulls(nreg)
-        estado_cliente_catastrado = arrayOfNulls(nreg)
+        codClienteComposicion = arrayOfNulls(nreg)
+        estadoClienteCatastrado = arrayOfNulls(nreg)
         cursor!!.moveToFirst()
         var cont = 0
         for (i in 0 until nreg) {
@@ -681,20 +675,20 @@ class CatastrarCliente : Activity() {
                 cursor!!
                     .getColumnIndex("COD_CLIENTE")
             )
-            cod_cliente_composicion[cont] = cursor!!.getString(cursor!!.getColumnIndex("COD_CLIENTE"))
+            codClienteComposicion[cont] = cursor!!.getString(cursor!!.getColumnIndex("COD_CLIENTE"))
             map2["RAZON_SOCIAL"] = cursor!!.getString(cursor!!.getColumnIndex("RAZON_SOCIAL"))
             map2["NOM_FANTASIA"] = cursor!!.getString(cursor!!.getColumnIndex("NOM_FANTASIA"))
             map2["RUC"] = cursor!!.getString(cursor!!.getColumnIndex("RUC"))
             map2["CI"] = cursor!!.getString(cursor!!.getColumnIndex("CI"))
             map2["ESTADO"] = cursor!!.getString(cursor!!.getColumnIndex("ESTADO"))
-            estado_cliente_catastrado[cont] = cursor!!.getString(cursor!!.getColumnIndex("ESTADO"))
-            alist_cliente_catastrado.add(map2)
+            estadoClienteCatastrado[cont] = cursor!!.getString(cursor!!.getColumnIndex("ESTADO"))
+            alistClienteCatastrado.add(map2)
             cursor!!.moveToNext()
             cont += 1
         }
-        sd6 = Adapter_lista_catastro_cliente(
-            this@CatastrarCliente, alist_cliente_catastrado,
-            R.layout.list_text_clientes_catastrados, arrayOf(
+        sd6 = AdapterListaCatastroCliente(
+            alistClienteCatastrado, R.layout.list_text_clientes_catastrados,
+            arrayOf(
                 "COD_CLIENTE", "RAZON_SOCIAL", "NOM_FANTASIA",
                 "RUC", "CI", "ESTADO"
             ), intArrayOf(
@@ -702,23 +696,21 @@ class CatastrarCliente : Activity() {
                 R.id.td4, R.id.td5, R.id.td6
             )
         )
-        list_view_clientes_catastrados!!.adapter = sd6
-        list_view_clientes_catastrados!!.onItemClickListener =
+        listViewClientesCatastrados!!.adapter = sd6
+        listViewClientesCatastrados!!.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
-                save_clientes_catastrados = position
-                list_view_clientes_catastrados!!.invalidateViews()
+                saveClientesCatastrados = position
+                listViewClientesCatastrados!!.invalidateViews()
             }
     }
 
-    inner class Adapter_lista_catastro_cliente(
-        context: Context,
+    inner class AdapterListaCatastroCliente(
         items: ArrayList<HashMap<String, String>>,
         resource: Int,
         from: Array<String>,
         to: IntArray?
     ) :
         SimpleAdapter(this, items, resource, from, to) {
-        var _sqlupdate: String? = null
         private val colors = intArrayOf(
             Color.parseColor("#696969"),
             Color.parseColor("#808080")
@@ -732,7 +724,7 @@ class CatastrarCliente : Activity() {
             view.setBackgroundColor(colors[colorPos])
             val holder =
                 ViewHolder()
-            if (save_clientes_catastrados == position) {
+            if (saveClientesCatastrados == position) {
                 view.setBackgroundColor(Color.BLUE)
             }
             view.tag = holder
@@ -756,7 +748,7 @@ class CatastrarCliente : Activity() {
             true
         }
     }
-    private fun validaCampo(tv: TextView, limite: Int):Boolean{
+    private fun validaCampo(tv: TextView):Boolean{
         return if (tv.text.toString() == "") {
             Toast.makeText(
                 this@CatastrarCliente,
@@ -765,8 +757,8 @@ class CatastrarCliente : Activity() {
             ).show()
             false
         } else {
-            if (tv.text.toString().length > limite) {
-                tv.setText(tv.text.toString().substring(0, limite))
+            if (tv.text.toString().length > 50) {
+                tv.text = tv.text.toString().substring(0, 50)
             }
             true
         }
@@ -789,8 +781,8 @@ class CatastrarCliente : Activity() {
         if (!validaCampo(etFormaPago, 50)) {return false}
         if (!validaCampo(etTipoCliente, 50)) {return false}
         if (!validaCampo(etDiasVisita, 50)) {return false}
-        if (!validaCampo(tvLatitud, 50)) {return false}
-        if (!validaCampo(tvLongitud, 50)) {return false}
+        if (!validaCampo(tvLatitud)) {return false}
+        if (!validaCampo(tvLongitud)) {return false}
         if (!validaCampo(etNomRefComercial, 50)) {return false}
         if (!validaCampo(etTelRefComercial, 50)) {return false}
         if (!validaCampo(etNomRefBancaria, 50)) {return false}
@@ -1002,15 +994,14 @@ class CatastrarCliente : Activity() {
             1
         }
         val max = "select max (Cast(COD_CLI_VEND as double)) as MAXIMO from svm_catastro_cliente"
-        val codigo2: Int
         try {
             cursor =funcion.consultar(max)
         } catch (e: Exception) {
-            var err = e.message
-            err = "" + err
+            val err = e.message
+            "" + err
         }
         cursor.moveToFirst()
-        codigo2 = if (cursor.count > 0) {
+        val codigo2: Int = if (cursor.count > 0) {
             try {
                 funcion.dato(cursor, "MAXIMO").toInt() + 1
             } catch (e: Exception) {
@@ -1026,79 +1017,14 @@ class CatastrarCliente : Activity() {
         }
     }
 
-    /*override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent
-    ) {
-        if (requestCode == 1) {
-            if (data == null) {
-                try {
-                    if (File(name).exists()) {
-                        try {
-                            val options = BitmapFactory.Options()
-                            options.inSampleSize = 8
-                            val fis = FileInputStream(name)
-                            var bm = BitmapFactory.decodeStream(fis, null, options)
-                            options.inJustDecodeBounds = true
-                            BitmapFactory.decodeFile(name, options)
-                            val w: Int
-                            val h: Int
-                            w = options.outWidth
-                            h = options.outHeight
-                            bm = if (w < h) {
-                                val y = h.toFloat() / 768
-                                foto.resizeImage(this@CatastrarCliente, bm!!, (w / y).toInt(), (h / y).toInt())
-                            } else {
-                                val x = w.toFloat() / 768
-                                foto.resizeImage(this@CatastrarCliente, bm!!, (w / x).toInt(), (h / x).toInt())
-                            }
-                            var out: FileOutputStream? = null
-                            try {
-                                out = FileOutputStream(name)
-                                bm!!.compress(Bitmap.CompressFormat.JPEG, 100, out)
-                                // bmp is your Bitmap instance
-                                // PNG is a lossless format, the compression factor (100) is ignored
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            } finally {
-                                try {
-                                    out?.close()
-                                } catch (e: IOException) {
-                                    e.printStackTrace()
-                                }
-                            }
-
-//							Bitmap bm = BitmapFactory.decodeFile(name);
-                            ivFachada.setImageBitmap(bm)
-                        } catch (e2: Exception) {
-                            var err = e2.message
-                            err += ""
-                        }
-                        val output = Uri.fromFile(File(name))
-                        val inputStream: InputStream?
-                        val imagen: ByteArray?
-                        val strImagen: String
-                        inputStream = contentResolver.openInputStream(output)
-                        imagen = foto.readBytes(output, inputStream!!)
-                        strImagen = foto.byteToString2(imagen!!).toString()
-                        imagenFachada = strImagen
-                        File(name).delete()
-                    }
-                } catch (e: Exception) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace()
-                }
-            }
-        }
-    }*/
-
     companion object {
-        lateinit var sd6 : Adapter_lista_catastro_cliente
+        lateinit var sd6 : AdapterListaCatastroCliente
+        @SuppressLint("StaticFieldLeak")
         lateinit var tvmLatitud  : TextView
+        @SuppressLint("StaticFieldLeak")
         lateinit var tvmLongitud : TextView
-        const val DATE_DIALOG_ID = 1
         var codVendedor = ""
+        @SuppressLint("StaticFieldLeak")
         lateinit var foto : FuncionesFoto
     }
 
@@ -1162,9 +1088,9 @@ class CatastrarCliente : Activity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        imagenFachada = foto.foto1(requestCode, resultCode, data, nombre, ivFachada, tipoFoto)
+        imagenFachada = foto.foto1(requestCode, nombre, ivFachada, tipoFoto)
         if (imagenFachada!!.isEmpty()){
-            imagenFachada = foto.foto2(requestCode, resultCode, data, ivFachada, ivFachada, nombre, tipoFoto)
+            imagenFachada = foto.foto2(requestCode, data, ivFachada, ivFachada, nombre, tipoFoto)
         }
     }
 

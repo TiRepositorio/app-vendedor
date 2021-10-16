@@ -1,5 +1,6 @@
 package apolo.vendedores.com.utilidades
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.database.Cursor
@@ -51,9 +52,9 @@ class DialogoBusqueda {
     var tabla: String
     var condicion: String
     var order: String
-    var tvResultado: TextView
-    var tvResultado2: TextView?
-    var lista: ArrayList<HashMap<String,String>> = ArrayList<HashMap<String,String>>()
+    private var tvResultado: TextView
+    private var tvResultado2: TextView?
+    var lista: ArrayList<HashMap<String,String>> = ArrayList()
     var funcion = FuncionesUtiles()
     var campos : String
     lateinit var dialogo: Dialog
@@ -61,7 +62,7 @@ class DialogoBusqueda {
 
     fun cargarDialogo(cancelable:Boolean){
         dialogo = Dialog(context)
-        if (campos.equals("")){
+        if (campos == ""){
             dialogo.setContentView(R.layout.busqueda)
             buscar(dialogo.etBuscar)
             mostrar(dialogo.lvBuscar)
@@ -88,32 +89,32 @@ class DialogoBusqueda {
     }
 
     private fun buscar(etBuscar:EditText){
-        var sql : String = "SELECT DISTINCT " + codigo + ", " + descripcion
-        if (!campos.equals("")){
-            sql = "SELECT DISTINCT " + campos
+        var sql = "SELECT DISTINCT $codigo, $descripcion"
+        if (campos != ""){
+            sql = "SELECT DISTINCT $campos"
         }
         sql += "  FROM " + tabla +
                 " WHERE (" + codigo.split(" ")[0] + " LIKE '%" + etBuscar.text + "%' " +
                 "    OR " + descripcion + " LIKE '%" + etBuscar.text + "%') "
 
-        if (!condicion.equals("")){
+        if (condicion != ""){
             sql += condicion
         }
-        sql += " ORDER BY " + order
+        sql += " ORDER BY $order"
 
         cargarDatos(funcion.consultar(sql))
     }
 
     private fun cargarDatos(cursor:Cursor){
-        lista = ArrayList<HashMap<String,String>>()
+        lista = ArrayList()
         for (i in 0 until cursor.count){
-            var datos = HashMap<String,String>()
-            if (campos.equals("")){
-                datos.put(codigo.split(" ")[0],funcion.dato(cursor,codigo.split(" ")[0]))
-                datos.put(descripcion,funcion.dato(cursor,descripcion))
+            val datos = HashMap<String,String>()
+            if (campos == ""){
+                datos[codigo.split(" ")[0]] = funcion.dato(cursor,codigo.split(" ")[0])
+                datos[descripcion] = funcion.dato(cursor,descripcion)
             } else {
-                for (j in 0 until campos.split(",").size){
-                    datos.put(campos.split(",")[j],funcion.dato(cursor,campos.split(",")[j]))
+                for (j in campos.split(",").indices){
+                    datos[campos.split(",")[j]] = funcion.dato(cursor,campos.split(",")[j])
                 }
             }
             lista.add(datos)
@@ -124,7 +125,7 @@ class DialogoBusqueda {
     private fun mostrar(lvBusqueda: ListView){
         funcion.vistas = intArrayOf(R.id.tvb1,R.id.tvb2)
         funcion.valores = arrayOf(codigo.split(" ")[0],descripcion)
-        var adapter:Adapter.AdapterBusqueda =
+        val adapter:Adapter.AdapterBusqueda =
                     Adapter.AdapterBusqueda(context
                                             ,lista
                                             ,R.layout.busqueda_lista
@@ -142,7 +143,7 @@ class DialogoBusqueda {
         funcion.vistas = intArrayOf(R.id.tvb1,R.id.tvb2,R.id.tvb3,R.id.tvb4,R.id.tvb5)
         funcion.valores = arrayOf(campos.split(",")[0],campos.split(",")[1],campos.split(",")[2],
                                   campos.split(",")[3],campos.split(",")[4])
-        var adapter:Adapter.AdapterBusqueda =
+        val adapter:Adapter.AdapterBusqueda =
             Adapter.AdapterBusqueda(context
                 ,lista
                 ,R.layout.busqueda4_lista
@@ -156,17 +157,18 @@ class DialogoBusqueda {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun seleccionar(btSeleccionar: Button, textView: TextView){
         btSeleccionar.setOnClickListener{
             if (lista.size>0){
                 if (campos == ""){
-                    textView.text = lista.get(posicion).get(codigo.split(" ")[0]) + " - " + lista.get(posicion).get(descripcion)
+                    textView.text = lista[posicion][codigo.split(" ")[0]] + " - " + lista[posicion][descripcion]
                 } else {
-                    textView.text = lista.get(posicion).get(campos.split(",")[0]) +
-                                    "-" + lista.get(posicion).get(campos.split(",")[1]) +
-                                    "-" + lista.get(posicion).get(campos.split(",")[2]) +
-                                    "-" + lista.get(posicion).get(campos.split(",")[3]) +
-                                    "-" + lista.get(posicion).get(campos.split(",")[4])
+                    textView.text = lista[posicion][campos.split(",")[0]] +
+                                    "-" + lista[posicion][campos.split(",")[1]] +
+                                    "-" + lista[posicion][campos.split(",")[2]] +
+                                    "-" + lista[posicion][campos.split(",")[3]] +
+                                    "-" + lista[posicion][campos.split(",")[4]]
                 }
             }
             dialogo.dismiss()

@@ -16,15 +16,15 @@ class SentenciasSQL {
                     " PROG_PEDIDO TEXT);"
         }
         fun insertUsuario(usuario: HashMap<String, String>):String{
-            return "INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO) VALUES " +
+            return ("INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO) VALUES " +
                     "('" + usuario["NOMBRE"] + "'," +
                      "'" + usuario["LOGIN"] + "'," +
                      "'" + usuario["TIPO"] + "'," +
                      "'" + usuario["ACTIVO"] + "'," +
-                     "'1'," +
+                     "'" + usuario["COD_EMPRESA"] + "'," +
                      "'" + usuario["VERSION"] + "'," +
                      "'" + usuario["PROG_PEDIDO"] + "'" +
-                     ")"
+                     ")")
         }
 
         //Sincronizacion

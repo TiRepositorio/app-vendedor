@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv1"
             android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:text="Codigo"
-            android:gravity="end"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:gravity="end|center_vertical"
             style="@style/textoSubTabla"
-            />
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/tv2"
-            android:layout_width="280dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:text="Articulo"
-            android:gravity="start"
+            android:gravity="start|center_vertical"
             style="@style/textoSubTabla"
-            />
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/tv3"
-            android:layout_width="180dp"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
             android:text="UM - Descripcion"
-            android:gravity="start"
+            android:gravity="center"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
             style="@style/textoSubTabla"
-            />
+            tools:ignore="HardcodedText" />
 
 </LinearLayout>

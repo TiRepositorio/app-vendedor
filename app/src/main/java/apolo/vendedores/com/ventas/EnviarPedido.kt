@@ -1,26 +1,19 @@
-@file:Suppress("DEPRECATION")
-
 package apolo.vendedores.com.ventas
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
-import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Build
 import android.telephony.TelephonyManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
-import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesDispositivo
 import apolo.vendedores.com.utilidades.FuncionesUbicacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -32,6 +25,7 @@ class EnviarPedido(
 ) {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var contexto : Context
         var cabecera = ""
         var detalles = ""
@@ -46,28 +40,24 @@ class EnviarPedido(
     var funcion = FuncionesUtiles(context)
     private var totalPedido = 0
     lateinit var cursor : Cursor
-    
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    fun enviarPedido() {
+    fun enviarPedido():Boolean {
         if (!dispositivo.modoAvion()) {
-            return
+            return false
         }
         if (!dispositivo.zonaHoraria()) {
-            return
+            return false
         }
-//        if (!dispositivo.fechaCorrecta()) {
-////            return
-//        }
         if (!dispositivo.tarjetaSim(telMgr)) {
-            return
+            return false
         }
 		if (!ubicacion.validaUbicacionSimulada(lm)) {
-			return
+			return false
 		}
         if (Pedidos.etTotalPedidos.toString() == "" || Pedidos.etTotalPedidos.toString() == "0") {
-            return
+            return false
         }
         descVarios = Pedidos.etDescVariosPedidos.text.toString().trim()
         descFin = Pedidos.etDescFinancPedidos.text.toString().trim()
@@ -82,7 +72,7 @@ class EnviarPedido(
 
             // 25 campos
             ubicacion.obtenerUbicacion(lm)
-            vIntoCab = ("'1'" // cod_empresa
+            vIntoCab = ("'${FuncionesUtiles.usuario["COD_EMPRESA"]}'" // cod_empresa
                     + ",'${ListaClientes.codSucursalCliente}'" // cod_sucursal
                     + ",to_date('${Pedidos.etFechaPedido.text}','dd/MM/yyyy')" // fec_comprobante
                     + ",'PRO'" // tip_comprobante
@@ -97,14 +87,14 @@ class EnviarPedido(
                     + ",'P'" // estado
                     + ",'PRO'" // tip_Comprobante_Ref
                     + ",'${ListaClientes.codVendedor}'" // ser_Comprobante_Ref
-                    + ",'${Pedidos.etNroPedidos.text.toString()}'" // nro_Comprobante_ref
+                    + ",'${Pedidos.etNroPedidos.text}'" // nro_Comprobante_ref
 //                    					+ ",'" + Aplicacion._lati + "'" // latitud
 //                    					+ ",'" + Aplicacion._longi + "'" // longitud
                     + ",'${ubicacion.latitud}'" // latitud
                     + ",'${ubicacion.longitud}'" // longitud
 //                    + ",''" // latitud
 //                    + ",''" // longitud
-                    + ",'${Pedidos.etNroOrdenCompra.text.toString()}'" // nro_Orden_Compra
+                    + ",'${Pedidos.etNroOrdenCompra.text}'" // nro_Orden_Compra
                     + ",'${Pedidos.depo}'" // ind_Deposito
                     + ",'S'" // ind_Sistema
                     + ",'${descVarios.replace(",",".")}'" // porc_Desc_Var
@@ -169,16 +159,16 @@ class EnviarPedido(
             detalles = ""
             var sql2: String
             for (i in 0 until nreg) {
-                vIntoDet = ("'1'," //cod_empresa
+                vIntoDet = ("'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," //cod_empresa
                         + "'" + ListaClientes.codSucursalCliente + "'," //cod_sucursal
                         + "'PRO'," //tip_comprobante
                         + "'" + ListaClientes.codVendedor + "'," //ser_comprobante
                         + "'" + cont.toString() + "'," //orden
                         + "'" + funcion.dato(cursor,"COD_ARTICULO") + "'," //cod_articulo
-                        + funcion.dato(cursor,"CANTIDAD") + "," //cantidad
+                        +       funcion.dato(cursor,"CANTIDAD") + "," //cantidad
                         + "'" + funcion.dato(cursor,"COD_UNIDAD_MEDIDA") + "'," //cod_unidad_medida
                         + "'" + funcion.dato(cursor,"COD_IVA") + "'," //cod_iva
-                        + funcion.dato(cursor,"PORC_IVA")) //porc_iva
+                        +       funcion.dato(cursor,"PORC_IVA")) //porc_iva
                 if (Pedidos.spListaPrecios.getDato("DECIMALES") == "0") {
                     vIntoDet = (vIntoDet + "," + funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA").replace(",", "").replace(".","") + "") //precio_unitario_c_iva
                     vIntoDet = if (descVarios != "") { (vIntoDet + "," + descVarios.replace(",",".").toFloat()) //porc_desc_var
@@ -227,14 +217,14 @@ class EnviarPedido(
                     "$detalles$sql2;"
                 }
                 cursor.moveToNext()
-                if (funcion.dato(cursor,"NRO_PROMOCION").isNullOrEmpty()){
+                if (funcion.dato(cursor,"NRO_PROMOCION").isEmpty()){
                     if (!validarPedido(funcion.dato(cursor,"COD_ARTICULO"),
                             cabeceraHash["COD_LISTA_PRECIO"].toString(),
                             funcion.dato(cursor,"COD_UNIDAD_MEDIDA"),
                             funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA")))
                     {
                         Pedidos.etAccionPedidos.setText("validarPedido*"+funcion.dato(cursor,"COD_ARTICULO"))
-                        return
+                        return false
                     }
                 }
             }
@@ -245,167 +235,21 @@ class EnviarPedido(
                     nf.minimumFractionDigits = 0
                     nf.maximumFractionDigits = 0
                     Toast.makeText(context,"El monto minimo para una venta es: " + nf.format(funcion.minVenta(ListaClientes.codVendedor)),Toast.LENGTH_LONG).show()
-                    return
+                    return false
                 }
             } catch (e: java.lang.Exception) {
             }
             if (cabeceraHash["COD_CONDICION"].equals("99")){
                 Toast.makeText(context,"No se permite la condicion de Venta 99 (Bonificación)",Toast.LENGTH_LONG).show()
-                return
+                return false
             }
-            Enviar().execute()
+            return true
         } catch (e: java.lang.Exception) {
             error = e.message.toString()
             funcion.mensaje(context,"Error",e.message.toString())
+            return false
         }
     }
-
-    @Suppress("DEPRECATION")
-    private class Enviar : AsyncTask<Void?, Void?, Void?>() {
-        private var pbarDialog: ProgressDialog? = null
-        override fun onPreExecute() {
-            try {
-                pbarDialog!!.dismiss()
-            } catch (e: java.lang.Exception) {
-            }
-            pbarDialog = ProgressDialog.show(contexto,"Un momento...", "Enviando el pedido al servidor...", true)
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            resultado = MainActivity.conexionWS.enviarPedido(cabecera, detalles,Pedidos.maximo.toString(),ListaClientes.codVendedor).toString()
-//            resultado = "01*Enviado con exito"
-            return null
-        }
-
-        @SuppressLint("SetTextI18n", "Recycle", "SimpleDateFormat")
-        override fun onPostExecute(unused: Void?) {
-            var ult = 0
-            var cantidad: String
-            var codigo = ""
-            pbarDialog!!.dismiss()
-            if (resultado.indexOf("03*") >= 0) {
-                resultado = resultado.replace("03*", "")
-
-                // Limpiar la existencia de todos los productos del detalle
-                var values = ContentValues()
-                values.put("existencia_actual", "")
-                try {
-                    MainActivity.bd!!.update("vt_pedidos_det", values,
-                        " NUMERO = '" + Pedidos.maximo
-                            .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
-                } catch (e: java.lang.Exception) {
-                }
-
-                // Muestra la existencia de los productos con corte
-                while (resultado.indexOf(";") > 0) {
-                    codigo = resultado.substring(ult, resultado.indexOf("/"))
-                    ult = resultado.indexOf(";")
-                    cantidad = resultado.substring(resultado.indexOf("/") + 1, ult)
-                    resultado = resultado.replaceFirst(
-                        "$codigo/$cantidad;",
-                        ""
-                    )
-                    ult = 0
-                    values = ContentValues()
-                    values.put("existencia_actual", cantidad)
-                    try {
-                        MainActivity.bd!!.update("vt_pedidos_det", values,
-                            (" NUMERO = '"
-                                    + Pedidos.maximo
-                                    ) + "'" + " and cod_articulo = '" + codigo + "'" + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
-                        codigo = ""
-                    } catch (e: java.lang.Exception) {
-                        resultado = "2"
-                        e.printStackTrace()
-                    }
-                }
-                if (codigo != "") {
-                    codigo = resultado.substring(ult, resultado.indexOf("/"))
-                    cantidad = resultado.substring(
-                        resultado.indexOf("/") + 1,
-                        resultado.length
-                    )
-                    values = ContentValues()
-                    values.put("existencia_actual", cantidad)
-                    try {
-                        MainActivity.bd!!.update("vt_pedidos_det",values,
-                            ("NUMERO = '" + Pedidos.maximo ) +
-                                    "'" + " and cod_articulo = '" + codigo + "'" +
-                                    " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null
-                        )
-                    } catch (e: java.lang.Exception) {
-                        resultado = "2"
-                        e.printStackTrace()
-                    }
-                }
-                resultado =  "Corte de Stock!! favor verificar los productos sin stock  y vuelva a intentarlo."
-                Pedidos.etAccionPedidos.setText("cargarDetallePedido")
-            }
-            if (resultado.indexOf("01*") >= 0) {
-                val values = ContentValues()
-                values.put("FECHA", Pedidos.etFechaPedido.text.toString())
-                values.put("FECHA_INT", Pedidos.fechaInt)
-                values.put("NRO_ORDEN_COMPRA",Pedidos.etNroOrdenCompra.text.toString())
-                values.put("ESTADO", "E")
-                values.put("COMENTARIO", Pedidos.etObservacionPedido.text.toString())
-                values.put("porc_desc_fin", descFin.replace(",","."))
-                values.put("porc_desc_var", descVarios.replace(",","."))
-                values.put("NRO_AUTORIZACION_DESC", Pedidos.claveAutorizacion)
-                values.put("tot_descuento", Pedidos.etTotalDescPedidos.text.toString().replace(".", ""))
-                values.put("TOT_COMPROBANTE", Pedidos.etTotalPedidos.text.toString().replace(".", ""))
-                val d2: String?
-                val cal2: Calendar = Calendar.getInstance()
-                val dfDate2 = SimpleDateFormat("dd/MM/yyyy")
-                d2 = dfDate2.format(cal2.time)
-                values.put("FEC_ALTA", d2)
-                try {
-                    MainActivity.bd!!.update("vt_pedidos_cab", values, "NUMERO = '" + Pedidos.maximo
-                            .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null )
-                } catch (e: java.lang.Exception) {
-                    resultado = "Error al grabar! Intente otra vez!!"
-                    e.printStackTrace()
-                }
-                val sqlUpdate: String
-                var porDescuento = 0.toFloat()
-                if (descFin != "") {
-                    porDescuento = descFin.replace(",",".").toFloat()
-                }
-                if (descVarios != "") {
-                    porDescuento = (porDescuento + descVarios.replace(",",".").toFloat())
-                }
-                sqlUpdate = if (porDescuento == 0f) {
-                    ("update vt_pedidos_det  set "
-                            + " monto_total = (precio_unitario * cantidad) "
-                            + " where NUMERO = '"
-                            + Pedidos.maximo + "'"
-                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
-                } else {
-                    ("update vt_pedidos_det  set "
-                            + "monto_total = (precio_unitario*cantidad) -"
-                            + "((precio_unitario * cantidad) * "
-                            + porDescuento / 100
-                            + ") where NUMERO = '"
-                            + Pedidos.maximo + "'"
-                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
-                }
-                try {
-                    MainActivity.bd!!.rawQuery(sqlUpdate, null)
-                } catch (e: java.lang.Exception) {
-                    resultado = e.message.toString()
-                    e.printStackTrace()
-                }
-                resultado = "Pedido enviado con exito!!"
-            }
-            if (resultado != "Pedido enviado con exito!!"){
-                MainActivity.funcion.mensaje(contexto,"", resultado)
-            } else {
-                val dialogo = DialogoAutorizacion(contexto)
-                dialogo.dialogoAccion("cerrarTodo",Pedidos.etAccionPedidos, resultado,"","OK")
-            }
-        }
-
-    }
-
     private fun validarPedido(codArticulo:String,codListaPrecio:String,um:String,precio:String):Boolean{
         val sql = " select  distinct a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
                 " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
@@ -423,8 +267,5 @@ class EnviarPedido(
     init {
         ubicacion.obtenerUbicacion(lm)
     }
-
-
-
 
 }

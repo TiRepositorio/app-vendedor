@@ -1,8 +1,5 @@
 package apolo.vendedores.com.utilidades
 
-import java.util.*
-import kotlin.collections.ArrayList
-
 class TablasSincronizacion {
 
 //    var tablasReportes : TablasReportes = TablasReportes()
@@ -130,7 +127,7 @@ class TablasSincronizacion {
         return lista
     }
 
-    fun listaVistas(): ArrayList<String> {
+   /* fun listaVistas(): ArrayList<String> {
         val lista : ArrayList<String> = ArrayList()
 //        lista.add(0 ,SentenciasSQL.venRuteoSemanalClienteVendedor())
 //        lista.add(1 ,camposTablaSvmArticulosPrecios())
@@ -182,7 +179,7 @@ class TablasSincronizacion {
 
         return lista
     }
-
+*/
     private fun camposTablaSvmArticulosPrecios(): ArrayList<String> {
         val lista : ArrayList<String> = ArrayList()
         lista.add(0,"COD_EMPRESA")

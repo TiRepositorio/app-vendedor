@@ -95,7 +95,7 @@ class FuncionesConsultor {
     private var btModificar:Button
     private var btConsultar:Button
     private var btEliminar:Button
-    lateinit var rgFiltro:RadioGroup
+    private lateinit var rgFiltro:RadioGroup
     var where:HashMap<String,String> = HashMap()
 
 

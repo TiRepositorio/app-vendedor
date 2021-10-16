@@ -30,13 +30,14 @@ class Promociones : AppCompatActivity() {
         var condicionVenta : String = ""
         var codArticulo    : String = ""
         var posPromocion   : Int = 0
-        var promocion = true
+//        var promocion = true
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccionPromo : EditText
     }
 
     lateinit var funcion : FuncionesUtiles
-    lateinit var listaPromociones : ArrayList<HashMap<String, String>>
-    var inNro = ""
+    private lateinit var listaPromociones : ArrayList<HashMap<String, String>>
+    private var inNro = ""
 
     private fun inicializarElementos(){
         funcion = FuncionesUtiles(this, imgTitulo, tvTitulo, llBuscar, spBuscar, etBuscar, btBuscar)
@@ -185,6 +186,7 @@ class Promociones : AppCompatActivity() {
         mostrar()
     }
 
+    @SuppressLint("Recycle")
     private fun seleccionaPromociones(){
         var sql = ("SELECT distinct NRO_PROMOCION FROM svm_promociones_art_cab c "
                 + "   WHERE (c.COD_CONDICION_VENTA = '" + condicionVenta + "' or c.COD_CONDICION_VENTA = ' ' or c.COD_CONDICION_VENTA IS NULL)"
@@ -239,6 +241,7 @@ class Promociones : AppCompatActivity() {
     }
 
     fun cargarPromocion(view: View) {
+        view.id
         if (!verificaPromoCargada(posPromocion)){
             lvPromocionCabecera.invalidateViews()
             return

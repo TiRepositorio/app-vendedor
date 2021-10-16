@@ -43,13 +43,13 @@
                     <EditText
                         android:id="@+id/etDesde"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:textSize="14dp"
-                        android:paddingRight="5dp"
-                        android:paddingLeft="5dp"
+                        android:background="@color/textoClaro"
                         android:editable="false"
-                        android:background="@color/textoClaro"/>
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 

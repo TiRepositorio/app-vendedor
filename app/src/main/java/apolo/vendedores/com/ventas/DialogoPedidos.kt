@@ -19,7 +19,7 @@ class DialogoPedidos(var context: Context, var numero: Int, listaDePrecio: Strin
     var funcion : FuncionesUtiles = FuncionesUtiles(context)
     lateinit var adapter: Adapter.AdapterGenericoDetalle
     lateinit var dialogo: Dialog
-    var listaDePrecios = listaDePrecio
+    private var listaDePrecios = listaDePrecio
 
     fun mostrarDialogo(){
         dialogo = Dialog(context)

@@ -5,10 +5,14 @@
       <w>abril</w>
       <w>acceso</w>
       <w>accesos</w>
+      <w>actualizados</w>
       <w>adaptados</w>
       <w>ahora</w>
+      <w>ajustada</w>
       <w>ajustado</w>
+      <w>ajuste</w>
       <w>alcanzado</w>
+      <w>alist</w>
       <w>ampliado</w>
       <w>animacion</w>
       <w>anomalia</w>
@@ -21,6 +25,7 @@
       <w>ayer</w>
       <w>bancaria</w>
       <w>bebidas</w>
+      <w>bloqueo</w>
       <w>bonificación</w>
       <w>botón</w>
       <w>busca</w>
@@ -30,6 +35,8 @@
       <w>caracteres</w>
       <w>cargada</w>
       <w>cargados</w>
+      <w>cargamos</w>
+      <w>cargando</w>
       <w>cargarlo</w>
       <w>carteras</w>
       <w>catastrado</w>
@@ -39,6 +46,7 @@
       <w>completar</w>
       <w>compr</w>
       <w>condiciones</w>
+      <w>configuración</w>
       <w>constructores</w>
       <w>contacto</w>
       <w>contexto</w>
@@ -66,11 +74,14 @@
       <w>dolar</w>
       <w>duplicado</w>
       <w>días</w>
+      <w>ejecucion</w>
       <w>elimina</w>
+      <w>eliminacion</w>
       <w>eliminación</w>
       <w>eliminado</w>
       <w>emergencia</w>
       <w>enero</w>
+      <w>envíos</w>
       <w>escalado</w>
       <w>esconder</w>
       <w>esequias</w>
@@ -85,6 +96,7 @@
       <w>febrero</w>
       <w>fechato</w>
       <w>filtros</w>
+      <w>gatillo</w>
       <w>gestor</w>
       <w>grafico</w>
       <w>graficos</w>
@@ -110,6 +122,7 @@
       <w>justificaciones</w>
       <w>lateinit</w>
       <w>limpia</w>
+      <w>limpio</w>
       <w>listas</w>
       <w>localmente</w>
       <w>lossless</w>
@@ -126,6 +139,7 @@
       <w>noviembre</w>
       <w>nuestra</w>
       <w>nuevos</w>
+      <w>nunguna</w>
       <w>número</w>
       <w>objeto</w>
       <w>obligatorio</w>
@@ -141,6 +155,7 @@
       <w>posibles</w>
       <w>presionar</w>
       <w>preventa</w>
+      <w>procesando</w>
       <w>prog</w>
       <w>programar</w>
       <w>progreso</w>
@@ -164,6 +179,7 @@
       <w>siguiente</w>
       <w>sincronizado</w>
       <w>sinergia</w>
+      <w>sqlupdate</w>
       <w>subsoord</w>
       <w>subtitulo</w>
       <w>sugerido</w>

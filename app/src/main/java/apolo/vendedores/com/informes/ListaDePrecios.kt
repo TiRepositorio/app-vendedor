@@ -1,5 +1,6 @@
 package apolo.vendedores.com.informes
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -24,6 +25,7 @@ class ListaDePrecios : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     companion object{
         var datos: HashMap<String, String> = HashMap()
+        @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
     }
 

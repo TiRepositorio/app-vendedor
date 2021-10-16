@@ -1,6 +1,5 @@
 package apolo.vendedores.com.ventas
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -15,8 +14,6 @@ import apolo.vendedores.com.utilidades.FuncionesConsultor
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.ventas.justificacion.NoVenta
 import kotlinx.android.synthetic.main.activity_consulta_clientes_no_positivados.*
-import kotlinx.android.synthetic.main.activity_consulta_clientes_no_positivados.accion
-import kotlinx.android.synthetic.main.activity_consulta_datos_de_cliente.*
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.btConsultar
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.btEliminar
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.btModificar
@@ -27,7 +24,6 @@ import kotlinx.android.synthetic.main.activity_consulta_pedidos.rbEnviado
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.rbPendiente
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.rbTodo
 import kotlinx.android.synthetic.main.activity_consulta_pedidos.rgFiltro
-import kotlinx.android.synthetic.main.activity_lista_clientes.*
 
 class ConsultaClientesNoPositivados : AppCompatActivity() {
 
@@ -120,10 +116,10 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
     private fun cargarDatosCliente(position:Int){
         listaCliente = ArrayList()
         val sql = "SELECT * FROM svm_cliente_vendedor " +
-                        "  WHERE COD_EMPRESA = '1' " +
-                        "    AND COD_CLIENTE    = '${lista[position]["COD_CLIENTE"]}'       " +
-                        "    AND COD_SUBCLIENTE = '${lista[position]["COD_SUBCLIENTE"]}'    " +
-                        "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'      " +
+                        "  WHERE COD_EMPRESA    = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'   " +
+                        "    AND COD_CLIENTE    = '${lista[position]["COD_CLIENTE"]}'           " +
+                        "    AND COD_SUBCLIENTE = '${lista[position]["COD_SUBCLIENTE"]}'        " +
+                        "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'          " +
                 ""
         funcion.cargarLista(listaCliente,funcion.consultar(sql))
         ListaClientes.codCliente        = lista[position]["COD_CLIENTE"].toString()

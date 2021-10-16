@@ -62,6 +62,7 @@ class VentasPorCliente : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun cargarCodigos(){
         try {
             codVendedor = tvVendedor.text!!.toString().split("-")[0]

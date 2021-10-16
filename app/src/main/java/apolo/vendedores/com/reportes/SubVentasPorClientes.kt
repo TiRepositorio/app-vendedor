@@ -8,8 +8,8 @@ class SubVentasPorClientes{
 
     lateinit var cursor : Cursor
     lateinit var lista : ArrayList<HashMap<String, String>>
-    lateinit var datosX : Array<String>
-    lateinit var datosY : IntArray
+    private lateinit var datosX : Array<String>
+    private lateinit var datosY : IntArray
 
     @SuppressLint("Recycle")
     fun cargarVentasPorCliente():ArrayList<HashMap<String, String>>{

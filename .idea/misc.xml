@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_configurar_usuario.xml" value="0.1" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_lista_de_precios.xml" value="0.2" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_main2.xml" value="0.10869565217391304" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_pedidos.xml" value="0.12395833333333334" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_ventana_auxiliar.xml" value="0.14947916666666666" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/inf_lis_prec_lista_articulo.xml" value="0.165625" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/list_clientes_catastrados5.xml" value="0.14947916666666666" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/menu_cab_vendedores.xml" value="0.1" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/progres_dialog.xml" value="0.165625" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/ventana_principal.xml" value="0.1" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/menu/drawer_menu_vendedores.xml" value="0.4" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <list size="1">
       <item index="0" class="java.lang.String" itemvalue="android.annotation.SuppressLint" />

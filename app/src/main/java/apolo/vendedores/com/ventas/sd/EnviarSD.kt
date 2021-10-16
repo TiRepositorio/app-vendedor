@@ -1,39 +1,41 @@
 package apolo.vendedores.com.ventas.sd
 
-import android.app.ProgressDialog
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.os.AsyncTask
 import android.widget.Toast
 import apolo.vendedores.com.MainActivity
-import apolo.vendedores.com.utilidades.DialogoAutorizacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.ventas.ListaClientes
 
 class EnviarSD {
 
     companion object{
+        @SuppressLint("StaticFieldLeak")
         lateinit var context : Context
         var respuesta:String = ""
         var cadena : String = ""
         var cadena2 : String = ""
         var codCliente : String = ""
         var codSubcliente : String = ""
+        @SuppressLint("StaticFieldLeak")
         var funcion : FuncionesUtiles = FuncionesUtiles()
     }
     
     private var registros : Int = 0
 
-    fun enviar() {
+    fun enviar():Boolean {
         registrarCabecera()
         cargarCabecera(funcion.consultar(sqlCabecera()))
         cargarDetalle(funcion.consultar(sqlDetalle()))
 
-        if (registros == 0) {
+        return if (registros == 0) {
             Toast.makeText(context,"No existe nunguna solicitud pendiente de envio",Toast.LENGTH_SHORT).show()
+            false
         } else {
-            Enviar().execute()
+//            Enviar().execute()
+            true
         }
     }
 
@@ -45,6 +47,7 @@ class EnviarSD {
                 + "    AND COD_CLIENTE    = '" + codCliente + "' "
                 + "    AND COD_SUBCLIENTE = '" + codSubcliente + "' "
                 + "    AND NRO_PLANILLA   = '" + ListaClientes.codVendedor + "' "
+                + "    AND FECHA    	  = '${funcion.getFechaActual()}' "
                 + "    AND EST_ENVIO	  = 'N' "
                 + "  GROUP BY COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,"
                 + "		   COD_CLIENTE,COD_SUBCLIENTE,FECHA ")
@@ -79,6 +82,7 @@ class EnviarSD {
                         + " where COD_CLIENTE    = '$codCliente'"
                         + " and COD_SUBCLIENTE 	 = '$codSubcliente'"
                         + " and NRO_PLANILLA   	 = '${ListaClientes.codVendedor}'"
+                        + " and FECHA ='${funcion.getFechaActual()}' "
                         + " and NRO_REGISTRO_REF ='0' ")
                 funcion.ejecutar(sql, context)
                 MainActivity.bd!!.setTransactionSuccessful()
@@ -97,6 +101,7 @@ class EnviarSD {
                 +  " WHERE COD_CLIENTE  	= '$codCliente' "
                 +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
                 +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
+                +  "   AND FECHA         	= '${funcion.getFechaActual()}' "
                 +  "   AND EST_ENVIO		= 'N' ")
     }
 
@@ -108,6 +113,7 @@ class EnviarSD {
                        + "  WHERE COD_CLIENTE  	 = '$codCliente' "
                        + "    AND COD_SUBCLIENTE = '$codSubcliente' "
                        + "    AND NRO_PLANILLA 	 = '${ListaClientes.codVendedor}' "
+                       + "    AND FECHA 		 = '${funcion.getFechaActual()}' "
                        + "    AND EST_ENVIO		 = 'N' ")
     }
 
@@ -128,12 +134,12 @@ class EnviarSD {
                 + " VALUES(")
 
         for (i : Int in 0 until cursor.count) {
-            val codEmpresa = "1"
+            val codEmpresa = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
             val nroRegistroRef: String = funcion.dato(cursor,"id")
             val codVendedor: String = ListaClientes.codVendedor
 
             cadena += "$cabecera '$codEmpresa','${codVendedor}','1','$codCliente"
-            cadena += "','$codSubcliente','$nroRegistroRef','0','0','${FuncionesUtiles.usuario["COD_PERSONA"]}','S') "
+            cadena += "','$codSubcliente','$nroRegistroRef','0','0','${FuncionesUtiles.usuario["COD_PERSONA"]}','V') "
             cursor.moveToNext()
         }
 
@@ -157,11 +163,12 @@ class EnviarSD {
                 + "precio_unitario_c_iva,"
                 + "cod_vendedor			,"
                 + "cod_supervisor		,"
-                + "supervisor_persona	) "
-                + " VALUES(")
+                + "supervisor_persona	,"
+                + "nro_registro) "
+                + " VALUES( ")
         for (i in 0 until cursor.count) {
             //aca
-            val codEmpresa = "1"
+            val codEmpresa = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
             val nroPlanilla : String = ListaClientes.codVendedor
             val codRepartidor = "1"
             val nroRegistroRef : String = funcion.dato(cursor,"NRO_REGISTRO_REF")
@@ -180,7 +187,15 @@ class EnviarSD {
             cadena2 += "','$nroRegistroRef','$codCliente','$codSubcliente"
             cadena2 += "','$codArticulo','$codUnidadMedida','$cantidad"
             cadena2 += "','$codMotivo', 0 ,'$codVendedor"
-            cadena2 += "','" + ListaClientes.codVendedor + "','" + FuncionesUtiles.usuario["COD_PERSONA"] + "')"
+            cadena2 += "','" + ListaClientes.codVendedor + "','" + FuncionesUtiles.usuario["COD_PERSONA"]
+            cadena2 += ("',( select nvl(max(nro_registro), 1) " +
+                    "  from vt_solicitud_cab_prov" +
+                    " where trim(cod_cliente) = '$codCliente'" +
+                    "   and trim(cod_subcliente) = '$codSubcliente'" +
+                    "   and trim(cod_empresa) = '$codEmpresa'" +
+                    "   and trim(cod_repartidor) = '$codRepartidor'" +
+                    "   and trim(nro_planilla) = '$nroPlanilla'" +
+                    "   and trim(vendedor_persona) = '${FuncionesUtiles.usuario["COD_PERSONA"]}') )")
             cursor.moveToNext()
         }
 
@@ -189,57 +204,4 @@ class EnviarSD {
 
     }
     
-    private class Enviar : AsyncTask<Void?, Void?, Void?>() {
-        var dialogo : ProgressDialog? = null
-        override fun onPreExecute() {
-            dialogo = ProgressDialog.show(context,"Un momento...","Comprobando conexion",true)
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            return try {
-                respuesta = MainActivity.conexionWS.procesaEnviaSolicitudSD(ListaClientes.codVendedor, cadena, cadena2)
-//                respuesta = "01*Enviado con exito"
-                null
-            } catch (e: Exception) {
-                respuesta = e.message.toString()
-                null
-            }
-        }
-
-        override fun onPostExecute(unused: Void?) {
-            try {
-                dialogo!!.dismiss()
-            } catch (e: Exception) {
-//					String aei;
-//					aei=e.getMessage();
-            }
-            if (respuesta.split("*").size != 1) {    //==> Si cant de caracteres de "mensaje" no es = 1 o Si retorna mensaje
-                if (respuesta.split("*")[0] == "01") {
-                    var sql : String = ("UPDATE svm_solicitud_dev_det set EST_ENVIO = 'S' "
-                            +  " WHERE COD_CLIENTE  	= '$codCliente' "
-                            +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
-                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
-                            +  "   AND EST_ENVIO 		= 'N' ")
-                    funcion.ejecutar(sql, context)
-
-                    sql = ("UPDATE svm_solicitud_dev_cab set EST_ENVIO = 'S' "
-                            +  " WHERE COD_CLIENTE  	= '$codCliente' "
-                            +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
-                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
-                            +  "   AND EST_ENVIO 		= 'N' ")
-                    funcion.ejecutar(sql, context)
-//                    funcion.mensaje(context,"Operación existosa!", respuesta)
-                    val dialogo = DialogoAutorizacion(context)
-                    dialogo.dialogoAccion("ACTUALIZAR", SolicitudDevolucion.etAccion, respuesta,"Operación existosa!","ok")
-                } else {
-                    funcion.mensaje(context,"Atención", "No se ha podido enviar la información\n$respuesta")
-                }
-            } else {
-                funcion.mensaje(context,"Error", respuesta)
-            }
-            return
-        }
-
-    }
-
 }

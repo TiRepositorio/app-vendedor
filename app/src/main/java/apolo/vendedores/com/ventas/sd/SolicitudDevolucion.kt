@@ -31,10 +31,13 @@ class SolicitudDevolucion : AppCompatActivity() {
     private lateinit var fspMotivo : FuncionesSpinner
     private lateinit var fspUM : FuncionesSpinner
     private var posProducto : Int = 0
+    lateinit var progressDialog: ProgressDialog
+    private lateinit var thread: Thread
 
     companion object{
         var posDetalles : Int = 0
         var posEnviados : Int = 0
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
     }
 
@@ -98,9 +101,12 @@ class SolicitudDevolucion : AppCompatActivity() {
                     finish()
                 }
                 if (etAccion.text.toString().trim() == "ACTUALIZAR"){
-                    etAccion.setText("")
-                    cargarEnviado()
-                    cargarDetalle()
+                    runOnUiThread {
+                        etAccion.setText("")
+                        cargarEnviado()
+                        cargarDetalle()
+                        finish()
+                    }
                 }
 
             }
@@ -174,7 +180,7 @@ class SolicitudDevolucion : AppCompatActivity() {
     private fun motivos(){
         val campos = " COD_EMPRESA,COD_MOTIVO,DESC_MOTIVO "
         val tabla = " svm_motivos_sd_dev "
-        val where = " COD_EMPRESA = '1' "
+        val where = " COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' "
         val whereOpcional = ""
         val group = ""
         val order = ""
@@ -301,8 +307,9 @@ class SolicitudDevolucion : AppCompatActivity() {
         val sql : String = ("SELECT COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,COD_CLIENTE,COD_SUBCLIENTE "
                 + "  FROM svm_solicitud_dev_det "
                 + " WHERE NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
-                + "   AND COD_SUBCLIENTE	= '" + etCodCliente.text.toString().split("-")[1].trim() + "' "
+                + "   AND COD_SUBCLIENTE= '" + etCodCliente.text.toString().split("-")[1].trim() + "' "
                 + "   AND COD_CLIENTE 	= '" + etCodCliente.text.toString().split("-")[0].trim() + "' "
+                + "   AND FECHA         = '${funcion.getFechaActual()}'"
                 + "   AND EST_ENVIO		= 'N'")
         return try {
             funcion.consultar(sql).count
@@ -317,7 +324,60 @@ class SolicitudDevolucion : AppCompatActivity() {
         EnviarSD.codSubcliente = etCodCliente.text.split("-")[1].trim()
         etAccion = accion
         val enviarSD = EnviarSD()
-        enviarSD.enviar()
+        if (enviarSD.enviar()){
+            enviar()
+        }
+    }
+
+    private fun enviar(){
+        thread = Thread{
+            progressDialog = ProgressDialog(this)
+            runOnUiThread { progressDialog.cargarDialogo("Comprobando conexion",false) }
+            try {
+                EnviarSD.respuesta = MainActivity.conexionWS.procesaEnviaSolicitudSD(ListaClientes.codVendedor,
+                    EnviarSD.cadena,
+                    EnviarSD.cadena2
+                )
+//                respuesta = "01*Enviado con exito"
+            } catch (e: Exception) {
+                EnviarSD.respuesta = e.message.toString()
+            }
+            runOnUiThread { progressDialog.cerrarDialogo() }
+            if (EnviarSD.respuesta.split("*").size != 1) {    //==> Si cant de caracteres de "mensaje" no es = 1 o Si retorna mensaje
+                if (EnviarSD.respuesta.split("*")[0] == "01") {
+                    var sql : String = ("UPDATE svm_solicitud_dev_det set EST_ENVIO = 'S' "
+                            +  " WHERE COD_CLIENTE  	= '${EnviarSD.codCliente}' "
+                            +  "   AND COD_SUBCLIENTE 	= '${EnviarSD.codSubcliente}' "
+                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
+                            +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
+                            +  "   AND EST_ENVIO 		= 'N' ")
+                    runOnUiThread { funcion.ejecutar(sql, this) }
+
+                    sql = ("UPDATE svm_solicitud_dev_cab set EST_ENVIO = 'S' "
+                            +  " WHERE COD_CLIENTE  	= '${EnviarSD.codCliente}' "
+                            +  "   AND COD_SUBCLIENTE 	= '${EnviarSD.codSubcliente}' "
+                            +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
+                            +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
+                            +  "   AND EST_ENVIO 		= 'N' ")
+                    runOnUiThread { funcion.ejecutar(sql, this) }
+//                    funcion.mensaje(context,"Operación existosa!", respuesta)
+                    runOnUiThread {
+                        val dialogo = DialogoAutorizacion(this)
+                        dialogo.dialogoAccion("ACTUALIZAR", etAccion,
+                            EnviarSD.respuesta,"Operación existosa!","ok")
+                    }
+                } else {
+                    runOnUiThread {
+                        funcion.mensaje(EnviarSD.context,"Atención", "No se ha podido enviar la información\n${EnviarSD.respuesta}")
+                    }
+                }
+            } else {
+                runOnUiThread {
+                    funcion.mensaje(EnviarSD.context,"Error", EnviarSD.respuesta)
+                }
+            }
+        }
+        thread.start()
     }
 
     //Detalle
@@ -329,7 +389,8 @@ class SolicitudDevolucion : AppCompatActivity() {
                         + " FROM svm_solicitud_dev_det where"
                         + " COD_CLIENTE		= '" + etCodCliente.text.toString().split("-")[0].trim() + "' and"
                         + " COD_SUBCLIENTE	= '" + etCodCliente.text.toString().split("-")[1].trim() + "' and"
-                        + " NRO_PLANILLA	= '${ListaClientes.codVendedor}' and"
+                        + " NRO_PLANILLA	= '${ListaClientes.codVendedor}' and "
+                        + " FECHA       	= '${funcion.getFechaActual()}' and "
                         + " EST_ENVIO 		= 'N' "
                         + " ORDER BY NRO_ORDEN")
         funcion.cargarLista(listaDetalles,funcion.consultar(sql))

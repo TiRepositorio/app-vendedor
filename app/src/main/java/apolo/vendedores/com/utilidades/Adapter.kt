@@ -19,19 +19,16 @@ import kotlinx.android.synthetic.main.rep_canasta_de_marcas.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_debitos.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_haberes.view.*
 import kotlinx.android.synthetic.main.ven_lista_sd_detalles.view.*
-import java.text.DecimalFormat
 
 class Adapter{
 
-    companion object{
-        val formatNumeroDecimal: DecimalFormat = DecimalFormat("###,###,##0.00")
-    }
 
-    class AdapterGenericoCabecera(private val context: Context,
-                          private val dataSource: ArrayList<HashMap<String, String>>,
-                          private val molde: Int,
-                          private val vistas: IntArray,
-                          private val valores: Array<String>) : BaseAdapter()
+    class AdapterGenericoCabecera(
+        context: Context,
+        private val dataSource: ArrayList<HashMap<String, String>>,
+        private val molde: Int,
+        private val vistas: IntArray,
+        private val valores: Array<String>) : BaseAdapter()
     {
 
         private val inflater: LayoutInflater
@@ -86,42 +83,6 @@ class Adapter{
             return totalValor
         }
 
-        fun getPorcDecimal(index: String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
-                    totalPorcCump += formatNumeroDecimal.format(
-                        dataSource[i][index].toString().replace(".", "").replace(",", ".")
-                            .replace("%", "").toDouble()
-                    ).toString().replace(",", ".").toDouble()
-                } else {
-                    Toast.makeText(context, dataSource[i][index],Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            return totalPorcCump/dataSource.size
-        }
-
-        fun getPorcDecimal(index: String,total:Double):Double{
-
-            var valor = 0.0
-
-            for (i in 0 until dataSource.size) {
-                if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
-                    valor += formatNumeroDecimal.format(
-                        dataSource[i][index].toString().replace(".", "").replace(",", ".")
-                            .replace("%", "").toDouble()
-                    ).toString().replace(",", ".").toDouble()
-                } else {
-                    Toast.makeText(context, dataSource[i][index],Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            return (total*100)/valor
-        }
-
         fun getTotalDecimal(index: String):Double{
 
             var totalDecimal = 0.0
@@ -135,14 +96,6 @@ class Adapter{
             }
 
             return totalDecimal
-        }
-//Porcentaje
-        fun getPorcentaje(totalS:String, valorS:String, position: Int):Double{
-
-            val total: Double = dataSource[position][totalS].toString().replace(".","").replace(",",".").replace("%","").toDouble()
-            val valor: Double = dataSource[position][valorS].toString().replace(".","").replace(",",".").replace("%","").toDouble()
-
-            return (valor*100)/total
         }
 
     }
@@ -203,18 +156,6 @@ class Adapter{
             return totalValor
         }
 
-        fun getTotalDecimal():Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                totalPorcCump += dataSource[i]["PORC_CUMP"].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/dataSource.size
-        }
-
     }
 
     class AdapterGenericoDetalle2(
@@ -260,31 +201,6 @@ class Adapter{
             }
 
             return rowView
-        }
-
-        fun getTotalEntero(parametro : String):Int{
-
-            var totalValor = 0
-
-            for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(
-                    dataSource[i][parametro].toString().replace(".", "", false)
-                )
-            }
-
-            return totalValor
-        }
-
-        fun getTotalDecimal():Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                totalPorcCump += dataSource[i]["PORC_CUMP"].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/dataSource.size
         }
 
     }
@@ -436,128 +352,6 @@ class Adapter{
 
     }
 
-    class AdapterCabecera(private val context: Context,
-                          private val dataSource: ArrayList<HashMap<String, String>>,
-                          private val molde: Int,
-                          private val vistas: IntArray,
-                          private val valores: Array<String>,
-                          private val vistasCabecera: IntArray) : BaseAdapter()
-    {
-
-        private val inflater: LayoutInflater
-                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-        override fun getCount(): Int {
-            return dataSource.size
-        }
-
-        override fun getItem(position: Int): Any {
-            return dataSource[position]
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        @SuppressLint("ViewHolder")
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val rowView = inflater.inflate(molde, parent, false)
-
-            for (i in vistas.indices){
-                try {
-                    rowView.findViewById<TextView>(vistas[i]).text = dataSource[position][valores[i]]
-                    rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
-                    rowView.findViewById<TextView>(vistas[i]).visibility = View.VISIBLE
-                    rowView.findViewById<TextView>(vistas[i]).width = rowView.findViewById<TextView>(vistasCabecera[i]).width
-                    rowView.findViewById<TextView>(vistas[i]).width = rowView.findViewById<TextView>(vistasCabecera[i]).width
-                } catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }
-
-            if (position%2==0){
-                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
-            } else {
-                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
-            }
-
-            if (FuncionesUtiles.posicionCabecera == position){
-                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
-            }
-
-            return rowView
-        }
-
-        fun getTotalEntero(index: String):Int{
-
-            var totalValor = 0
-
-            for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(dataSource[i][index].toString().replace(".", ""))
-            }
-
-            return totalValor
-        }
-
-        fun getPorcDecimal(index: String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
-                    totalPorcCump += formatNumeroDecimal.format(
-                        dataSource[i][index].toString().replace(".", "").replace(",", ".")
-                            .replace("%", "").toDouble()
-                    ).toString().replace(",", ".").toDouble()
-                } else {
-                    Toast.makeText(context, dataSource[i][index],Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            return totalPorcCump/dataSource.size
-        }
-
-        fun getPorcDecimal(index: String,total:Double):Double{
-
-            var valor = 0.0
-
-            for (i in 0 until dataSource.size) {
-                if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
-                    valor += formatNumeroDecimal.format(
-                        dataSource[i][index].toString().replace(".", "").replace(",", ".")
-                            .replace("%", "").toDouble()
-                    ).toString().replace(",", ".").toDouble()
-                } else {
-                    Toast.makeText(context, dataSource[i][index],Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            return (total*100)/valor
-        }
-
-        fun getTotalDecimal(index: String):Double{
-
-            var totalDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                if (dataSource[i][index].toString().contains(Regex("^[\\-\\d+%$]"))){
-                    totalDecimal += dataSource[i][index].toString().replace(".", "")
-                        .replace(",", ".").replace("%", "").toDouble()
-                }
-//                totalDecimal = totalDecimal + dataSource.get(i).get(index).toString().replace(".","").replace(",",".").replace("%","").toDouble()
-            }
-
-            return totalDecimal
-        }
-
-        fun getPorcentaje(totalS:String, valorS:String, position: Int):Double{
-            val valor: Double = dataSource[position][valorS].toString().replace(".","").replace(",",".").replace("%","").toDouble()
-            val total: Double = dataSource[position][totalS].toString().replace(".","").replace(",",".").replace("%","").toDouble()
-            return (valor*100)/total
-        }
-
-    }
-
     //GENERICO CON SUBLISTA
     class ListaDesplegable(private val context: Context,
                            private val dataSource: ArrayList<HashMap<String, String>>,
@@ -643,17 +437,6 @@ class Adapter{
             return rowView
         }
 
-        fun getTotalEntero(index:String):Int{
-
-            var totalValor = 0
-
-            for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(dataSource[i][index].toString().replace(".", "", false))
-            }
-
-            return totalValor
-        }
-
         fun getTotalDecimal(index: String):Double{
             var promDecimal = 0.0
 
@@ -664,45 +447,6 @@ class Adapter{
                     .replace("%", "").toDouble()
             }
             return promDecimal
-        }
-
-        fun getPromedioDecimalSubLista(index:String):Double{
-
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                for (j in 0 until subDataSource[i].size) {
-                    promDecimal += subDataSource[i][j][index].toString()
-                        .replace(".", "")
-                        .replace(",", ".")
-                        .replace("%", "").toDouble()
-                }
-                promDecimal /= subDataSource[i].size
-            }
-            return promDecimal/dataSource.size
-        }
-
-        fun getPromedioDecimal(index: String):Double{
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                promDecimal = dataSource[i][index].toString()
-                    .replace(".","")
-                    .replace(",", ".")
-                    .replace("%", "").toDouble()
-            }
-            return promDecimal/dataSource.size
-        }
-
-        fun getSubTablaHeight(parent: ViewGroup?):Int{
-            val subRowView = inflater.inflate(subMolde, parent, false)
-            var subHeight = 0
-            for (i in subVistas.indices){
-                if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height
-                }
-            }
-            return subHeight + (subHeight/20)
         }
 
     }
@@ -718,7 +462,6 @@ class Adapter{
 
         private val subInflater: LayoutInflater
                 = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        private var height : Int = 0
 
         override fun getItem(position: Int): HashMap<String,String> {
             return subDataSource[position]
@@ -735,7 +478,7 @@ class Adapter{
         @SuppressLint("ViewHolder")
         override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
             val subRowView = subInflater.inflate(subMolde, parent, false)
-            var subHeight : Int = 0
+            var subHeight = 0
 
 
             for (i in subVistas.indices){
@@ -771,17 +514,6 @@ class Adapter{
             return subHeight + (subHeight/20)
         }
 
-        fun getTotalPorcCump(index:String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until subDataSource.size) {
-                totalPorcCump += subDataSource[i][index].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/subDataSource.size
-        }
     }
 
     //GENERICO CON 2 SUBLISTA
@@ -885,20 +617,9 @@ class Adapter{
             return rowView
         }
 
-        fun getTablaHeight(parent: ViewGroup?):Int{
-            val subRowView = inflater.inflate(subMolde, parent, false)
-            var subHeight = 0
-            for (i in subVistas.indices){
-                if (subRowView.findViewById<TextView>(vistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(vistas[i]).layoutParams.height
-                }
-            }
-            return subHeight + (subHeight/20)
-        }
-
         fun getTotalEntero(index:String):Int{
 
-            var totalValor: Int = 0
+            var totalValor = 0
 
             for (i in 0 until dataSource.size) {
                 totalValor += Integer.parseInt(dataSource[i][index].toString().replace(".", "", false))
@@ -908,7 +629,7 @@ class Adapter{
         }
 
         fun getTotalDecimal(index: String):Double{
-            var promDecimal: Double = 0.0
+            var promDecimal = 0.0
 
             for (i in 0 until dataSource.size) {
                 promDecimal += dataSource[i][index].toString()
@@ -917,34 +638,6 @@ class Adapter{
                     .replace("%", "").toDouble()
             }
             return promDecimal
-        }
-
-        fun getPromedioDecimalSubLista(index:String):Double{
-
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                for (j in 0 until subDataSource[i].size) {
-                    promDecimal += subDataSource[i][j][index].toString()
-                        .replace(".", "")
-                        .replace(",", ".")
-                        .replace("%", "").toDouble()
-                }
-                promDecimal /= subDataSource[i].size
-            }
-            return promDecimal/dataSource.size
-        }
-
-        fun getPromedioDecimal(index: String):Double{
-            var promDecimal: Double = 0.0
-
-            for (i in 0 until dataSource.size) {
-                promDecimal = dataSource[i][index].toString()
-                    .replace(".","")
-                    .replace(",", ".")
-                    .replace("%", "").toDouble()
-            }
-            return promDecimal/dataSource.size
         }
 
     }
@@ -1035,128 +728,8 @@ class Adapter{
             return rowView
         }
 
-        fun getTotalEntero(index:String):Int{
-
-            var totalValor = 0
-
-            for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(dataSource[i][index].toString().replace(".", "", false))
-            }
-
-            return totalValor
-        }
-
-        fun getTotalDecimal(index: String):Double{
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                promDecimal += dataSource[i][index].toString()
-                    .replace(".","")
-                    .replace(",", ".")
-                    .replace("%", "").toDouble()
-            }
-            return promDecimal
-        }
-
-        fun getPromedioDecimalSubLista(index:String):Double{
-
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                for (j in 0 until subDataSource[i].size) {
-                    promDecimal += subDataSource[i][j][index].toString()
-                        .replace(".", "")
-                        .replace(",", ".")
-                        .replace("%", "").toDouble()
-                }
-                promDecimal /= subDataSource[i].size
-            }
-            return promDecimal/dataSource.size
-        }
-
-        fun getPromedioDecimal(index: String):Double{
-            var promDecimal = 0.0
-
-            for (i in 0 until dataSource.size) {
-                promDecimal = dataSource[i][index].toString()
-                    .replace(".","")
-                    .replace(",", ".")
-                    .replace("%", "").toDouble()
-            }
-            return promDecimal/dataSource.size
-        }
-
         fun getSubTablaHeight(parent: ViewGroup?):Int{
             val subRowView = inflater.inflate(subMolde, parent, false)
-            var subHeight : Int = 0
-            for (i in subVistas.indices){
-                if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height
-                }
-            }
-            return subHeight + (subHeight/20)
-        }
-
-    }
-
-    class SubLista1(
-        context: Context,
-        private val subDataSource: ArrayList<HashMap<String, String>>,
-        private val subDataSource2: ArrayList<ArrayList<HashMap<String, String>>>,
-        private val subMolde: Int,
-        private val subMolde2: Int,
-        private val subVistas: IntArray,
-        private val subValores: Array<String>,
-        private val subVistas2: IntArray,
-        private val subValores2: Array<String>,
-        private val posicionCabecera : Int) : BaseAdapter()
-    {
-
-        private val subInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        private var height = 0
-
-        override fun getItem(position: Int): HashMap<String,String> {
-            return subDataSource[position]
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getCount(): Int {
-            return subDataSource.size
-        }
-
-        @SuppressLint("ViewHolder")
-        override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-            val subRowView = subInflater.inflate(subMolde, parent, false)
-            var subHeight = 0
-
-
-            for (i in subVistas.indices){
-                subRowView.findViewById<TextView>(subVistas[i]).text = subDataSource[position][subValores[i]]
-                subRowView.findViewById<TextView>(subVistas[i]).setBackgroundResource(R.drawable.border_textview)
-                if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height
-                }
-            }
-
-//            subRowView.setBackgroundResource(R.drawable.border_textview)
-            if (position%2==0){
-                subRowView.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            } else {
-                subRowView.setBackgroundColor(Color.parseColor("#DDDDDD"))
-            }
-
-            if (FuncionesUtiles.posicionDetalle == position && FuncionesUtiles.posicionCabecera == posicionCabecera){
-                subRowView.setBackgroundColor(Color.parseColor("#aabbaa"))
-            }
-
-            return subRowView
-        }
-
-        fun getSubTablaHeight(parent: ViewGroup?):Int{
-            val subRowView = subInflater.inflate(subMolde, parent, false)
             var subHeight = 0
             for (i in subVistas.indices){
                 if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
@@ -1166,94 +739,6 @@ class Adapter{
             return subHeight + (subHeight/20)
         }
 
-        fun getTotalPorcCump(index:String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until subDataSource.size) {
-                totalPorcCump += subDataSource[i][index].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/subDataSource.size
-        }
-    }
-
-    class SubLista2(context: Context,
-                    private val subDataSource: ArrayList<HashMap<String, String>>,
-                    private val subMolde: Int,
-                    private val subVistas: IntArray,
-                    private val subValores: Array<String>,
-                    private val posicionCabecera : Int,
-                    private val posicionSubLista1: Int) : BaseAdapter()
-    {
-
-        private val subInflater: LayoutInflater
-                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        private var height = 0
-
-        override fun getItem(position: Int): HashMap<String,String> {
-            return subDataSource[position]
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getCount(): Int {
-            return subDataSource.size
-        }
-
-        @SuppressLint("ViewHolder")
-        override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
-            val subRowView = subInflater.inflate(subMolde, parent, false)
-            var subHeight = 0
-
-
-            for (i in subVistas.indices){
-                subRowView.findViewById<TextView>(subVistas[i]).text = subDataSource[position][subValores[i]]
-                subRowView.findViewById<TextView>(subVistas[i]).setBackgroundResource(R.drawable.border_textview)
-                if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height
-                }
-            }
-
-//            subRowView.setBackgroundResource(R.drawable.border_textview)
-            if (position%2==0){
-                subRowView.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            } else {
-                subRowView.setBackgroundColor(Color.parseColor("#DDDDDD"))
-            }
-
-            if (FuncionesUtiles.posicionDetalle == position && FuncionesUtiles.posicionCabecera == posicionCabecera){
-                subRowView.setBackgroundColor(Color.parseColor("#aabbaa"))
-            }
-
-            return subRowView
-        }
-
-        fun getSubTablaHeight(parent: ViewGroup?):Int{
-            val subRowView = subInflater.inflate(subMolde, parent, false)
-            var subHeight = 0
-            for (i in subVistas.indices){
-                if (subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height>subHeight){
-                    subHeight = subRowView.findViewById<TextView>(subVistas[i]).layoutParams.height
-                }
-            }
-            return subHeight + (subHeight/20)
-        }
-
-        fun getTotalPorcCump(index:String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until subDataSource.size) {
-                totalPorcCump += subDataSource[i][index].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/subDataSource.size
-        }
     }
 
     //EXTRACTO DE SALARIO
@@ -1330,7 +815,10 @@ class Adapter{
             return totalMonto
         }
     }
-    class ExtractoDeSalarioDebitos(context: Context, private val dataSource: ArrayList<HashMap<String, String>>, private val totalHaberes:Int) : BaseAdapter() {
+    class ExtractoDeSalarioDebitos(
+        context: Context,
+        private val dataSource: ArrayList<HashMap<String, String>>
+    ) : BaseAdapter() {
 
         private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -1524,17 +1012,6 @@ class Adapter{
             return subRowView
         }
 
-        fun getTotalPorcCump(index:String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until subDataSource.size) {
-                totalPorcCump += subDataSource[i][index].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/subDataSource.size
-        }
     }
 
     //PROMOCIONES
@@ -1593,42 +1070,6 @@ class Adapter{
             return rowView
         }
 
-        fun getTotalEntero(parametro:String):Int{
-
-            var totalValor = 0
-
-            for (i in 0 until dataSource.size) {
-                totalValor += Integer.parseInt(
-                    dataSource[i][parametro].toString().replace(".", "", false)
-                )
-            }
-
-            return totalValor
-        }
-
-        fun getTotalDecimal(parametro: String):Double{
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-            return totalPorcCump
-        }
-
-        private fun verificaCargado(position:Int):Boolean{
-            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
-                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
-                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND COD_ARTICULO = '${dataSource[position]["COD_ARTICULO"]}' "
-                    +  " ")
-            val funcion = FuncionesUtiles(context)
-            if (funcion.consultar(sql).count > 0){
-                return false
-            }
-            return true
-        }
-
         private fun verificaPromoCargada(position:Int):Boolean{
             if (Pedidos.nuevo){
                 return true
@@ -1643,18 +1084,6 @@ class Adapter{
                 return false
             }
             return true
-        }
-
-        fun getPromedioDecimal(parametro: String):Double{
-
-            var totalPorcCump: Double = 0.0
-
-            for (i in 0 until dataSource.size) {
-                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/dataSource.size
         }
 
     }
@@ -1754,41 +1183,17 @@ class Adapter{
             return true
         }
 
-        private fun verificaPromoCargada(position:Int):Boolean{
-            val sql : String = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
-                    +  " WHERE NUMERO = '${Pedidos.maximo}' "
-                    +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
-                    +  "   AND NRO_PROMOCION = '${dataSource[position]["NRO_PROMOCION"]}' "
-                    +  " ")
-            val funcion = FuncionesUtiles(context)
-            if (funcion.consultar(sql).count > 0){
-                return false
-            }
-            return true
-        }
-
-        fun getPromedioDecimal(parametro: String):Double{
-
-            var totalPorcCump = 0.0
-
-            for (i in 0 until dataSource.size) {
-                totalPorcCump += dataSource[i][parametro].toString().replace(".", "")
-                    .replace(",", ".").replace("%", "").toDouble()
-            }
-
-            return totalPorcCump/dataSource.size
-        }
-
     }
 
     //PEDIDOS
-    class AdapterDetallePedido(private val context: Context,
-                               private val dataSource: ArrayList<HashMap<String, String>>,
-                               private val molde: Int,
-                               private val vistas: IntArray,
-                               private val valores: Array<String>,
-                               private val etAccion : EditText,
-                               private val accion: String) : BaseAdapter()
+    class AdapterDetallePedido(
+        context: Context,
+        private val dataSource: ArrayList<HashMap<String, String>>,
+        private val molde: Int,
+        private val vistas: IntArray,
+        private val valores: Array<String>,
+        private val etAccion : EditText,
+        private val accion: String) : BaseAdapter()
     {
 
         private val inflater: LayoutInflater

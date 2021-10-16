@@ -39,20 +39,22 @@ class ConfigurarUsuario : AppCompatActivity() {
             Toast.makeText(this, "Sincronizar", Toast.LENGTH_SHORT )
             if (usuarioGuardado()){
                 try {
-                    MainActivity.bd!!.execSQL("UPDATE usuarios SET NOMBRE = '" + etUsuNombre.text.toString().trim() + "'" +
-                            ", VERSION = '" + etUsuVersion.text.toString().trim() + "' " +
-                            "    WHERE LOGIN = '" + etUsuCodigo.text.toString().trim() + "' "  )
+                    MainActivity.bd!!.execSQL("UPDATE usuarios " +
+                                                    "  SET NOMBRE = '" + etUsuNombre.text.toString().trim() + "'" +
+                                                    ", VERSION = '" + etUsuVersion.text.toString().trim() + "' " +
+                                                    ", COD_EMPRESA = '" + etCodEmpresa.text.toString().trim() + "' " +
+                                                    "    WHERE LOGIN = '" + etUsuCodigo.text.toString().trim() + "' "  )
                 } catch (e : Exception) {
                     e.message.toString()
                 }
             } else {
                 borrarDatos()
+                FuncionesUtiles.usuario["COD_EMPRESA"] = etCodEmpresa.text.toString().trim()
                 FuncionesUtiles.usuario["NOMBRE"] = etUsuNombre.text.toString().trim()
                 FuncionesUtiles.usuario["LOGIN"] = etUsuCodigo.text.toString().trim()
                 FuncionesUtiles.usuario["VERSION"] = etUsuVersion.text.toString().trim()
                 FuncionesUtiles.usuario["TIPO"] = "U"
                 FuncionesUtiles.usuario["ACTIVO"] = "S"
-                FuncionesUtiles.usuario["COD_EMPRESA"] = "1"
                 FuncionesUtiles.usuario["CONF"] = "S"
                 Sincronizacion.tipoSinc = "T"
                 MainActivity.bd!!.execSQL(SentenciasSQL.insertUsuario(FuncionesUtiles.usuario))
@@ -69,6 +71,7 @@ class ConfigurarUsuario : AppCompatActivity() {
         cursor = MainActivity.bd!!.rawQuery("SELECT * FROM usuarios", null)
         if (cursor.count>0){
             cursor.moveToLast()
+            etCodEmpresa.setText(cursor.getString(cursor.getColumnIndex("COD_EMPRESA")))
             etUsuCodigo.setText(cursor.getString(cursor.getColumnIndex("LOGIN")))
             etUsuNombre.setText(cursor.getString(cursor.getColumnIndex("NOMBRE")))
             etUsuVersion.setText(cursor.getString(cursor.getColumnIndex("VERSION")))
@@ -82,7 +85,7 @@ class ConfigurarUsuario : AppCompatActivity() {
         return try {
             cursor = MainActivity.bd!!.rawQuery("SELECT * FROM usuarios", null)
             cursor.moveToLast()
-            cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")) == etUsuCodigo.text.toString().trim()
+            cursor.count > 0 && cursor.getString(cursor.getColumnIndex("LOGIN")) == etUsuCodigo.text.toString().trim() && cursor.getString(cursor.getColumnIndex("COD_EMPRESA")) == etCodEmpresa.text.toString().trim()
         } catch (e : Exception) {
             e.message
             false
@@ -97,11 +100,11 @@ class ConfigurarUsuario : AppCompatActivity() {
         borrarUsuario()
         val noSinc = SentenciasSQL.listaSQLCreateTable()
         for (i in 0 until noSinc.size){
-            MainActivity2.funcion.ejecutar("DELETE FROM " + noSinc[i].split(" ")[5],this)
+            MainActivity2.funcion.ejecutarB("DELETE FROM " + noSinc[i].split(" ")[5],this)
         }
         val sinc = TablasSincronizacion()
         for (i in 0 until sinc.listaSQLCreateTables().size){
-            MainActivity2.funcion.ejecutar("DELETE FROM " + sinc.listaSQLCreateTables()[i].split(" ")[5],this)
+            MainActivity2.funcion.ejecutarB("DELETE FROM " + sinc.listaSQLCreateTables()[i].split(" ")[5],this)
         }
     }
 

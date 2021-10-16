@@ -1,5 +1,6 @@
 package apolo.vendedores.com.ventas
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
@@ -30,6 +31,7 @@ class DeudaDeClientes : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     companion object{
         var datos: HashMap<String, String> = HashMap()
+        @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
         lateinit var cursor: Cursor
         var venta : Boolean = false

@@ -19,6 +19,7 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
@@ -578,7 +579,6 @@ class Pedidos : AppCompatActivity() {
                 "Ingrese su codigo de vendedor",
                 "¿Seguro que desea modificar la condicion de venta?",
                 ListaClientes.codVendedor,
-                "Pedido bloqueado por la condicion de venta!",
                 "El codigo de vendedor ingresado es incorrecto"
             )
         } else {
@@ -636,7 +636,7 @@ class Pedidos : AppCompatActivity() {
             val dato : HashMap<String, String> = HashMap()
             for (j in 0 until cursor.columnCount){
                 try {
-                    dato[cursor.getColumnName(j).toUpperCase(Locale.ROOT)] =
+                    dato[cursor.getColumnName(j).uppercase(Locale.ROOT)] =
                         funcion.dato(cursor, cursor.getColumnName(j))
                 } catch (e: Exception){}
             }
@@ -1055,7 +1055,7 @@ class Pedidos : AppCompatActivity() {
     private fun cargaDatosCabecera(){
         val values = ContentValues()
         habilitarSpinnersCabecera(false)
-        values.put("COD_EMPRESA", "1")
+        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
@@ -1132,7 +1132,7 @@ class Pedidos : AppCompatActivity() {
 
     private fun cargaDatosDetalle(){
         val values = ContentValues()
-        values.put("COD_EMPRESA", "1")
+        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
         values.put("NUMERO", maximo)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
         values.put("COD_ARTICULO", tvdCod.text.toString().trim())
@@ -1428,7 +1428,7 @@ class Pedidos : AppCompatActivity() {
                 val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
                 println(diffInDays.toString())
 //                if (diffInDays > 2) {
-                val progPedido = funcion.progPedido(ListaClientes.codVendedor)
+                val progPedido = funcion.progPedido()
                 if (diffInDays > progPedido) {
                     funcion.mensaje(
                         this@Pedidos,
@@ -1959,7 +1959,7 @@ class Pedidos : AppCompatActivity() {
                 "   AND COD_CLIENTE        = '${ListaClientes.codCliente}'      " +
                 "   AND COD_SUBCLIENTE     = '${ListaClientes.codSubcliente}'   " +
                 "   AND COD_VENDEDOR       = '${ListaClientes.codVendedor}'     " +
-                "   AND COD_EMPRESA        = '1'                                " +
+                "   AND COD_EMPRESA        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'                                " +
                 ""
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         etSubtotal.setText(lista[0]["TOT_COMPROBANTE"])
@@ -1987,12 +1987,14 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun enviarPedido(){
+        val progressDialog = ProgressDialog(this)
+        progressDialog.cargarDialogo("Procesando...",false)
         val sql = "SELECT * FROM vt_pedidos_cab " +
                 " WHERE TRIM(NUMERO)             = '$maximo'                                 " +
                 "   AND TRIM(COD_CLIENTE)        = '${ListaClientes.codCliente.trim()}'      " +
                 "   AND TRIM(COD_SUBCLIENTE)     = '${ListaClientes.codSubcliente.trim()}'   " +
                 "   AND TRIM(COD_VENDEDOR)       = '${ListaClientes.codVendedor.trim()}'     " +
-                "   AND TRIM(COD_EMPRESA)        = '1'                                       " +
+                "   AND TRIM(COD_EMPRESA)        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'                                       " +
                 ""
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         if (lista.size == 0){
@@ -2010,7 +2012,158 @@ class Pedidos : AppCompatActivity() {
             return
         }
         val enviarPedido = EnviarPedido(this, lm, telMgr, lista[0])
-        enviarPedido.enviarPedido()
+        if (enviarPedido.enviarPedido()){
+            progressDialog.cerrarDialogo()
+            procesoEnviar()
+            return
+        }
+        progressDialog.cerrarDialogo()
+    }
+
+    @SuppressLint("SetTextI18n", "SimpleDateFormat", "Recycle")
+    private fun procesoEnviar(){
+        val progressDialog = ProgressDialog(this)
+        val thread = Thread{
+            runOnUiThread { progressDialog.cargarDialogo("Enviando pedido...",false) }
+
+            EnviarPedido.resultado = MainActivity.conexionWS.enviarPedido(
+                EnviarPedido.cabecera,
+                EnviarPedido.detalles, maximo.toString(),ListaClientes.codVendedor)
+
+            var ult = 0
+            var cantidad: String
+            var codigo = ""
+            if (EnviarPedido.resultado.indexOf("03*") >= 0) {
+                EnviarPedido.resultado = EnviarPedido.resultado.replace("03*", "")
+
+                // Limpiar la existencia de todos los productos del detalle
+                var values = ContentValues()
+                values.put("existencia_actual", "")
+                try {
+                    MainActivity.bd!!.update("vt_pedidos_det", values,
+                        " NUMERO = '" + maximo
+                            .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
+                } catch (e: java.lang.Exception) {
+                }
+
+                // Muestra la existencia de los productos con corte
+                while (EnviarPedido.resultado.indexOf(";") > 0) {
+                    codigo = EnviarPedido.resultado.substring(ult, EnviarPedido.resultado.indexOf("/"))
+                    ult = EnviarPedido.resultado.indexOf(";")
+                    cantidad = EnviarPedido.resultado.substring(EnviarPedido.resultado.indexOf("/") + 1, ult)
+                    EnviarPedido.resultado = EnviarPedido.resultado.replaceFirst(
+                        "$codigo/$cantidad;",
+                        ""
+                    )
+                    ult = 0
+                    values = ContentValues()
+                    values.put("existencia_actual", cantidad)
+                    try {
+                        MainActivity.bd!!.update("vt_pedidos_det", values,
+                            (" NUMERO = '"
+                                    + maximo
+                                    ) + "'" + " and cod_articulo = '" + codigo + "'" + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
+                        codigo = ""
+                    } catch (e: java.lang.Exception) {
+                        EnviarPedido.resultado = "2"
+                        e.printStackTrace()
+                    }
+                }
+                if (codigo != "") {
+                    codigo = EnviarPedido.resultado.substring(ult, EnviarPedido.resultado.indexOf("/"))
+                    cantidad = EnviarPedido.resultado.substring(
+                        EnviarPedido.resultado.indexOf("/") + 1,
+                        EnviarPedido.resultado.length
+                    )
+                    values = ContentValues()
+                    values.put("existencia_actual", cantidad)
+                    try {
+                        MainActivity.bd!!.update("vt_pedidos_det",values,
+                            ("NUMERO = '$maximo") +
+                                    "'" + " and cod_articulo = '" + codigo + "'" +
+                                    " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null
+                        )
+                    } catch (e: java.lang.Exception) {
+                        EnviarPedido.resultado = "2"
+//                        e.printStackTrace()
+                    }
+                }
+                EnviarPedido.resultado =  "Corte de Stock!! favor verificar los productos sin stock  y vuelva a intentarlo."
+                runOnUiThread { etAccionPedidos.setText("cargarDetallePedido") }
+            }
+            if (EnviarPedido.resultado.indexOf("01*") >= 0) {
+                val values = ContentValues()
+                runOnUiThread {
+                    values.put("FECHA", etFechaPedido.text.toString())
+                    values.put("FECHA_INT", fechaInt)
+                    values.put("NRO_ORDEN_COMPRA", etNroOrdenCompra.text.toString())
+                    values.put("ESTADO", "E")
+                    values.put("COMENTARIO", etObservacionPedido.text.toString())
+                    values.put("porc_desc_fin", EnviarPedido.descFin.replace(",","."))
+                    values.put("porc_desc_var", EnviarPedido.descVarios.replace(",","."))
+                    values.put("NRO_AUTORIZACION_DESC", claveAutorizacion)
+                    values.put("tot_descuento", etTotalDescPedidos.text.toString().replace(".", ""))
+                    values.put("TOT_COMPROBANTE", etTotalPedidos.text.toString().replace(".", ""))
+                }
+                val d2: String?
+                val cal2: Calendar = Calendar.getInstance()
+                val dfDate2 = SimpleDateFormat("dd/MM/yyyy")
+                d2 = dfDate2.format(cal2.time)
+                values.put("FEC_ALTA", d2)
+                try {
+                    MainActivity.bd!!.update("vt_pedidos_cab", values, "NUMERO = '" + maximo
+                        .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null )
+                } catch (e: java.lang.Exception) {
+                    EnviarPedido.resultado = "Error al grabar! Intente otra vez!!"
+                    e.printStackTrace()
+                }
+                val sqlUpdate: String
+                var porDescuento = 0.toFloat()
+                if (EnviarPedido.descFin != "") {
+                    porDescuento = EnviarPedido.descFin.replace(",",".").toFloat()
+                }
+                if (EnviarPedido.descVarios != "") {
+                    porDescuento = (porDescuento + EnviarPedido.descVarios.replace(",",".").toFloat())
+                }
+                sqlUpdate = if (porDescuento == 0f) {
+                    ("update vt_pedidos_det  set "
+                            + " monto_total = (precio_unitario * cantidad) "
+                            + " where NUMERO = '"
+                            + maximo + "'"
+                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
+                } else {
+                    ("update vt_pedidos_det  set "
+                            + "monto_total = (precio_unitario*cantidad) -"
+                            + "((precio_unitario * cantidad) * "
+                            + porDescuento / 100
+                            + ") where NUMERO = '"
+                            + maximo + "'"
+                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
+                }
+                try {
+                    MainActivity.bd!!.rawQuery(sqlUpdate, null)
+                } catch (e: java.lang.Exception) {
+                    EnviarPedido.resultado = e.message.toString()
+//                    e.printStackTrace()
+                }
+                EnviarPedido.resultado = "Pedido enviado con exito!!"
+            }
+            if (EnviarPedido.resultado != "Pedido enviado con exito!!"){
+                runOnUiThread {
+                    progressDialog.cerrarDialogo()
+                    MainActivity.funcion.mensaje(EnviarPedido.contexto,"", EnviarPedido.resultado)
+                }
+            } else {
+                runOnUiThread {
+                    progressDialog.cerrarDialogo()
+                    val dialogo = DialogoAutorizacion(EnviarPedido.contexto)
+                    dialogo.dialogoAccion("cerrarTodo",Pedidos.etAccionPedidos,
+                        EnviarPedido.resultado,"","OK")
+                }
+            }
+
+        }
+        thread.start()
     }
 
     class AdapterProducto(

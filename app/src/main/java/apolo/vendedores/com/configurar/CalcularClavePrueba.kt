@@ -26,6 +26,7 @@ class CalcularClavePrueba : AppCompatActivity() {
     }
 
     fun calcular(view: View) {
+        view.id
         val contraClave = Clave()
         if (contraClave.contraClave(tvClaveTemporal.text.toString()) == etClave.text.toString()
             && etClave.text.toString().length==8){

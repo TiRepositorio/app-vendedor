@@ -140,8 +140,6 @@ class DialogoPromocion(
             override fun afterTextChanged(s: Editable?) {
                 if (dialogo.agregarPromocion.text.toString().isEmpty()){
                     return
-                } else {
-//                    agregarPromocion()
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -376,7 +374,7 @@ class DialogoPromocion(
 
     private fun cargaDatosCabecera(){
         val values = ContentValues()
-        values.put("COD_EMPRESA", "1")
+        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
@@ -451,7 +449,7 @@ class DialogoPromocion(
         for (i in 0 until lista.size){
             if (lista[i]["CANTIDAD"] != "0"){
                 val values = ContentValues()
-                values.put("COD_EMPRESA", "1")
+                values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
                 values.put("NUMERO", Pedidos.maximo)
                 values.put("COD_VENDEDOR", ListaClientes.codVendedor)
                 values.put("COD_ARTICULO", lista[i]["COD_ARTICULO"])
@@ -575,7 +573,7 @@ class DialogoPromocion(
         for (i in 0 until lista.size){
             if (lista[i]["CANTIDAD"] != "0"){
                 val values = ContentValues()
-                values.put("COD_EMPRESA", "1")
+                values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
                 values.put("NUMERO", Pedidos.maximo)
                 values.put("COD_VENDEDOR", ListaClientes.codVendedor)
                 values.put("COD_ARTICULO", lista[i]["COD_ARTICULO"])
@@ -612,11 +610,7 @@ class DialogoPromocion(
                         val nf: NumberFormat = NumberFormat.getInstance()
                         nf.minimumFractionDigits = Pedidos.spListaPrecios.getDato("DECIMALES").toInt()
                         nf.maximumFractionDigits = Pedidos.spListaPrecios.getDato("DECIMALES").toInt()
-                        var total: String = lista[i]["PREC_CAJA"].toString().replace(".", "")
-                        total = total.replace(",", ".")
                         values.put("PRECIO_UNITARIO", precio)
-                        total = lista[i]["SUBTOTAL"].toString().replace(".", "")
-                        total = total.replace(",", ".")
                         values.put("MONTO_TOTAL", subtotal)
                         values.put("TOTAL_IVA", "0")
                         values.put("PRECIO_UNITARIO_C_IVA", precio)
@@ -692,11 +686,11 @@ class DialogoPromocion(
                 "   AND a.COD_EMPRESA  = b.COD_EMPRESA "
         listaDetalle = funcion.cargarDatos(funcion.consultar(sql))
         for (i in 0 until listaDetalle.size){
-            val cantidad = listaDetalle[i]["CANT_DESDE"].toString().toInt()
+            val cantidadP = listaDetalle[i]["CANT_DESDE"].toString().toInt()
             if (listaDetalle[i]["IND_MULTIPLE"].toString().trim() == "S"){
-                listaDetalle[i]["CANTIDAD"] = (cantidad * multiplo).toString()
+                listaDetalle[i]["CANTIDAD"] = (cantidadP * multiplo).toString()
             } else {
-                listaDetalle[i]["CANTIDAD"] = (cantidad).toString()
+                listaDetalle[i]["CANTIDAD"] = (cantidadP).toString()
             }
             listaDetalle[i]["PREC_CAJA"] = "0"
             listaDetalle[i]["SUBTOTAL"] = "0"
@@ -721,7 +715,7 @@ class DialogoPromocion(
                 " WHERE trim(a.NRO_PROMOCION) = '${lista[0]["NRO_PROMOCION"]}' " +
                 "   AND trim(a.COD_VENDEDOR)  = '${ListaClientes.codVendedor}' " +
 //                "   AND trim(a.COD_ARTICULO)  = trim(b.COD_ARTICULO) " +
-                "   AND ifnull(trim(a.COD_EMPRESA),'1')  = ifnull(trim(b.COD_EMPRESA),'1') "
+                "   AND ifnull(trim(a.COD_EMPRESA),'${FuncionesUtiles.usuario["COD_EMPRESA"]}')  = ifnull(trim(b.COD_EMPRESA),'${FuncionesUtiles.usuario["COD_EMPRESA"]}') "
         listaDetalle = funcion.cargarDatos(funcion.consultar(sql))
         cargarDetalleF(lista)
 //        cargarDetalle(listaDetalle)

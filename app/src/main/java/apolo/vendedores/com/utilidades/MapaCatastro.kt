@@ -1,8 +1,6 @@
 package apolo.vendedores.com.utilidades
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,14 +8,12 @@ import android.database.Cursor
 import android.graphics.Color
 import android.graphics.Typeface
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import apolo.vendedores.com.R
-import apolo.vendedores.com.ventas.ListaClientes
 import apolo.vendedores.com.ventas.catastro.CatastrarCliente
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -28,6 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_mapa.*
 
 class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
@@ -41,7 +38,7 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private lateinit var mMap: GoogleMap
-    private var positionCliente : LatLng? = null
+    private lateinit var positionCliente : LatLng
     private lateinit var ubicacion : FuncionesUbicacion
     private lateinit var lm: LocationManager
     var funcion  : FuncionesUtiles = FuncionesUtiles(this)
@@ -51,9 +48,9 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
     var tipo : String  = ""
     var cliente : String = ""
     var resultado : String = ""
-    var respuesta : String = ""
-    var foto      : String = ""
-    var conexion : ConexionWS = ConexionWS()
+//    var respuesta : String = ""
+//    var foto      : String = ""
+//    var conexion : ConexionWS = ConexionWS()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +85,18 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
-    private fun cargarUbicacion(){
-        if (modificarCliente){
+//    private fun cargarUbicacion(){
+//        if (modificarCliente){
+//
+//        }
+//    }
 
-        }
-    }
-
-    private fun sqlCliente() : String {
-        return (" SELECT TELEFONO, TELEFONO2, DIRECCION, CERCA_DE "
-                + " FROM  svm_cliente_vendedor "
-                + " WHERE COD_CLIENTE    = '" + codCliente      + "'"
-                + " AND   COD_SUBCLIENTE = '" + codSubcliente   + "'")
-    }
+//    private fun sqlCliente() : String {
+//        return (" SELECT TELEFONO, TELEFONO2, DIRECCION, CERCA_DE "
+//                + " FROM  svm_cliente_vendedor "
+//                + " WHERE COD_CLIENTE    = '" + codCliente      + "'"
+//                + " AND   COD_SUBCLIENTE = '" + codSubcliente   + "'")
+//    }
 
     fun valores(cursor: Cursor):ContentValues{
         if (cursor.count>0){
@@ -118,7 +115,7 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
         for (i in 0 until cursor.columnCount){
             valores.put(cursor.getColumnName(i),funcion.dato(cursor,cursor.getColumnName(i)))
         }
-        valores.put("COD_EMPRESA","1")
+        valores.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
         valores.put("COD_CLIENTE", codCliente)
         valores.put("COD_SUBCLIENTE", codSubcliente)
         valores.put("LATITUD",latitud)
@@ -135,9 +132,9 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
 
     private fun inicializaBoton(boton:Button){
         boton.setOnClickListener{
-            if (validaUbicacion(ubicacion.obtenerUbicacionLatLng(lm),positionCliente!!)){
-                CatastrarCliente.tvmLatitud.text  = positionCliente!!.latitude.toString()
-                CatastrarCliente.tvmLongitud.text = positionCliente!!.longitude.toString()
+            if (validaUbicacion(ubicacion.obtenerUbicacionLatLng(lm), positionCliente)){
+                CatastrarCliente.tvmLatitud.text  = positionCliente.latitude.toString()
+                CatastrarCliente.tvmLongitud.text = positionCliente.longitude.toString()
                 finish()
             }
         }

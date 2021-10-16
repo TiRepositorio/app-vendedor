@@ -31,9 +31,13 @@ import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
+import apolo.vendedores.com.ventas.ListaClientes
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
+import apolo.vendedores.com.ventas.asistencia.Marcacion
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
+import kotlinx.android.synthetic.main.activity_main2.accion
+import kotlinx.android.synthetic.main.activity_marcacion.*
 import kotlinx.android.synthetic.main.ven_pri_accesos.*
 import kotlinx.android.synthetic.main.ven_pri_evol_diaria_de_venta.*
 import kotlinx.android.synthetic.main.ventana_principal.*
@@ -69,7 +73,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 //    private var subInforme2 = SubVentasPorClientes()
     private var subInforme3 = SubAvanceDeComisiones()
     private var cerrar = false
-    lateinit var enviarMarcacion : EnviarMarcacion
+    private lateinit var enviarMarcacion : EnviarMarcacion
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -222,7 +226,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.vendReportes               -> menu.mostrarMenu(menuItem,R.layout.menu_cab_reportes)
             R.id.vendInformes               -> menu.mostrarMenu(menuItem,R.layout.menu_cab_informes)
             R.id.vendConfigurar             -> menu.mostrarMenu(menuItem,R.layout.menu_cab_configurar)
-            R.id.vendMarcaciones            -> enviarMarcacion.cargarDatosDelDia()
+//            R.id.vendMarcaciones            -> enviarMarcacion.cargarDatosDelDia()
+            R.id.vendMarcaciones            -> enviarMarcaciones()
             R.id.vendSalir                  -> finish()
         }
 
@@ -248,6 +253,56 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 //        }
         mostrarMenu()
         return true
+    }
+
+    private fun enviarMarcaciones(){
+        val progressDialog = ProgressDialog(this)
+        val thread = Thread{
+            runOnUiThread { progressDialog.cargarDialogo("Enviando marcaciones...",false) }
+            EnviarMarcacion.contexto = this
+            EnviarMarcacion.etAccion = accion
+            EnviarMarcacion.accion = ""
+            enviarMarcacion = EnviarMarcacion("","")
+            if (!enviarMarcacion.cargarDatosDelDia()){
+                runOnUiThread {
+                    progressDialog.cerrarDialogo()
+                    funcion.mensaje(this,"Atención!",EnviarMarcacion.resultado)
+                }
+                return@Thread
+            }
+            try {
+                EnviarMarcacion.resultado = conexionWS.procesaMarcacionAsistenciaAct(FuncionesUtiles.usuario["LOGIN"].toString(),
+                    EnviarMarcacion.cadena
+                )
+//                resultado = "01*GRABADO CON EXITO"
+            } catch (e: Exception) {
+                EnviarMarcacion.resultado = e.message.toString()
+            }
+            val mensaje: Array<String> = EnviarMarcacion.resultado.split("*").toTypedArray()
+            if (mensaje.size == 1) {
+                runOnUiThread{
+                    progressDialog.cerrarDialogo()
+                    funcion.mensaje(EnviarMarcacion.contexto,"Resultado",EnviarMarcacion.resultado)
+                }
+            } else {
+                if (mensaje[0] == "01") {
+                    val update = (" UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
+                                "  WHERE ESTADO = 'P'" +
+                                "    AND FECHA like '%" + funcion.getFechaActual() + "%'")
+                    runOnUiThread { funcion.ejecutar(update, EnviarMarcacion.contexto) }
+                    EnviarMarcacion.anomalia = ""
+                }
+                if ( mensaje[0]=="01"){
+                    mensaje[1]="Datos enviados con éxito."
+                }
+                runOnUiThread {
+                    funcion.mensaje(EnviarMarcacion.contexto,"Resultado", mensaje[1])
+                    progressDialog.cerrarDialogo()
+                }
+            }
+            runOnUiThread { EnviarMarcacion.etAccion.setText(EnviarMarcacion.accion) }
+        }
+        thread.start()
     }
 
     private fun codPersona():String{

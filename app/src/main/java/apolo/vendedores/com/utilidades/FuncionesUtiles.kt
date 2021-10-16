@@ -3,7 +3,6 @@ package apolo.vendedores.com.utilidades
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
@@ -358,7 +357,7 @@ class FuncionesUtiles {
         var listaDetalle: ArrayList<HashMap<String, String>> = ArrayList()
         var listaDetalle2: ArrayList<HashMap<String, String>> = ArrayList()
         var subListaDetalle: ArrayList<ArrayList<HashMap<String, String>>> = ArrayList()
-        var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList()
+//        var subListaDetalle2: ArrayList<ArrayList<ArrayList<HashMap<String, String>>>> =  ArrayList()
         val formatoNumeroEntero: DecimalFormat = DecimalFormat("###,###,###,###.##")
         val formatoNumeroDecimal: DecimalFormat = DecimalFormat("###,###,###,##0.00")
         var formatoGenerico: NumberFormat = NumberFormat.getInstance()
@@ -384,7 +383,7 @@ class FuncionesUtiles {
     private var valoresSpinner: ArrayList<HashMap<String, String>> = ArrayList()
     private var parametros : Array<String> = arrayOf()
     lateinit var vistas : IntArray
-    lateinit var vistasCabecera : IntArray
+//    lateinit var vistasCabecera : IntArray
     lateinit var valores: Array<String>
     lateinit var subVistas : IntArray
     lateinit var subValores: Array<String>
@@ -524,16 +523,17 @@ class FuncionesUtiles {
         var sql: String
         if (spBuscar!!.selectedItemPosition != 0){
             sql = "SELECT " + campos + " FROM " + tabla +
-                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].toUpperCase(
-                Locale.ROOT) +
+                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].uppercase(
+                Locale.ROOT
+            ) +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
             if (valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size>1){
                 for(i in 1 until valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(
                     ","
                 ).size){
                     sql = "$sql OR " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(
-                        ","
-                    )[i].toUpperCase(Locale.ROOT) +
+                                        ","
+                                    )[i].uppercase(Locale.ROOT) +
                             " LIKE '%" + etBuscar!!.text.toString() + "%' "
                 }
             }
@@ -551,13 +551,13 @@ class FuncionesUtiles {
         var sql: String
         if (spBuscar!!.selectedItemPosition != 0){
             sql = "SELECT " + campos + " FROM " + tabla +
-                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].toUpperCase(
+                    " WHERE " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[0].uppercase(
                 Locale.ROOT
             ) +
                     "  LIKE '%"  + etBuscar!!.text.toString() + "%' "
             if (valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size>1){
                 for(i in 1 until valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",").size){
-                    sql = "$sql OR " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[i].toUpperCase(
+                    sql = "$sql OR " + valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]!!.split(",")[i].uppercase(
                         Locale.ROOT
                     ) +
                             " LIKE '%" + etBuscar!!.text.toString() + "%' "
@@ -687,20 +687,18 @@ class FuncionesUtiles {
     fun decimalPunto(decimal: String):String{
         return decimal(decimal).replace(".", "").replace(",", ".")
     }
-    fun numero(decimales: String, numero: String):String{
+    fun numero(decimales: String, numero: String): String {
         formatoGenerico.minimumFractionDigits = decimales.toInt()
         formatoGenerico.maximumFractionDigits = decimales.toInt()
         var numeroF = numero.replace(".", "")
         numeroF = numeroF.replace(",", ".")
-        val result = formatoGenerico.format(numeroF.toDouble())
-        return result
+        return formatoGenerico.format(numeroF.toDouble())
     }
-    fun numero(decimales: String, numero: String,punto:Boolean):String{
+    fun numero(decimales: String, numero: String, punto: Boolean): String {
         formatoGenerico.minimumFractionDigits = decimales.toInt()
         formatoGenerico.maximumFractionDigits = decimales.toInt()
-        var numeroF = numero.replace(",", ".")
-        val result = formatoGenerico.format(numeroF.toDouble())
-        return result
+        val numeroF = numero.replace(",", ".")
+        return formatoGenerico.format(numeroF.toDouble())
     }
     fun porcentaje(decimal: String):String{
         return decimal(decimal) + "%"
@@ -713,6 +711,7 @@ class FuncionesUtiles {
         posicionDetalle = 0
         posicionGenerico = 0
     }
+    @SuppressLint("SimpleDateFormat")
     fun fechaHora(fecha: String): Date {
         val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         if (fecha.trim() == ""){
@@ -724,10 +723,12 @@ class FuncionesUtiles {
             hourFormat.parse("01/01/2020 00:00:00")
         }
     }
+    @SuppressLint("SimpleDateFormat")
     fun fecha(fecha: String): Date {
         val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return hourFormat.parse(fecha)
     }
+    @SuppressLint("SimpleDateFormat")
     fun fechaF(fecha: String): Date {
         val hourFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return hourFormat.parse(hourFormat.format(fecha))
@@ -757,9 +758,9 @@ class FuncionesUtiles {
             "01/01/2020 00:00:00"
         }
     }
-    fun convertirFechatoSQLFormat(fechas: String): String? {
+    fun convertirFechatoSQLFormat(fechas: String): String {
         var fecha = fechas
-        var res = ""
+        val res: String
         var dia = ""
         var mes = ""
         var anho = ""
@@ -781,7 +782,8 @@ class FuncionesUtiles {
     }
 
     //FECHAS
-    fun getDiaDeLaSemana(str_fecha: String?): String? {
+    @SuppressLint("SimpleDateFormat")
+    fun getDiaDeLaSemana(str_fecha: String?): String {
         val formatoDelTexto = SimpleDateFormat("dd/MM/yyyy")
         val fecha: Date?
         try {
@@ -793,7 +795,7 @@ class FuncionesUtiles {
         }
         return "Lunes"
     }
-    fun getDia(dia: Int):String{
+    private fun getDia(dia: Int):String{
         return when(dia){
             1 -> "Domingo"
             2 -> "Lunes"
@@ -846,38 +848,36 @@ class FuncionesUtiles {
             else -> "Valor no corresponde"
         }
     }
-    fun getHoraActual(): String? {
+    fun getHoraActual(): String {
         val calendario = Calendar.getInstance()
-        val hora: Int
-        val minutos: Int
-        val segundos: Int
-        hora = calendario[Calendar.HOUR_OF_DAY]
-        minutos = calendario[Calendar.MINUTE]
-        segundos = calendario[Calendar.SECOND]
+        val hora: Int = calendario[Calendar.HOUR_OF_DAY]
+        val minutos: Int = calendario[Calendar.MINUTE]
+        val segundos: Int = calendario[Calendar.SECOND]
 
         // GUARDAR LA HORA
-        var _hora = ""
-        _hora += if (hora < 10) {
+        var horaTemp = ""
+        horaTemp += if (hora < 10) {
             "0$hora:"
         } else {
             "$hora:"
         }
-        _hora += if (minutos < 10) {
+        horaTemp += if (minutos < 10) {
             "0$minutos:"
         } else {
             "$minutos:"
         }
         if (segundos < 10) {
-            _hora += "0$segundos"
+            horaTemp += "0$segundos"
         } else {
-            _hora += segundos
+            horaTemp += segundos
         }
-        return _hora
+        return horaTemp
     }
+    @SuppressLint("SimpleDateFormat")
     fun getFechaActual():String{
         val dfDate = SimpleDateFormat("dd/MM/yyyy")
         val cal = Calendar.getInstance()
-        return dfDate.format(cal.getTime()) + ""
+        return dfDate.format(cal.time) + ""
     }
     fun getFechaHoraActual():String{
         return getFechaActual() + " " + getHoraActual()
@@ -906,7 +906,7 @@ class FuncionesUtiles {
             d = fecha(fecha)
             d1 = fechaF(cal.time.toString())
         } catch (e: java.text.ParseException) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
 
         val diffInDays : Int = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
@@ -917,9 +917,9 @@ class FuncionesUtiles {
         }
         return true
     }
-    fun progPedido(codVendedor:String):Int{
+    fun progPedido():Int{
         val sql = "select PROG_PEDIDO from usuarios"
-        return datoEntero(consultar(sql),"PROG_PEDIDO");
+        return datoEntero(consultar(sql),"PROG_PEDIDO")
     }
 
     //MENU
@@ -987,18 +987,7 @@ class FuncionesUtiles {
                 + " ORDER BY CAST(" + codVendedor + " AS NUMBER)")
         cargarVendedores(sql, codVendedor, descVendedor)
     }
-    fun listaSupervisores(codSupervisor: String, descSupervisor: String, tabla: String){
-        val sql = ("SELECT DISTINCT " + codSupervisor + "," + descSupervisor + " "
-                + " FROM " + tabla
-                + " ORDER BY CAST(" + codSupervisor + " AS NUMBER)")
-        cargarSupervisores(sql, codSupervisor, descSupervisor)
-    }
-    fun listaGerentes(codGerente: String, descGerente: String, tabla: String){
-        val sql = ("SELECT DISTINCT " + codGerente + "," + descGerente + " "
-                + " FROM " + tabla
-                + " ORDER BY CAST(" + codGerente + " AS NUMBER)")
-        cargarGerentes(sql, codGerente, descGerente)
-    }
+
     fun listaVendedores(codVendedor: String, descVendedor: String, sql: String, orderBy: String){
         cargarVendedores(sql, codVendedor, descVendedor)
     }
@@ -1190,7 +1179,7 @@ class FuncionesUtiles {
         entrada.text = et.text
         dialogo.setPositiveButton(
             "OK"
-        ) { _: DialogInterface, i: Int ->
+        ) { _: DialogInterface, _: Int ->
             et.text = entrada.text
             etAccion.setText(accion)
         }
@@ -1203,8 +1192,8 @@ class FuncionesUtiles {
         dialogo.etNombre.text = etNombre.text
         dialogo.etTelefono.text = etTelefono.text
         dialogo.dBtAceptar.setOnClickListener {
-            etNombre.setText(dialogo.etNombre.text.toString().toUpperCase())
-            etTelefono.setText(dialogo.etTelefono.text.toString().toUpperCase())
+            etNombre.setText(dialogo.etNombre.text.toString().uppercase(Locale.ROOT))
+            etTelefono.setText(dialogo.etTelefono.text.toString().uppercase(Locale.getDefault()))
             dialogo.dismiss()
         }
         dialogo.dBtCancelar.setOnClickListener { dialogo.dismiss() }
@@ -1259,17 +1248,6 @@ class FuncionesUtiles {
     }
 
     //DATOS
-    fun codPersona():String{
-        val sql : String = "SELECT DISTINCT COD_PERSONA FROM svm_vendedor_pedido"
-        val cursor : Cursor = consultar(sql)
-        return if (cursor.count < 1){
-            MainActivity.codPersona = ""
-            ""
-        } else {
-            MainActivity.codPersona = dato(cursor, "COD_PERSONA")
-            dato(cursor, "COD_PERSONA")
-        }
-    }
     fun maxDescuento():Double{
         val sql : String = ("SELECT NUMERO MAXIMO, IND_PALM, ULTIMA_SINCRO, RANGO, MIN_FOTOS, "
                 +  "       MAX_FOTOS, IND_FOTO, "
@@ -1282,7 +1260,7 @@ class FuncionesUtiles {
         val sql: String = ("SELECT  MAX(id),nro_orden FROM '" + tabla + "' "
                 + "where est_envio= 'N'")
         cursor = consultar(sql)
-        var id: String? = ""
+        var id: String?
         if (cursor.moveToFirst()) {
             id = cursor.getString(cursor.getColumnIndex("NRO_ORDEN"))
             if (id == null) {
@@ -1302,7 +1280,7 @@ class FuncionesUtiles {
         val nreg = cursor.count
         cursor.moveToFirst()
         var cont = 0
-        var id = ""
+        var id: String
         for (i in 0 until nreg) {
             cont += 1
             id = cursor.getString(cursor.getColumnIndex("id"))

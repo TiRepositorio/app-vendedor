@@ -1,9 +1,6 @@
 package apolo.vendedores.com.utilidades
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -11,14 +8,13 @@ import android.database.Cursor
 import android.graphics.Color
 import android.graphics.Typeface
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
-import apolo.vendedores.com.ventas.ListaClientes
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter
@@ -41,7 +37,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private lateinit var mMap: GoogleMap
-    private var positionCliente : LatLng? = null
+    private lateinit var positionCliente : LatLng
     private lateinit var ubicacion : FuncionesUbicacion
     private lateinit var lm: LocationManager
     var funcion  : FuncionesUtiles = FuncionesUtiles(this)
@@ -51,9 +47,10 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
     var tipo : String  = ""
     var cliente : String = ""
     var resultado : String = ""
-    var respuesta : String = ""
-    var foto      : String = ""
-    var conexion : ConexionWS = ConexionWS()
+    private var respuesta : String = ""
+    private var foto      : String = ""
+    private var conexion : ConexionWS = ConexionWS()
+    private lateinit var thread: Thread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,8 +89,8 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         if (modificarCliente) {
             id = ""
             tipo = "G"
-            latitud  = positionCliente!!.latitude.toString()
-            longitud = positionCliente!!.longitude.toString()
+            latitud  = positionCliente.latitude.toString()
+            longitud = positionCliente.longitude.toString()
             val sql : String = (" SELECT TELEFONO1, TELEFONO2, DIRECCION,FOTO_FACHADA, CERCA_DE,TIPO "
                             + " FROM  svm_modifica_catastro "
                             + " WHERE COD_CLIENTE    = '" + codCliente      + "'"
@@ -112,11 +109,76 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
                 funcion.actualizar("svm_modifica_catastro",valores, " id = '$id'")
             }
             valores = valores(funcion.consultar(sql))
-            cliente = "'1'|'$codCliente'|'$codSubcliente'|'${valores.get("TELEFONO1")}'|'${valores.get("TELEFONO2")}'" +
+            cliente = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'|'$codCliente'|'$codSubcliente'|'${valores.get("TELEFONO1")}'|'${valores.get("TELEFONO2")}'" +
                     "|'${valores.get("DIRECCION")}'|'${valores.get("CERCA_DE")}'|'$latitud'|'$longitud'|'$tipo'"
             foto = valores.get("FOTO_FACHADA").toString()
-            ComprobarConexion().execute()
+            enviarUbicacion()
         }
+    }
+
+    private fun enviarUbicacion(){
+        val dialogo = ProgressDialog(this)
+        thread = Thread {
+            runOnUiThread {
+                dialogo.cargarDialogo("Comprobando conexion",false)
+            }
+            resultado = ""
+            resultado = MainActivity2.conexionWS.procesaVersion()
+            runOnUiThread{
+                dialogo.cerrarDialogo()
+            }
+            if (resultado == ""){
+                return@Thread
+            }
+            runOnUiThread{
+                dialogo.cargarDialogo("Enviando la actualización al servidor",false)
+            }
+            respuesta = conexion.procesaActualizaDatosClienteFinal(codVendedor, cliente, foto)
+            if (respuesta.indexOf("01*")>-1 || respuesta.indexOf("03*")>-1){
+                try {
+                    var sql : String = "UPDATE svm_modifica_catastro SET ESTADO = 'E' " +
+                            " WHERE COD_CLIENTE    = '" + codCliente    + "' " +
+                            "   AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                    funcion.ejecutarB(sql,this@Mapa)
+                    sql = "UPDATE svm_modifica_catastro SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
+                            "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
+                            "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                    funcion.ejecutarB(sql,this@Mapa)
+                    sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
+                            "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
+                            "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                    funcion.ejecutarB(sql,this@Mapa)
+                    sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
+                            "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
+                            "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                    funcion.ejecutarB(sql,this@Mapa)
+                } catch (e:Exception) {
+                    //enviar().excecute()
+                    runOnUiThread {
+                        dialogo.cerrarDialogo()
+                        funcion.mensaje("Error","Verifique su conexion a internet y vuelva a intentar.")
+                    }
+                    return@Thread
+                }
+            }
+
+
+            if (respuesta.indexOf("07*")>-1){
+                respuesta = "07*Verifique su conexión a internet y vuelva a intentarlo."
+            }
+
+            runOnUiThread {
+                dialogo.cerrarDialogo()
+                funcion.toast(this,respuesta.substring(3))
+                finish()
+            }
+        }
+        thread.start()
+
+
     }
 
     private fun sqlCliente() : String {
@@ -143,7 +205,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         for (i in 0 until cursor.columnCount){
             valores.put(cursor.getColumnName(i),funcion.dato(cursor,cursor.getColumnName(i)))
         }
-        valores.put("COD_EMPRESA","1")
+        valores.put("COD_EMPRESA",FuncionesUtiles.usuario["COD_EMPRESA"])
         valores.put("COD_CLIENTE", codCliente)
         valores.put("COD_SUBCLIENTE", codSubcliente)
         valores.put("LATITUD",latitud)
@@ -160,116 +222,10 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
 
     private fun inicializaBoton(boton:Button){
         boton.setOnClickListener{
-            if (validaUbicacion(ubicacion.obtenerUbicacionLatLng(lm),positionCliente!!)){
+            if (validaUbicacion(ubicacion.obtenerUbicacionLatLng(lm), positionCliente)){
                 cargarUbicacion()
             }
         }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private inner class ComprobarConexion : AsyncTask<Void, Void, Void>() {
-        lateinit var progressDialog: ProgressDialog
-        override fun onPreExecute() {
-            super.onPreExecute()
-            try {
-                progressDialog.dismiss()
-            } catch (e:Exception){
-
-            }
-            progressDialog = ProgressDialog.show(this@Mapa,"Un momento...","Comprobando conexion", true)
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            return try {
-                null
-            } catch (e:Exception){
-                resultado = e.message.toString()
-                null
-            }
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            progressDialog.dismiss()
-            if (resultado != "null"){
-                try {
-                    Enviar().execute()
-                    return
-                } catch (e:Exception) {
-                    Enviar().execute()
-                    return
-                }
-                funcion.mensaje("Error","Verifique su conexion a internet y vuelva a intentar.")
-                finish()
-                return
-            }
-        }
-
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private inner class Enviar : AsyncTask<Void, Void, Void>() {
-        lateinit var progressDialog: ProgressDialog
-        override fun onPreExecute() {
-            super.onPreExecute()
-            try {
-                progressDialog.dismiss()
-            } catch (e:Exception){
-
-            }
-            progressDialog = ProgressDialog.show(this@Mapa,"Un momento...","Enviando la actualización al servidor", true)
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            respuesta = conexion.procesaActualizaDatosClienteFinal(codVendedor, cliente, foto).toString()
-//            respuesta = "01*Correcto"
-            return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            progressDialog.dismiss()
-            if (respuesta.indexOf("01*")>-1 || respuesta.indexOf("03*")>-1){
-                try {
-                    var sql : String = "UPDATE svm_modifica_catastro SET ESTADO = 'E' " +
-                                       " WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                                       "   AND COD_SUBCLIENTE = '" + codSubcliente + "' "
-                    funcion.ejecutar(sql,this@Mapa)
-                    sql = "UPDATE svm_modifica_catastro SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
-                                                           "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
-                           "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                           "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
-                    funcion.ejecutar(sql,this@Mapa)
-                    sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
-                            "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
-                            "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
-                    funcion.ejecutar(sql,this@Mapa)
-                    sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
-                            "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
-                            "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
-                    funcion.ejecutar(sql,this@Mapa)
-                } catch (e:Exception) {
-                    //enviar().excecute()
-                    funcion.mensaje("Error","Verifique su conexion a internet y vuelva a intentar.")
-                    return
-                }
-//                finish()
-//                return
-            }
-
-//            ListaClientes.etAccion.setText("recargar")
-
-            if (respuesta.indexOf("07*")>-1){
-                respuesta = "07*Verifique su conexión a internet y vuelva a intentarlo."
-            }
-
-//            val dialogo = DialogoAutorizacion(this@Mapa)
-//            dialogo.dialogoAccion("recargar",ListaClientes.etAccion,respuesta.substring(3),"","OK",false)
-            funcion.mensaje("",respuesta.substring(3))
-        }
-
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

@@ -11,13 +11,13 @@ import android.widget.EditText
 import apolo.vendedores.com.R
 import kotlinx.android.synthetic.main.menu_cliente.*
 import kotlinx.android.synthetic.main.menu_cliente_texto.*
-import java.lang.Exception
 
 class DialogoAutorizacion(var context: Context) {
 
     private var claves : Clave = Clave()
     var funcion : FuncionesUtiles = FuncionesUtiles(context)
 
+    @SuppressLint("SetTextI18n")
     fun dialogoAutorizacion(accion:String, cargaAcion : EditText){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         val claveTemp : String = claves.generaClave()
@@ -45,6 +45,7 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.show()
     }
 
+    @SuppressLint("SetTextI18n")
     fun dialogoAutorizacionCod(accion:String, cargaAcion : EditText){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         val claveTemp : String = claves.generaClave()
@@ -72,7 +73,15 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.show()
     }
 
-    fun dialogoAutorizacion(accion:String,noAccion:String, cargaAcion : EditText,mensaje:String, titulo:String,codigo:String,mTrue:String,mFalse:String){
+    fun dialogoAutorizacion(
+        accion: String,
+        noAccion: String,
+        cargaAcion: EditText,
+        mensaje: String,
+        titulo: String,
+        codigo: String,
+        mFalse: String
+    ){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         dialogo.setTitle(titulo)
         dialogo.setMessage(mensaje)
@@ -128,13 +137,14 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.show()
     }
 
-    fun dialogoMapa(accion:String, cargaAcion : EditText){
+    @SuppressLint("SetTextI18n")
+    fun dialogoMapa(cargaAcion: EditText){
         val dialogo = Dialog(context)
         try {
             dialogo.setContentView(R.layout.menu_cliente)
         } catch (e: Exception){
             dialogo.setContentView(R.layout.menu_cliente_texto)
-            var cliente : Button = dialogo.btCliente as Button
+            dialogo.btCliente as Button
             dialogo.btCliente.setOnClickListener{
                 cargaAcion.setText("cliente")
                 dialogo.dismiss()
@@ -168,6 +178,7 @@ class DialogoAutorizacion(var context: Context) {
         dialogo.show()
     }
 
+    @SuppressLint("SetTextI18n")
     fun dialogoAutorizacion(accion:String, noAccion: String, cargaAcion : EditText, mensaje:String){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
 //        var claveTemp : String = "54127854"

@@ -1,5 +1,6 @@
 package apolo.vendedores.com.informes
 
+import android.annotation.SuppressLint
 import apolo.vendedores.com.R
 import android.app.Activity
 import android.content.pm.ActivityInfo
@@ -28,7 +29,7 @@ class CorteDeStock : Activity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         setContentView(R.layout.activity_corte_de_stock)
 
         inicializarElementos()
@@ -68,6 +69,7 @@ class CorteDeStock : Activity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun cargarCodigos(){
         try {
             codVendedor = tvVendedor.text!!.toString().split("-")[0]
@@ -139,10 +141,11 @@ class CorteDeStock : Activity() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         lateinit var adapter: Adapter.AdapterGenericoCabecera
     }
 
-    fun inicializarETAccion(){
+    private fun inicializarETAccion(){
         accion.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

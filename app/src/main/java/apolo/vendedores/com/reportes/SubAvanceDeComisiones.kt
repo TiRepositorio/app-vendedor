@@ -1,5 +1,6 @@
 package apolo.vendedores.com.reportes
 
+import android.annotation.SuppressLint
 import android.database.Cursor
 import apolo.vendedores.com.MainActivity2
 
@@ -10,6 +11,7 @@ class SubAvanceDeComisiones{
     lateinit var datosX : Array<String>
     lateinit var datosY : IntArray
 
+    @SuppressLint("Recycle")
     fun cargarDatos():ArrayList<HashMap<String, String>>{
 
         val sql : String = (" SELECT  TIP_COM "
