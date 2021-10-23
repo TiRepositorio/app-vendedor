@@ -31,9 +31,7 @@ import apolo.vendedores.com.configurar.ConfigurarUsuario
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
-import apolo.vendedores.com.ventas.ListaClientes
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
-import apolo.vendedores.com.ventas.asistencia.Marcacion
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.activity_main2.accion
@@ -288,7 +286,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 if (mensaje[0] == "01") {
                     val update = (" UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
                                 "  WHERE ESTADO = 'P'" +
-                                "    AND FECHA like '%" + funcion.getFechaActual() + "%'")
+                                "    AND FECHA  like '%" + funcion.getFechaActual() + "%'")
                     runOnUiThread { funcion.ejecutar(update, EnviarMarcacion.contexto) }
                     EnviarMarcacion.anomalia = ""
                 }

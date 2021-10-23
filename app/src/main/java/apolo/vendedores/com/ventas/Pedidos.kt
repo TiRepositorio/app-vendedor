@@ -2009,6 +2009,7 @@ class Pedidos : AppCompatActivity() {
                     )
                 }."
             )
+            progressDialog.cerrarDialogo()
             return
         }
         val enviarPedido = EnviarPedido(this, lm, telMgr, lista[0])
@@ -2105,11 +2106,18 @@ class Pedidos : AppCompatActivity() {
                     values.put("tot_descuento", etTotalDescPedidos.text.toString().replace(".", ""))
                     values.put("TOT_COMPROBANTE", etTotalPedidos.text.toString().replace(".", ""))
                 }
+
+
                 val d2: String?
                 val cal2: Calendar = Calendar.getInstance()
                 val dfDate2 = SimpleDateFormat("dd/MM/yyyy")
                 d2 = dfDate2.format(cal2.time)
                 values.put("FEC_ALTA", d2)
+                val updCab = "update vt_pedidos_cab " +
+                        "    set ESTADO = 'E' " +
+                        "  WHERE NUMERO = '" + maximo.toString() + "' " +
+                        "    and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'"
+                funcion.ejecutarB(updCab,this)
                 try {
                     MainActivity.bd!!.update("vt_pedidos_cab", values, "NUMERO = '" + maximo
                         .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null )

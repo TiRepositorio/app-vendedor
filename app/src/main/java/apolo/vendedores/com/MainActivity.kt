@@ -21,12 +21,11 @@ class MainActivity : AppCompatActivity() {
         var bd: SQLiteDatabase? = null
         @SuppressLint("StaticFieldLeak")
         val conexionWS: ConexionWS = ConexionWS()
-//        var codPersona : String = ""
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "68"
-        const val fechaVersion : String = "20211015"
+        const val version : String = "69"
+        const val fechaVersion : String = "20211022"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
