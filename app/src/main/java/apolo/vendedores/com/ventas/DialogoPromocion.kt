@@ -12,7 +12,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import apolo.vendedores.com.R
-import apolo.vendedores.com.utilidades.*
+import apolo.vendedores.com.utilidades.Adapter
+import apolo.vendedores.com.utilidades.FuncionesSpinner
+import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.dialogo_bonificacion_combo.*
 import kotlinx.android.synthetic.main.dialogo_bonificacion_combo.agregarPromocion
 import kotlinx.android.synthetic.main.dialogo_bonificacion_combo.btAgregarPromocion
@@ -213,6 +215,7 @@ class DialogoPromocion(
             override fun onNothingSelected(p0: AdapterView<*>?) { return }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 dialogo.tvdPrecioReferenciaPromo.text = fspReferencia.getDato("PRECIO")
+                lista[posicion]["COD_UNIDAD_MEDIDA"] = fspReferencia.getDato("COD_UNIDAD_REL")
             }
         }
         dialogo.spReferenciaPromo.setSelection(0)
@@ -323,6 +326,7 @@ class DialogoPromocion(
         dialogo.tvdCantidadPromo.setText(lista[position]["CANTIDAD"])
         dialogo.tvdTotalPromo.text = lista[position]["SUBTOTAL"]
         spReferencias(position)
+        lista[position]["COD_UNIDAD_MEDIDA"] = dialogo.spReferenciaPromo.selectedItem.toString().split("-")[0]
     }
 
     @SuppressLint("SetTextI18n")
