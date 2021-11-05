@@ -100,6 +100,7 @@ class Pedidos : AppCompatActivity() {
     private var diasInicial = 0
     var decimales = ""
     private var indActualizado = false
+    val dialogoCB = ProgressDialog(this)
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -315,6 +316,12 @@ class Pedidos : AppCompatActivity() {
             }
         }
         cbUM1.setOnClickListener {
+//            dialogoCB.cargarDialogo("Cargando...",false)
+            if (spReferencia.selectedItemPosition == 0){
+                if (!cbUM1.isChecked) {cbUM1.isChecked = true}
+                return@setOnClickListener
+            }
+            btVender.isEnabled = false
             spReferencia.setSelection(0)
             cbUM2.isChecked = false
             cbUM3.isChecked = false
@@ -322,6 +329,12 @@ class Pedidos : AppCompatActivity() {
             if (!cbUM1.isChecked) {cbUM1.isChecked = true}
         }
         cbUM2.setOnClickListener {
+//            dialogoCB.cargarDialogo("Cargando...",false)
+            if (spReferencia.selectedItemPosition == 1){
+                if (!cbUM2.isChecked) {cbUM2.isChecked = true}
+                return@setOnClickListener
+            }
+            btVender.isEnabled = false
             spReferencia.setSelection(1)
             cbUM1.isChecked = false
             cbUM3.isChecked = false
@@ -329,6 +342,12 @@ class Pedidos : AppCompatActivity() {
             if (!cbUM2.isChecked) {cbUM2.isChecked = true}
         }
         cbUM3.setOnClickListener {
+//            dialogoCB.cargarDialogo("Cargando...",false)
+            if (spReferencia.selectedItemPosition == 2){
+                if (!cbUM3.isChecked) {cbUM3.isChecked = true}
+                return@setOnClickListener
+            }
+            btVender.isEnabled = false
             spReferencia.setSelection(2)
             cbUM1.isChecked = false
             cbUM2.isChecked = false
@@ -336,6 +355,12 @@ class Pedidos : AppCompatActivity() {
             if (!cbUM3.isChecked) {cbUM3.isChecked = true}
         }
         cbUM4.setOnClickListener {
+//            dialogoCB.cargarDialogo("Cargando...",false)
+            if (spReferencia.selectedItemPosition == 3){
+                if (!cbUM4.isChecked) {cbUM4.isChecked = true}
+                return@setOnClickListener
+            }
+            btVender.isEnabled = false
             spReferencia.setSelection(3)
             cbUM1.isChecked = false
             cbUM2.isChecked = false
@@ -373,6 +398,13 @@ class Pedidos : AppCompatActivity() {
                 id: Long
             ) {
                 cargarDetalleProducto()
+                Thread.sleep(100)
+                btVender.isEnabled = true
+//                try {
+//                    dialogoCB.cerrarDialogo()
+//                } catch (e:java.lang.Exception){
+//                    e.printStackTrace()
+//                }
             }
         }
     }
