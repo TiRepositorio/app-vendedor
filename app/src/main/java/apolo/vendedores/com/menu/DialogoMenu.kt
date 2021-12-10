@@ -8,17 +8,18 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.TextView
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
-import apolo.vendedores.com.configurar.AcercaDe
 import apolo.vendedores.com.configurar.CalcularClavePrueba
 import apolo.vendedores.com.informes.*
 import apolo.vendedores.com.prueba.VentanaAuxiliar
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import apolo.vendedores.com.utilidades.ItemAbrir
+import apolo.vendedores.com.utilidades.Sincronizacion
 import kotlinx.android.synthetic.main.menu_cab_configurar.*
-import java.lang.Exception
 
 @Suppress("SameParameterValue")
 class DialogoMenu(var context: Context) {
@@ -96,8 +97,8 @@ class DialogoMenu(var context: Context) {
     fun configurar():ArrayList<ItemAbrir>{
         val lista:ArrayList<ItemAbrir> = ArrayList()
         lista.add(item((R.drawable.ic_usuario).toString(),"Configurar usuario",Intent(context,CalcularClavePrueba::class.java)))
-        lista.add(item((R.drawable.ic_acerca).toString(),"Acerca de",Intent(context,AcercaDe::class.java)))
-//        lista.add(item((R.drawable.ic_sincronizar).toString(),"Sincronizar",Intent(context,Sincronizacion::class.java)))
+//        lista.add(item((R.drawable.ic_acerca).toString(),"Acerca de",Intent(context,AcercaDe::class.java)))
+        lista.add(item((R.drawable.ic_sincronizar).toString(),"Sincronizar",Intent(context,Sincronizacion::class.java)))
         return lista
     }
 

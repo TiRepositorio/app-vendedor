@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
+import apolo.vendedores.com.configurar.AcercaDe
 import apolo.vendedores.com.configurar.ActualizarVersion
 import apolo.vendedores.com.configurar.CalcularClavePrueba
 import apolo.vendedores.com.configurar.ConfigurarUsuario
@@ -208,6 +209,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         if (R.id.vendActualizar  != menuItem.itemId &&
             R.id.vendConfigurar  != menuItem.itemId &&
             R.id.vendSincronizar != menuItem.itemId &&
+            R.id.vendAcercaDe    != menuItem.itemId &&
             R.id.vendSalir       != menuItem.itemId ){
             if (!dispositivo.fechaCorrecta()){
                 funcion.toast(this,"Debe sincronizar para continuar.")
@@ -235,6 +237,10 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         if (menuItem.itemId == R.id.vendActualizar){
             actualizarVersion()
+        }
+        if (menuItem.itemId == R.id.vendAcercaDe){
+            startActivity(Intent(this@MainActivity2,AcercaDe::class.java))
+            accion.setText("")
         }
         if (menuItem.itemId == R.id.vendSincronizar){
             val dialogo = DialogoAutorizacion(this)
@@ -335,7 +341,6 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     //ACTUALIZAR VERSION
     private fun actualizarVersion(){
-        etAccion = accion
         val dialogo = DialogoAutorizacion(this)
         dialogo.dialogoAccionOpcion("DESCARGAR","",accion,"¿Desea actualizar la versión?","Atención!","SI","NO")
     }
@@ -343,8 +348,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     fun descargarActualizacion(){
         ActualizarVersion.context = this
         ConexionWS.context = this
-        etAccion = accion
         crearArchivo()
+        ActualizarVersion.etAccion = accion
         val descargar = ActualizarVersion()
         descargar.preparaActualizacion()
     }

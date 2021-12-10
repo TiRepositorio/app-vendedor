@@ -1,3 +1,5 @@
 <resources>
     <string name="title_activity_maps">Map</string>
+<!--    <string name="info_de_app">Desarrollado por el D.T.I. de Apolo Import S.A.</string>-->
+    <string name="info_de_app"> </string>
 </resources>

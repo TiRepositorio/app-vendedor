@@ -22,10 +22,12 @@ class EnviarSD {
         @SuppressLint("StaticFieldLeak")
         var funcion : FuncionesUtiles = FuncionesUtiles()
     }
-    
+
+    private var nroRegistroRef = 0
     private var registros : Int = 0
 
     fun enviar():Boolean {
+        nroRegistroRef = nroRegistroRef()
         registrarCabecera()
         cargarCabecera(funcion.consultar(sqlCabecera()))
         cargarDetalle(funcion.consultar(sqlDetalle()))
@@ -54,14 +56,43 @@ class EnviarSD {
         insertarCabecera(funcion.consultar(sql))
     }
 
+    private fun nroRegistroRef():Int{
+        var sql = "select VERSION " +
+                "    from svm_vendedor_pedido " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+        var cursor = funcion.consultar(sql)
+        var servidor = 0
+        if (cursor.count > 0){
+            servidor = funcion.datoEntero(cursor,"VERSION")
+        }
+
+        sql = "select max(NRO_REGISTRO_REF) NRO_REGISTRO_REF from svm_solicitud_dev_cab " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+        cursor = funcion.consultar(sql)
+        var telefono = 0
+        if (cursor.count > 0){
+            telefono = funcion.datoEntero(cursor,"NRO_REGISTRO_REF")
+        }
+
+        return if (telefono > servidor){
+            telefono + 1
+        } else {
+            servidor + 1
+        }
+    }
+
     private fun insertarCabecera(cursor: Cursor){
+//        val registroRef = nroRegistroRef()
         for (i in 0 until cursor.count) {
             try {
                 val valores = ContentValues()
                 valores.put("COD_EMPRESA", funcion.dato(cursor,"COD_EMPRESA"))
                 valores.put("NRO_PLANILLA",funcion.dato(cursor,"NRO_PLANILLA"))
                 valores.put("COD_VENDEDOR", ListaClientes.codVendedor)
-                valores.put("NRO_REGISTRO_REF", "0")
+//                valores.put("NRO_REGISTRO_REF", "0")
+                valores.put("NRO_REGISTRO_REF", "${nroRegistroRef()}")
                 valores.put("COD_CLIENTE", funcion.dato(cursor,"COD_CLIENTE"))
                 valores.put("COD_SUBCLIENTE",funcion.dato(cursor,"COD_SUBCLIENTE"))
                 valores.put("EST_ENVIO", "N")
@@ -76,14 +107,14 @@ class EnviarSD {
                 if (cursor2.count > 0) {
                     xid = funcion.dato(cursor2,"xid")
                 }
-                val sql = ("update svm_solicitud_dev_det set "
-                        + " GRABADO_CAB 		 = 'S', "
-                        + " NRO_REGISTRO_REF 	 = '$xid' "
-                        + " where COD_CLIENTE    = '$codCliente'"
-                        + " and COD_SUBCLIENTE 	 = '$codSubcliente'"
-                        + " and NRO_PLANILLA   	 = '${ListaClientes.codVendedor}'"
-                        + " and FECHA ='${funcion.getFechaActual()}' "
-                        + " and NRO_REGISTRO_REF ='0' ")
+                val sql = ("update svm_solicitud_dev_det "
+                        + "    set GRABADO_CAB 		 = 'S', "
+                        + "        NRO_REGISTRO_REF  = '${nroRegistroRef}' "
+                        + "  where COD_CLIENTE       = '$codCliente'"
+                        + "    and COD_SUBCLIENTE 	 = '$codSubcliente'"
+                        + "    and NRO_PLANILLA   	 = '${ListaClientes.codVendedor}'"
+                        + "    and FECHA ='${funcion.getFechaActual()}' "
+                        + "    and NRO_REGISTRO_REF ='0' ")
                 funcion.ejecutar(sql, context)
                 MainActivity.bd!!.setTransactionSuccessful()
                 MainActivity.bd!!.endTransaction()
@@ -96,25 +127,27 @@ class EnviarSD {
     }
 
     private fun sqlCabecera():String {
-        return ("SELECT COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,COD_CLIENTE,COD_SUBCLIENTE,id "
+        return ("SELECT COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,COD_CLIENTE,COD_SUBCLIENTE,NRO_REGISTRO_REF,id "
                 +  "  FROM svm_solicitud_dev_cab "
                 +  " WHERE COD_CLIENTE  	= '$codCliente' "
                 +  "   AND COD_SUBCLIENTE 	= '$codSubcliente' "
                 +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                 +  "   AND FECHA         	= '${funcion.getFechaActual()}' "
+                +  "   AND NRO_REGISTRO_REF = '$nroRegistroRef' "
                 +  "   AND EST_ENVIO		= 'N' ")
     }
 
     private fun sqlDetalle():String{
-        return ("SELECT COD_EMPRESA      , NRO_PLANILLA   , COD_VENDEDOR , NRO_REGISTRO_REF, "
-                       + "        COD_CLIENTE      , COD_SUBCLIENTE , COD_ARTICULO , "
-                       + "        COD_UNIDAD_REL   , CANTIDAD       , COD_PENALIDAD, PAGO "
-                       + "   FROM svm_solicitud_dev_det "
-                       + "  WHERE COD_CLIENTE  	 = '$codCliente' "
-                       + "    AND COD_SUBCLIENTE = '$codSubcliente' "
-                       + "    AND NRO_PLANILLA 	 = '${ListaClientes.codVendedor}' "
-                       + "    AND FECHA 		 = '${funcion.getFechaActual()}' "
-                       + "    AND EST_ENVIO		 = 'N' ")
+        return ("  SELECT COD_EMPRESA      , NRO_PLANILLA   , COD_VENDEDOR , NRO_REGISTRO_REF, "
+               + "        COD_CLIENTE      , COD_SUBCLIENTE , COD_ARTICULO , "
+               + "        COD_UNIDAD_REL   , CANTIDAD       , COD_PENALIDAD, PAGO "
+               + "   FROM svm_solicitud_dev_det "
+               + "  WHERE COD_CLIENTE  	   = '$codCliente' "
+               + "    AND COD_SUBCLIENTE   = '$codSubcliente' "
+               + "    AND NRO_PLANILLA 	   = '${ListaClientes.codVendedor}' "
+               + "    AND FECHA 		   = '${funcion.getFechaActual()}' "
+               + "    AND EST_ENVIO		   = 'N' "
+               + "    AND NRO_REGISTRO_REF = '$nroRegistroRef' ")
     }
 
     private fun cargarCabecera(cursor: Cursor){
@@ -135,7 +168,7 @@ class EnviarSD {
 
         for (i : Int in 0 until cursor.count) {
             val codEmpresa = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
-            val nroRegistroRef: String = funcion.dato(cursor,"id")
+            val nroRegistroRef: String = funcion.dato(cursor,"NRO_REGISTRO_REF")
             val codVendedor: String = ListaClientes.codVendedor
 
             cadena += "$cabecera '$codEmpresa','${codVendedor}','1','$codCliente"

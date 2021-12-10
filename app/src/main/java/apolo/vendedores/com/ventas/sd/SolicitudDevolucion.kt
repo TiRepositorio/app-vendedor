@@ -15,7 +15,6 @@ import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.ListaClientes
 import kotlinx.android.synthetic.main.activity_solicitud_devolucion.*
-import kotlinx.android.synthetic.main.activity_solicitud_devolucion.accion
 import kotlinx.android.synthetic.main.sd_detalle.*
 import kotlinx.android.synthetic.main.sd_enviados.*
 import kotlinx.android.synthetic.main.sd_productos.*
@@ -63,6 +62,8 @@ class SolicitudDevolucion : AppCompatActivity() {
         btEnviar.setOnClickListener{enviarSD()}
         inicializaETAccion(accion)
         inicializaETCodCliente(etCodCliente)
+        cargarDetalle()
+        cargarEnviado()
     }
 
     @SuppressLint("SetTextI18n")
@@ -225,6 +226,33 @@ class SolicitudDevolucion : AppCompatActivity() {
         })
     }
 
+    private fun nroRegistroRef():Int{
+        var sql = "select VERSION " +
+                "    from svm_vendedor_pedido " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+        var cursor = EnviarSD.funcion.consultar(sql)
+        var servidor = 0
+        if (cursor.count > 0){
+            servidor = EnviarSD.funcion.datoEntero(cursor,"VERSION")
+        }
+
+        sql = "select max(id) id from svm_solicitud_dev_cab " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+        cursor = EnviarSD.funcion.consultar(sql)
+        var telefono = 0
+        if (cursor.count > 0){
+            telefono = EnviarSD.funcion.datoEntero(cursor,"id")
+        }
+
+        return if (telefono > servidor){
+            telefono + 1
+        } else {
+            servidor + 1
+        }
+    }
+
     private fun registrarSDDetalle(): Boolean {
         val resultado: Boolean
         val orden: String = (funcion.ultimoNroOrden("svm_solicitud_dev_det") + 1).toString() + ""
@@ -237,6 +265,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         misValues.put("COD_VENDEDOR", ListaClientes.codVendedor)
         misValues.put("COD_CLIENTE", etCodCliente.text.toString().split("-")[0].trim())
         misValues.put("COD_SUBCLIENTE", etCodCliente.text.toString().split("-")[1].trim())
+//        misValues.put("NRO_REGISTRO_REF", "0")
         misValues.put("NRO_REGISTRO_REF", "0")
         misValues.put("COD_ARTICULO", listaProductos[posProducto]["COD_ARTICULO"])
         misValues.put("DESC_ARTICULO", listaProductos[posProducto]["DESC_ARTICULO"])
@@ -299,6 +328,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                          + "    AND COD_CLIENTE 	= '" + etCodCliente.text.toString().split("-")[0].trim() + "' "
                          + "    AND COD_ARTICULO	= '" + listaProductos[posProducto]["COD_ARTICULO"] + "' "
                          + "    AND EST_ENVIO		= 'N'"
+                         + "    AND NRO_REGISTRO_REF= '0'"
                          + "    AND COD_UNIDAD_REL 	= '" + fspUM.getDato("COD_UNIDAD_REL") + "' ")
         return funcion.consultar(sql).count <= 0
     }
@@ -351,7 +381,10 @@ class SolicitudDevolucion : AppCompatActivity() {
                             +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
                             +  "   AND EST_ENVIO 		= 'N' ")
-                    runOnUiThread { funcion.ejecutar(sql, this) }
+                    Thread.sleep(1000)
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
 
                     sql = ("UPDATE svm_solicitud_dev_cab set EST_ENVIO = 'S' "
                             +  " WHERE COD_CLIENTE  	= '${EnviarSD.codCliente}' "
@@ -359,7 +392,10 @@ class SolicitudDevolucion : AppCompatActivity() {
                             +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
                             +  "   AND EST_ENVIO 		= 'N' ")
-                    runOnUiThread { funcion.ejecutar(sql, this) }
+                    Thread.sleep(1000)
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
+                    runOnUiThread { MainActivity.bd!!.execSQL(sql) }
 //                    funcion.mensaje(context,"Operación existosa!", respuesta)
                     runOnUiThread {
                         val dialogo = DialogoAutorizacion(this)

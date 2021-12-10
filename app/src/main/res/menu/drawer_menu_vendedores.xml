@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    tools:ignore="HardcodedText">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/vendVenta"
             android:icon="@drawable/ic_venta"
-            android:title="Pre-Venta"/>
+            android:title="Pre-Venta" />
         <item
             android:id="@+id/vendReportes"
             android:icon="@drawable/ic_dolar"
@@ -32,6 +33,10 @@
             android:id="@+id/vendActualizar"
             android:icon="@drawable/ic_actualizar"
             android:title="Actualizar versión"/>
+        <item
+            android:id="@+id/vendAcercaDe"
+            android:icon="@drawable/ic_acerca"
+            android:title="Acerca de"/>
         <item
             android:id="@+id/vendSalir"
             android:icon="@drawable/ic_persona"

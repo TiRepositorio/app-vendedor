@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".configurar.AcercaDe">
+    tools:context=".configurar.AcercaDe"
+    tools:ignore="HardcodedText,ContentDescription,SmallSp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,20 +14,86 @@
         android:gravity="center"
         android:background="#202026">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contacto:"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#cccccc"/>
-        <TextView
-            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="50dp"
+            >
+
+            <TextView
+                android:id="@+id/tvTituloAplicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vendedores"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#cccccc" />
+            <TextView
+                android:id="@+id/tvVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v.00.20211204"
+                android:textSize="15sp"
+                android:textColor="#cccccc"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Esequias de Souza"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="#cccccc"/>
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="50dp"
+            >
+
+            <TextView
+                android:id="@+id/tvBuscarActualizacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Buscar actualizaciones"
+                android:textSize="12sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/tvAutor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/info_de_app"
+                android:textSize="10sp"
+                android:textColor="#cccccc" />
+            <Button
+                android:id="@+id/btActualizar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descargar actualización"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+            <EditText
+                android:id="@+id/accion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

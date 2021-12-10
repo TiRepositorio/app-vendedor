@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_acerca_de.xml" value="0.264" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_catastrar_cliente.xml" value="0.25416666666666665" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_configurar_usuario.xml" value="0.1" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/activity_lista_de_precios.xml" value="0.2" />
@@ -14,6 +15,7 @@
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/list_clientes_catastrados5.xml" value="0.14947916666666666" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/menu_cab_vendedores.xml" value="0.1" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/progres_dialog.xml" value="0.165625" />
+        <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/ven_lista_sd_enviados.xml" value="0.21296296296296297" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/ventana_principal.xml" value="0.1" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/menu/drawer_menu_vendedores.xml" value="0.4" />
       </map>

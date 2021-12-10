@@ -9,6 +9,7 @@ import android.net.TrafficStats
 import android.os.AsyncTask
 import android.os.Process
 import android.view.Window
+import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import apolo.vendedores.com.MainActivity2
@@ -18,6 +19,7 @@ import apolo.vendedores.com.utilidades.DialogoAutorizacion
 
 class ActualizarVersion {
 
+    @SuppressLint("StaticFieldLeak")
     companion object{
         @SuppressLint("StaticFieldLeak")
         lateinit var context : Context
@@ -29,6 +31,7 @@ class ActualizarVersion {
         var uid = Process.myUid()
         var urx = 0f
         lateinit var miDialogo : MyProgressDialog
+        lateinit var etAccion : EditText
     }
 
     fun preparaActualizacion(){
@@ -69,7 +72,7 @@ class ActualizarVersion {
             if (estado) {
                 mensaje = "El sistema será actualizado por una nueva versión!!"
                 val dialogoAccion = DialogoAutorizacion(context)
-                dialogoAccion.dialogoAccion("ACTUALIZAR",MainActivity2.etAccion,mensaje,"Atención!","OK")
+                dialogoAccion.dialogoAccion("ACTUALIZAR",etAccion,mensaje,"Atención!","OK")
             } else {
                 mensaje = "Fallo al bajar la actualización!!\n"
                 mensaje += ConexionWS.resultados

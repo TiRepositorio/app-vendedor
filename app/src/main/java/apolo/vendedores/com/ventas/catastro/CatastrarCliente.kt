@@ -760,6 +760,16 @@ class CatastrarCliente : Activity() {
             if (tv.text.toString().length > 50) {
                 tv.text = tv.text.toString().substring(0, 50)
             }
+            if (tv.id == tvLatitud.id || tv.id == tvLongitud.id){
+                if (tv.text.toString().trim() == "0.0"){
+                    Toast.makeText(
+                        this@CatastrarCliente,
+                        "Ubicación incorrecta",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return false
+                }
+            }
             true
         }
     }

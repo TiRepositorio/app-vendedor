@@ -158,6 +158,7 @@ class FuncionesDispositivo(var context: Context) {
         return true
     }
 */
+
     fun verificaRoot():Boolean{
         return try {
             Runtime.getRuntime().exec("su")
