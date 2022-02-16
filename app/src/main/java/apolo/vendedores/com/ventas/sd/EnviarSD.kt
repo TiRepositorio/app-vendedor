@@ -102,11 +102,6 @@ class EnviarSD {
                 MainActivity.bd!!.beginTransaction()
                 MainActivity.bd!!.insert("svm_solicitud_dev_cab",campos,valores)
 
-                var xid = "0"
-                val cursor2 = funcion.consultar("SELECT max(id) xid from svm_solicitud_dev_cab")
-                if (cursor2.count > 0) {
-                    xid = funcion.dato(cursor2,"xid")
-                }
                 val sql = ("update svm_solicitud_dev_det "
                         + "    set GRABADO_CAB 		 = 'S', "
                         + "        NRO_REGISTRO_REF  = '${nroRegistroRef}' "

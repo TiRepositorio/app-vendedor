@@ -31,6 +31,7 @@ class ActualizarVersion {
         var uid = Process.myUid()
         var urx = 0f
         lateinit var miDialogo : MyProgressDialog
+        @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
     }
 
