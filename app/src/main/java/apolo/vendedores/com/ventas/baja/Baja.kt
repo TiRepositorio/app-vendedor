@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -53,6 +54,20 @@ class Baja: AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun inicializar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ||
+            !ubicacion.validaUbicacionSimulada(lm)||
+            !ubicacion.validaUbicacionSimulada2(lm)){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         funcion = FuncionesUtiles(this)
         ubicacion = FuncionesUbicacion(this)
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager

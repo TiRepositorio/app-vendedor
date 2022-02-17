@@ -6,12 +6,15 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
@@ -23,7 +26,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.text.DecimalFormat
-import java.util.*
 
 @Suppress("DEPRECATION", "ClassName")
 class Sincronizacion : AppCompatActivity() {
@@ -37,10 +39,15 @@ class Sincronizacion : AppCompatActivity() {
         var primeraVez = false
         var nf = DecimalFormat("000")
     }
-
+    var dispositivo = FuncionesDispositivo(this)
+    var ubicacion = FuncionesUbicacion(this)
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
     lateinit var enviarMarcacion : EnviarMarcacion
     lateinit var enviarNoventa   : NoVenta
+    private lateinit var lm: LocationManager
+    private lateinit var telMgr : TelephonyManager
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Suppress("ClassName")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +58,38 @@ class Sincronizacion : AppCompatActivity() {
         enviarMarcacion = EnviarMarcacion("","")
         enviarNoventa = NoVenta("","",null,null,"","")
         imeiBD = ""
+        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (FuncionesUtiles.usuario["CONF"].equals("N")){
+            btFinalizar.visibility = View.VISIBLE
+            return
+        }
+        if (!dispositivo.horaAutomatica()){
+            tvImei.text = "Debe configurar su hora de manera automatica"
+            btFinalizar.visibility = View.VISIBLE
+            return
+        }
+        if (!dispositivo.zonaHoraria()){
+            tvImei.text = "La zona horaria no coincide con America/Asuncion"
+            btFinalizar.visibility = View.VISIBLE
+            return
+        }
+        if (!dispositivo.modoAvion()){
+            tvImei.text = "Debe desactivar el modo avion"
+            btFinalizar.visibility = View.VISIBLE
+            return
+        }
+        if (!dispositivo.tarjetaSim(telMgr)){
+            tvImei.text = "Insertar SIM para realizar la operacion"
+            btFinalizar.visibility = View.VISIBLE
+            return
+        }
+        if (!ubicacion.validaUbicacionSimulada(lm) || !ubicacion.validaUbicacionSimulada(lm)){
+            if (Build.VERSION.SDK_INT > 22){
+                tvImei.text = "Debe habilitar las ubicaciones simuladas para esta aplicacion"
+            } else {
+                tvImei.text = "Debe deshabilitar las ubicaciones simuladas"
+            }
             btFinalizar.visibility = View.VISIBLE
             return
         }

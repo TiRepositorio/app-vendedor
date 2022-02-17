@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.asistencia.Marcacion
@@ -76,7 +77,21 @@ class ListaClientes : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    fun inicializarElementos(){
+    fun inicializarElementos(){val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         funcion.inicializaContadores()
         funcion.addItemSpinner(this,"Codigo-Nombre-Ciudad","COD_CLIENTE-DESC_SUBCLIENTE-desc_ciudad")
         funcion.inicializaContadores()

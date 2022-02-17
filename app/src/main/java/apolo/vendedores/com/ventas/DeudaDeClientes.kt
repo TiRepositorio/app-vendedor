@@ -1,19 +1,27 @@
 package apolo.vendedores.com.ventas
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
+import apolo.vendedores.com.utilidades.FuncionesDispositivo
+import apolo.vendedores.com.utilidades.FuncionesUbicacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_deuda_de_clientes.*
@@ -54,7 +62,25 @@ class DeudaDeClientes : AppCompatActivity(), NavigationView.OnNavigationItemSele
         inicializarElementos()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun inicializarElementos(){
+        val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ||
+            !ubicacion.validaUbicacionSimulada(lm)||
+            !ubicacion.validaUbicacionSimulada2(lm)){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         barraMenu.setNavigationItemSelectedListener(this)
         actualizarDatos(ibtnAnterior)
         actualizarDatos(ibtnSiguiente)

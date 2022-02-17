@@ -1,23 +1,31 @@
 package apolo.vendedores.com.ventas
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.Adapter
+import apolo.vendedores.com.utilidades.FuncionesDispositivo
+import apolo.vendedores.com.utilidades.FuncionesUbicacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.activity_promociones.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
 class Promociones : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_promociones)
@@ -39,7 +47,23 @@ class Promociones : AppCompatActivity() {
     private lateinit var listaPromociones : ArrayList<HashMap<String, String>>
     private var inNro = ""
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun inicializarElementos(){
+        val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         funcion = FuncionesUtiles(this, imgTitulo, tvTitulo, llBuscar, spBuscar, etBuscar, btBuscar)
         funcion.cargarTitulo(R.drawable.ic_promocion, "Promociones")
         funcion.addItemSpinner(this, "Número-Descripción", "NRO_PROMOCION-DESCRIPCION")

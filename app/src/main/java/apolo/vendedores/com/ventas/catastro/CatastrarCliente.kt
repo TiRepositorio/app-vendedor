@@ -1,22 +1,28 @@
 package apolo.vendedores.com.ventas.catastro
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
@@ -26,7 +32,6 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CatastrarCliente : Activity() {
@@ -75,6 +80,7 @@ class CatastrarCliente : Activity() {
     private lateinit var thread: Thread
 
     val funcion = FuncionesUtiles(this)
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("SourceLockedOrientationActivity", "SetTextI18n")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +90,24 @@ class CatastrarCliente : Activity() {
         tvmLatitud = tvLatitud
         tvmLongitud = tvLongitud
         foto = FuncionesFoto(this)
+
+        val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ||
+            !ubicacion.validaUbicacionSimulada(lm)||
+            !ubicacion.validaUbicacionSimulada2(lm)){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
 
         obtieneCodCliente(codVendedor)
         val imgBuscarCliente = findViewById<View>(R.id.imgBuscarCliente) as ImageButton

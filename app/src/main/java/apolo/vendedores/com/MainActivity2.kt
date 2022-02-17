@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,10 +36,7 @@ import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
-import kotlinx.android.synthetic.main.activity_main2.accion
-import kotlinx.android.synthetic.main.activity_marcacion.*
 import kotlinx.android.synthetic.main.ven_pri_accesos.*
-import kotlinx.android.synthetic.main.ven_pri_evol_diaria_de_venta.*
 import kotlinx.android.synthetic.main.ventana_principal.*
 import java.io.File
 import java.io.IOException
@@ -66,6 +64,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     )
     private lateinit var telMgr : TelephonyManager
     private lateinit var dispositivo : FuncionesDispositivo
+    private lateinit var ubicacion : FuncionesUbicacion
+    private lateinit var lm: LocationManager
 
     private lateinit var grafico : Graficos
     private var subInforme1 = SubVentasPorMarcas()
@@ -104,6 +104,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         dispositivo = FuncionesDispositivo(this)
         rooteado = dispositivo.verificaRoot()
+        ubicacion = FuncionesUbicacion(this)
+        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
@@ -133,17 +135,29 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         ibt1Acceso.setOnClickListener {
-            if (dispositivo.fechaCorrecta()) {
+            if (dispositivo.fechaCorrecta() &&
+                dispositivo.horaAutomatica() &&
+                dispositivo.modoAvion() &&
+                dispositivo.zonaHoraria() &&
+                dispositivo.tarjetaSim(telMgr)) {
                 startActivity(Intent(this, ExtractoDeSalario::class.java))
             }
         }
         ibt2Acceso.setOnClickListener {
-            if (dispositivo.fechaCorrecta()) {
+            if (dispositivo.fechaCorrecta() &&
+                dispositivo.horaAutomatica() &&
+                dispositivo.modoAvion() &&
+                dispositivo.zonaHoraria() &&
+                dispositivo.tarjetaSim(telMgr)) {
                 startActivity(Intent(this, ComprobantesPendientes::class.java))
             }
         }
         ibt3Acceso.setOnClickListener {
-            if (dispositivo.fechaCorrecta()) {
+            if (dispositivo.fechaCorrecta() &&
+                dispositivo.horaAutomatica() &&
+                dispositivo.modoAvion() &&
+                dispositivo.zonaHoraria() &&
+                dispositivo.tarjetaSim(telMgr)) {
                 startActivity(Intent(this, VentasPorCliente::class.java))
             }
         }
@@ -210,11 +224,18 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.vendConfigurar  != menuItem.itemId &&
             R.id.vendSincronizar != menuItem.itemId &&
             R.id.vendAcercaDe    != menuItem.itemId &&
-            R.id.vendSalir       != menuItem.itemId ){
-            if (!dispositivo.fechaCorrecta()){
-                funcion.toast(this,"Debe sincronizar para continuar.")
-                return false
-            }
+            R.id.vendSalir       != menuItem.itemId ) {
+                if (!dispositivo.horaAutomatica() ||
+                    !dispositivo.modoAvion() ||
+                    !dispositivo.zonaHoraria() ||
+                    !dispositivo.tarjetaSim(telMgr)) {
+                    funcion.toast(this,"Verifique su configuración para continuar.")
+                    return false
+                }
+                if (!dispositivo.fechaCorrecta()) {
+                    funcion.toast(this,"Debe sincronizar para continuar.")
+                    return false
+                }
         }
         val menu = DialogoMenu(this)
         EnviarMarcacion.contexto = this

@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "73"
-        const val fechaVersion : String = "20220103"
+        const val version : String = "74"
+        const val fechaVersion : String = "20220217"
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         @SuppressLint("StaticFieldLeak")
         lateinit var dispositivo : FuncionesDispositivo
         lateinit var telMgr : TelephonyManager
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

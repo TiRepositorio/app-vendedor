@@ -1,8 +1,12 @@
 package apolo.vendedores.com.ventas
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.CheckBox
@@ -13,6 +17,8 @@ import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.DialogoAutorizacion
+import apolo.vendedores.com.utilidades.FuncionesDispositivo
+import apolo.vendedores.com.utilidades.FuncionesUbicacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 
@@ -38,6 +44,23 @@ class ModificarCliente : AppCompatActivity() {
     }
 
     fun inicializarElementos(){
+        val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ||
+            !ubicacion.validaUbicacionSimulada(lm)||
+            !ubicacion.validaUbicacionSimulada2(lm)){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         codCliente = ListaClientes.codCliente
         codSubcliente = ListaClientes.codSubcliente
         cargar(funcion.consultar(sqlModificar()),funcion.consultar(sqlCliente()))

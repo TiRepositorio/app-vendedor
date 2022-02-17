@@ -1,17 +1,21 @@
 package apolo.vendedores.com.ventas
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
-import apolo.vendedores.com.utilidades.Adapter
-import apolo.vendedores.com.utilidades.FuncionesUtiles
-import apolo.vendedores.com.utilidades.SentenciasSQL
+import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_promotores.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 
@@ -27,6 +31,7 @@ class Promotores : AppCompatActivity() {
 
     private var posicion = 0
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_promotores)
@@ -38,7 +43,23 @@ class Promotores : AppCompatActivity() {
         inicializarElementos()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializarElementos(){
+        val dispositivo = FuncionesDispositivo(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MainActivity2.rooteado = dispositivo.verificaRoot()
+        }
+        val ubicacion = FuncionesUbicacion(this)
+        val lm: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        val telMgr : TelephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        if (!dispositivo.horaAutomatica() ||
+            !dispositivo.modoAvion() ||
+            !dispositivo.zonaHoraria() ||
+            !dispositivo.tarjetaSim(telMgr) ){
+            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            finish()
+        }
         funcion.inicializaContadores()
         funcion.addItemSpinner(this,"Codigo-Nombre","a.COD_VENDEDOR-a.DESC_VENDEDOR")
         funcion.inicializaContadores()
