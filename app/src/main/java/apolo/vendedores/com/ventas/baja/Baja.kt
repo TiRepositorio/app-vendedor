@@ -16,6 +16,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
@@ -54,6 +55,12 @@ class Baja: AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun inicializar(){
+        dispositivo = FuncionesDispositivo(this)
+        funcion = FuncionesUtiles(this)
+        ubicacion = FuncionesUbicacion(this)
+        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        ubicacion.obtenerUbicacion(lm)
+        foto = FuncionesFoto(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             MainActivity2.rooteado = dispositivo.verificaRoot()
         }
@@ -65,15 +72,9 @@ class Baja: AppCompatActivity() {
             !dispositivo.tarjetaSim(telMgr) ||
             !ubicacion.validaUbicacionSimulada(lm)||
             !ubicacion.validaUbicacionSimulada2(lm)){
-            MainActivity2.funcion.toast(this,"Verifique su configuración para continuar.")
+            MainActivity.funcion.toast(this,"Verifique su configuración para continuar.")
             finish()
         }
-        funcion = FuncionesUtiles(this)
-        ubicacion = FuncionesUbicacion(this)
-        lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        ubicacion.obtenerUbicacion(lm)
-        dispositivo = FuncionesDispositivo(this)
-        foto = FuncionesFoto(this)
         imgBuscarCliente.setOnClickListener { buscar() }
         etCodigo()
         btVolver.setOnClickListener { finish() }
@@ -279,7 +280,7 @@ class Baja: AppCompatActivity() {
         thread = Thread{
             runOnUiThread{ dialogo.cargarDialogo("Comprobando conexion",false) }
             try {
-                EnviarBaja.resultado = MainActivity2.conexionWS.enviarBaja(codVendedor,codCliente,codSubcliente,
+                EnviarBaja.resultado = MainActivity.conexionWS.enviarBaja(codVendedor,codCliente,codSubcliente,
                     EnviarBaja.cliente,
                     EnviarBaja.fotoFachada
                 )
@@ -289,13 +290,13 @@ class Baja: AppCompatActivity() {
             runOnUiThread {
                 dialogo.cerrarDialogo()
                 if (EnviarBaja.resultado.split("*")[0].trim() == "01") {
-                    MainActivity2.funcion.mensaje(
+                    MainActivity.funcion.mensaje(
                         EnviarBaja.context,
                         "Atención",
                         "Se guardó correctamente"
                     )
                 } else {
-                    MainActivity2.funcion.mensaje(
+                    MainActivity.funcion.mensaje(
                         EnviarBaja.context,
                         "Error al intentar enviar",
                         "No se ha podido enviar el archivo, intente más tarde.\n${EnviarBaja.resultado}"
