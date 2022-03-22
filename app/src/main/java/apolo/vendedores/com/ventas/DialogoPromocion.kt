@@ -197,6 +197,26 @@ class DialogoPromocion(
         dialogo.show()
     }
 
+    fun calcularTotal(){
+        if (dialogo.trCombo.visibility != View.GONE){
+            return
+        }
+        if (dialogo.tvdCantidadPromo.text.toString().trim().isEmpty()){
+            dialogo.tvdTotalPromo.text = "0"
+            lista[posicion]["CANTIDAD"] = "0"
+            lista[posicion]["PREC_CAJA"] = "0"
+        } else {
+            if (dialogo.tvdCantidadPromo.text.toString().trim().isEmpty()){
+                dialogo.tvdCantidadPromo.setText("0")
+            }
+            val subtotal = dialogo.tvdPrecioReferenciaPromo.text.toString().replace(".","").toInt() * dialogo.tvdCantidadPromo.text.toString().toInt()
+            dialogo.tvdTotalPromo.text = funcion.entero(subtotal)
+            lista[posicion]["CANTIDAD"] = dialogo.tvdCantidadPromo.text.toString()
+            lista[posicion]["SUBTOTAL"] = dialogo.tvdTotalPromo.text.toString()
+            lista[posicion]["PREC_CAJA"] = dialogo.tvdPrecioReferenciaPromo.text.toString()
+        }
+    }
+
     private fun spReferencias(position:Int){
         val campos : String = " a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
                 " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
@@ -216,6 +236,7 @@ class DialogoPromocion(
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 dialogo.tvdPrecioReferenciaPromo.text = fspReferencia.getDato("PRECIO")
                 lista[posicion]["COD_UNIDAD_MEDIDA"] = fspReferencia.getDato("COD_UNIDAD_REL")
+                calcularTotal()
             }
         }
         dialogo.spReferenciaPromo.setSelection(0)
