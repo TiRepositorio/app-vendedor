@@ -14,7 +14,6 @@ import apolo.vendedores.com.utilidades.FuncionesDispositivo
 import apolo.vendedores.com.utilidades.FuncionesUbicacion
 import apolo.vendedores.com.utilidades.FuncionesUtiles
 import java.text.NumberFormat
-import java.util.*
 import kotlin.math.roundToInt
 
 class EnviarPedido(
@@ -216,8 +215,11 @@ class EnviarPedido(
                 } else {
                     "$detalles$sql2;"
                 }
-                cursor.moveToNext()
-                if (funcion.dato(cursor,"NRO_PROMOCION").isEmpty()){
+                val articuloVal = funcion.dato(cursor,"COD_ARTICULO")
+                val codUnidadMedidaVal = funcion.dato(cursor,"COD_UNIDAD_MEDIDA")
+                val precioUnitarioConIva = funcion.dato(cursor,"PRECIO_UNITARIO_C_IVA")
+                val nroPromocionVal = funcion.dato(cursor,"NRO_PROMOCION").trim()
+                if (funcion.dato(cursor,"NRO_PROMOCION").trim().isEmpty()){
                     if (!validarPedido(funcion.dato(cursor,"COD_ARTICULO"),
                             cabeceraHash["COD_LISTA_PRECIO"].toString(),
                             funcion.dato(cursor,"COD_UNIDAD_MEDIDA"),
@@ -227,6 +229,7 @@ class EnviarPedido(
                         return false
                     }
                 }
+                cursor.moveToNext()
             }
             try {
                 val t: Double = Pedidos.etTotalPedidos.text.toString().replace(".", "").replace(",", ".").toDouble()
@@ -261,7 +264,8 @@ class EnviarPedido(
                 " and b.COD_LISTA_PRECIO = '" + codListaPrecio + "' " +
                 " and a.COD_UNIDAD_REL = '" + um + "' "
         val curPrecio = funcion.consultar(sql)
-        return(funcion.dato(curPrecio,"PRECIO") == precio)
+        val precioArt = funcion.numero(Pedidos.decimales,funcion.dato(curPrecio,"PRECIO"),false).replace(".","")
+        return(precioArt == precio)
     }
 
     init {

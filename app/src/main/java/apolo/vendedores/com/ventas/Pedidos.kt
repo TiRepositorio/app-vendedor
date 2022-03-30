@@ -31,8 +31,6 @@ import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.math.round
 
 class Pedidos : AppCompatActivity() {
@@ -79,6 +77,7 @@ class Pedidos : AppCompatActivity() {
         lateinit var spCondicionDeVenta : FuncionesSpinner
         @SuppressLint("StaticFieldLeak")
         lateinit var spReferencias : FuncionesSpinner
+        var decimales = ""
     }
 
     lateinit var funcion : FuncionesUtiles
@@ -98,7 +97,6 @@ class Pedidos : AppCompatActivity() {
     var codListaPrecio = ""
     var codMoneda = ""
     private var diasInicial = 0
-    var decimales = ""
     private var indActualizado = false
     val dialogoCB = ProgressDialog(this)
 
@@ -2022,11 +2020,11 @@ class Pedidos : AppCompatActivity() {
         val progressDialog = ProgressDialog(this)
         progressDialog.cargarDialogo("Procesando...",false)
         val sql = "SELECT * FROM vt_pedidos_cab " +
-                " WHERE TRIM(NUMERO)             = '$maximo'                                 " +
-                "   AND TRIM(COD_CLIENTE)        = '${ListaClientes.codCliente.trim()}'      " +
-                "   AND TRIM(COD_SUBCLIENTE)     = '${ListaClientes.codSubcliente.trim()}'   " +
-                "   AND TRIM(COD_VENDEDOR)       = '${ListaClientes.codVendedor.trim()}'     " +
-                "   AND TRIM(COD_EMPRESA)        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'                                       " +
+                " WHERE TRIM(NUMERO)             = '$maximo'                                   " +
+                "   AND TRIM(COD_CLIENTE)        = '${ListaClientes.codCliente.trim()}'        " +
+                "   AND TRIM(COD_SUBCLIENTE)     = '${ListaClientes.codSubcliente.trim()}'     " +
+                "   AND TRIM(COD_VENDEDOR)       = '${ListaClientes.codVendedor.trim()}'       " +
+                "   AND TRIM(COD_EMPRESA)        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
                 ""
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         if (lista.size == 0){

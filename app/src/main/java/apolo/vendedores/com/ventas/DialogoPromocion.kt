@@ -220,8 +220,8 @@ class DialogoPromocion(
     private fun spReferencias(position:Int){
         val campos : String = " a.REFERENCIA , a.MULT, a.DIV        , a.IND_BASICO      , " +
                 " a.COD_IVA    , a.PORC_IVA           , a.COD_UNIDAD_REL  , " +
-                " (b.CANT_MINIMA/a.mult) CANT_MINIMA  , " +
-                " CASE WHEN a.COD_UNIDAD_REL = '01' THEN b.PREC_UNID ELSE b.PREC_CAJA END AS PRECIO "
+                " (CAST(b.CANT_MINIMA as integer)/CAST(a.mult as integer)) CANT_MINIMA  ,  " +
+                " CAST((CAST(IFNULL(b.PREC_CAJA,1) AS DOUBLE)/CAST(IFNULL(b.MULT,1) AS DOUBLE)) * CAST(IFNULL(a.MULT,1) AS DOUBLE) AS DOUBLE) PRECIO "
         val tabla = " svm_st_articulos a, svm_articulos_precios b "
         val where : String = "     a.COD_ARTICULO = '" + lista[position]["COD_ARTICULO"] + "' " +
                 " and a.COD_ARTICULO = b.COD_ARTICULO and b.COD_VENDEDOR = '" + ListaClientes.codVendedor + "' " +
@@ -234,7 +234,7 @@ class DialogoPromocion(
         dialogo.spReferenciaPromo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(p0: AdapterView<*>?) { return }
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                dialogo.tvdPrecioReferenciaPromo.text = fspReferencia.getDato("PRECIO")
+                dialogo.tvdPrecioReferenciaPromo.text = funcion.numero(Pedidos.decimales,fspReferencia.getDato("PRECIO"),false)
                 lista[posicion]["COD_UNIDAD_MEDIDA"] = fspReferencia.getDato("COD_UNIDAD_REL")
                 calcularTotal()
             }
