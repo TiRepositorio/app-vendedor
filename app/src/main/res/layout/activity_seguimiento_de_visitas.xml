@@ -102,44 +102,70 @@
                             android:id="@+id/tvd3"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="Cant." />
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="Cli. Sem." />
 
                         <TextView
                             android:id="@+id/tvd4"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="Vta. Pres." />
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="Total Visita" />
 
                         <TextView
                             android:id="@+id/tvd5"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="Vendido" />
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="(%) Visita"
+                            android:layout_weight="1"/>
 
                         <TextView
                             android:id="@+id/tvd6"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="No venta" />
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="No Visitado" />
+
 
                         <TextView
                             android:id="@+id/tvd7"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="No Aten." />
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="Fuera Ruta" />
 
                         <TextView
                             android:id="@+id/tvd8"
                             style="@style/cabeceraTabla"
                             android:layout_width="80dp"
-                            android:gravity="end"
-                            android:text="Porc."
-                            android:layout_weight="1"/>
+                            android:gravity="center_vertical|end"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
+                            android:autoSizeMinTextSize="5sp"
+                            android:autoSizeMaxTextSize="100sp"
+                            android:text="En Pareja" />
+
 
                     </TableRow>
 

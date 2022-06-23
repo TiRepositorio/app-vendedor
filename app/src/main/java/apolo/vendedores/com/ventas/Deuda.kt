@@ -48,6 +48,7 @@ class Deuda : AppCompatActivity() {
                 + " WHERE COD_CLIENTE       = '" + codigo.split("-")[0] + "'  "
                 + "   AND COD_SUBCLIENTE    = '" + codigo.split("-")[1] + "'  "
 //                    + " COD_VENDEDOR      = '" + ListaClientes.codVendedor  + "' "
+                + "    AND COD_EMPRESA IN (SELECT DISTINCT COD_EMPRESA FROM svm_vendedor_pedido WHERE COD_VENDEDOR = '" + codVen + "')"
                 + " Order By date(substr(FEC_VENCIMIENTO,7) || '-' || "
                 + " substr(FEC_VENCIMIENTO,4,2) || '-' || "
                 + " substr(FEC_VENCIMIENTO,1,2)) "))
@@ -95,6 +96,7 @@ class Deuda : AppCompatActivity() {
                 + "   FROM svm_deuda_cliente "
                 + "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'"
 //                + "    AND COD_VENDEDOR   = '" + codVen + "'"
+                + "    AND COD_EMPRESA IN (SELECT DISTINCT COD_EMPRESA FROM svm_vendedor_pedido WHERE COD_VENDEDOR = '" + codVen + "')"
                 + "    AND COD_CLIENTE      = '" + codigo.split("-")[0] + "'"
                 + "    AND (CAST(DIA_ATRAZO AS NUMBER)) < 0")
         cargarFooter(tvTVenc,tvNVenc,funcion.consultar(sql))
@@ -105,6 +107,7 @@ class Deuda : AppCompatActivity() {
                            "  FROM svm_deuda_cliente " +
                            "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'" +
 //                           "    AND COD_VENDEDOR   = '" + codVen + "'" +
+                           "    AND COD_EMPRESA IN (SELECT DISTINCT COD_EMPRESA FROM svm_vendedor_pedido WHERE COD_VENDEDOR = '" + codVen + "')" +
                            "   AND COD_CLIENTE     = '" + codigo.split("-")[0] + "'" +
                            "   AND (CAST(DIA_ATRAZO AS NUMBER)) >= 0"
         cargarFooter(tvTAVenc,tvNAVenc,funcion.consultar(sql))
@@ -115,6 +118,7 @@ class Deuda : AppCompatActivity() {
                            "  FROM svm_deuda_cliente " +
                            "  WHERE COD_SUBCLIENTE     = '" + codigo.split("-")[1] + "'" +
 //                           "    AND COD_VENDEDOR   = '" + codVen + "'" +
+                           "    AND COD_EMPRESA IN (SELECT DISTINCT COD_EMPRESA FROM svm_vendedor_pedido WHERE COD_VENDEDOR = '" + codVen + "')" +
                            "   AND COD_CLIENTE       = '" + codigo.split("-")[0] + "'"
         cargarFooter(tvTCant,tvNCant,funcion.consultar(sql))
     }

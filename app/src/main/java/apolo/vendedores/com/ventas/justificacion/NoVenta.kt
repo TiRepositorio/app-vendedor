@@ -26,6 +26,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
               private val latitud:String, private val longitud: String) {
 
     companion object{
+        var codEmpresa = ""
         @SuppressLint("StaticFieldLeak")
         lateinit var context  : Context
         @SuppressLint("StaticFieldLeak")
@@ -46,6 +47,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
                         + "   and COD_CLIENTE    = '" + ListaClientes.codCliente + "' "
                         + "   and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "' "
+                        + "   and COD_EMPRESA    = '$codEmpresa' "
                         + "   and FECHA 	  = '" + MainActivity2.funcion.getFechaActual().substring(0, 10) + "'")
                 cursorMarcacionesVisitaBuscar = MainActivity2.funcion.consultar(select)
                 cursorMarcacionesVisitaBuscar.moveToFirst()
@@ -136,6 +138,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 + "   and TRIM(COD_PROMOTOR)   = '" + ListaClientes.codVendedor.trim() + "' "
                 + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim() + "' "
                 + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim() + "' "
+//                + "   and COD_EMPRESA    = '$codEmpresa' "
                 + "   and TRIM(FECHA)          LIKE '${funcion.getFechaActual().trim()}%'"
                 + " order by id desc                        				")
         val cursor: Cursor = funcion.consultar(sql)
@@ -169,6 +172,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         + "   and COD_CLIENTE    = '" + codCliente + "' "
                         + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
                         + "   and FECHA 	     = '" + fechaModificacion + "'"
+                        + "   and COD_EMPRESA    = '$codEmpresa' "
 //                        + "   and id             = '" + id + "' "
                         + "   and COD_MOTIVO NOT IN ('16')")
             fechaMod = ""
@@ -183,6 +187,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                             + " where COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
                             + "   and COD_CLIENTE    = '" + codCliente + "' "
                             + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
+                            + "   and COD_EMPRESA    = '$codEmpresa' "
 //                            + "   and FECHA 	     = '" + fechaModificacion + "'"
                             + "   and id             = '" + id + "' "
                             + "   and COD_MOTIVO NOT IN ('16')")
@@ -207,7 +212,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 val fecha: String = funcion.getFechaActual()
                 alertMotivos.setMessage("Realizada el $fecha")
                 listaMotivos = ArrayList()
-                val cursorMotivos: Cursor = funcion.consultar("select * from spm_motivo_no_venta order by DESC_MOTIVO")
+                val cursorMotivos: Cursor = funcion.consultar("select * from spm_motivo_no_venta where cod_empresa = '$codEmpresa' order by DESC_MOTIVO")
                 funcion.cargarLista(listaMotivos,cursorMotivos)
                 val descMotivo = arrayOfNulls<String?>(cursorMotivos.count)
                 val conSpinner = Spinner(context)
@@ -250,7 +255,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         val horaAlta: String = funcion.getHoraActual()
         if (nuevos){
             guardaMarcacionVisita(
-                FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
+                codEmpresa,
                 ListaClientes.codSucursalCliente,
                 codCliente,
                 codSubcliente,
@@ -268,7 +273,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 }
             }
             noVenta =
-                "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                "'$codEmpresa'," + "'" + ListaClientes.codSucursalCliente + "'," +
                         "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
                         "'" + ListaClientes.codVendedor + "'," +
                         "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"]!! + "'," +
@@ -292,7 +297,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     private fun guardar(conSpinner: Spinner, observacion: EditText, fecha: String){
         val horaAlta: String = funcion.getHoraActual()
         guardaMarcacionVisita(
-            FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
+            codEmpresa,
             ListaClientes.codSucursalCliente,
             ListaClientes.codCliente,
             ListaClientes.codSubcliente,
@@ -338,7 +343,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             alertMotivos.setTitle("         Marcación de visita")
             alertMotivos.setMessage("Realizada el $fecha")
             listaMotivos = ArrayList()
-            val cursorMotivos: Cursor = funcion.consultar("select * from spm_motivo_no_venta order by DESC_MOTIVO")
+            val cursorMotivos: Cursor = funcion.consultar("select * from spm_motivo_no_venta WHERE COD_EMPRESA = '$codEmpresa' order by DESC_MOTIVO")
             val descMotivo = arrayOfNulls<String>(cursorMotivos.count)
             funcion.cargarLista(listaMotivos,cursorMotivos)
             for (i in 0 until listaMotivos.size){
@@ -377,7 +382,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                         dialog.cancel()
                     } else {
                         noVenta =
-                            "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + ListaClientes.codSucursalCliente + "'," +
+                            "'$codEmpresa'," + "'" + ListaClientes.codSucursalCliente + "'," +
                                     "'" + ListaClientes.codCliente + "'," + "'" + ListaClientes.codSubcliente + "'," +
                                     "'" + ListaClientes.codVendedor + "'," +
                                     "'" + listaMotivos[conSpinner.selectedItemPosition]["COD_MOTIVO"] + "'," +
@@ -400,7 +405,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                 alertMotivos.setNeutralButton("Guardar") { _, _ ->
                         try {
                             actualizaMarcacionVisita(
-                                FuncionesUtiles.usuario["COD_EMPRESA"].toString(),
+                                codEmpresa,
                                 ListaClientes.codSucursalCliente,
                                 codCliente,
                                 codSubcliente,
@@ -490,7 +495,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         }
 
         override fun doInBackground(vararg params: Void?): Void? {
-            resultado = MainActivity2.conexionWS.procesaNoVenta(noVenta,ListaClientes.codVendedor)
+            resultado = MainActivity2.conexionWS.procesaNoVenta(noVenta,ListaClientes.codVendedor, codEmpresa)
 //            resultado = "01*GRABADO CON EXITO"
             return null
         }
@@ -515,7 +520,8 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
                             MainActivity2.bd!!.update("vt_marcacion_visita", values,
                                 " COD_CLIENTE = '" + ListaClientes.codCliente + "'" +
                                         "  and COD_SUBCLIENTE = '" + ListaClientes.codSubcliente + "'" +
-                                        "  and id = '$id'",
+                                        "  and id = '$id'" +
+                                        "  AND COD_EMPRESA = '$codEmpresa'",
                                 null
                             )
                             ListaClientes.estado = "E"
@@ -543,7 +549,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         val fecEntrada: String = funcion.getFechaActual() + " " + funcion.getHoraActual()
         // INSERTA CABECERA
         val values = ContentValues()
-        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        values.put("COD_EMPRESA", codEmpresa)
         values.put("COD_PROMOTOR", ListaClientes.codVendedor)
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
@@ -560,7 +566,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
         val sql = "select * from vt_marcacion_visita where FECHA not like '$fecha%' and ESTADO = 'P' "
         val ca = funcion.consultar(sql)
         for (i in 0 until ca.count){
-            noVenta = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," + "'" + funcion.dato(ca,"COD_SUCURSAL") + "'," +
+            noVenta = "'${funcion.dato(ca,"COD_EMPRESA")}'," + "'" + funcion.dato(ca,"COD_SUCURSAL") + "'," +
                     "'" + funcion.dato(ca,"COD_CLIENTE")+
                     "','" + funcion.dato(ca,"COD_SUBCLIENTE") +
                     "','" + funcion.dato(ca,"COD_VENDEDOR")+ "'," +
@@ -588,7 +594,7 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
     }
 
     private fun enviarAnteriores(){
-        resultado = MainActivity2.conexionWS.procesaNoVenta(noVenta,ListaClientes.codVendedor)
+        resultado = MainActivity2.conexionWS.procesaNoVenta(noVenta,ListaClientes.codVendedor, codEmpresa)
         if (resultado.indexOf("01*") >= 0) {
             val values: ContentValues?
             values = ContentValues()

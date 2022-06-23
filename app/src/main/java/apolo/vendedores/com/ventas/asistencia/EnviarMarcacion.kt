@@ -147,7 +147,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
     }
 
     //envia todas las marcaciones del dia anterior
-    fun procesaEnviaMarcaciones(){
+    fun procesaEnviaMarcaciones() {
         val funcion = FuncionesUtiles(contexto)
         var cadena = " "
         val date = MainActivity2.funcion.getFechaActual()
@@ -210,7 +210,7 @@ class EnviarMarcacion(private val codCliente : String, private val codSubcliente
 
         if(cursor1.count > 0){
             val mensaje: Array<String> = MainActivity2.conexionWS.procesaMarcacionAsistenciaAct (
-                FuncionesUtiles.usuario["LOGIN"].toString() , cadena ).split("*").toTypedArray()
+                FuncionesUtiles.usuario["LOGIN"].toString() , cadena, FuncionesUtiles.usuario["COD_EMPRESA"].toString() ).split("*").toTypedArray()
             if (mensaje.size != 1) {
                 if (mensaje[0] == "01") {
                     val update = " UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +

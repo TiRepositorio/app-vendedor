@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".configurar.ConfigurarUsuarioNuevo"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="Configuracion de Usuarios"
+                android:gravity="center_vertical"
+                android:background="#3A94DF"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textColor="#FFFFFF"/>
+
+            android:background="#076807"
+
+            ImageButton
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:paddingRight="50dp"
+                android:id="@+id/ivAgregarUsuario"
+                android:background="#076807"
+                android:textStyle="bold"
+                android:scaleType="centerCrop"
+                android:src="@drawable/plus"
+                android:textColor="#FFFFFF"/>
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/btnAgregar"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:padding="15dp"
+                android:background="#3A94DF"
+                android:src="@drawable/plus"
+                app:cb_color="#3A94DF"
+                app:cb_pressedRingWidth="8dip"  />
+
+
+
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:id="@+id/lvUsuarios"/>
+
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnBorrarTodo"
+                android:text="Borrar Todo"
+                android:layout_margin="5dp"
+                android:textColor="#FFFFFF"
+                style="@style/SingleGradient" />
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnGuardarTodo"
+                android:lines="2"
+                android:text="Guardar"
+                android:layout_margin="5dp"
+                android:textColor="#FFFFFF"
+                style="@style/SingleGradient" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnGuardarSincronizarTodo"
+                android:text="Guardar Y Sincronizar"
+                android:lines="2"
+                android:layout_margin="5dp"
+                android:textColor="#FFFFFF"
+                style="@style/SingleGradient" />
+
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

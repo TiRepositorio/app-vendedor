@@ -7,6 +7,7 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
@@ -22,6 +23,7 @@ class ConsultaPedidos : AppCompatActivity() {
     lateinit var lista : ArrayList<HashMap<String,String>>
     private lateinit var listaCliente : ArrayList<HashMap<String,String>>
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consulta_pedidos)
@@ -29,6 +31,7 @@ class ConsultaPedidos : AppCompatActivity() {
         inicializarElementos()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializarElementos(){
         val dispositivo = FuncionesDispositivo(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -90,7 +93,7 @@ class ConsultaPedidos : AppCompatActivity() {
     private fun cargarDatosCliente(position:Int){
         listaCliente = ArrayList()
         val sql = "SELECT * FROM svm_cliente_vendedor " +
-                        "  WHERE COD_EMPRESA    = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'   " +
+                        "  WHERE COD_EMPRESA    = '${lista[position]["COD_EMPRESA"]}'   " +
                         "    AND COD_CLIENTE    = '${lista[position]["COD_CLIENTE"]}'           " +
                         "    AND COD_SUBCLIENTE = '${lista[position]["COD_SUBCLIENTE"]}'        " +
                         "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'          " +
@@ -122,12 +125,13 @@ class ConsultaPedidos : AppCompatActivity() {
             }
             Pedidos.nuevo = false
             Pedidos.maximo = lista[posicion]["NUMERO"].toString().toInt()
+            Pedidos.codEmpresa = lista[posicion]["COD_EMPRESA"].toString().toString()
             startActivity(Intent(this,Pedidos::class.java))
         }
     }
 
     private fun consultar(){
-        val dialogo = DialogoPedidos(this, lista[posicion]["NUMERO"].toString().toInt(),lista[posicion]["COD_LISTA_PRECIO"].toString())
+        val dialogo = DialogoPedidos(this, lista[posicion]["NUMERO"].toString().toInt(),lista[posicion]["COD_LISTA_PRECIO"].toString(), lista[posicion]["COD_EMPRESA"].toString())
         dialogo.mostrarDialogo()
 //        etDesde.setText(0)
     }
@@ -144,7 +148,7 @@ class ConsultaPedidos : AppCompatActivity() {
             funcion.toast(this,"El pedido ya fue anulado.")
             return
         }
-        funcion.ejecutar("DELETE FROM vt_pedidos_det WHERE NUMERO = '${lista[posicion]["NUMERO"]}' AND COD_VENDEDOR = '${lista[posicion]["COD_VENDEDOR"]}'",this)
+        funcion.ejecutar("DELETE FROM vt_pedidos_det WHERE NUMERO = '${lista[posicion]["NUMERO"]}' AND COD_VENDEDOR = '${lista[posicion]["COD_VENDEDOR"]}' AND COD_EMPRESA = '${lista[posicion]["COD_EMPRESA"]}' ",this)
         funcion.ejecutar("DELETE FROM vt_pedidos_cab WHERE id = '${lista[posicion]["id"]}'",this)
         buscarPedidos()
     }

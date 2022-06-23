@@ -27,7 +27,7 @@ class EnviarModificacion {
     }
 
     fun sql():String{
-        return ("SELECT id, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, LATITUD, LONGITUD, FOTO_FACHADA, TIPO "
+        return ("SELECT id, COD_EMPRESA, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, LATITUD, LONGITUD, FOTO_FACHADA, TIPO "
                     + " FROM svm_modifica_catastro "
                     + " WHERE COD_CLIENTE    = '" + codCliente + "'"
                     + "   AND COD_SUBCLIENTE = '" + codSubcliente + "'"
@@ -42,8 +42,10 @@ class EnviarModificacion {
         val latitud: String = funcion.dato(cursor,"LATITUD")
         val longitud: String = funcion.dato(cursor,"LONGITUD")
         val tipo: String = funcion.dato(cursor,"TIPO")
+        //siempre debe mandar por empresa 1
+        val codEmpresa: String = "1" //funcion.dato(cursor,"COD_EMPRESA")
 
-        vCliente = "'" + FuncionesUtiles.usuario["COD_EMPRESA"] + "'|'" + codCliente + "'|'" +
+        vCliente = "'" + codEmpresa + "'|'" + codCliente + "'|'" +
                    codSubcliente + "'|'" + telefono1 + "'|'" + telefono2 + "'|'" +
                    direccion + "'|'" + cercaDe + "'|'" + latitud + "'|'" + longitud + "'|'" + tipo + "'"
     }

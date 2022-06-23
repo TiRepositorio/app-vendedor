@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".configurar.ConfigurarUsuario"
+    android:background="#08080C">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="40sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_usuario_logo"
+                app:tint="#FBFAFA" />
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_weight="2.5"
+                android:text="Empresa:"
+                android:textColor="#FFF"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etCodEmpresaIndividual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#076807"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="#CCCCCC" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_weight="2.5"
+                android:text="Codigo:"
+                android:textColor="#FFF"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etUsuCodigoIndividual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#076807"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="#CCCCCC" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_weight="2.5"
+                android:text="Nombre:"
+                android:textColor="#FFF"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etUsuNombreIndividual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#076807"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:textColor="#CCCCCC" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_weight="2.5"
+                android:text="Versión:"
+                android:textColor="#FFF"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etUsuVersionIndividual"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#076807"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="#CCCCCC" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5sp"
+            android:paddingBottom="5sp">
+
+
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ibtnCancelar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:src="@drawable/cancelar"
+                android:tint="#FBFBFB" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ibtnGuardar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="50dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:src="@drawable/aceptar"
+                android:tint="#FFFFFF" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/etUsuarioMensaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CCCCCC"
+            />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,6 +33,7 @@ class ConsultaDatosDeCliente : AppCompatActivity() {
     lateinit var lista : ArrayList<HashMap<String,String>>
     private lateinit var listaCliente : ArrayList<HashMap<String,String>>
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consulta_datos_de_cliente)
@@ -84,13 +85,14 @@ class ConsultaDatosDeCliente : AppCompatActivity() {
         sql = (" create view svm_modifica_catastro_cliente as "
                 + "select a.id, a.COD_CLIENTE , a.COD_SUBCLIENTE  , b.DESC_SUBCLIENTE, a.TELEFONO1, a.TELEFONO2, a.DIRECCION "
                 + "     , a.CERCA_DE  	, a.LATITUD			, a.LONGITUD 	   , a.FECHA	, a.ESTADO   , a.FOTO_FACHADA "
-                + "		, a.TIPO        , b.COD_VENDEDOR "
+                + "		, a.TIPO        , b.COD_VENDEDOR    , a.COD_EMPRESA "
                 + "  from svm_modifica_catastro a,"
                 + "		  svm_cliente_vendedor b "
                 + "  where a.COD_CLIENTE    = b.COD_CLIENTE "
                 + "   and a.COD_SUBCLIENTE = b.COD_SUBCLIENTE "
+                + "   and a.COD_EMPRESA    = b.COD_EMPRESA "
                 + " GROUP BY a.id, a.COD_CLIENTE , a.COD_SUBCLIENTE  , b.DESC_SUBCLIENTE, a.TELEFONO1, a.TELEFONO2, a.DIRECCION,"
-                + "			 a.CERCA_DE  	, a.LATITUD			, a.LONGITUD 	   , a.FECHA	, a.ESTADO"
+                + "			 a.CERCA_DE  	, a.LATITUD			, a.LONGITUD 	   , a.FECHA	, a.ESTADO, a.COD_EMPRESA"
                 + " ORDER BY a.ESTADO DESC, a.id")
         funcion.ejecutar(sql,this)
     }
@@ -116,7 +118,7 @@ class ConsultaDatosDeCliente : AppCompatActivity() {
     private fun cargarDatosCliente(position:Int){
         listaCliente = ArrayList()
         val sql = "SELECT * FROM svm_cliente_vendedor " +
-                        "  WHERE COD_EMPRESA    = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'   " +
+                        "  WHERE COD_EMPRESA    = '${lista[position]["COD_EMPRESA"]}'   " +
                         "    AND COD_CLIENTE    = '${lista[position]["COD_CLIENTE"]}'           " +
                         "    AND COD_SUBCLIENTE = '${lista[position]["COD_SUBCLIENTE"]}'        " +
                         "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'          " +
@@ -154,7 +156,16 @@ class ConsultaDatosDeCliente : AppCompatActivity() {
     }
 
     private fun eliminar(){
-        funcion.ejecutar("DELETE FROM svm_modifica_catastro WHERE id = '${lista[posicion]["id"]}' AND COD_VENDEDOR = '${lista[posicion]["COD_VENDEDOR"]}'",this)
+        //funcion.ejecutar("DELETE FROM svm_modifica_catastro WHERE id = '${lista[posicion]["id"]}' AND COD_VENDEDOR = '${lista[posicion]["COD_VENDEDOR"]}' AND COD_EMPRESA = '${lista[posicion]["COD_EMPRESA"]}'",this)
+        //buscarDatos()
+
+        if(lista[posicion]["ESTADO"] == "E"){
+            funcion.toast(this,"El registro ya fue enviado.")
+            return
+        }
+        funcion.ejecutar("DELETE FROM svm_modifica_catastro WHERE id = '${lista[posicion]["id"]}'",this)
         buscarDatos()
+
+
     }
 }

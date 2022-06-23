@@ -19,6 +19,7 @@ class EnviarSD {
         var cadena2 : String = ""
         var codCliente : String = ""
         var codSubcliente : String = ""
+        var codEmpresa : String = ""
         @SuppressLint("StaticFieldLeak")
         var funcion : FuncionesUtiles = FuncionesUtiles()
     }
@@ -51,6 +52,7 @@ class EnviarSD {
                 + "    AND NRO_PLANILLA   = '" + ListaClientes.codVendedor + "' "
                 + "    AND FECHA    	  = '${funcion.getFechaActual()}' "
                 + "    AND EST_ENVIO	  = 'N' "
+                + "    AND COD_EMPRESA	  = '$codEmpresa' "
                 + "  GROUP BY COD_EMPRESA,NRO_PLANILLA,COD_VENDEDOR,"
                 + "		   COD_CLIENTE,COD_SUBCLIENTE,FECHA ")
         insertarCabecera(funcion.consultar(sql))
@@ -59,7 +61,7 @@ class EnviarSD {
     private fun nroRegistroRef():Int{
         var sql = "select VERSION " +
                 "    from svm_vendedor_pedido " +
-                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "   where COD_EMPRESA = '$codEmpresa' " +
                 "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         var cursor = funcion.consultar(sql)
         var servidor = 0
@@ -68,7 +70,7 @@ class EnviarSD {
         }
 
         sql = "select max(NRO_REGISTRO_REF) NRO_REGISTRO_REF from svm_solicitud_dev_cab " +
-                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "   where COD_EMPRESA = '$codEmpresa' " +
                 "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         cursor = funcion.consultar(sql)
         var telefono = 0
@@ -107,6 +109,7 @@ class EnviarSD {
                         + "        NRO_REGISTRO_REF  = '${nroRegistroRef}' "
                         + "  where COD_CLIENTE       = '$codCliente'"
                         + "    and COD_SUBCLIENTE 	 = '$codSubcliente'"
+                        + "    and COD_EMPRESA  	 = '$codEmpresa'"
                         + "    and NRO_PLANILLA   	 = '${ListaClientes.codVendedor}'"
                         + "    and FECHA ='${funcion.getFechaActual()}' "
                         + "    and NRO_REGISTRO_REF ='0' ")
@@ -129,6 +132,7 @@ class EnviarSD {
                 +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                 +  "   AND FECHA         	= '${funcion.getFechaActual()}' "
                 +  "   AND NRO_REGISTRO_REF = '$nroRegistroRef' "
+                +  "   AND COD_EMPRESA      = '$codEmpresa' "
                 +  "   AND EST_ENVIO		= 'N' ")
     }
 
@@ -142,6 +146,7 @@ class EnviarSD {
                + "    AND NRO_PLANILLA 	   = '${ListaClientes.codVendedor}' "
                + "    AND FECHA 		   = '${funcion.getFechaActual()}' "
                + "    AND EST_ENVIO		   = 'N' "
+               +  "   AND COD_EMPRESA      = '$codEmpresa' "
                + "    AND NRO_REGISTRO_REF = '$nroRegistroRef' ")
     }
 
@@ -162,7 +167,7 @@ class EnviarSD {
                 + " VALUES(")
 
         for (i : Int in 0 until cursor.count) {
-            val codEmpresa = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
+            val codEmpresa = codEmpresa
             val nroRegistroRef: String = funcion.dato(cursor,"NRO_REGISTRO_REF")
             val codVendedor: String = ListaClientes.codVendedor
 
@@ -196,7 +201,7 @@ class EnviarSD {
                 + " VALUES( ")
         for (i in 0 until cursor.count) {
             //aca
-            val codEmpresa = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
+            val codEmpresa = codEmpresa //FuncionesUtiles.usuario[COD_EMPRESA].toString()
             val nroPlanilla : String = ListaClientes.codVendedor
             val codRepartidor = "1"
             val nroRegistroRef : String = funcion.dato(cursor,"NRO_REGISTRO_REF")

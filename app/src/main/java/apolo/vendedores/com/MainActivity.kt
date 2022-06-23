@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import apolo.vendedores.com.configurar.ConfigurarUsuarioNuevo
 import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "77"
-        const val fechaVersion : String = "20220330"
+        const val version : String = "79"
+        const val fechaVersion : String = "20220617"
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
@@ -70,6 +71,9 @@ class MainActivity : AppCompatActivity() {
                 if (s.toString() == "comenzar"){
                     iniciar()
                 }
+                if (s.toString() == "nocomenzar"){
+                    finish()
+                }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -109,12 +113,17 @@ class MainActivity : AppCompatActivity() {
             return true
         } else {
             FuncionesUtiles.usuario["CONF"] = "N"
+
+            val dialogo = DialogoAutorizacion(this)
+            dialogo.dialogoAutorizacion("comenzar",accion)
+
+
             return false
         }
     }
 
     fun iniciar(){
-        if (!usuarioGuardado()){
+        /*if (!usuarioGuardado()){
             FuncionesUtiles.usuario["COD_EMPRESA"] = etCodEmpresa.text.toString().trim()
             FuncionesUtiles.usuario["NOMBRE"] = etNombreUsuario.text.toString().trim()
             FuncionesUtiles.usuario["LOGIN"] = etCodigoUsuario.text.toString().trim()
@@ -128,7 +137,9 @@ class MainActivity : AppCompatActivity() {
             val menu2 = Intent(this, Sincronizacion::class.java)
             startActivity(menu2)
             finish()
-        }
+        }*/
+        startActivity(Intent(this,ConfigurarUsuarioNuevo::class.java))
+        finish()
     }
 
     private fun usuarioGuardado():Boolean{

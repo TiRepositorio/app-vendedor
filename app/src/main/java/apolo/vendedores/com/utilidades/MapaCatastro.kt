@@ -35,6 +35,7 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
         var codSubcliente :String = ""
         var codVendedor : String = ""
         var lista : ArrayList<HashMap<String,String>> = ArrayList()
+        var codEmpresa : String = ""
     }
 
     private lateinit var mMap: GoogleMap
@@ -115,7 +116,7 @@ class MapaCatastro : AppCompatActivity(), OnMapReadyCallback {
         for (i in 0 until cursor.columnCount){
             valores.put(cursor.getColumnName(i),funcion.dato(cursor,cursor.getColumnName(i)))
         }
-        valores.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        valores.put("COD_EMPRESA", codEmpresa)
         valores.put("COD_CLIENTE", codCliente)
         valores.put("COD_SUBCLIENTE", codSubcliente)
         valores.put("LATITUD",latitud)

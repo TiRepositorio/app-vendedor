@@ -11,12 +11,16 @@ import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.View
 import android.widget.*
+import androidx.core.database.getStringOrNull
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import apolo.vendedores.com.MainActivity
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
+import apolo.vendedores.com.clases.Usuario
 import apolo.vendedores.com.ventas.ListaClientes
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_configurar_usuario_2.*
 import kotlinx.android.synthetic.main.dialogo_contacto.*
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -348,6 +352,7 @@ class FuncionesUtiles {
     //Variables
     companion object{
         lateinit var cursor: Cursor
+        var listaUsuarios : ArrayList<Usuario> = ArrayList()
         val usuario : HashMap<String, String> = HashMap()
         var posicionCabecera: Int = 0
         var posicionDetalle : Int = 0
@@ -1296,4 +1301,36 @@ class FuncionesUtiles {
     }
 
     //DIALOGOS DE ENTRADA DE DATOS
+
+
+    //OBTENER USUARIOS REGISTRADOS
+    fun traerUsuario() {
+        cursor = MainActivity.bd!!.rawQuery("SELECT * FROM usuarios GROUP BY COD_EMPRESA, LOGIN", null)
+        cursor.moveToFirst()
+
+        MainActivity2.listaUsuarios.clear()
+
+        for (i in 0 until cursor.count){
+
+            val usuario : Usuario = Usuario()
+
+            usuario.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")))
+            usuario.nombre = cursor.getStringOrNull(cursor.getColumnIndex("NOMBRE")).toString()
+            usuario.login = cursor.getStringOrNull(cursor.getColumnIndex("LOGIN")).toString()
+            usuario.tipo = cursor.getStringOrNull(cursor.getColumnIndex("TIPO")).toString()
+            usuario.activo = cursor.getStringOrNull(cursor.getColumnIndex("ACTIVO")).toString()
+            usuario.cod_empresa = cursor.getStringOrNull(cursor.getColumnIndex("COD_EMPRESA")).toString()
+            usuario.version = cursor.getStringOrNull(cursor.getColumnIndex("VERSION")).toString()
+            usuario.min_fotos = cursor.getStringOrNull(cursor.getColumnIndex("MIN_FOTOS")).toString()
+            usuario.max_fotos = cursor.getStringOrNull(cursor.getColumnIndex("MAX_FOTOS")).toString()
+            usuario.cod_persona = cursor.getStringOrNull(cursor.getColumnIndex("COD_PERSONA")).toString()
+            usuario.prog_pedido = cursor.getStringOrNull(cursor.getColumnIndex("PROG_PEDIDO")).toString()
+
+            MainActivity2.listaUsuarios.add(usuario)
+
+            cursor.moveToNext()
+        }
+
+
+    }
 }

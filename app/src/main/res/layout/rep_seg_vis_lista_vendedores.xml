@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/tvd3"
             android:layout_width="80dp"
-            android:text="Cant."
+            android:text="Cli. Semana"
             android:gravity="end"
             style="@style/textoTabla"
             />
@@ -31,42 +31,53 @@
         <TextView
             android:id="@+id/tvd4"
             android:layout_width="80dp"
-            android:text="Vta. Pres."
+            android:text="Tot. Visit. Validas"
             android:gravity="end"
             style="@style/textoTabla"
             />
 
+
         <TextView
             android:id="@+id/tvd5"
             android:layout_width="80dp"
-            android:text="Vendido"
+            android:text="Porc. Visitas Validas"
             android:gravity="end"
+            android:layout_weight="1"
             style="@style/textoTabla"
             />
 
         <TextView
             android:id="@+id/tvd6"
             android:layout_width="80dp"
-            android:text="No venta"
-            android:gravity="end"
-            style="@style/textoTabla"
-            />
-
-        <TextView
-            android:id="@+id/tvd7"
-            android:layout_width="80dp"
             android:text="No Aten."
             android:gravity="end"
             style="@style/textoTabla"
             />
 
+
+
+        <TextView
+            android:id="@+id/tvd7"
+            android:layout_width="80dp"
+            android:text="Fuera de Ruta"
+            android:gravity="end"
+            style="@style/textoTabla"
+            />
+
+
         <TextView
             android:id="@+id/tvd8"
             android:layout_width="80dp"
-            android:text="Porc."
+            android:text="Total en Pareja"
             android:gravity="end"
-            android:layout_weight="1"
             style="@style/textoTabla"
             />
+
+
+
+
+
+
+
 
 </LinearLayout>

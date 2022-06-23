@@ -73,7 +73,7 @@ class Promotores : AppCompatActivity() {
     }
 
     fun buscar(){
-        val campos = "DISTINCT a.COD_VENDEDOR, a.DESC_VENDEDOR "
+        val campos = "DISTINCT a.COD_EMPRESA, a.COD_VENDEDOR, a.DESC_VENDEDOR "
         val groupBy = ""
         val orderBy = "a.COD_VENDEDOR"
         val tabla = " ven_svm_cliente_vendedor a "
@@ -86,6 +86,7 @@ class Promotores : AppCompatActivity() {
         lista = ArrayList()
         for (i in 0 until cursor.count){
             datos = HashMap()
+            datos["COD_EMPRESA"] = funcion.dato(cursor,"COD_EMPRESA")
             datos["COD_VENDEDOR"] = funcion.dato(cursor,"COD_VENDEDOR")
             datos["DESC_VENDEDOR"] = funcion.dato(cursor,"DESC_VENDEDOR")
             lista.add(datos)
@@ -136,6 +137,8 @@ class Promotores : AppCompatActivity() {
 //            Pedidos.nuevo = true
 //            Pedidos.maximo = funcion.datoEntero(cursor,"MAXIMO")
             ListaClientes.codVendedor = lista[posicion]["COD_VENDEDOR"].toString()
+            //FuncionesUtiles.usuario["COD_EMPRESA"] = lista[posicion]["COD_EMPRESA"].toString()
+            ListaClientes.codEmpresa = lista[posicion]["COD_EMPRESA"].toString()
             startActivity(Intent(this, ListaClientes::class.java))
         }else{
             funcion.mensaje(this,"Atención!","No posee permiso para vender en esta cartera!")

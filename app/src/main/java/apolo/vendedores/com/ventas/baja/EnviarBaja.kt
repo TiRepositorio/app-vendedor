@@ -42,7 +42,8 @@ class EnviarBaja {
                 ",FOTO_FACHADA) " +
                 "VALUES " +
                 "(" +
-                "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," +
+                //"'${FuncionesUtiles.usuario[COD_EMPRESA]}'," +
+                "'1'," +
                 "'${Baja.codVendedor}'," +
                 "'${FuncionesUtiles.usuario["NOMBRE"]}'," +
                 "'${Baja.codCliente}'," +
@@ -54,7 +55,8 @@ class EnviarBaja {
                 "'$fotoFachada'" +
                 ")"
         MainActivity2.funcion.ejecutar(cliente, context)
-        cliente = "${FuncionesUtiles.usuario["COD_EMPRESA"]}" +
+        cliente = //"${FuncionesUtiles.usuario[COD_EMPRESA]}" +
+                  "1" +
                   "|${Baja.codVendedor}" +
                   "|${FuncionesUtiles.usuario["NOMBRE"]}" +
                   "|${Baja.codCliente}" +

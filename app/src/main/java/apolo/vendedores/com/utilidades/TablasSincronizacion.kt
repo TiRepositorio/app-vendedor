@@ -516,7 +516,8 @@ class TablasSincronizacion {
         lista.add(0,"CODIGO")
         lista.add(1,"COD_SUBTIPO")
         lista.add(2,"DESC_CANAL_VENTA")
-        lista.add(3,"DESCRIPCION")
+        lista.add(3,"COD_EMPRESA")
+        lista.add(4,"DESCRIPCION")
         return lista
     }
     private fun camposTablaSvmCondicionVentaCliente(): ArrayList<String> {
@@ -549,19 +550,30 @@ class TablasSincronizacion {
         lista.add(7,"COD_MONEDA")
         lista.add(8,"DECIMALES")
         lista.add(9,"SIGLAS")
-        lista.add(10,"COMENT")
+        lista.add(10,"COD_EMPRESA")
+        lista.add(11,"COMENT")
         return lista
     }
     /*falto agregar*/private fun camposTablaSvmModuloComisionVend(): ArrayList<String> {
         val lista : ArrayList<String> = ArrayList()
-        lista.add(0,"COD_CONCEPTO")
+        /*lista.add(0,"COD_CONCEPTO")
         lista.add(1,"DESC_CONCEPTO")
         lista.add(2,"DESC_MODULO")
         lista.add(3,"MONTO_VENTA")
         lista.add(4,"MONTO_COMISION")
         lista.add(5,"FEC_FINAL")
         lista.add(6,"TOT_VENTAS")
-        lista.add(7,"TOT_COMISION")
+        lista.add(7,"TOT_COMISION")*/
+        lista.add(0,"COD_EMPRESA")
+        lista.add(1,"COD_CONCEPTO")
+        lista.add(2,"COD_MODULO")
+        lista.add(3,"DESC_MODULO")
+        lista.add(4,"MONTO_VENTA")
+        lista.add(5,"MONTO_COMISION")
+        lista.add(6,"FEC_FINAL")
+        lista.add(7,"TOT_VENTAS")
+        lista.add(8,"TOT_COMISION")
+
         return lista
     }
     /*private fun camposTablaSvmDiasVisitaCliente(): ArrayList<String> {
@@ -706,6 +718,16 @@ class TablasSincronizacion {
         lista.add(8,"CANT_NO_VISITADO")
         lista.add(9,"SEMANA")
         lista.add(10,"PORC")
+       lista.add(11,"COD_PERSONA")
+        lista.add(12,"CANT_CLIENTE")
+        lista.add(13,"CLI_SEMANA")
+        lista.add(14,"CANT_VISITA_VALIDA")
+        lista.add(15,"CANT_EN_PAREJA")
+        lista.add(16,"CANT_FUERA_RUTA")
+        lista.add(17,"CANT_VISITA")
+        lista.add(18,"PORC_VISITA_VALIDA")
+        lista.add(19,"PORC_TOTAL_VISITA")
+
         return lista
     }
     /*private fun camposTablaCcvMotivoSolTarjCred(): ArrayList<String> {

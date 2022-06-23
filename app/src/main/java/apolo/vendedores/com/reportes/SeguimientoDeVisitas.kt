@@ -62,7 +62,7 @@ class SeguimientoDeVisitas : AppCompatActivity(){
 
     private fun cargarPeriodo() {
         val sql =
-            "SELECT DISTINCT SEMANA, FEC_INICIO || ' AL ' || FEC_FIN AS PERIODO FROM svm_seg_visitas_semanal ORDER BY FEC_INICIO"
+            "SELECT DISTINCT SEMANA, FEC_INICIO || ' AL ' || FEC_FIN AS PERIODO FROM svm_seg_visitas_semanal ORDER BY SEMANA"
         cursor = funcion.consultar(sql)
         FuncionesUtiles.listaCabecera = ArrayList()
         for (i in 0 until cursor.count) {
@@ -100,11 +100,18 @@ class SeguimientoDeVisitas : AppCompatActivity(){
             FuncionesUtiles.listaDetalle = ArrayList()
             return
         }
+
+
         val sql: String = "SELECT DISTINCT IFNULL(a.COD_VENDEDOR,'0')    AS COD_VENDEDOR  , IFNULL(b.DESC_VENDEDOR,'')       AS NOMBRE_VENDEDOR        , " +
                           "       IFNULL(a.CANTIDAD,'0')        AS CANTIDAD      , IFNULL(a.CANT_VENDIDO,'0')       AS CANT_VENDIDO           , " +
                           "       IFNULL(a.CANT_NO_VENDIDO,'0') AS CANT_NO_VENTA , IFNULL(a.CANT_NO_VISITADO,'0')   AS CANT_NO_VISITADO       , " +
                           "       IFNULL(a.PORC,'0.0') AS PORC                   , " +
-                          "       IFNULL(a.CANTIDAD,'0') - IFNULL(a.CANT_NO_VENDIDO,'0') - IFNULL(a.CANT_NO_VISITADO,'0') AS VENTA_PRESENCIAL   " +
+                          "       IFNULL(a.CANTIDAD,'0') - IFNULL(a.CANT_NO_VENDIDO,'0') - IFNULL(a.CANT_NO_VISITADO,'0') AS VENTA_PRESENCIAL,   " +
+                          "       IFNULL(a.COD_PERSONA,'0') as COD_PERSONA      , IFNULL(a.CANT_CLIENTE,'0') as CANT_CLIENTE, " +
+                          "       IFNULL(a.CLI_SEMANA,'0') as CLI_SEMANA        , IFNULL(a.CANT_VISITA_VALIDA,'0') as CANT_VISITA_VALIDA, " +
+                          "       IFNULL(a.CANT_EN_PAREJA,'0') as CANT_EN_PAREJA, IFNULL(a.CANT_FUERA_RUTA,'0') as CANT_FUERA_RUTA, " +
+                          "       IFNULL(a.CANT_VISITA,'0') as CANT_VISITA      , IFNULL(a.PORC_VISITA_VALIDA,'0') as PORC_VISITA_VALIDA, " +
+                          "       IFNULL(a.PORC_TOTAL_VISITA,'0') as PORC_TOTAL_VISITA " +
                           "  FROM svm_seg_visitas_semanal a, ven_svm_seg_visitas_semanal b " +
                           " WHERE a.SEMANA = '" + FuncionesUtiles.listaCabecera[FuncionesUtiles.posicionCabecera]["SEMANA"] + "' " +
                           " ORDER BY a.COD_VENDEDOR "
@@ -114,9 +121,9 @@ class SeguimientoDeVisitas : AppCompatActivity(){
 
     private fun mostrarDetalle(){
         funcion.subVistas = intArrayOf(R.id.tvd1, R.id.tvd2, R.id.tvd3, R.id.tvd4,
-                                       R.id.tvd5, R.id.tvd6, R.id.tvd7,R.id.tvd8)
-        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         , "VENTA_PRESENCIAL",
-                                     "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" , "PORC"            )
+                                       R.id.tvd5, R.id.tvd6, R.id.tvd7, R.id.tvd8)
+        funcion.subValores = arrayOf("COD_VENDEDOR"      , "NOMBRE_VENDEDOR", "CLI_SEMANA"     , "CANT_VISITA_VALIDA",
+                                     "PORC_VISITA_VALIDA","CANT_NO_VISITADO", "CANT_FUERA_RUTA", "CANT_EN_PAREJA")
 //        funcion.subValores = arrayOf("COD_VENDEDOR", "NOMBRE_VENDEDOR"  ,"CANTIDAD"         ,
 //            "CANT_VENDIDO", "CANT_NO_VENTA"    ,"CANT_NO_VISITADO" ,
 //            "PORC")

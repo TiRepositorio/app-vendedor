@@ -24,6 +24,7 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.utilidades.Adapter
+import kotlinx.android.synthetic.main.activity_configurar_usuario_individual.*
 import kotlinx.android.synthetic.main.activity_pedidos.*
 import kotlinx.android.synthetic.main.barra_vendedores.*
 import kotlinx.android.synthetic.main.ven_ped_lista_pedidos_producto.view.*
@@ -78,6 +79,7 @@ class Pedidos : AppCompatActivity() {
         @SuppressLint("StaticFieldLeak")
         lateinit var spReferencias : FuncionesSpinner
         var decimales = ""
+        var codEmpresa = ""
     }
 
     lateinit var funcion : FuncionesUtiles
@@ -201,7 +203,8 @@ class Pedidos : AppCompatActivity() {
         val tabla = " cliente_list_prec "
         val where : String = " COD_CLIENTE        = '" + ListaClientes.codCliente + "' " +
                              " AND COD_SUBCLIENTE =  '" + ListaClientes.codSubcliente + "' " +
-                             " AND COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' "
+                             " AND COD_VENDEDOR   = '" + ListaClientes.codVendedor + "' " +
+                             " AND COD_EMPRESA    = '$codEmpresa'"
         val whereOpcional = ""
         val group = ""
         val order = ""
@@ -257,7 +260,8 @@ class Pedidos : AppCompatActivity() {
         val tabla = " svm_st_articulos a, svm_articulos_precios b "
         val where : String = "     a.COD_ARTICULO = '" + listaProductos[posProducto]["COD_ARTICULO"] + "' " +
                              " and a.COD_ARTICULO = b.COD_ARTICULO and b.COD_VENDEDOR = '" + ListaClientes.codVendedor + "' " +
-                             " and b.COD_LISTA_PRECIO = '" + codListaPrecio + "' "
+                             " and b.COD_LISTA_PRECIO = '" + codListaPrecio + "' " +
+                             " AND a.COD_EMPRESA = B.COD_EMPRESA AND a.COD_EMPRESA = '$codEmpresa'"
         val whereOpcional = ""
         val group = ""
         val order = " cast(a.COD_UNIDAD_REL AS NUMBER) asc "
@@ -414,6 +418,7 @@ class Pedidos : AppCompatActivity() {
             "Select IND_DIRECTA  from svm_cliente_vendedor " + " where cod_cliente  = '"
                     + ListaClientes.codCliente + "' " + " and cod_subcliente = '"
                     + ListaClientes.codSubcliente + "'   and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' "
+                    + " AND COD_EMPRESA = '$codEmpresa'"
         )
         cursor.moveToFirst()
         val indDirecta = cursor.getString(cursor.getColumnIndex("IND_DIRECTA"))
@@ -460,7 +465,8 @@ class Pedidos : AppCompatActivity() {
                              "    where COD_LISTA_PRECIO = '" + codListaPrecio + "' " +
                              "      and COD_CLIENTE      = '" + ListaClientes.codCliente    + "' " +
                              "      and COD_SUBCLIENTE   = '" + ListaClientes.codSubcliente + "' " +
-                             "      and COD_VENDEDOR     = '" + ListaClientes.codVendedor   + "') "
+                             "      and COD_VENDEDOR     = '" + ListaClientes.codVendedor   + "') " +
+                             "      AND COD_EMPRESA      = '$codEmpresa' "
         val whereOpcional : String = if (ListaClientes.indEspecial.trim() == "S") {
                                         " AND (tipo_condicion = '" + ListaClientes.tipCondicion + "' or tipo_condicion = 'S' "
                                      } else { "AND (tipo_condicion = '" + ListaClientes.tipCondicion + "') " }
@@ -652,7 +658,8 @@ class Pedidos : AppCompatActivity() {
                     "   AND   a.COD_ARTICULO	= b.COD_ARTICULO " +
                     "   AND   b.COD_CLIENTE     = '${ListaClientes.codCliente}' " +
                     "   AND   b.COD_SUBCLIENTE  = '${ListaClientes.codSubcliente}' " +
-                    "   AND   b.TIP_CLIENTE     = '${ListaClientes.tipCliente}' "
+                    "   AND   b.TIP_CLIENTE     = '${ListaClientes.tipCliente}' " +
+                    "   AND   a.COD_EMPRESA     = '$codEmpresa' "
         val where : String = "  AND a.COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                              "  AND a.COD_LISTA_PRECIO = '${codListaPrecio}' "
         cargarLista(funcion.buscar(tabla, campos, groupBy, orderBy, where))
@@ -799,6 +806,7 @@ class Pedidos : AppCompatActivity() {
         var sql = ("SELECT distinct COD_ARTICULO FROM svm_promociones_art_cab c "
                 + "   WHERE (c.COD_CONDICION_VENTA = '" + codCondicion + "' or TRIM(COD_CONDICION_VENTA) = '')"
                 + "    and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or TRIM(TIP_CLIENTE) = '')"
+                + "    AND c.COD_EMPRESA  = '$codEmpresa' "
                 + "    and (c.COD_LISTA_PRECIO = '" + lista + "' or TRIM(COD_LISTA_PRECIO) = '')")
 
         var cursorProm: Cursor = MainActivity2.bd!!.rawQuery(sql, null)
@@ -821,6 +829,7 @@ class Pedidos : AppCompatActivity() {
                 + "   WHERE (c.COD_CONDICION_VENTA = '" + codCondicion + "' or TRIM(c.COD_CONDICION_VENTA) = '')"
                 + "    and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or TRIM(c.TIP_CLIENTE) = '')"
                 + "    and (c.COD_LISTA_PRECIO = '" + lista + "' or TRIM(c.COD_LISTA_PRECIO) = '')"
+                + "    AND (c.COD_EMPRESA = '$codEmpresa' )"
                 + "    and (c.IND_ART = 'S')")
 
         cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
@@ -838,7 +847,7 @@ class Pedidos : AppCompatActivity() {
         }
 
         sql = ("SELECT distinct COD_ARTICULO FROM svm_promociones_art_det b "
-                + "   WHERE NRO_PROMOCION IN (" + inNro + ")")
+                + "   WHERE NRO_PROMOCION IN (" + inNro + ") AND COD_EMPRESA = '$codEmpresa' ")
 
         cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
 
@@ -854,7 +863,7 @@ class Pedidos : AppCompatActivity() {
             cursorProm.moveToNext()
         }
 
-        sql = "UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'N'"
+        sql = "UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'N' AND COD_EMPRESA = '$codEmpresa' "
 
         try {
             MainActivity2.bd!!.execSQL(sql)
@@ -863,7 +872,7 @@ class Pedidos : AppCompatActivity() {
             )
         }
 
-        sql = ("UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE cod_articulo in ($`in`)")
+        sql = ("UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE cod_articulo in ($`in`) AND COD_EMPRESA = '$codEmpresa' ")
 
         try {
             MainActivity2.bd!!.execSQL(sql)
@@ -972,7 +981,7 @@ class Pedidos : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun maxPedido(){
-        val sql = "SELECT MAX(NUMERO) MAXIMO from vt_pedidos_cab where COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+        val sql = "SELECT MAX(NUMERO) MAXIMO from vt_pedidos_cab where COD_VENDEDOR = '${ListaClientes.codVendedor}' AND COD_EMPRESA = '$codEmpresa' "
         val cursor: Cursor = funcion.consultar(sql)
         if (cursor.moveToFirst()) {
             maximo = if (funcion.datoEntero(cursor, "MAXIMO") > funcion.ultPedidoVenta(ListaClientes.codVendedor)) {
@@ -1037,7 +1046,8 @@ class Pedidos : AppCompatActivity() {
             val sql = ("SELECT id FROM vt_pedidos_det "
                     + "  WHERE NRO_PROMOCION > 0 "
                     + "    AND NUMERO		 = '${numeroPedido()}'"
-                    + "    AND COD_VENDEDOR = '${ListaClientes.codVendedor}'")
+                    + "    AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
+                    + "    AND COD_EMPRESA  = '$codEmpresa' ")
             val cursor: Cursor = funcion.consultar(sql)
             cursor.moveToFirst()
             val nreg = cursor.count
@@ -1062,7 +1072,8 @@ class Pedidos : AppCompatActivity() {
                     + "  FROM vt_pedidos_cab "
                     + " WHERE COD_VENDEDOR = '${ListaClientes.codVendedor}' "
                     + "   AND COD_CLIENTE  = '${ListaClientes.codCliente}' "
-                    + "   AND COD_SUBCLIENTE = '${ListaClientes.codSubcliente}' ")
+                    + "   AND COD_SUBCLIENTE = '${ListaClientes.codSubcliente}' "
+                    + "   AND COD_EMPRESA  = '$codEmpresa' ")
             val cursor : Cursor = funcion.consultar(sql)
             if(cursor.count==0){
                 1
@@ -1085,7 +1096,8 @@ class Pedidos : AppCompatActivity() {
     private fun cargaDatosCabecera(){
         val values = ContentValues()
         habilitarSpinnersCabecera(false)
-        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        //values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        values.put("COD_EMPRESA", codEmpresa)
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
@@ -1162,7 +1174,8 @@ class Pedidos : AppCompatActivity() {
 
     private fun cargaDatosDetalle(){
         val values = ContentValues()
-        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        //values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        values.put("COD_EMPRESA", codEmpresa)
         values.put("NUMERO", maximo)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
         values.put("COD_ARTICULO", tvdCod.text.toString().trim())
@@ -1246,6 +1259,7 @@ class Pedidos : AppCompatActivity() {
         val where = " and a.COD_FAMILIA      = '${listaProductos[posProducto]["COD_FAMILIA"]}' " +
                            " and a.COD_LINEA        = '${listaProductos[posProducto]["COD_LINEA"]}' " +
                            " and a.COD_LISTA_PRECIO = '${codListaPrecio}' " +
+                           " AND a.COD_EMPRESA      = '$codEmpresa' " +
                            " and a.PREC_CAJA        = '${listaProductos[posProducto]["PREC_CAJA"].toString().replace(
                                ".",
                                ""
@@ -1266,6 +1280,7 @@ class Pedidos : AppCompatActivity() {
         }
         Promociones.codListaPrecio = codListaPrecio
         Promociones.condicionVenta = spCondicionDeVenta.getDato("COD_CONDICION_VENTA")
+        Promociones.codEmpresa = codEmpresa
         val promociones = Intent(this, Promociones::class.java)
         startActivity(promociones)
     }
@@ -1285,6 +1300,7 @@ class Pedidos : AppCompatActivity() {
                          +  "   AND a.COD_EMPRESA  = b.COD_EMPRESA "
                          +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
                          +  "   AND a.COD_VENDEDOR = b.COD_VENDEDOR "
+                         +  "   AND a.COD_EMPRESA  = '$codEmpresa' "
                          +  "   AND b.COD_LISTA_PRECIO  = '${spListaPrecios.getDato("COD_LISTA_PRECIO")}'"
                          +  " ")
         listaDetalles = funcion.cargarDatos(funcion.consultar(sql))
@@ -1311,6 +1327,7 @@ class Pedidos : AppCompatActivity() {
         val sql = ("SELECT DISTINCT COD_ARTICULO FROM vt_pedidos_det "
                 +  " WHERE NUMERO       = '$maximo' "
                 +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                +  "   AND COD_EMPRESA  = '$codEmpresa' "
                 +  " ")
         val cursor = funcion.consultar(sql)
         articulosDetalle = ""
@@ -1366,7 +1383,9 @@ class Pedidos : AppCompatActivity() {
         val sql: String
         if (listaDetalles[posDetalle]["NRO_PROMOCION"].toString().trim().replace("null", "") == ""){
             sql = "DELETE FROM  vt_pedidos_det WHERE id = ${listaDetalles[posicion]["id"]}" +
-                  "   AND NUMERO = '$maximo' "
+                  "   AND NUMERO = '$maximo' " +
+                  "   AND COD_EMPRESA  = '$codEmpresa' "
+
             funcion.ejecutar(sql, this)
             recalcularTotal()
         } else {
@@ -1383,13 +1402,14 @@ class Pedidos : AppCompatActivity() {
     private fun eliminarDetallePromocion(posicion: Int){
         val sql = "DELETE FROM  vt_pedidos_det " +
                 " WHERE NRO_PROMOCION = '${listaDetalles[posicion]["NRO_PROMOCION"].toString().trim()}' " +
-                "   AND NUMERO = '$maximo' "
+                "   AND NUMERO = '$maximo' " +
+                "   AND COD_EMPRESA = '$codEmpresa' "
         funcion.ejecutar(sql, this)
         recalcularTotal()
     }
 
     private fun recalcularTotal(){
-        val sql = ("SELECT SUM(CAST(MONTO_TOTAL_CONIVA AS INTEGER)) MONTO_TOTAL FROM vt_pedidos_det " + " WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ")
+        val sql = ("SELECT SUM(CAST(MONTO_TOTAL_CONIVA AS INTEGER)) MONTO_TOTAL FROM vt_pedidos_det " + " WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' AND COD_EMPRESA = '$codEmpresa'  ")
         val cursor = funcion.consultar(sql)
         val total = funcion.entero(funcion.dato(cursor, "MONTO_TOTAL"))
         etSubtotal.setText(total)
@@ -1409,7 +1429,7 @@ class Pedidos : AppCompatActivity() {
                     cursor,
                     "MONTO_TOTAL"
                 )
-            }' WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' ", this
+            }' WHERE NUMERO = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' AND COD_EMPRESA = '$codEmpresa' ", this
         )
     }
 
@@ -1471,7 +1491,8 @@ class Pedidos : AppCompatActivity() {
                 val sql = "update vt_pedidos_cab set FECHA = '${s.toString()}' " +
                         "WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                         "  AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
-                        "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
+                        "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' " +
+                        "  AND COD_EMPRESA      = '$codEmpresa' "
                 funcion.ejecutar(sql, this@Pedidos)
             }
 
@@ -1488,7 +1509,9 @@ class Pedidos : AppCompatActivity() {
                 val sql = "update vt_pedidos_cab set COMENTARIO = '${s.toString()}' " +
                         "WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                         "  AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
-                        "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
+                        "  AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' " +
+                        "  AND COD_EMPRESA      = '$codEmpresa' "
+
                 funcion.ejecutar(sql, this@Pedidos)
             }
 
@@ -1812,7 +1835,8 @@ class Pedidos : AppCompatActivity() {
                         " WHERE NUMERO           = '$maximo' " +
                         "   AND COD_VENDEDOR     = '${ListaClientes.codVendedor}' " +
                         "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
-                        "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
+                        "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' " +
+                        "   AND COD_EMPRESA      = '$codEmpresa' "
                 funcion.ejecutar(sql, this@Pedidos)
                 recalcularTotal()
             }
@@ -1870,7 +1894,8 @@ class Pedidos : AppCompatActivity() {
                     " , TOT_DESCUENTO        = '${etTotalDesc.text.toString().replace(".", "")}' " +
                     " WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                     "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
-                    "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
+                    "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' " +
+                    "   AND COD_EMPRESA      = '$codEmpresa' "
             funcion.ejecutar(sql, this@Pedidos)
         } catch (e: Exception) {
             etTotalDesc.setText("")
@@ -1909,7 +1934,8 @@ class Pedidos : AppCompatActivity() {
                     " , TOT_DESCUENTO        = '$calc2' " +
                     " WHERE NUMERO           = '$maximo' AND COD_VENDEDOR = '${ListaClientes.codVendedor}' " +
                     "   AND COD_CLIENTE      = '${ListaClientes.codCliente}' " +
-                    "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' "
+                    "   AND COD_SUBCLIENTE   = '${ListaClientes.codSubcliente}' " +
+                    "   AND COD_EMPRESA      = '$codEmpresa' "
             funcion.ejecutar(sql, this@Pedidos)
         } catch (e: Exception) {
             etTotalDesc.setText("")
@@ -1925,7 +1951,7 @@ class Pedidos : AppCompatActivity() {
         var okDescArticulo = true
         try {
             val sql = ("SELECT PRECIO_UNITARIO, PRECIO_LISTA FROM vt_pedidos_det WHERE NUMERO = $nroPedido "
-                        + " AND COD_VENDEDOR = '${ListaClientes.codVendedor}'")
+                        + " AND COD_VENDEDOR = '${ListaClientes.codVendedor}' AND COD_EMPRESA = '$codEmpresa' ")
             val rs: Cursor = funcion.consultar(sql)
             rs.moveToFirst()
             val nreg = rs.count
@@ -1964,7 +1990,8 @@ class Pedidos : AppCompatActivity() {
             val sql = ("SELECT id FROM vt_pedidos_det "
                     + "  WHERE NRO_PROMOCION > 0 "
                     + "    AND NUMERO		 = '$maximo'"
-                    + "    AND COD_VENDEDOR = '${ListaClientes.codVendedor}'")
+                    + "    AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
+                    + "    AND COD_EMPRESA  = '$codEmpresa' ")
             val cursor: Cursor = funcion.consultar(sql)
             cursor.moveToFirst()
             val nreg = cursor.count
@@ -1989,7 +2016,8 @@ class Pedidos : AppCompatActivity() {
                 "   AND COD_CLIENTE        = '${ListaClientes.codCliente}'      " +
                 "   AND COD_SUBCLIENTE     = '${ListaClientes.codSubcliente}'   " +
                 "   AND COD_VENDEDOR       = '${ListaClientes.codVendedor}'     " +
-                "   AND COD_EMPRESA        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'                                " +
+                //"   AND COD_EMPRESA        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'
+                "   AND COD_EMPRESA        = '$codEmpresa'    " +
                 ""
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         etSubtotal.setText(lista[0]["TOT_COMPROBANTE"])
@@ -2024,7 +2052,8 @@ class Pedidos : AppCompatActivity() {
                 "   AND TRIM(COD_CLIENTE)        = '${ListaClientes.codCliente.trim()}'        " +
                 "   AND TRIM(COD_SUBCLIENTE)     = '${ListaClientes.codSubcliente.trim()}'     " +
                 "   AND TRIM(COD_VENDEDOR)       = '${ListaClientes.codVendedor.trim()}'       " +
-                "   AND TRIM(COD_EMPRESA)        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                //"   AND TRIM(COD_EMPRESA)        = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "   AND TRIM(COD_EMPRESA)        = '$codEmpresa' " +
                 ""
         val lista = funcion.cargarDatos(funcion.consultar(sql))
         if (lista.size == 0){
@@ -2042,7 +2071,7 @@ class Pedidos : AppCompatActivity() {
             progressDialog.cerrarDialogo()
             return
         }
-        val enviarPedido = EnviarPedido(this, lm, telMgr, lista[0])
+        val enviarPedido = EnviarPedido(this, lm, telMgr, lista[0], codEmpresa)
         if (enviarPedido.enviarPedido()){
             progressDialog.cerrarDialogo()
             procesoEnviar()
@@ -2059,7 +2088,7 @@ class Pedidos : AppCompatActivity() {
 
             EnviarPedido.resultado = MainActivity.conexionWS.enviarPedido(
                 EnviarPedido.cabecera,
-                EnviarPedido.detalles, maximo.toString(),ListaClientes.codVendedor)
+                EnviarPedido.detalles, maximo.toString(),ListaClientes.codVendedor, codEmpresa)
 
             var ult = 0
             var cantidad: String
@@ -2073,7 +2102,7 @@ class Pedidos : AppCompatActivity() {
                 try {
                     MainActivity.bd!!.update("vt_pedidos_det", values,
                         " NUMERO = '" + maximo
-                            .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
+                            .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' AND COD_EMPRESA = '$codEmpresa'", null)
                 } catch (e: java.lang.Exception) {
                 }
 
@@ -2093,7 +2122,7 @@ class Pedidos : AppCompatActivity() {
                         MainActivity.bd!!.update("vt_pedidos_det", values,
                             (" NUMERO = '"
                                     + maximo
-                                    ) + "'" + " and cod_articulo = '" + codigo + "'" + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null)
+                                    ) + "'" + " and cod_articulo = '" + codigo + "'" + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' AND COD_EMPRESA = '$codEmpresa'", null)
                         codigo = ""
                     } catch (e: java.lang.Exception) {
                         EnviarPedido.resultado = "2"
@@ -2112,7 +2141,7 @@ class Pedidos : AppCompatActivity() {
                         MainActivity.bd!!.update("vt_pedidos_det",values,
                             ("NUMERO = '$maximo") +
                                     "'" + " and cod_articulo = '" + codigo + "'" +
-                                    " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null
+                                    " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' AND COD_EMPRESA = '$codEmpresa'", null
                         )
                     } catch (e: java.lang.Exception) {
                         EnviarPedido.resultado = "2"
@@ -2146,11 +2175,12 @@ class Pedidos : AppCompatActivity() {
                 val updCab = "update vt_pedidos_cab " +
                         "    set ESTADO = 'E' " +
                         "  WHERE NUMERO = '" + maximo.toString() + "' " +
-                        "    and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'"
+                        "    and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'" +
+                        "    AND COD_EMPRESA  = '$codEmpresa'"
                 funcion.ejecutarB(updCab,this)
                 try {
                     MainActivity.bd!!.update("vt_pedidos_cab", values, "NUMERO = '" + maximo
-                        .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'", null )
+                        .toString() + "' and COD_VENDEDOR = '" + ListaClientes.codVendedor + "' AND COD_EMPRESA = '$codEmpresa'", null )
                 } catch (e: java.lang.Exception) {
                     EnviarPedido.resultado = "Error al grabar! Intente otra vez!!"
                     e.printStackTrace()
@@ -2168,7 +2198,8 @@ class Pedidos : AppCompatActivity() {
                             + " monto_total = (precio_unitario * cantidad) "
                             + " where NUMERO = '"
                             + maximo + "'"
-                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
+                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'"
+                            + " AND COD_EMPRESA  = '$codEmpresa' ")
                 } else {
                     ("update vt_pedidos_det  set "
                             + "monto_total = (precio_unitario*cantidad) -"
@@ -2176,7 +2207,8 @@ class Pedidos : AppCompatActivity() {
                             + porDescuento / 100
                             + ") where NUMERO = '"
                             + maximo + "'"
-                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'")
+                            + " and COD_VENDEDOR = '" + ListaClientes.codVendedor + "'"
+                            + " AND COD_EMPRESA  = '$codEmpresa' ")
                 }
                 try {
                     MainActivity.bd!!.rawQuery(sqlUpdate, null)

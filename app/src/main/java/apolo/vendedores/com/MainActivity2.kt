@@ -26,10 +26,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
-import apolo.vendedores.com.configurar.AcercaDe
-import apolo.vendedores.com.configurar.ActualizarVersion
-import apolo.vendedores.com.configurar.CalcularClavePrueba
-import apolo.vendedores.com.configurar.ConfigurarUsuario
+import apolo.vendedores.com.clases.Usuario
+import apolo.vendedores.com.clases.Vendedor
+import apolo.vendedores.com.configurar.*
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
@@ -55,6 +54,14 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         var rooteado : Boolean = false
         @SuppressLint("StaticFieldLeak")
         var conexionWS : ConexionWS = ConexionWS()
+
+
+        var listaUsuarios : ArrayList<Usuario> = ArrayList()
+        var posicionEditaUsuario = 0
+        const val limiteCantidadUsuario = 4
+
+        var vendedorActivo = Vendedor()
+
     }
 
     private val requestExternalStorage = 1
@@ -97,6 +104,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private fun inicializaElementosReporte(){
 
         crearTablas()
+        modificarTablas()
+        borrarVistas()
 
         inicializaETAccion(accion)
 
@@ -217,6 +226,17 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             funcion.ejecutar(SentenciasSQL.listaSQLCreateTable()[i],this)
         }
     }
+    private fun modificarTablas(){
+        for (i in 0 until SentenciasSQL.listaSQLAlterTable().size){
+            funcion.ejecutarB(SentenciasSQL.listaSQLAlterTable()[i],this)
+        }
+    }
+
+    private fun borrarVistas(){
+        for (i in 0 until SentenciasSQL.listaSQLDropView().size){
+            funcion.ejecutarB(SentenciasSQL.listaSQLDropView()[i],this)
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -253,7 +273,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         if (menuItem.itemId == R.id.vendConfigurar){
-            CalcularClavePrueba.informe = ConfigurarUsuario::class.java
+            CalcularClavePrueba.informe = ConfigurarUsuarioNuevo::class.java
         }
 
         if (menuItem.itemId == R.id.vendActualizar){
@@ -297,7 +317,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             }
             try {
                 EnviarMarcacion.resultado = conexionWS.procesaMarcacionAsistenciaAct(FuncionesUtiles.usuario["LOGIN"].toString(),
-                    EnviarMarcacion.cadena
+                    EnviarMarcacion.cadena,
+                    FuncionesUtiles.usuario["COD_EMPRESA"].toString()
                 )
 //                resultado = "01*GRABADO CON EXITO"
             } catch (e: Exception) {

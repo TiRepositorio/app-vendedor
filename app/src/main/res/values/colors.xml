@@ -18,5 +18,27 @@
     <color name="grisTab">#757575</color>
     <color name="etDeshabilitado">#B8B8B8</color>
 
+<!-- Boton-->
+    <color name="pressed_end">#D7530F</color>
+    <color name="pressed_start">#822300</color>
+    <color name="pressed_border">#EDBAB0</color>
+    <color name="normal_end">#6490FF</color>
+    <color name="normal_start">#9BB7FD</color>
+    <color name="normal_border">#0031AE</color>
+    <color name="focused_start">#944224</color>
+    <color name="focused_end">#D8703B</color>
+    <color name="focused_border">#862501</color>
+    <color name="disabled_start">#EAB6A6</color>
+    <color name="disabled_end">#C9AB9D</color>
+    <color name="disabled_border">#EBC7BE</color>
+    <color name="disabled_and_focused_start">#C29B8C</color>
+    <color name="disabled_and_focused_end">#E2AE94</color>
+    <color name="disabled_and_focused_border">#B27E6B</color>
+    <color name="pressed_text">#FFFFFF</color>
+    <color name="normal_text">#000000</color>
+    <color name="focused_text">#000000</color>
+    <color name="disabled_text">#EBC7BE</color>
+    <color name="disabled_and_focused_text">#B27E6B</color>
+
 
 </resources>

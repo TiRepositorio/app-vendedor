@@ -38,6 +38,7 @@ class Marcacion : AppCompatActivity() {
         lateinit var descCliente: String
         lateinit var tiempoMin : String
         lateinit var tiempoMax  : String
+        var codEmpresa = ""
     }
 
     private val funcion = FuncionesUtiles(this)
@@ -173,6 +174,7 @@ class Marcacion : AppCompatActivity() {
                 + " where TRIM(TIPO)           IN ('E','S')             "
                 + "   and TRIM(COD_CLIENTE)    = '" + codCliente.trim()      + "' "
                 + "   and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim()   + "' "
+                + "   and COD_EMPRESA          = '$codEmpresa' "
                 + " order by id desc                        		 ")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
@@ -207,6 +209,7 @@ class Marcacion : AppCompatActivity() {
                 + " where TRIM(COD_CLIENTE) = '" + ListaClientes.codCliente.trim() + "'"
                 + " and TRIM(COD_SUBCLIENTE) = '" + ListaClientes.codSubcliente.trim() + "'"
                 + " and TRIM(FEC_ALTA) = '" + funcion.getFechaActual().trim() + "'"
+                + " and TRIM(COD_EMPRESA) = '$codEmpresa' "
                 + " and TRIM(ESTADO) IN ('P','E')")
         var cursor: Cursor = funcion.consultar(sql)
         var nreg = cursor.count
@@ -216,6 +219,7 @@ class Marcacion : AppCompatActivity() {
                     + "   and TRIM(COD_CLIENTE)    = '" + ListaClientes.codCliente.trim() + "'"
                     + "   and TRIM(COD_SUBCLIENTE) = '" + ListaClientes.codSubcliente.trim() + "'"
                     + "   and TRIM(FECHA) = '" + funcion.getFechaActual().trim() + "'"
+                    + "   and TRIM(COD_EMPRESA) = '$codEmpresa'"
                     + "   and TRIM(ESTADO) IN ('P','E')")
             cursor = funcion.consultar(sql)
             nreg = cursor.count
@@ -306,6 +310,8 @@ class Marcacion : AppCompatActivity() {
                     + "    and TRIM(a.COD_SUBCLIENTE) = '${codSubcliente.trim()}'"
                     + "    and TRIM(a.COD_CLIENTE)    = TRIM(b.COD_CLIENTE)"
                     + "    and TRIM(a.COD_SUBCLIENTE) = TRIM(b.COD_SUBCLIENTE) "
+                    + "    and TRIM(a.COD_EMPRESA)    = TRIM(b.COD_EMPRESA) "
+                    + "    and TRIM(a.COD_EMPRESA)    = '$codEmpresa' "
                     + "    and ( TRIM(a.TIPO) = 'E' or TRIM(a.TIPO) = 'S' ) "
                     + "    and a.FECHA like '%${funcion.getFechaActual()}%' "
                     + "  group by a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE "
@@ -339,6 +345,7 @@ class Marcacion : AppCompatActivity() {
                 + "  from vt_marcacion_ubicacion "
                 + "  where TRIM(TIPO) in ('E','S') "
                 + "    and FECHA LIKE '${funcion.getFechaActual()}%' "
+                + "    AND COD_EMPRESA = '$codEmpresa' "
                 + "    and trim(COD_CLIENTE)||'-'||trim(COD_SUBCLIENTE) <> '${codCliente.trim()}-${codSubcliente.trim()}' "
                 + "  order by id desc ")
         val cursor: Cursor = funcion.consultar(select)
@@ -366,7 +373,7 @@ class Marcacion : AppCompatActivity() {
         dialogMarcarPresenciaCliente.chkSalida.isEnabled = cb.id == dialogMarcarPresenciaCliente.chkEntrada.id
         //INSERTA CABECERA
         val values = ContentValues()
-        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"])
+        values.put("COD_EMPRESA", codEmpresa)
         values.put("COD_PROMOTOR", ListaClientes.codVendedor.trim())
         values.put("COD_CLIENTE", codCliente.trim())
         values.put("COD_SUBCLIENTE", codSubcliente.trim())
@@ -391,6 +398,7 @@ class Marcacion : AppCompatActivity() {
                 + " WHERE TRIM(COD_CLIENTE)       = '" + codCliente.trim()       + "'"
                 + "   AND TRIM(COD_SUBCLIENTE)    = '" + codSubcliente.trim()    + "'"
                 + "   AND TRIM(TIPO) = '${tipo.trim()}' "
+                + "   AND COD_EMPRESA = '$codEmpresa' "
                 + " ORDER BY id DESC ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count > 0)
@@ -451,6 +459,7 @@ class Marcacion : AppCompatActivity() {
                 + " where TIPO           = ('E')                 	    "
                 + "   and COD_CLIENTE    = '" + codCliente + "' "
                 + "   and COD_SUBCLIENTE = '" + codSubcliente + "' "
+                + "   AND COD_EMPRESA    = '$codEmpresa' "
                 + " order by id desc                        				")
         val cursor: Cursor = funcion.consultar(sql)
         cursor.moveToFirst()
@@ -466,7 +475,8 @@ class Marcacion : AppCompatActivity() {
                 + "  from vt_marcacion_ubicacion "
                 + "  where TRIM(COD_CLIENTE) 	  = '" + codCliente.trim()+ "'"
                 + "    and TRIM(COD_SUBCLIENTE) = '" + codSubcliente.trim() + "'"
-                + "    and TRIM(TIPO) in ('S','E')"
+                + "    and TRIM(TIPO) in ('S','E') "
+                + "    AND COD_EMPRESA = '$codEmpresa' "
                 + "  order by id desc ")
         val cursor: Cursor = funcion.consultar(select)
         if (cursor.count == 0) {
@@ -522,6 +532,7 @@ class Marcacion : AppCompatActivity() {
                 + "    and TRIM(a.COD_CLIENTE)    = TRIM(b.COD_CLIENTE)  "
                 + "    and TRIM(a.COD_SUBCLIENTE) = TRIM(b.COD_SUBCLIENTE) "
                 + "    and ( TRIM(a.TIPO) = 'E' or TRIM(a.TIPO) = 'S' ) "
+                + "    AND a.COD_EMPRESA          = '$codEmpresa' "
                 + "    and FECHA LIKE '%${funcion.getFechaActual()}%' "
                 + "  GROUP BY a.COD_CLIENTE, a.COD_SUBCLIENTE, a.FECHA, a.COD_PROMOTOR, a.TIPO, "
                 + "           a.ESTADO, a.LATITUD, a.LONGITUD, b.DESC_SUBCLIENTE  "
@@ -599,11 +610,13 @@ class Marcacion : AppCompatActivity() {
             try {
                 EnviarMarcacion.resultado = if (EnviarMarcacion.dia == "HOY"){
                     MainActivity2.conexionWS.procesaMarcacionAsistenciaAct(FuncionesUtiles.usuario["LOGIN"].toString(),
-                        EnviarMarcacion.cadena
+                        EnviarMarcacion.cadena,
+                        FuncionesUtiles.usuario["COD_EMPRESA"].toString()
                     )
                 } else {
                     MainActivity2.conexionWS.procesaMarcacionAsistencia(ListaClientes.codVendedor,
-                        EnviarMarcacion.cadena
+                        EnviarMarcacion.cadena,
+                        FuncionesUtiles.usuario["COD_EMPRESA"].toString()
                     )
                 }
 //                resultado = "01*GRABADO CON EXITO"
@@ -621,10 +634,12 @@ class Marcacion : AppCompatActivity() {
                     val update = if (EnviarMarcacion.dia == "HOY"){
                         (" UPDATE vt_marcacion_ubicacion SET ESTADO = 'E' " +
                                 "  WHERE ESTADO = 'P'" +
+                                "    AND COD_EMPRESA = '$codEmpresa' " +
                                 "    AND FECHA like '%" + MainActivity2.funcion.getFechaActual() + "%'")
                     } else {
                         ("update vt_marcacion_ubicacion set ESTADO = 'E' " +
                                 " where ESTADO         = 'P' " +
+                                "   AND COD_EMPRESA = '$codEmpresa' " +
                                 "   and COD_PROMOTOR   = '" + ListaClientes.codVendedor + "'" +
                                 "   and COD_CLIENTE    = '" + EnviarMarcacion.stCodCliente + "'" +
                                 "   and COD_SUBCLIENTE = '" + EnviarMarcacion.stCodSubcliente + "'" +

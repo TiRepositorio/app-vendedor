@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
@@ -27,6 +28,7 @@ class ModificarCliente : AppCompatActivity() {
     companion object{
         var codCliente : String = ""
         var codSubcliente : String = ""
+        var codEmpresa : String = ""
         var editable = false
     }
 
@@ -35,6 +37,7 @@ class ModificarCliente : AppCompatActivity() {
     var tipo  : String = ""
     var nombre : String = ""
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_modificar_cliente)
@@ -43,6 +46,7 @@ class ModificarCliente : AppCompatActivity() {
         inicializarElementos()
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun inicializarElementos(){
         val dispositivo = FuncionesDispositivo(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -75,18 +79,20 @@ class ModificarCliente : AppCompatActivity() {
     }
 
     private fun sqlModificar():String{
-        return ("Select id, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, FOTO_FACHADA, TIPO "
+        return ("Select id, COD_EMPRESA, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, FOTO_FACHADA, TIPO "
                     + " from svm_modifica_catastro "
                     + " WHERE COD_CLIENTE    = '" + codCliente + "'"
                     + "   and COD_SUBCLIENTE = '" + codSubcliente + "'"
+                    + "   AND COD_EMPRESA = '" + codEmpresa + "' "
                     + "   and ESTADO         = 'P' ")
     }
 
     private fun sqlCliente():String{
-        return "SELECT COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA " +
+        return "SELECT COD_EMPRESA, COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA " +
                            "  FROM svm_cliente_vendedor " +
                            " WHERE COD_CLIENTE    = '" + codCliente + "' " +
                            "   AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
+                           "   AND COD_EMPRESA = '" + codEmpresa + "' " +
                            " GROUP BY COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA"
     }
 
@@ -130,7 +136,7 @@ class ModificarCliente : AppCompatActivity() {
         if (validaDatos()){
             if (idCat == "") {
                 val cv = ContentValues()
-                cv.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+                cv.put("COD_EMPRESA", codEmpresa)
                 cv.put("COD_CLIENTE", codCliente)
                 cv.put("COD_SUBCLIENTE", codSubcliente)
                 cv.put("TELEFONO1", etTel1.text.toString())
@@ -145,7 +151,7 @@ class ModificarCliente : AppCompatActivity() {
                 funcion.insertar("svm_modifica_catastro", cv)
             } else {
                 val cv = ContentValues()
-                cv.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+                cv.put("COD_EMPRESA", codEmpresa)
                 cv.put("COD_CLIENTE", codCliente)
                 cv.put("COD_SUBCLIENTE", codSubcliente)
                 cv.put("TELEFONO1", etTel1.text.toString())

@@ -316,4 +316,13 @@
         <item name="android:color">@color/textoClaro</item>
     </style>
 
+
+
+
+    <style name="SingleGradient">
+        <item name="android:background">@drawable/selector_gradient</item>
+        <item name="android:padding">@dimen/button_padding</item>
+        <item name="android:textColor">@drawable/selector_color</item>
+    </style>
+
 </resources>

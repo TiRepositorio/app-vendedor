@@ -68,6 +68,12 @@
             android:name=".configurar.ConfigurarUsuario"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".configurar.ConfigurarUsuarioNuevo"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".configurar.ConfigurarUsuarioIndividual"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".configurar.AcercaDe"
             android:windowSoftInputMode="adjustNothing" />
         <activity

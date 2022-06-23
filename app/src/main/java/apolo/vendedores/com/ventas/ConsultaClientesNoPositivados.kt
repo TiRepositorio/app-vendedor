@@ -101,13 +101,15 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
         funcion.ejecutar(sql,this)
         sql =
             ("create view if not exists svm_no_positivados as Select a.id		 , a.COD_CLIENTE, a.COD_SUBCLIENTE, b.DESC_CLIENTE, b.DESC_SUBCLIENTE, a.COD_MOTIVO , "
-                    + " c.DESC_MOTIVO, a.FECHA		, a.ESTADO    , b.COD_VENDEDOR "
+                    + " c.DESC_MOTIVO, a.FECHA		, a.ESTADO    , b.COD_VENDEDOR, a.COD_EMPRESA "
                     + " from vt_marcacion_visita  a,"
                     + "		 svm_cliente_vendedor b,"
                     + "		 spm_motivo_no_venta  c "
                     + " where a.COD_CLIENTE    = b.COD_CLIENTE "
                     + "   and a.COD_SUBCLIENTE = b.COD_SUBCLIENTE "
                     + "   and a.COD_MOTIVO     = c.COD_MOTIVO "
+                    + "   AND a.COD_EMPRESA    = b.COD_EMPRESA "
+                    + "   AND a.COD_EMPRESA    = c.COD_EMPRESA "
                     + " GROUP BY a.id, a.COD_CLIENTE, a.COD_SUBCLIENTE, b.DESC_CLIENTE, b.DESC_SUBCLIENTE, a.COD_MOTIVO, c.DESC_MOTIVO, a.FECHA, a.ESTADO, b.COD_VENDEDOR "
                     + " ORDER BY a.id DESC")
         funcion.ejecutar(sql,this)
@@ -134,7 +136,8 @@ class ConsultaClientesNoPositivados : AppCompatActivity() {
     private fun cargarDatosCliente(position:Int){
         listaCliente = ArrayList()
         val sql = "SELECT * FROM svm_cliente_vendedor " +
-                        "  WHERE COD_EMPRESA    = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'   " +
+//                        "  WHERE COD_EMPRESA    = '${FuncionesUtiles.usuario[COD_EMPRESA]}'   " +
+                        "  WHERE COD_EMPRESA    = '${lista[position]["COD_EMPRESA"]}'   " +
                         "    AND COD_CLIENTE    = '${lista[position]["COD_CLIENTE"]}'           " +
                         "    AND COD_SUBCLIENTE = '${lista[position]["COD_SUBCLIENTE"]}'        " +
                         "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'          " +

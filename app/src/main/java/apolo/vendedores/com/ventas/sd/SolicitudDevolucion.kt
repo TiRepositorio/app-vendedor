@@ -36,6 +36,7 @@ class SolicitudDevolucion : AppCompatActivity() {
     companion object{
         var posDetalles : Int = 0
         var posEnviados : Int = 0
+        var codEmpresa : String = ""
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccion : EditText
     }
@@ -132,6 +133,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                     + " WHERE IND_BASICO = 'S' "
                     + "   and a.COD_EMPRESA = b.COD_EMPRESA "
                     + "   and a.COD_ARTICULO = b.COD_ARTICULO "
+                    + "   and a.COD_EMPRESA = '" + codEmpresa + "'"
                     + " GROUP BY a.id,a.COD_EMPRESA	,a.COD_ARTICULO	,a.DESC_ARTICULO	, "
                     + " 		 a.COD_UNIDAD_REL	,a.REFERENCIA	,a.IND_BASICO		, "
                     + "			 b.COD_BARRA "
@@ -147,7 +149,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         val groupBy : String = campos
         val orderBy = " a.DESC_ARTICULO asc "
         val tabla   = " svm_st_articulos a, svm_articulos_precios b "
-        val where   = " and IND_BASICO = 'S' and a.COD_EMPRESA = b.COD_EMPRESA and a.COD_ARTICULO = b.COD_ARTICULO "
+        val where   = " AND a.COD_EMPRESA = '$codEmpresa' and IND_BASICO = 'S' and a.COD_EMPRESA = b.COD_EMPRESA and a.COD_ARTICULO = b.COD_ARTICULO "
         listaProductos = ArrayList()
         funcion.cargarLista(listaProductos,funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrarProductos()
@@ -181,7 +183,7 @@ class SolicitudDevolucion : AppCompatActivity() {
     private fun motivos(){
         val campos = " COD_EMPRESA,COD_MOTIVO,DESC_MOTIVO "
         val tabla = " svm_motivos_sd_dev "
-        val where = " COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' "
+        val where = " COD_EMPRESA = '$codEmpresa' "
         val whereOpcional = ""
         val group = ""
         val order = ""
@@ -193,7 +195,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         val campos = " DESC_ARTICULO,COD_UNIDAD_REL,REFERENCIA "
         val tabla = " svm_st_articulos "
         val where : String = " COD_ARTICULO = '" + etDetCodArticulo.text.toString().trim() + "' "
-        val whereOpcional = ""
+        val whereOpcional = " AND COD_EMPRESA = '$codEmpresa'"
         val group = ""
         val order = ""
         fspUM = FuncionesSpinner(this,spUM)
@@ -226,10 +228,10 @@ class SolicitudDevolucion : AppCompatActivity() {
         })
     }
 
-    private fun nroRegistroRef():Int{
+    /*private fun nroRegistroRef():Int{
         var sql = "select VERSION " +
                 "    from svm_vendedor_pedido " +
-                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario[COD_EMPRESA]}' " +
                 "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         var cursor = EnviarSD.funcion.consultar(sql)
         var servidor = 0
@@ -238,7 +240,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         }
 
         sql = "select max(id) id from svm_solicitud_dev_cab " +
-                "   where COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' " +
+                "   where COD_EMPRESA = '${FuncionesUtiles.usuario[COD_EMPRESA]}' " +
                 "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         cursor = EnviarSD.funcion.consultar(sql)
         var telefono = 0
@@ -251,7 +253,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         } else {
             servidor + 1
         }
-    }
+    }*/
 
     private fun registrarSDDetalle(): Boolean {
         val resultado: Boolean
@@ -329,6 +331,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                          + "    AND COD_ARTICULO	= '" + listaProductos[posProducto]["COD_ARTICULO"] + "' "
                          + "    AND EST_ENVIO		= 'N'"
                          + "    AND NRO_REGISTRO_REF= '0'"
+                         + "    AND COD_EMPRESA     = '$codEmpresa'"
                          + "    AND COD_UNIDAD_REL 	= '" + fspUM.getDato("COD_UNIDAD_REL") + "' ")
         return funcion.consultar(sql).count <= 0
     }
@@ -340,6 +343,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                 + "   AND COD_SUBCLIENTE= '" + etCodCliente.text.toString().split("-")[1].trim() + "' "
                 + "   AND COD_CLIENTE 	= '" + etCodCliente.text.toString().split("-")[0].trim() + "' "
                 + "   AND FECHA         = '${funcion.getFechaActual()}'"
+                + "   AND COD_EMPRESA   = '$codEmpresa'"
                 + "   AND EST_ENVIO		= 'N'")
         return try {
             funcion.consultar(sql).count
@@ -352,6 +356,7 @@ class SolicitudDevolucion : AppCompatActivity() {
         EnviarSD.context = this
         EnviarSD.codCliente = etCodCliente.text.split("-")[0].trim()
         EnviarSD.codSubcliente = etCodCliente.text.split("-")[1].trim()
+        EnviarSD.codEmpresa = codEmpresa
         etAccion = accion
         val enviarSD = EnviarSD()
         if (enviarSD.enviar()){
@@ -366,7 +371,8 @@ class SolicitudDevolucion : AppCompatActivity() {
             try {
                 EnviarSD.respuesta = MainActivity.conexionWS.procesaEnviaSolicitudSD(ListaClientes.codVendedor,
                     EnviarSD.cadena,
-                    EnviarSD.cadena2
+                    EnviarSD.cadena2,
+                    codEmpresa
                 )
 //                respuesta = "01*Enviado con exito"
             } catch (e: Exception) {
@@ -380,6 +386,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                             +  "   AND COD_SUBCLIENTE 	= '${EnviarSD.codSubcliente}' "
                             +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
+                            +  "   AND COD_EMPRESA      = '$codEmpresa'"
                             +  "   AND EST_ENVIO 		= 'N' ")
                     Thread.sleep(1000)
                     runOnUiThread { MainActivity.bd!!.execSQL(sql) }
@@ -391,6 +398,7 @@ class SolicitudDevolucion : AppCompatActivity() {
                             +  "   AND COD_SUBCLIENTE 	= '${EnviarSD.codSubcliente}' "
                             +  "   AND NRO_PLANILLA 	= '${ListaClientes.codVendedor}' "
                             +  "   AND FECHA     		= '${funcion.getFechaActual()}' "
+                            + "    AND COD_EMPRESA      = '$codEmpresa'"
                             +  "   AND EST_ENVIO 		= 'N' ")
                     Thread.sleep(1000)
                     runOnUiThread { MainActivity.bd!!.execSQL(sql) }

@@ -2,19 +2,24 @@ package apolo.vendedores.com.utilidades
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.get
+import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
+import apolo.vendedores.com.clases.Usuario
+import apolo.vendedores.com.configurar.ConfigurarUsuarioIndividual
 import apolo.vendedores.com.reportes.ExtractoDeSalario
 import apolo.vendedores.com.ventas.DialogoPromocion
 import apolo.vendedores.com.ventas.ListaClientes
 import apolo.vendedores.com.ventas.Pedidos
 import apolo.vendedores.com.ventas.Promociones
 import kotlinx.android.synthetic.main.inf_ped_rep_lista_pedidos.view.*
+import kotlinx.android.synthetic.main.lista_usuario_detalle.view.*
 import kotlinx.android.synthetic.main.rep_canasta_de_marcas.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_debitos.view.*
 import kotlinx.android.synthetic.main.rep_ext_sal_haberes.view.*
@@ -1237,6 +1242,62 @@ class Adapter{
             if (Pedidos.posDetalle == position){
                 rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
             }
+
+            return rowView
+        }
+
+    }
+
+
+
+
+
+    //NUEVA CONFIGURACION DE USUARIOS
+    class ConfigurarUsuarioNuevo(private val context: Context,
+                                 private val dataSource: ArrayList<Usuario>,
+                                 private val lvUsuarios: ListView) : BaseAdapter() {
+
+        private val inflater: LayoutInflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        @SuppressLint("ViewHolder")
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(R.layout.lista_usuario_detalle, parent, false)
+
+            rowView.tvEmpresa.text = dataSource[position].cod_empresa
+            rowView.tvCodigo.text = dataSource[position].login
+            rowView.tvNombre.text = dataSource[position].nombre
+            rowView.tvVersion.text = dataSource[position].version
+
+
+            rowView.btnModificarUsuario.setOnClickListener {
+
+                MainActivity2.posicionEditaUsuario = position
+                this.context.startActivity(Intent(this.context, ConfigurarUsuarioIndividual::class.java))
+
+
+            }
+
+
+            rowView.btnEliminarUsuario.setOnClickListener {
+                dataSource.removeAt(position)
+                lvUsuarios.invalidateViews()
+
+            }
+
+
 
             return rowView
         }

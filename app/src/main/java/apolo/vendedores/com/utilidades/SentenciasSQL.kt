@@ -1,5 +1,6 @@
 package apolo.vendedores.com.utilidades
 
+import apolo.vendedores.com.clases.Usuario
 import java.util.*
 
 class SentenciasSQL {
@@ -25,6 +26,18 @@ class SentenciasSQL {
                      "'" + usuario["VERSION"] + "'," +
                      "'" + usuario["PROG_PEDIDO"] + "'" +
                      ")")
+        }
+
+        fun insertUsuario2(usuario: Usuario):String{
+            return ("INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO) VALUES " +
+                    "('" + usuario.nombre + "'," +
+                    "'" + usuario.login + "'," +
+                    "'" + usuario.tipo + "'," +
+                    "'" + usuario.activo + "'," +
+                    "'" + usuario.cod_empresa + "'," +
+                    "'" + usuario.version + "'," +
+                    "'" + usuario.prog_pedido + "'" +
+                    ")")
         }
 
         //Sincronizacion
@@ -176,8 +189,8 @@ class SentenciasSQL {
 
         fun createTableSvmTipoCliente(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_tipo_cliente "
-                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, CODIGO TEXT			, DESCRIPCION TEXT,"
-                    + " COD_SUBTIPO TEXT					, DESC_CANAL_VENTA TEXT )")
+                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA TEXT      ,   CODIGO TEXT, "
+                    + " DESCRIPCION TEXT,   COD_SUBTIPO TEXT, DESC_CANAL_VENTA TEXT )")
         }
 
         fun createTableSvmCondicionVentaCliente() : String {
@@ -199,7 +212,7 @@ class SentenciasSQL {
                     + " MONTO TEXT							, TIPO TEXT          , NRO_ORDEN TEXT    ,"
                     + " NRO_CUOTA TEXT 						, FEC_HASTA TEXT  	 , COD_MONEDA TEXT   ,"
                     + " DECIMALES TEXT   					, SIGLAS TEXT  		 , COMENT TEXT       ,"
-                    + " COD_VENDEDOR TEXT                   , DESC_VENDEDOR TEXT)")
+                    + " COD_VENDEDOR TEXT                   , DESC_VENDEDOR TEXT , COD_EMPRESA TEXT)")
         }
 
         fun createTableSvmModuloComisionVend(): String {
@@ -207,7 +220,7 @@ class SentenciasSQL {
                     + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_CONCEPTO TEXT    , DESC_CONCEPTO TEXT ,"
                     + " DESC_MODULO TEXT                     , MONTO_VENTA TEXT     , MONTO_COMISION TEXT,"
                     + " FEC_FINAL TEXT                       , TOT_VENTAS TEXT      , TOT_COMISION TEXT  ,"
-                    + " COD_VENDEDOR TEXT                    , DESC_VENDEDOR TEXT)")
+                    + " COD_VENDEDOR TEXT                    , DESC_VENDEDOR TEXT   , COD_EMPRESA TEXT)")
         }
 
         fun createTableSvmCondVentaVendedor(): String {
@@ -274,11 +287,14 @@ class SentenciasSQL {
 
         fun createTableSvmSegVisitasSemanal(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_seg_visitas_semanal"
-                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT , COD_EMPRESA TEXT     , FEC_MOVIMIENTO TEXT    , "
-                    + "  FEC_INICIO TEXT                	  , FEC_FIN TEXT         , CANTIDAD TEXT          , "
-                    + "  CANT_VENDIDO TEXT                    , CANT_NO_VENDIDO TEXT , CANT_NO_VISITADO TEXT  , "
-                    + "  SEMANA TEXT                          , PORC TEXT            , COD_VENDEDOR TEXT      , "
-                    + "  DESC_VENDEDOR TEXT )")
+                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT , COD_EMPRESA TEXT       , FEC_MOVIMIENTO TEXT    , "
+                    + "  FEC_INICIO TEXT                	  , FEC_FIN TEXT           , CANTIDAD TEXT          , "
+                    + "  CANT_VENDIDO TEXT                    , CANT_NO_VENDIDO TEXT   , CANT_NO_VISITADO TEXT  , "
+                    + "  SEMANA TEXT                          , PORC TEXT              , COD_VENDEDOR TEXT      , "
+                    + "  DESC_VENDEDOR TEXT                   , COD_PERSONA TEXT       , CANT_CLIENTE TEXT      , "
+                    + "  CLI_SEMANA TEXT                      , CANT_VISITA_VALIDA TEXT, CANT_EN_PAREJA TEXT    , "
+                    + "  CANT_FUERA_RUTA TEXT                 , CANT_VISITA TEXT       , PORC_VISITA_VALIDA TEXT, "
+                    + "  PORC_TOTAL_VISITA TEXT )")
         }
 
         fun createTableSvmPromocionesArtCab(): String {
@@ -521,13 +537,105 @@ class SentenciasSQL {
             return lista
         }
 
+
+
+        private fun addCodEmpresaSvmTipoCliente():String{
+            return ("alter table svm_tipo_cliente add column COD_EMPRESA TEXT;")
+        }
+
+        private fun addCodEmpresaSvmLiqComisionVendedor():String{
+            return ("alter table svm_liq_comision_vendedor add column COD_EMPRESA TEXT;")
+        }
+
+        private fun addCodEmpresaSvmModuloComisionVend():String{
+            return ("alter table svm_modulo_comision_vend add column COD_EMPRESA TEXT;")
+        }
+
+        private fun addCodPersonaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column COD_PERSONA TEXT;")
+        }
+
+        private fun addCantClienteSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CANT_CLIENTE TEXT;")
+        }
+
+        private fun addCliSemanaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CLI_SEMANA TEXT;")
+        }
+
+        private fun addCantVisitaValidaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CANT_VISITA_VALIDA TEXT;")
+        }
+
+        private fun addCantEnParejaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CANT_EN_PAREJA TEXT;")
+        }
+
+        private fun addCantFueraRutaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CANT_FUERA_RUTA TEXT;")
+        }
+
+        private fun addCantVisitaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column CANT_VISITA TEXT;")
+        }
+
+        private fun addPorcVisitaValidaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column PORC_VISITA_VALIDA TEXT;")
+        }
+
+        private fun addPorcTotalVisitaSvmSegVisitasSemanal():String{
+            return ("alter table svm_seg_visitas_semanal add column PORC_TOTAL_VISITA TEXT;")
+        }
+
+
+        fun listaSQLAlterTable(): ArrayList<String> {
+            val lista : ArrayList<String> = ArrayList()
+            lista.add(0, addCodEmpresaSvmTipoCliente())
+            lista.add(1, addCodEmpresaSvmLiqComisionVendedor())
+            lista.add(2, addCodEmpresaSvmModuloComisionVend())
+            lista.add(3, addCodPersonaSvmSegVisitasSemanal())
+            lista.add(4, addCantClienteSvmSegVisitasSemanal())
+            lista.add(5, addCliSemanaSvmSegVisitasSemanal())
+            lista.add(6, addCantVisitaValidaSvmSegVisitasSemanal())
+            lista.add(7, addCantEnParejaSvmSegVisitasSemanal())
+            lista.add(8, addCantFueraRutaSvmSegVisitasSemanal())
+            lista.add(9, addCantVisitaSvmSegVisitasSemanal())
+            lista.add(10, addPorcVisitaValidaSvmSegVisitasSemanal())
+            lista.add(11, addPorcTotalVisitaSvmSegVisitasSemanal())
+
+
+            return lista
+        }
+
+
+
+
+        private fun dropVenSvmClienteVendedor():String{
+            return ("DROP VIEW IF EXISTS ven_svm_cliente_vendedor;")
+        }
+
+
+        fun listaSQLDropView(): ArrayList<String> {
+            val lista : ArrayList<String> = ArrayList()
+            lista.add(0, dropVenSvmClienteVendedor())
+
+
+            return lista
+        }
+
+
         //VISTAS DE VENDEDORES
         fun venVistaCabecera(tabla:String):String{
             return "CREATE VIEW IF NOT EXISTS ven_" + tabla + " as " +
-                    "select DISTINCT A.COD_VENDEDOR, B.DESC_VENDEDOR" +
+                    "select DISTINCT B.COD_EMPRESA, A.COD_VENDEDOR, B.DESC_VENDEDOR" +
                     "  FROM $tabla A, svm_vendedor_pedido B" +
                     " WHERE A.COD_EMPRESA = B.COD_EMPRESA " +
                     "   AND A.COD_VENDEDOR= B.COD_VENDEDOR;"
+            /*return "CREATE VIEW IF NOT EXISTS ven_" + tabla + " as " +
+                    "select DISTINCT A.COD_VENDEDOR, A.COD_VENDEDOR, B.DESC_VENDEDOR" +
+                    "  FROM $tabla A, svm_vendedor_pedido B" +
+                    " WHERE A.COD_EMPRESA = B.COD_EMPRESA " +
+                    "   AND A.COD_VENDEDOR= B.COD_VENDEDOR;"*/
         }
 
         //INDICES

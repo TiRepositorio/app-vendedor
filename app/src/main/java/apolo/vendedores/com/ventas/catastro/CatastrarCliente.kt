@@ -160,6 +160,7 @@ class CatastrarCliente : Activity() {
         etComentario.setOnClickListener{ funcion.dialogoEntrada(etComentario, this)}
         btBuscarEnMapa.setOnClickListener{
             MapaCatastro.modificarCliente = true
+            MapaCatastro.codEmpresa = "1"
             startActivity(Intent(this, MapaCatastro::class.java))
         }
         btLimpiar.setOnClickListener {
@@ -353,48 +354,6 @@ class CatastrarCliente : Activity() {
         vCliente += "'|'" + etComentario.text.toString().uppercase(Locale.ROOT).substring(0, limit) + "'"
 
 
-        /* vCliente = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'|'$codVendedor"
-        vCliente += "'|'" + etCodigo.text.toString()
-        codCliente = etCodigo.text.toString()
-        var limit: Int = if (etRazonSocial.text.length < 100) { etRazonSocial.text.length } else { 100 }
-        vCliente += "'|'" + etRazonSocial.text.toString().substring(0, limit)
-        limit = if (etNombreFantasia.text.length < 100) { etNombreFantasia.text.length } else { 100 }
-        vCliente += "'|'" + etNombreFantasia.text.toString().substring(0, limit)
-        limit = if (etDireccionComercial.text.length < 100) { etDireccionComercial.text.length } else { 100 }
-        vCliente += "'|'" + etDireccionComercial.text.toString().substring(0, limit)
-        vCliente += "'|'PAR"
-        vCliente += "'|'${etDepartamento.text.toString().split("-")[0].trim()}"
-        vCliente += "'|'${etCiudad.text.toString().split("-")[0].trim()}"
-        limit = if (etBarrio.text.length < 100) { etBarrio.text.length } else { 100 }
-        vCliente += "'|'" + etBarrio.text.toString().substring(0, limit)
-        vCliente += "'|'" + etRUC.text.toString()
-        vCliente += "'|'" + etCI.text.toString()
-        vCliente += "'|'" + etCelular.text.toString()
-        vCliente += "'|'" + etLineaBaja.text.toString()
-        vCliente += "'|'${etFormaPago.text.toString().split("-")[0].trim()}"
-        vCliente += "'|'${etTipoCliente.text.toString().split("-")[0].trim()}"
-        vCliente += "'|'${etDiasVisita.text.toString().split("-")[0].trim()}"
-        limit = if (etCercaDe.text.length < 100) { etCercaDe.text.length } else { 100 }
-        vCliente += "'|'" + etCercaDe.text.toString().substring(0, limit)
-        limit = if (etEmail.text.length < 100) { etEmail.text.length } else { 100 }
-        vCliente += "'|'" + etEmail.text.toString().substring(0, limit)
-        vCliente += "'|'" + etLimiteCredito.text.toString()
-        vCliente += "'|'${etListaPrecio.text.toString().split("-")[0].trim()}"
-        limit = if (etNomRefComercial.text.length < 100) { etNomRefComercial.text.length } else { 100 }
-        vCliente += "'|'" + etNomRefComercial.text.toString().substring(0, limit)
-        limit = if (etTelRefComercial.text.length < 100) { etTelRefComercial.text.length } else { 100 }
-        vCliente += "'|'" + etTelRefComercial.text.toString().substring(0, limit)
-        limit = if (etNomRefBancaria.text.length < 100) { etNomRefBancaria.text.length } else { 100 }
-        vCliente += "'|'" + etNomRefBancaria.text.toString().substring(0, limit)
-        limit = if (etTelRefBancaria.text.length < 100) { etTelRefBancaria.text.length } else { 100 }
-        vCliente += "'|'" + etTelRefBancaria.text.toString().substring(0, limit)
-        limit = if (tvLatitud.text.length < 100) { tvLatitud.text.length } else { 100 }
-        vCliente += "'|'" + tvLatitud.text.toString().substring(0, limit)
-        limit = if (tvLongitud.text.length < 100) { tvLongitud.text.length } else { 100 }
-        vCliente += "'|'" + tvLongitud.text.toString().substring(0, limit)
-        limit = if (etComentario.text.length < 100) { etComentario.text.length } else { 100 }
-        vCliente += "'|'" + etComentario.text.toString().substring(0, limit) + "'"
-        Enviar().execute()*/
     }
 
     //	PROCESO DE ENVIAR CLIENTE AL WEB SERVICE

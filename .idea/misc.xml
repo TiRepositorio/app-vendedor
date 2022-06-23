@@ -22,6 +22,36 @@
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/ven_lista_sd_enviados.xml" value="0.21296296296296297" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/layout/ventana_principal.xml" value="0.264" />
         <entry key="..\:/Android/Proyecto/VendedoresKT/ApoloVendedor/app/src/main/res/menu/drawer_menu_vendedores.xml" value="0.4" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/border_textview.xml" value="0.2075" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/ic_actualizar.xml" value="0.142" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/ic_agregar.xml" value="0.142" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/ic_check.xml" value="0.142" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/ic_eliminar.xml" value="0.142" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable-xxhdpi/ic_usuario_servidor.xml" value="0.142" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/disabled.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/disabled_and_focused.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/focused.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/layout_bg.xml" value="0.2065" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/normal.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/pressed.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/selector_color.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/drawable/selector_gradient.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_configurar_usuario.xml" value="0.17074275362318841" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_configurar_usuario_2.xml" value="0.22" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_configurar_usuario_individual.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_consulta_pedidos.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_deuda.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_lista_clientes.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_mapa.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_pedidos.xml" value="0.17074275362318841" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_promotores.xml" value="0.192481884057971" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_seguimiento_de_visitas.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_sincronizacion.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/inf_comision_detalle.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/lista_usuario_detalle.xml" value="0.33" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/rep_seg_vis_lista_vendedores.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/ven_lista_sd_productos.xml" value="0.2" />
       </map>
     </option>
   </component>
@@ -30,7 +60,7 @@
       <item index="0" class="java.lang.String" itemvalue="android.annotation.SuppressLint" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

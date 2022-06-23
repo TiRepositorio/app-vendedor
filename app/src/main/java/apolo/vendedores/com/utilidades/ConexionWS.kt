@@ -205,7 +205,7 @@ class ConexionWS {
     }
 
     //enviar marcaciones
-    fun procesaMarcacionAsistencia(codVendedor: String, vMarcaciones: String) : String{
+    fun procesaMarcacionAsistencia(codVendedor: String, vMarcaciones: String, codEmpresa: String) : String{
         setMethodName("ProcesaMarcacionProm")
 
         lateinit var solicitud : SoapObject
@@ -215,7 +215,8 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+            //solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario[COD_EMPRESA])
+            solicitud.addProperty("codEmpresa", codEmpresa)
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
         } catch (e: Exception){
@@ -234,7 +235,7 @@ class ConexionWS {
         }
         return resultado
     }
-    fun procesaMarcacionAsistenciaAct(codVendedor: String, vMarcaciones: String) : String{
+    fun procesaMarcacionAsistenciaAct(codVendedor: String, vMarcaciones: String, codEmpresa: String) : String{
         setMethodName("ProcesaMarcacionAsistenciaAct")
 
         lateinit var solicitud : SoapObject
@@ -244,7 +245,8 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+            //solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario[COD_EMPRESA])
+            solicitud.addProperty("codEmpresa", codEmpresa)
             solicitud.addProperty("codVendedor", codVendedor)
             solicitud.addProperty("detalle", vMarcaciones)
         } catch (e: Exception){
@@ -264,7 +266,7 @@ class ConexionWS {
         return resultado
     }
 
-    fun procesaEnviaSolicitudSD(codRepartidor: String, cabecera: String, detalle: String) : String{
+    fun procesaEnviaSolicitudSD(codRepartidor: String, cabecera: String, detalle: String, codEmpresa: String) : String{
         setMethodName("ProcesaAutorizaSDVend")
 
         lateinit var solicitud : SoapObject
@@ -274,7 +276,8 @@ class ConexionWS {
             solicitud = SoapObject(NAMESPACE, METHOD_NAME)
             solicitud.addProperty("usuario", "edsystem")
             solicitud.addProperty("password", "#edsystem@polo")
-            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+            //solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario[COD_EMPRESA])
+            solicitud.addProperty("codEmpresa", codEmpresa)
             solicitud.addProperty("codRepartidor", codRepartidor)
             solicitud.addProperty("cabecera", cabecera)
             solicitud.addProperty("detalle", detalle)
@@ -402,14 +405,15 @@ class ConexionWS {
         return true
     }
 
-    fun procesaNoVenta(noVenta: String, codVendedor: String): String {
+    fun procesaNoVenta(noVenta: String, codVendedor: String, codEmpresa: String): String {
             setMethodName("ProcesaNoVenta")
         val request: SoapObject
         try {
             request = SoapObject(NAMESPACE, METHOD_NAME)
             request.addProperty("usuario", "edsystem")
             request.addProperty("password", "#edsystem@polo")
-            request.addProperty("vcodEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+            //request.addProperty("vcodEmpresa", FuncionesUtiles.usuario[COD_EMPRESA])
+            request.addProperty("vcodEmpresa", codEmpresa)
             request.addProperty("vcodVendedor", codVendedor)
             request.addProperty("nopositivado", noVenta)
         } catch (e: java.lang.Exception) {
@@ -435,12 +439,13 @@ class ConexionWS {
         return res
     }
 
-    fun enviarPedido(cabecera: String, detalle: String, nroComprobante: String, codVendedor: String): String {
+    fun enviarPedido(cabecera: String, detalle: String, nroComprobante: String, codVendedor: String, codEmpresa: String): String {
         setMethodName("ProcesaPedido")
         val request = SoapObject(NAMESPACE, METHOD_NAME)
         request.addProperty("usuario", "edsystem")
         request.addProperty("password", "#edsystem@polo")
-        request.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+        //request.addProperty("codEmpresa", FuncionesUtiles.usuario[COD_EMPRESA])
+        request.addProperty("codEmpresa", codEmpresa)
         request.addProperty("tipComprobante", "PRO")
         request.addProperty("serComprobante", codVendedor)
         request.addProperty("nroComprobante", nroComprobante)

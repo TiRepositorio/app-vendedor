@@ -34,6 +34,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         var codSubcliente :String = ""
         var codVendedor : String = ""
         var lista : ArrayList<HashMap<String,String>> = ArrayList()
+        var codEmpresa = ""
     }
 
     private lateinit var mMap: GoogleMap
@@ -91,13 +92,17 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
             tipo = "G"
             latitud  = positionCliente.latitude.toString()
             longitud = positionCliente.longitude.toString()
-            val sql : String = (" SELECT TELEFONO1, TELEFONO2, DIRECCION,FOTO_FACHADA, CERCA_DE,TIPO "
+            val sql : String = (" SELECT id, TELEFONO1, TELEFONO2, DIRECCION,FOTO_FACHADA, CERCA_DE,TIPO "
                             + " FROM  svm_modifica_catastro "
                             + " WHERE COD_CLIENTE    = '" + codCliente      + "'"
                             + " AND   COD_SUBCLIENTE = '" + codSubcliente   + "'"
-                            + " AND   ESTADO         = 'P' ")
+                            + " AND   COD_EMPRESA    = '$codEmpresa'"
+                            + " AND   ESTADO         = 'P' "
+                            + " AND   TIPO           = 'G' ")
             var valores : ContentValues = valores(funcion.consultar(sqlCliente()))
             valores.put("TIPO",tipo)
+            val cursor = funcion.consultar(sql)
+            id = if (cursor.count>0){funcion.dato(cursor,"id")} else {""}
             if (id == ""){
                 try {
                     funcion.insertar("svm_modifica_catastro",valores)
@@ -109,7 +114,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
                 funcion.actualizar("svm_modifica_catastro",valores, " id = '$id'")
             }
             valores = valores(funcion.consultar(sql))
-            cliente = "'${FuncionesUtiles.usuario["COD_EMPRESA"]}'|'$codCliente'|'$codSubcliente'|'${valores.get("TELEFONO1")}'|'${valores.get("TELEFONO2")}'" +
+            cliente = "'1'|'$codCliente'|'$codSubcliente'|'${valores.get("TELEFONO1")}'|'${valores.get("TELEFONO2")}'" +
                     "|'${valores.get("DIRECCION")}'|'${valores.get("CERCA_DE")}'|'$latitud'|'$longitud'|'$tipo'"
             foto = valores.get("FOTO_FACHADA").toString()
             enviarUbicacion()
@@ -138,22 +143,26 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
                 try {
                     var sql : String = "UPDATE svm_modifica_catastro SET ESTADO = 'E' " +
                             " WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "   AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                            "   AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
+                            "   AND COD_EMPRESA    = '$codEmpresa' "
                     funcion.ejecutarB(sql,this@Mapa)
                     sql = "UPDATE svm_modifica_catastro SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
                             "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
                             "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
+                            "  AND COD_EMPRESA    = '$codEmpresa' "
                     funcion.ejecutarB(sql,this@Mapa)
                     sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
                             "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
                             "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
+                            "  AND COD_EMPRESA    = '$codEmpresa' "
                     funcion.ejecutarB(sql,this@Mapa)
                     sql = "UPDATE svm_cliente_vendedor SET LATITUD  = '" + cliente.split("|")[7].replace("'","") + "'," +
                             "LONGITUD = '" + cliente.split("|")[8].replace("'","") + "' " +
                             "WHERE COD_CLIENTE    = '" + codCliente    + "' " +
-                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' "
+                            "  AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
+                            "   AND COD_EMPRESA    = '$codEmpresa' "
                     funcion.ejecutarB(sql,this@Mapa)
                 } catch (e:Exception) {
                     //enviar().excecute()
@@ -173,7 +182,10 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
             runOnUiThread {
                 dialogo.cerrarDialogo()
                 funcion.toast(this,respuesta.substring(3))
-                finish()
+                if (respuesta.indexOf("01*")>-1){
+                    finish()
+                }
+                //finish()
             }
         }
         thread.start()
@@ -185,7 +197,8 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         return (" SELECT TELEFONO, TELEFONO2, DIRECCION, CERCA_DE "
                 + " FROM  svm_cliente_vendedor "
                 + " WHERE COD_CLIENTE    = '" + codCliente      + "'"
-                + " AND   COD_SUBCLIENTE = '" + codSubcliente   + "'")
+                + " AND   COD_SUBCLIENTE = '" + codSubcliente   + "'"
+                + " AND COD_EMPRESA      = '$codEmpresa' ")
     }
 
     fun valores(cursor: Cursor):ContentValues{
@@ -205,7 +218,7 @@ class Mapa : AppCompatActivity(), OnMapReadyCallback {
         for (i in 0 until cursor.columnCount){
             valores.put(cursor.getColumnName(i),funcion.dato(cursor,cursor.getColumnName(i)))
         }
-        valores.put("COD_EMPRESA",FuncionesUtiles.usuario["COD_EMPRESA"])
+        valores.put("COD_EMPRESA", codEmpresa)
         valores.put("COD_CLIENTE", codCliente)
         valores.put("COD_SUBCLIENTE", codSubcliente)
         valores.put("LATITUD",latitud)

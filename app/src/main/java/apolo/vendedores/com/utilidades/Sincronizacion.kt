@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
+import apolo.vendedores.com.clases.Usuario
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
 import apolo.vendedores.com.ventas.justificacion.NoVenta
 import kotlinx.android.synthetic.main.activity_sincronizacion.*
@@ -38,10 +39,13 @@ class Sincronizacion : AppCompatActivity() {
         lateinit var context: Context
         var primeraVez = false
         var nf = DecimalFormat("000")
+        var usuario = Usuario()
     }
     var dispositivo = FuncionesDispositivo(this)
     var ubicacion = FuncionesUbicacion(this)
     var funcion : FuncionesUtiles = FuncionesUtiles(this)
+    var posicionUsuario = 0
+
     lateinit var enviarMarcacion : EnviarMarcacion
     lateinit var enviarNoventa   : NoVenta
     private lateinit var lm: LocationManager
@@ -98,11 +102,27 @@ class Sincronizacion : AppCompatActivity() {
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")
 //            finish()
         }
+
+        //solo insertar si es la primera vez que esta configurando
+        if (primeraVez) {
+            insertarUsuario()
+        }
+
+        posicionUsuario = 0
+        funcion.traerUsuario()
+
+
         try {
+            usuario = MainActivity2.listaUsuarios[posicionUsuario]
+            FuncionesUtiles.usuario["LOGIN"] = usuario.login
+            FuncionesUtiles.usuario["COD_EMPRESA"] = usuario.cod_empresa
+            FuncionesUtiles.usuario["VERSION"] = usuario.version
             preparaSincornizacion().execute()
         } catch(e: Exception){
             Log.println(Log.WARN, "Error",e.message!!)
         }
+
+
     }
 
     @Suppress("ClassName")
@@ -119,6 +139,16 @@ class Sincronizacion : AppCompatActivity() {
 
         @SuppressLint("WrongThread", "SetTextI18n")
         override fun doInBackground(vararg p0: Void?): Void? {
+
+            runOnUiThread {
+                tvImei.text = "Espere..."
+                pbProgresoTotal.progress = 0
+                pbTabla.progress = 0
+                btFinalizar.visibility = View.INVISIBLE
+            }
+
+
+
             imeiBD = MainActivity.conexionWS.procesaVersion()
             if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1) {
                 progressDialog.dismiss()
@@ -132,7 +162,7 @@ class Sincronizacion : AppCompatActivity() {
             enviarMarcacion.procesaEnviaMarcaciones()
             enviarNoventa.enviarPendientesDiaAnterior()
 
-            insertarUsuario()
+
             if (imeiBD.isEmpty()){
                 return null
             }
@@ -146,9 +176,12 @@ class Sincronizacion : AppCompatActivity() {
                     return null
                 }
                 funcion.ejecutar("update usuarios set PROG_PEDIDO = '${imeiBD.split("-")[3]}'",this@Sincronizacion)
+
                 if (!validaVersion(imeiBD.split("-")[0],imeiBD.split("-")[1],imeiBD.split("-")[2])){
                     return null
                 }
+
+
             } else {
                 if (imeiBD.isEmpty()){
                     tvImei.text = "Ocurrio un error"
@@ -219,9 +252,11 @@ class Sincronizacion : AppCompatActivity() {
         }
     }
 
-    private fun borrarTablasTodo(listaTablas: ArrayList<String>){
+    private fun borrarTablasTodo(listaTablas: ArrayList<String>,
+                                 codEmpresa: String){
         for (i in 0 until listaTablas.size){
-            val sql: String = "DROP TABLE IF EXISTS " + listaTablas[i].split(" ")[5]
+            //val sql: String = "DROP TABLE IF EXISTS " + listaTablas[i].split(" ")[5]
+            val sql: String = "DELETE FROM " + listaTablas[i].split(" ")[5] + " WHERE COD_EMPRESA = '" + codEmpresa + "' or COD_EMPRESA is NULL "
             try {
                 MainActivity.bd!!.execSQL(sql)
             } catch (e : Exception) {
@@ -236,7 +271,7 @@ class Sincronizacion : AppCompatActivity() {
             runOnUiThread {
                 tvImei.text = tvImei.text.toString() + "\n\nSincronizando"
             }
-            borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables())
+            borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables(), Sincronizacion.usuario.cod_empresa)
             obtenerArchivosMasivo(
                 MainActivity.tablasSincronizacion.listaSQLCreateTables(),
                 MainActivity.tablasSincronizacion.listaCamposSincronizacion(),
@@ -396,8 +431,27 @@ class Sincronizacion : AppCompatActivity() {
                     }
                 }
             }
-            pbProgresoTotal.progress = 100
-            btFinalizar.visibility = View.VISIBLE
+
+            posicionUsuario++
+            if (posicionUsuario < MainActivity2.listaUsuarios.size) {
+
+                try {
+                    usuario = MainActivity2.listaUsuarios[posicionUsuario]
+                    FuncionesUtiles.usuario["LOGIN"] = usuario.login
+                    FuncionesUtiles.usuario["COD_EMPRESA"] = usuario.cod_empresa
+                    FuncionesUtiles.usuario["VERSION"] = usuario.version
+                    preparaSincornizacion().execute()
+                } catch(e: Exception){
+                    Log.println(Log.WARN, "Error",e.message!!)
+                }
+
+            } else {
+
+                pbProgresoTotal.progress = 100
+                btFinalizar.visibility = View.VISIBLE
+
+            }
+
         }
         return true
     }
@@ -425,18 +479,28 @@ class Sincronizacion : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun validaVersion(versionUsuario:String, versionSistema:String, versionEstado:String):Boolean{
         if (!FuncionesUtiles.usuario["VERSION"].equals(versionUsuario)){
-            tvImei.text = "Version de usuario no corresponde.$versionUsuario"
+            runOnUiThread {
+                tvImei.text = "Version de usuario no corresponde.$versionUsuario"
+            }
+
             return false
         }
         if (versionSistema != MainActivity.version){
-            tvImei.text = "Debe actualizar su version para sincronizar."
+            runOnUiThread {
+                tvImei.text = "Debe actualizar su version para sincronizar."
+            }
+
             return false
         }
         if (versionEstado == "I"){
-            tvImei.text = "El usuario se encuentra inactivo."
-            borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables())
-            borrarTablasTodo(SentenciasSQL.listaSQLCreateTable() )
-            btFinalizar.visibility = View.VISIBLE
+            runOnUiThread {
+                tvImei.text = "El usuario se encuentra inactivo."
+                borrarTablasTodo(MainActivity.tablasSincronizacion.listaSQLCreateTables(), Sincronizacion.usuario.cod_empresa)
+                borrarTablasTodo(SentenciasSQL.listaSQLCreateTable(), Sincronizacion.usuario.cod_empresa)
+                btFinalizar.visibility = View.VISIBLE
+            }
+
+
             return false
         }
         return true

@@ -20,7 +20,8 @@ class EnviarPedido(
     var context: Context,
     private var lm: LocationManager,
     private var telMgr: TelephonyManager,
-    private var cabeceraHash: HashMap<String, String>
+    private var cabeceraHash: HashMap<String, String>,
+    private var codEmpresa: String
 ) {
 
     companion object{
@@ -71,7 +72,7 @@ class EnviarPedido(
 
             // 25 campos
             ubicacion.obtenerUbicacion(lm)
-            vIntoCab = ("'${FuncionesUtiles.usuario["COD_EMPRESA"]}'" // cod_empresa
+            vIntoCab = ("'$codEmpresa'" // cod_empresa
                     + ",'${ListaClientes.codSucursalCliente}'" // cod_sucursal
                     + ",to_date('${Pedidos.etFechaPedido.text}','dd/MM/yyyy')" // fec_comprobante
                     + ",'PRO'" // tip_comprobante
@@ -158,7 +159,7 @@ class EnviarPedido(
             detalles = ""
             var sql2: String
             for (i in 0 until nreg) {
-                vIntoDet = ("'${FuncionesUtiles.usuario["COD_EMPRESA"]}'," //cod_empresa
+                vIntoDet = ("'$codEmpresa'," //cod_empresa
                         + "'" + ListaClientes.codSucursalCliente + "'," //cod_sucursal
                         + "'PRO'," //tip_comprobante
                         + "'" + ListaClientes.codVendedor + "'," //ser_comprobante

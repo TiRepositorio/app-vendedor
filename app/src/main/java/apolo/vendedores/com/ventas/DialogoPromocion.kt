@@ -34,7 +34,8 @@ class DialogoPromocion(
     var context: Context,
     var order: String,
     private var condicion: String,
-    var descripcion: String
+    var descripcion: String,
+    var codEmpresa: String
 ) {
 
     var lista: ArrayList<HashMap<String,String>> = ArrayList()
@@ -399,7 +400,7 @@ class DialogoPromocion(
 
     private fun cargaDatosCabecera(){
         val values = ContentValues()
-        values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+        values.put("COD_EMPRESA", codEmpresa)
         values.put("COD_CLIENTE", ListaClientes.codCliente)
         values.put("COD_SUBCLIENTE", ListaClientes.codSubcliente)
         values.put("COD_VENDEDOR", ListaClientes.codVendedor)
@@ -474,7 +475,7 @@ class DialogoPromocion(
         for (i in 0 until lista.size){
             if (lista[i]["CANTIDAD"] != "0"){
                 val values = ContentValues()
-                values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+                values.put("COD_EMPRESA", codEmpresa)
                 values.put("NUMERO", Pedidos.maximo)
                 values.put("COD_VENDEDOR", ListaClientes.codVendedor)
                 values.put("COD_ARTICULO", lista[i]["COD_ARTICULO"])
@@ -598,7 +599,7 @@ class DialogoPromocion(
         for (i in 0 until lista.size){
             if (lista[i]["CANTIDAD"] != "0"){
                 val values = ContentValues()
-                values.put("COD_EMPRESA", FuncionesUtiles.usuario["COD_EMPRESA"].toString())
+                values.put("COD_EMPRESA", codEmpresa)
                 values.put("NUMERO", Pedidos.maximo)
                 values.put("COD_VENDEDOR", ListaClientes.codVendedor)
                 values.put("COD_ARTICULO", lista[i]["COD_ARTICULO"])
@@ -740,7 +741,8 @@ class DialogoPromocion(
                 " WHERE trim(a.NRO_PROMOCION) = '${lista[0]["NRO_PROMOCION"]}' " +
                 "   AND trim(a.COD_VENDEDOR)  = '${ListaClientes.codVendedor}' " +
 //                "   AND trim(a.COD_ARTICULO)  = trim(b.COD_ARTICULO) " +
-                "   AND ifnull(trim(a.COD_EMPRESA),'${FuncionesUtiles.usuario["COD_EMPRESA"]}')  = ifnull(trim(b.COD_EMPRESA),'${FuncionesUtiles.usuario["COD_EMPRESA"]}') "
+                "   AND a.COD_EMPRESA         = '$codEmpresa' " +
+                "   AND ifnull(trim(a.COD_EMPRESA),'$codEmpresa')  = ifnull(trim(b.COD_EMPRESA),'$codEmpresa') "
         listaDetalle = funcion.cargarDatos(funcion.consultar(sql))
         cargarDetalleF(lista)
 //        cargarDetalle(listaDetalle)

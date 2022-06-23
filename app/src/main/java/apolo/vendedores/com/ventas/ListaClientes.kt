@@ -52,6 +52,7 @@ class ListaClientes : AppCompatActivity() {
         var lista : ArrayList<HashMap<String,String>> = ArrayList()
         var indPresencial = "N"
         var claveAutorizacion = ""
+        var codEmpresa = ""
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccion: EditText
     }
@@ -119,7 +120,7 @@ class ListaClientes : AppCompatActivity() {
         val orderBy = "COD_CLIENTE"
         val tabla = " svm_cliente_vendedor "
 //        var where = " AND COD_VENDEDOR = '" + codVendedor +
-        val where = " AND COD_VENDEDOR = '$codVendedor' $condicion "
+        val where = " AND COD_VENDEDOR = '$codVendedor' $condicion AND COD_EMPRESA = '$codEmpresa'"
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
         mostrar()
     }
@@ -223,6 +224,7 @@ class ListaClientes : AppCompatActivity() {
             Deuda.codigo = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_CLIENTE"].toString() + "-" +
                            FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["COD_SUBCLIENTE"].toString()
             Deuda.nombre = FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["DESC_CLIENTE"].toString()
+            Deuda.codVen = ListaClientes.codVendedor
             if (FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TOT_DEUDA"].equals("0")){
                 funcion.mensaje(this,"Atención!","El cliente no tiene deudas.")
                 return
@@ -236,6 +238,7 @@ class ListaClientes : AppCompatActivity() {
         Mapa.lista = ArrayList()
         Mapa.lista.add(FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle])
         Mapa.modificarCliente = false
+        Mapa.codEmpresa = codEmpresa
         val intent = Intent(this,Mapa::class.java)
         startActivity(intent)
     }
@@ -244,6 +247,7 @@ class ListaClientes : AppCompatActivity() {
         Mapa.lista = ArrayList()
         Mapa.lista = FuncionesUtiles.listaDetalle
         Mapa.modificarCliente = false
+        Mapa.codEmpresa = codEmpresa
         val intent = Intent(this,Mapa::class.java)
         startActivity(intent)
     }
@@ -277,12 +281,14 @@ class ListaClientes : AppCompatActivity() {
                 }
                 if (et.text.toString().trim() == "vender") {
                     Pedidos.nuevo = true
+                    Pedidos.codEmpresa = codEmpresa
                     startActivity(Intent(this@ListaClientes, Pedidos::class.java))
                     return
                 }
                 if (et.text.toString().trim() == "venderNoPresencial") {
                     Pedidos.nuevo = true
                     Pedidos.indPresencial = "N"
+                    Pedidos.codEmpresa = codEmpresa
                     startActivity(Intent(this@ListaClientes, Pedidos::class.java))
                     return
                 }
@@ -324,7 +330,8 @@ class ListaClientes : AppCompatActivity() {
     private fun modificar(){
         if (FuncionesUtiles.listaDetalle.size==0){return}
         ModificarCliente.editable = true
-        val modifcar = Intent(this,ModificarCliente::class.java)
+        ModificarCliente.codEmpresa = codEmpresa
+        val modifcar = Intent(this, ModificarCliente::class.java)
         startActivity(modifcar)
     }
 
@@ -353,6 +360,7 @@ class ListaClientes : AppCompatActivity() {
     }
 
     private fun sd(){
+        apolo.vendedores.com.ventas.sd.SolicitudDevolucion.codEmpresa = codEmpresa
         val sd = Intent(this,apolo.vendedores.com.ventas.sd.SolicitudDevolucion::class.java)
         startActivity(sd)
     }
@@ -412,6 +420,7 @@ class ListaClientes : AppCompatActivity() {
         NoVenta.nuevo        = true
         NoVenta.etAccion     = accion
         NoVenta.context      = this
+        NoVenta.codEmpresa   = codEmpresa
         val noVenta = NoVenta(codCliente, codSubcliente, lm, telMgr, latitud, longitud)
         noVenta.cargarDialogo()
     }
@@ -425,6 +434,9 @@ class ListaClientes : AppCompatActivity() {
         Marcacion.descCliente   = FuncionesUtiles.listaDetalle[posCliente]["DESC_CLIENTE"].toString()
         Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MIN"].toString()
         Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MAX"].toString()
+        Marcacion.codEmpresa    = codEmpresa
+
+
         val ubicacion = FuncionesUbicacion(this)
         if (!ubicacion.validaUbicacionSimulada2(lm)){
             return

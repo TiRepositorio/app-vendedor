@@ -38,6 +38,7 @@ class Promociones : AppCompatActivity() {
         var condicionVenta : String = ""
         var codArticulo    : String = ""
         var posPromocion   : Int = 0
+        var codEmpresa     : String = ""
 //        var promocion = true
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccionPromo : EditText
@@ -92,7 +93,8 @@ class Promociones : AppCompatActivity() {
                             +  "    AND (z.COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(z.COD_LISTA_PRECIO)     = '' or z.COD_LISTA_PRECIO IS NULL)"
                             +  "    AND  z.COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
                             +  "    AND  z.NRO_PROMOCION IN ($inNro)"
-                            +  "    AND EXISTS ("
+                            +  "    AND  z.COD_EMPRESA = '$codEmpresa'"
+                            +  "    AND EXISTS ( "
                             +  " SELECT 1 FROM svm_promociones_art_cab a, svm_articulos_precios b "
                             +  " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  "
                             +  "   AND a.COD_ARTICULO = b.COD_ARTICULO "
@@ -165,6 +167,7 @@ class Promociones : AppCompatActivity() {
                 +  "    AND (z.COD_LISTA_PRECIO   = '$codListaPrecio'             or trim(z.COD_LISTA_PRECIO)     = '' or z.COD_LISTA_PRECIO IS NULL)"
                 +  "    AND  z.COD_VENDEDOR       = '${ListaClientes.codVendedor}' "
                 +  "    AND  z.NRO_PROMOCION IN ($inNro) "
+                +  "    AND  z.COD_EMPRESA = '$codEmpresa'"
                 +  "    AND EXISTS ("
                 +  " SELECT 1 FROM svm_promociones_art_cab a, svm_articulos_precios b "
                 +  " WHERE a.COD_EMPRESA  = b.COD_EMPRESA  "
@@ -215,7 +218,8 @@ class Promociones : AppCompatActivity() {
         var sql = ("SELECT distinct NRO_PROMOCION FROM svm_promociones_art_cab c "
                 + "   WHERE (c.COD_CONDICION_VENTA = '" + condicionVenta + "' or c.COD_CONDICION_VENTA = ' ' or c.COD_CONDICION_VENTA IS NULL)"
                 + "     and (c.TIP_CLIENTE = '" + ListaClientes.tipCliente + "' or c.TIP_CLIENTE = ' ' or c.TIP_CLIENTE IS NULL)"
-                + "     and (c.COD_LISTA_PRECIO = '" + codListaPrecio + "' or c.COD_LISTA_PRECIO = ' ' or c.COD_LISTA_PRECIO IS NULL)")
+                + "     and (c.COD_LISTA_PRECIO = '" + codListaPrecio + "' or c.COD_LISTA_PRECIO = ' ' or c.COD_LISTA_PRECIO IS NULL)"
+                + "     AND c.COD_EMPRESA = '$codEmpresa'")
 
         if (codArticulo.isNotEmpty()) {
             sql += "     and  c.COD_ARTICULO = '$codArticulo'"
@@ -238,7 +242,8 @@ class Promociones : AppCompatActivity() {
 
         if (codArticulo.isNotEmpty()) {
             sql = ("SELECT distinct NRO_PROMOCION FROM svm_promociones_art_det b "
-                    + "   WHERE COD_ARTICULO IN (" + codArticulo + ")")
+                    + "   WHERE COD_ARTICULO IN (" + codArticulo + ")"
+                    + "     AND COD_EMPRESA = '$codEmpresa'")
             cursorProm = MainActivity2.bd!!.rawQuery(sql, null)
             var inNroDet = ""
             if (cursorProm.count == 0) {
@@ -275,7 +280,8 @@ class Promociones : AppCompatActivity() {
             this,
             "NRO_PROMOCION",
             "",
-            "DESC_ARTICULO"
+            "DESC_ARTICULO",
+            codEmpresa
         )
         if (listaPromociones[posPromocion]["IND_TIPO"] == "B"){
             dialogo.dialogoComboBonificacion(
@@ -309,6 +315,7 @@ class Promociones : AppCompatActivity() {
                 +  " WHERE NUMERO = '${Pedidos.maximo}' "
                 +  "   AND COD_VENDEDOR = '${ListaClientes.codVendedor}' "
                 +  "   AND NRO_PROMOCION = '${listaPromociones[position]["NRO_PROMOCION"]}' "
+                +  "   AND COD_EMPRESA = '$codEmpresa'"
                 +  " ")
         val funcion = FuncionesUtiles(this)
         if (funcion.consultar(sql).count > 0){
