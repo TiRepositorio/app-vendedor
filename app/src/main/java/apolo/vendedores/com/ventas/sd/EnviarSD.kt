@@ -69,7 +69,7 @@ class EnviarSD {
             servidor = funcion.datoEntero(cursor,"VERSION")
         }
 
-        sql = "select max(NRO_REGISTRO_REF) NRO_REGISTRO_REF from svm_solicitud_dev_cab " +
+        sql = "select max(CAST(NRO_REGISTRO_REF as decimal)) NRO_REGISTRO_REF from svm_solicitud_dev_cab " +
                 "   where COD_EMPRESA = '$codEmpresa' " +
                 "     AND COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         cursor = funcion.consultar(sql)

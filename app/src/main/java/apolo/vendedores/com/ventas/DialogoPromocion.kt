@@ -42,7 +42,7 @@ class DialogoPromocion(
     var listaDetalle: ArrayList<HashMap<String,String>> = ArrayList()
     var funcion = FuncionesUtiles()
     var campos : String = ""
-    private var descuento = 0
+    private var descuento = 0.0
     private lateinit var listaDetallesInsertar : ArrayList<ContentValues>
     lateinit var adapter: Adapter.AdapterDialogoPromociones
     lateinit var dialogo: Dialog
@@ -547,12 +547,12 @@ class DialogoPromocion(
         } else {
             cantidad = adapter.getTotalEntero("SUBTOTAL")
         }
-        descuento = 0
+        descuento = 0.0
         for (i in 0 until listaDetalle.size){
             val desde = listaDetalle[i]["CANT_DESDE"].toString().trim().toInt()
             val hasta = listaDetalle[i]["CANT_HASTA"].toString().trim().toInt()
             if (cantidad in desde..hasta){
-                descuento = listaDetalle[i]["DESCUENTO"].toString().trim().toInt()
+                descuento = listaDetalle[i]["DESCUENTO"].toString().trim().toDouble()
                 if (listaDetalle[i]["IND_TIPO"] == "C"){
                     if (Pedidos.spListaPrecios.getDato("DECIMALES") == "0"){
                         precioFinal = listaDetalle[i]["PRECIO_GS"].toString().toInt()
@@ -572,7 +572,7 @@ class DialogoPromocion(
                 }
             }
         }
-        if (descuento == 0){
+        if (descuento == 0.0){
             if (lista[0]["IND_TIPO"] == "M") {
                 funcion.mensaje(context,"¡Atención!","No alcanzó el monto mínimo para acceder a la promoción.\nTotal: $cantidad")
             } else {
@@ -616,7 +616,8 @@ class DialogoPromocion(
                             precio = floor(precio - ((precio * descuento)/100))
                         } else {
                             if (listaDetalle[0]["IND_TIPO"] == "M"){
-                                precio = floor(precio - listaDetalle[0]["DESCUENTO"].toString().replace(".","").trim().toDouble())
+                                //precio = floor(precio - listaDetalle[0]["DESCUENTO"].toString().replace(".","").trim().toDouble())
+                                precio = floor(precio - descuento)
                             }
                         }
                         val subtotal = precio * lista[i]["CANTIDAD"].toString().trim().toInt()
@@ -746,7 +747,7 @@ class DialogoPromocion(
         listaDetalle = funcion.cargarDatos(funcion.consultar(sql))
         cargarDetalleF(lista)
 //        cargarDetalle(listaDetalle)
-        if (descuento == 0){
+        if (descuento == 0.0){
             return
         }
         for (i in 0 until lista.size){

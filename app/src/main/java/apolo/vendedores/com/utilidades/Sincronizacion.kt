@@ -148,8 +148,16 @@ class Sincronizacion : AppCompatActivity() {
             }
 
 
+            try {
+                imeiBD = MainActivity.conexionWS.procesaVersion()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
+                }
+                return null
+            }
 
-            imeiBD = MainActivity.conexionWS.procesaVersion()
+
             if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1) {
                 progressDialog.dismiss()
                 runOnUiThread {
@@ -158,9 +166,25 @@ class Sincronizacion : AppCompatActivity() {
                 finish()
                 return null
             }
+            try {
+                enviarMarcacion.procesaEnviaMarcaciones()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
+                }
+                return null
+            }
 
-            enviarMarcacion.procesaEnviaMarcaciones()
-            enviarNoventa.enviarPendientesDiaAnterior()
+            try {
+                enviarNoventa.enviarPendientesDiaAnterior()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
+                }
+                return null
+            }
+
+
 
 
             if (imeiBD.isEmpty()){

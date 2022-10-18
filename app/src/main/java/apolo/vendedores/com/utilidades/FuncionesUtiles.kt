@@ -941,19 +941,22 @@ class FuncionesUtiles {
     }
     @SuppressLint("SetTextI18n")
     fun actualizaVendedor(context: Context){
-        if (posVend == listaVendedores.size){
-            Toast.makeText(context, "Es el ultimo registro", Toast.LENGTH_SHORT).show()
-            posVend--
-        } else {
-            if (posVend == -1){
-                Toast.makeText(context, "Es el primer registro", Toast.LENGTH_SHORT).show()
-                posVend++
+        if (listaVendedores.size > 0) {
+            if (posVend == listaVendedores.size){
+                Toast.makeText(context, "Es el ultimo registro", Toast.LENGTH_SHORT).show()
+                posVend--
             } else {
-                tvVendedor!!.text = listaVendedores[posVend]["codigo"] + "-" +
-                        listaVendedores[posVend]["descripcion"]
-                inicializaContadores()
+                if (posVend == -1){
+                    Toast.makeText(context, "Es el primer registro", Toast.LENGTH_SHORT).show()
+                    posVend++
+                } else {
+                    tvVendedor!!.text = listaVendedores[posVend]["codigo"] + "-" +
+                            listaVendedores[posVend]["descripcion"]
+                    inicializaContadores()
+                }
             }
         }
+
     }
     @SuppressLint("SetTextI18n")
     fun actualizaSupervisor(context: Context){

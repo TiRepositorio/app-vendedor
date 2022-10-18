@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "79"
-        const val fechaVersion : String = "20220617"
+        const val version : String = "81"
+        const val fechaVersion : String = "20221017"
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(menu2)
             finish()
         }*/
-        startActivity(Intent(this,ConfigurarUsuarioNuevo::class.java))
+        startActivity(Intent(this, ConfigurarUsuarioNuevo::class.java))
         finish()
     }
 
