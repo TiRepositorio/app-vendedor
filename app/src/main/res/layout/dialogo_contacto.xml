@@ -34,7 +34,7 @@
         android:id="@+id/etTelefono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="number"
         android:padding="15dp"
         android:hint="Telefono"/>
     <LinearLayout

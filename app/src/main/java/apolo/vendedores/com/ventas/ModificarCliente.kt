@@ -30,6 +30,7 @@ class ModificarCliente : AppCompatActivity() {
         var codSubcliente : String = ""
         var codEmpresa : String = ""
         var editable = false
+        var indVenta = false
     }
 
     var funcion : FuncionesUtiles = FuncionesUtiles()
@@ -67,11 +68,13 @@ class ModificarCliente : AppCompatActivity() {
         }
         codCliente = ListaClientes.codCliente
         codSubcliente = ListaClientes.codSubcliente
+        codEmpresa = ListaClientes.codEmpresa
         cargar(funcion.consultar(sqlModificar()),funcion.consultar(sqlCliente()))
         inicializarEt(etTel1,cbConfirmado1)
         inicializarEt(etTel2,cbConfirmado2)
         inicializarEt(etDireccion,cbConfirmado3)
         inicializarEt(etCercaDe,cbConfirmado4)
+        inicializarEt(etCorreo,cbConfirmado5)
         btnAceptar.setOnClickListener{registrar()}
         btnCancelar.setOnClickListener{finish()}
         inicializaETAccion(accion)
@@ -79,7 +82,7 @@ class ModificarCliente : AppCompatActivity() {
     }
 
     private fun sqlModificar():String{
-        return ("Select id, COD_EMPRESA, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, FOTO_FACHADA, TIPO "
+        return ("Select id, COD_EMPRESA, COD_CLIENTE, COD_SUBCLIENTE, TELEFONO1, TELEFONO2, DIRECCION, CERCA_DE, FOTO_FACHADA, TIPO, EMAIL "
                     + " from svm_modifica_catastro "
                     + " WHERE COD_CLIENTE    = '" + codCliente + "'"
                     + "   and COD_SUBCLIENTE = '" + codSubcliente + "'"
@@ -88,12 +91,12 @@ class ModificarCliente : AppCompatActivity() {
     }
 
     private fun sqlCliente():String{
-        return "SELECT COD_EMPRESA, COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA " +
+        return "SELECT COD_EMPRESA, COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA, EMAIL " +
                            "  FROM svm_cliente_vendedor " +
                            " WHERE COD_CLIENTE    = '" + codCliente + "' " +
                            "   AND COD_SUBCLIENTE = '" + codSubcliente + "' " +
                            "   AND COD_EMPRESA = '" + codEmpresa + "' " +
-                           " GROUP BY COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA"
+                           " GROUP BY COD_CLIENTE,COD_SUBCLIENTE,TELEFONO,TELEFONO2,DIRECCION,CERCA_DE,FOTO_FACHADA, EMAIL "
     }
 
     private fun cargar(modificar: Cursor, cliente:Cursor){
@@ -102,6 +105,7 @@ class ModificarCliente : AppCompatActivity() {
             etTel2.setText(funcion.dato(cliente,"TELEFONO2").replace("null",""))
             etDireccion.setText(funcion.dato(cliente,"DIRECCION").replace("null",""))
             etCercaDe.setText(funcion.dato(cliente,"CERCA_DE").replace("null",""))
+            etCorreo.setText(funcion.dato(cliente,"EMAIL").replace("null",""))
             idCat = ""
             tipo = ""
         } else {
@@ -109,6 +113,7 @@ class ModificarCliente : AppCompatActivity() {
             etTel2.setText(funcion.dato(modificar,"TELEFONO2").replace("null",""))
             etDireccion.setText(funcion.dato(modificar,"DIRECCION").replace("null",""))
             etCercaDe.setText(funcion.dato(modificar,"CERCA_DE").replace("null",""))
+            etCorreo.setText(funcion.dato(modificar,"EMAIL").replace("null",""))
             idCat = funcion.dato(modificar,"id").replace("null","")
             tipo = "D"
         }
@@ -125,9 +130,43 @@ class ModificarCliente : AppCompatActivity() {
     }
 
     private fun validaDatos():Boolean{
-        val validacion : Boolean = (cbConfirmado1.isChecked && cbConfirmado2.isChecked && cbConfirmado3.isChecked and cbConfirmado4.isChecked)
+        var validacion : Boolean = (cbConfirmado1.isChecked && cbConfirmado2.isChecked && cbConfirmado3.isChecked and cbConfirmado5.isChecked)
         if (!validacion){
             funcion.mensaje(this,"Atención!","Debe confirmar todos los campos.")
+        } else {
+
+            if (etTel1.text.toString().trim().isEmpty()) {
+                funcion.mensaje(this,"Atención!","El campo de Telefono 1 es obligatorio")
+                validacion = false
+            } else {
+
+                if (etCorreo.text.toString().trim().isEmpty()) {
+                    funcion.mensaje(this,"Atención!","El campo de correo es obligatorio")
+                    validacion = false
+                } else {
+
+
+                    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+                    if (!etTel1.text.toString().matches(regex)) {
+                        funcion.mensaje(this,"Atención!","El campo telefono 1 solo debe tener numeros")
+                        validacion = false
+                    }  else {
+
+                        if (!etTel2.text.toString().matches(regex) && etTel2.text.toString() != "") {
+                            funcion.mensaje(this,"Atención!","El campo telefono 2 solo debe tener numeros")
+                            validacion = false
+                        }
+
+                    }
+
+
+
+
+
+                }
+
+            }
+
         }
         return validacion
     }
@@ -141,8 +180,9 @@ class ModificarCliente : AppCompatActivity() {
                 cv.put("COD_SUBCLIENTE", codSubcliente)
                 cv.put("TELEFONO1", etTel1.text.toString())
                 cv.put("TELEFONO2", etTel2.text.toString())
-                cv.put("DIRECCION", etDireccion.text.toString())
+                cv.put("DIRECCION", etDireccion.text.toString().trim())
                 cv.put("CERCA_DE", etCercaDe.text.toString())
+                cv.put("EMAIL", etCorreo.text.toString())
                 cv.put("LATITUD", "")
                 cv.put("LONGITUD", "")
                 cv.put("FECHA", funcion.getFechaActual())
@@ -158,6 +198,7 @@ class ModificarCliente : AppCompatActivity() {
                 cv.put("TELEFONO2", etTel2.text.toString())
                 cv.put("DIRECCION", etDireccion.text.toString())
                 cv.put("CERCA_DE", etCercaDe.text.toString())
+                cv.put("EMAIL", etCorreo.text.toString().trim())
                 cv.put("ESTADO", "P")
                 if (tipo == "G") {
                     cv.put("TIPO", "A")
@@ -166,6 +207,20 @@ class ModificarCliente : AppCompatActivity() {
                 }
                 funcion.actualizar("svm_modifica_catastro",cv, " id = '$idCat'")
             }
+
+            val cv = ContentValues()
+            cv.put("IND_CADUCADO", "N")
+            funcion.actualizar("svm_cliente_vendedor",cv, "     cod_empresa = '$codEmpresa' " +
+                                                                      " AND cod_cliente = '$codCliente'" +
+                                                                      " AND cod_subcliente = '$codSubcliente'")
+
+            try {
+                FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["IND_CADUCADO"] = "N"
+            } catch (e: Exception) {
+            }
+
+
+
             val gatillo = DialogoAutorizacion(this)
             gatillo.dialogoAccionOpcion("enviar","cerrar",accion,"Desea enviar los datos al servidor?","Guardado con exito","Si","No")
         }
@@ -289,6 +344,8 @@ class ModificarCliente : AppCompatActivity() {
         cbConfirmado3.isEnabled = estado
         etCercaDe.isEnabled = estado
         cbConfirmado4.isEnabled = estado
+        etCorreo.isEnabled = estado
+        cbConfirmado5.isEnabled = estado
         btnAceptar.isEnabled = estado
         btnCancelar.isEnabled = estado
     }

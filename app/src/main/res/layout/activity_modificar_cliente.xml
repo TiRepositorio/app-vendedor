@@ -28,9 +28,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="ATENCION ESTE CLIENTE ESTA CADUCADO !!"
+                android:text="CONFIRMAR DATOS DEL CLIENTE"
                 android:textColor="@color/textoClaro"
                 android:layout_margin="10dp"/>
+            android:text="ATENCION ESTE CLIENTE ESTA CADUCADO !!"
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -52,13 +53,14 @@
                     android:layout_weight="1"
                     android:textSize="12dp"
                     android:textColor="@color/textoClaro"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:singleLine="true" />
 
                 <CheckBox
                     android:id="@+id/cbConfirmado1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"/>
 
             </LinearLayout>
 
@@ -82,13 +84,14 @@
                     android:layout_weight="1"
                     android:textSize="12dp"
                     android:textColor="@color/textoClaro"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:singleLine="true" />
 
                 <CheckBox
                     android:id="@+id/cbConfirmado2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff" />
 
             </LinearLayout>
 
@@ -118,13 +121,14 @@
                 <CheckBox
                     android:id="@+id/cbConfirmado3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:orientation="horizontal"
                 android:gravity="center">
 
@@ -149,7 +153,40 @@
                 <CheckBox
                     android:id="@+id/cbConfirmado4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Correo:"
+                    style="@style/tvOscuro"/>
+
+                <EditText
+                    android:id="@+id/etCorreo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45sp"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:textSize="12dp"
+                    android:textColor="@color/textoClaro"
+                    android:inputType="textFilter"
+                    android:singleLine="true" />
+
+                <CheckBox
+                    android:id="@+id/cbConfirmado5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff" />
 
             </LinearLayout>
 
@@ -192,6 +229,18 @@
                     android:layout_weight="1"
                     android:text="Cancelar" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="20sp"
+                android:text="Atencion!!\nLos datos serán revisados antes de ser aprobados"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:gravity="center"/>
+
+
         </LinearLayout>
     </ScrollView>
 

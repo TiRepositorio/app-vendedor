@@ -331,6 +331,7 @@ class ListaClientes : AppCompatActivity() {
         if (FuncionesUtiles.listaDetalle.size==0){return}
         ModificarCliente.editable = true
         ModificarCliente.codEmpresa = codEmpresa
+        ModificarCliente.indVenta = false
         val modifcar = Intent(this, ModificarCliente::class.java)
         startActivity(modifcar)
     }
@@ -340,6 +341,15 @@ class ListaClientes : AppCompatActivity() {
         if (FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["TIP_CAUSAL"].toString().trim() == "B"){
             val dialogo = DialogoAutorizacion(this)
             dialogo.dialogoAutorizacion("vender",accion)
+            return
+        }
+        if (FuncionesUtiles.listaDetalle[FuncionesUtiles.posicionDetalle]["IND_CADUCADO"].toString().trim() == "S"){
+            if (FuncionesUtiles.listaDetalle.size==0){return}
+            ModificarCliente.editable = true
+            ModificarCliente.codEmpresa = codEmpresa
+            ModificarCliente.indVenta = true
+            val modifcar = Intent(this, ModificarCliente::class.java)
+            startActivity(modifcar)
             return
         }
         if (validaMarcacionSalida()){

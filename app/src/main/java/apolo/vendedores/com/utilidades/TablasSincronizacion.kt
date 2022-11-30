@@ -261,6 +261,7 @@ class TablasSincronizacion {
         lista.add(40,"TIEMPO_MAX")
         lista.add(41,"SOL_TARG")
         lista.add(42,"DIAS_INICIAL")
+        lista.add(43,"EMAIL")
         return lista
     }
     private fun camposTablaSvmCondicionVenta(): ArrayList<String> {

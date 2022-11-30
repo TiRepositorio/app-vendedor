@@ -21,6 +21,7 @@ import apolo.vendedores.com.clases.Usuario
 import apolo.vendedores.com.ventas.ListaClientes
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_configurar_usuario_2.*
+import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import kotlinx.android.synthetic.main.dialogo_contacto.*
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -1200,6 +1201,13 @@ class FuncionesUtiles {
         dialogo.etNombre.text = etNombre.text
         dialogo.etTelefono.text = etTelefono.text
         dialogo.dBtAceptar.setOnClickListener {
+
+            val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+            if (!etTelefono.text.toString().matches(regex) && etTelefono.text.toString() != "") {
+                mensaje(context,"Atención!","El campo telefono solo debe tener numeros")
+                return@setOnClickListener
+            }
+
             etNombre.setText(dialogo.etNombre.text.toString().uppercase(Locale.ROOT))
             etTelefono.setText(dialogo.etTelefono.text.toString().uppercase(Locale.getDefault()))
             dialogo.dismiss()

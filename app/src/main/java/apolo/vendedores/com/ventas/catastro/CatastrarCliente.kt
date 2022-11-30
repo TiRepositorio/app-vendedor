@@ -28,6 +28,9 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_catastrar_cliente.*
+import kotlinx.android.synthetic.main.activity_catastrar_cliente.etCercaDe
+import kotlinx.android.synthetic.main.activity_catastrar_cliente.ivFachada
+import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -314,7 +317,7 @@ class CatastrarCliente : Activity() {
         limit = if (etDireccionComercial.text.length < 100) { etDireccionComercial.text.length } else { 100 }
         vCliente += "'|'" + etDireccionComercial.text.toString().uppercase(Locale.ROOT)
             .substring(0, limit)
-        vCliente += "'|'PAR"
+        vCliente += "'|'PRY"
         vCliente += "'|'${etDepartamento.text.toString().split("-")[0].trim().uppercase(Locale.ROOT)}"
         vCliente += "'|'${etCiudad.text.toString().split("-")[0].trim().uppercase(Locale.ROOT)}"
         limit = if (etBarrio.text.length < 100) { etBarrio.text.length } else { 100 }
@@ -524,7 +527,7 @@ class CatastrarCliente : Activity() {
                     + " where trim(a.COD_CLIENTE) = '" + codCliente.trim() + "'"
                     + " and a.COD_PAIS = b.COD_PAIS 	  and a.COD_DEPARTAMENTO = b.COD_DEPARTAMENTO "
                     + " and a.COD_CIUDAD = b.COD_CIUDAD   and a.COD_CONDICION_VENTA = c.COD_CONDICION_VENTA"
-                    + " and a.COD_TIPO_CLIENTE = d.COD_SUBTIPO and a.COD_DIAS_VISITA = e.CODIGO "
+                    + " and a.COD_TIPO_CLIENTE = d.CODIGO and a.COD_DIAS_VISITA = e.CODIGO "
                     + " and a.CANAL_SUGERIDO = f.COD_LISTA_PRECIO")
         cursor = funcion.consultar(sql)
         etRazonSocial.setText(funcion.dato(cursor, "RAZON_SOCIAL"))
@@ -767,7 +770,7 @@ class CatastrarCliente : Activity() {
         if (!validaCampo(etRUC, 15)) {return false}
         if (!validaCampo(etCI, 15)) {return false}
         if (!validaCampo(etCelular, 15)) {return false}
-        if (!validaCampo(etLineaBaja, 15)) {return false}
+        //if (!validaCampo(etLineaBaja, 15)) {return false}
         if (!validaCampo(etEmail, 30)) {return false}
         if (!validaCampo(etLimiteCredito, 17)) {return false}
         if (!validaCampo(etListaPrecio, 50)) {return false}
@@ -785,6 +788,25 @@ class CatastrarCliente : Activity() {
             Toast.makeText(this@CatastrarCliente, "Debe tomar foto de fachada", Toast.LENGTH_SHORT).show()
             return false
         }
+        //VALIDAR QUE TELEFONO SEA SOLO NUMEROS
+        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+        if (!etCelular.text.toString().matches(regex)) {
+            Toast.makeText(
+                this@CatastrarCliente,
+                "El campo telefono 1 solo debe tener numeros",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+        if (!etLineaBaja.text.toString().matches(regex) && etLineaBaja.text.toString() != "") {
+            Toast.makeText(
+                this@CatastrarCliente,
+                "El campo telefono 2 solo debe tener numeros",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+
         return true
     }
 
@@ -798,7 +820,7 @@ class CatastrarCliente : Activity() {
         values.put("NOM_FANTASIA", etNombreFantasia.text.toString())
         values.put("DIR_COMERCIAL", etDireccionComercial.text.toString())
         values.put("CERCA_DE", etCercaDe.text.toString())
-        values.put("COD_PAIS", "PAR")
+        values.put("COD_PAIS", "PRY")
         values.put("COD_DEPARTAMENTO", etDepartamento.text.toString().split("-")[0].trim())
         values.put("COD_CIUDAD", etCiudad.text.toString().split("-")[0].trim())
         values.put("BARRIO", etBarrio.text.toString())
@@ -933,9 +955,14 @@ class CatastrarCliente : Activity() {
         dialogo.cargarDialogo(false)
     }
     private fun buscarTipoCliente(){
-        val dialogo = DialogoBusqueda(
+        /*val dialogo = DialogoBusqueda(
             this, "svm_tipo_cliente", "COD_SUBTIPO",
             "DESC_CANAL_VENTA", "COD_SUBTIPO", "",
+            etTipoCliente, null
+        )*/
+        val dialogo = DialogoBusqueda(
+            this, "svm_tipo_cliente", "CODIGO",
+            "DESCRIPCION", "CODIGO", "",
             etTipoCliente, null
         )
         dialogo.cargarDialogo(false)

@@ -304,7 +304,7 @@ class ConexionWS {
         clientes: String,
         FotoFachada: String?
     ): String {
-        setMethodName("ProcesaActualizaClienteFinal")
+        setMethodName("ProcesaActualizaClienteFinalAct")
         val solicitud: SoapObject?
         val resultado: String?
         try {
@@ -340,8 +340,8 @@ class ConexionWS {
         vcliente: String,
         vFotoFachada: String?
     ): String {
-        METHOD_NAME = "ProcesaClienteFinal"
-        SOAP_ACTION = "http://edsystem/servidor/ProcesaClienteFinal"
+        METHOD_NAME = "ProcesaClienteFinalAct"
+        SOAP_ACTION = "http://edsystem/servidor/ProcesaClienteFinalAct"
         val request: SoapObject?
         val resultado: String?
         try {

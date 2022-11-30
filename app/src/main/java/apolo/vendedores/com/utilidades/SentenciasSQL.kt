@@ -61,7 +61,7 @@ class SentenciasSQL {
                     + " COMENTARIO TEXT						 , IND_ESP TEXT 		, CATEGORIA TEXT   , TELEFONO2 TEXT		,"
                     + " LATITUD TEXT						 , LONGITUD TEXT		, CERCA_DE TEXT	   , IND_CADUCADO TEXT  ,"
                     + " IND_VITRINA TEXT 					 , ESTADO TEXT 			, FOTO_FACHADA TEXT, TIEMPO_MIN TEXT    ,"
-                    + " TIEMPO_MAX TEXT 					 , SOL_TARG TEXT        , DESC_VENDEDOR TEXT); ")
+                    + " TIEMPO_MAX TEXT 					 , SOL_TARG TEXT        , DESC_VENDEDOR TEXT, EMAIL TEXT); ")
         }
 
         fun createTableSvmCondicionVenta(): String {
@@ -414,7 +414,7 @@ class SentenciasSQL {
                     + " COD_SUBCLIENTE TEXT					 , TELEFONO1 TEXT	, TELEFONO2 TEXT		,"
                     + " DIRECCION TEXT						 , CERCA_DE TEXT	, LATITUD TEXT			,"
                     + " LONGITUD TEXT						 , ESTADO TEXT		, FECHA TEXT		    ,"
-                    + " FOTO_FACHADA BLOB		 			 , TIPO TEXT        )")
+                    + " FOTO_FACHADA BLOB		 			 , TIPO TEXT        , EMAIL TEXT)")
         }
         private fun createTableSvmCatastroCliente(): String {
             return ("CREATE TABLE IF NOT EXISTS svm_catastro_cliente "
@@ -587,6 +587,14 @@ class SentenciasSQL {
             return ("alter table svm_seg_visitas_semanal add column PORC_TOTAL_VISITA TEXT;")
         }
 
+        private fun addEmailSvmModificaCatastro():String{
+            return ("alter table svm_modifica_catastro add column EMAIL TEXT;")
+        }
+
+        private fun addEmailSvmClienteVendedor():String{
+            return ("alter table svm_cliente_vendedor add column EMAIL TEXT;")
+        }
+
 
         fun listaSQLAlterTable(): ArrayList<String> {
             val lista : ArrayList<String> = ArrayList()
@@ -602,6 +610,8 @@ class SentenciasSQL {
             lista.add(9, addCantVisitaSvmSegVisitasSemanal())
             lista.add(10, addPorcVisitaValidaSvmSegVisitasSemanal())
             lista.add(11, addPorcTotalVisitaSvmSegVisitasSemanal())
+            lista.add(12, addEmailSvmModificaCatastro())
+            lista.add(13, addEmailSvmClienteVendedor())
 
 
             return lista

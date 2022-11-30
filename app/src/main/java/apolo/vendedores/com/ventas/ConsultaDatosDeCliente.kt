@@ -124,6 +124,7 @@ class ConsultaDatosDeCliente : AppCompatActivity() {
                         "    AND COD_VENDEDOR   = '${lista[position]["COD_VENDEDOR"]}'          " +
                 ""
         funcion.cargarLista(listaCliente,funcion.consultar(sql))
+        ListaClientes.codEmpresa        = lista[position]["COD_EMPRESA"].toString()
         ListaClientes.codCliente        = lista[position]["COD_CLIENTE"].toString()
         ListaClientes.codSubcliente     = lista[position]["COD_SUBCLIENTE"].toString()
         ListaClientes.descCliente       = lista[position]["DESC_CLIENTE"].toString()

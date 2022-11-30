@@ -27,6 +27,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.text.DecimalFormat
+import kotlin.concurrent.thread
 
 @Suppress("DEPRECATION", "ClassName")
 class Sincronizacion : AppCompatActivity() {
@@ -154,11 +155,12 @@ class Sincronizacion : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
                 }
+                finish()
                 return null
             }
 
 
-            if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1) {
+            if (imeiBD.indexOf("Unable to resolve host") > -1 || imeiBD.indexOf("timeout") > -1  || imeiBD.indexOf("Failed to connect") > -1) {
                 progressDialog.dismiss()
                 runOnUiThread {
                     Toast.makeText(context,"Verifique su conexion a internet y vuelva a intentarlo",Toast.LENGTH_SHORT).show()
@@ -172,6 +174,7 @@ class Sincronizacion : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
                 }
+                finish()
                 return null
             }
 
@@ -181,6 +184,7 @@ class Sincronizacion : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(context,"Error. ${e.message.toString()}",Toast.LENGTH_SHORT).show()
                 }
+                finish()
                 return null
             }
 
@@ -244,6 +248,7 @@ class Sincronizacion : AppCompatActivity() {
                             tvImei.text = "\n\nError al obtener archivos"
                             tvImei.text = "\n\n${ConexionWS.resultados}"
                             Toast.makeText(this@Sincronizacion, "Error al obtener archivos", Toast.LENGTH_SHORT).show()
+                            finish()
                         }
                     }
                 }
@@ -255,6 +260,8 @@ class Sincronizacion : AppCompatActivity() {
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             progressDialog.dismiss()
+
+
             runOnUiThread {
                 if (tvImei.text.toString().indexOf("Espere")<0){
                     if (imeiBD.trim() == "X"){
@@ -278,9 +285,20 @@ class Sincronizacion : AppCompatActivity() {
 
     private fun borrarTablasTodo(listaTablas: ArrayList<String>,
                                  codEmpresa: String){
+
+        var empresasExistentes = ""
+
+        MainActivity2.listaUsuarios.forEach {
+            if (empresasExistentes == "") {
+                empresasExistentes = "'${it.cod_empresa}'"
+            } else {
+                empresasExistentes = "$empresasExistentes,'${it.cod_empresa}'"
+            }
+        }
+
         for (i in 0 until listaTablas.size){
             //val sql: String = "DROP TABLE IF EXISTS " + listaTablas[i].split(" ")[5]
-            val sql: String = "DELETE FROM " + listaTablas[i].split(" ")[5] + " WHERE COD_EMPRESA = '" + codEmpresa + "' or COD_EMPRESA is NULL "
+            val sql: String = "DELETE FROM " + listaTablas[i].split(" ")[5] + " WHERE COD_EMPRESA = '" + codEmpresa + "' or COD_EMPRESA is NULL or COD_EMPRESA not in ($empresasExistentes) "
             try {
                 MainActivity.bd!!.execSQL(sql)
             } catch (e : Exception) {
