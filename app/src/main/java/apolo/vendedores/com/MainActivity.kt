@@ -25,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         val tablasSincronizacion: TablasSincronizacion = TablasSincronizacion()
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
-        const val version : String = "82"
-        const val fechaVersion : String = "20221129"
+        const val version : String = "87"
+        const val fechaVersion : String = "20230615"
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")

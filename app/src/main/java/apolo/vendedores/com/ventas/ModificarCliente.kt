@@ -101,19 +101,19 @@ class ModificarCliente : AppCompatActivity() {
 
     private fun cargar(modificar: Cursor, cliente:Cursor){
         if (modificar.count == 0){
-            etTel1.setText(funcion.dato(cliente,"TELEFONO").replace("null",""))
-            etTel2.setText(funcion.dato(cliente,"TELEFONO2").replace("null",""))
-            etDireccion.setText(funcion.dato(cliente,"DIRECCION").replace("null",""))
-            etCercaDe.setText(funcion.dato(cliente,"CERCA_DE").replace("null",""))
-            etCorreo.setText(funcion.dato(cliente,"EMAIL").replace("null",""))
+            etTel1.setText(funcion.dato(cliente,"TELEFONO").replace("null","").trim())
+            etTel2.setText(funcion.dato(cliente,"TELEFONO2").replace("null","").trim())
+            etDireccion.setText(funcion.dato(cliente,"DIRECCION").replace("null","").trim())
+            etCercaDe.setText(funcion.dato(cliente,"CERCA_DE").replace("null","").trim())
+            etCorreo.setText(funcion.dato(cliente,"EMAIL").replace("null","").trim())
             idCat = ""
             tipo = ""
         } else {
-            etTel1.setText(funcion.dato(modificar,"TELEFONO1").replace("null",""))
-            etTel2.setText(funcion.dato(modificar,"TELEFONO2").replace("null",""))
-            etDireccion.setText(funcion.dato(modificar,"DIRECCION").replace("null",""))
-            etCercaDe.setText(funcion.dato(modificar,"CERCA_DE").replace("null",""))
-            etCorreo.setText(funcion.dato(modificar,"EMAIL").replace("null",""))
+            etTel1.setText(funcion.dato(modificar,"TELEFONO1").replace("null","").trim())
+            etTel2.setText(funcion.dato(modificar,"TELEFONO2").replace("null","").trim())
+            etDireccion.setText(funcion.dato(modificar,"DIRECCION").replace("null","").trim())
+            etCercaDe.setText(funcion.dato(modificar,"CERCA_DE").replace("null","").trim())
+            etCorreo.setText(funcion.dato(modificar,"EMAIL").replace("null","").trim())
             idCat = funcion.dato(modificar,"id").replace("null","")
             tipo = "D"
         }
@@ -146,7 +146,8 @@ class ModificarCliente : AppCompatActivity() {
                 } else {
 
 
-                    val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+                    //val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+                    val regex = "([0-9]+)?".toRegex()
                     if (!etTel1.text.toString().matches(regex)) {
                         funcion.mensaje(this,"Atención!","El campo telefono 1 solo debe tener numeros")
                         validacion = false

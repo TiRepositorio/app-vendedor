@@ -74,4 +74,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
+
+    implementation 'org.threeten:threetenbp:1.4.0'
 }

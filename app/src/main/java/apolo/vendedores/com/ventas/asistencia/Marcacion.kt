@@ -367,6 +367,22 @@ class Marcacion : AppCompatActivity() {
     }
 
     private fun marcar(cb: CheckBox){
+
+        var estadoSim = false
+
+        try {
+            var fechaOnline = funcion.obtenerHoraActualDeInternet()
+            estadoSim = true
+        } catch (e: Exception) {
+            estadoSim = dispositivo.validaEstadoSim(telMgr);
+        }
+
+        var paquetesUbicacionSimulada = ""
+        try{
+            paquetesUbicacionSimulada = dispositivo.getAppsForMockLocation(this)
+        } catch (e: Exception) {
+        }
+
         val fecha: String = funcion.getFechaActual() + " " + funcion.getHoraActual()
         val tipo = if (cb.id == dialogMarcarPresenciaCliente.chkEntrada.id) { "E" } else { "S" }
         cb.text = if(autorizacion != ""){getHoraDeEntrada()} else {fecha}
@@ -381,12 +397,25 @@ class Marcacion : AppCompatActivity() {
         values.put("TIPO", tipo.trim())
         values.put("LATITUD", ubicacion.latitud)
         values.put("LONGITUD", ubicacion.longitud)
+        var observacion = ""
+
         if (autorizacion != ""){
-            values.put("OBSERVACION", "Autorizacion: $autorizacion. Version de Sistema: ${MainActivity.version}.20210520")
             values.put("FECHA", getHoraDeEntrada())
+            observacion = "Autorizacion: $autorizacion. Version de Sistema: ${MainActivity.version}.${MainActivity.fechaVersion}"
         } else {
             values.put("FECHA", fecha)
         }
+        if (!estadoSim) {
+            observacion = "$observacion . El chip no se encuentra habilitado o no posee señal"
+        }
+
+        if (paquetesUbicacionSimulada != "") {
+            observacion = "$observacion . $paquetesUbicacionSimulada"
+        }
+
+        values.put("OBSERVACION", observacion)
+
+
         funcion.insertar("vt_marcacion_ubicacion", values)
     }
 

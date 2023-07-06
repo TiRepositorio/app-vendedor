@@ -789,7 +789,8 @@ class CatastrarCliente : Activity() {
             return false
         }
         //VALIDAR QUE TELEFONO SEA SOLO NUMEROS
-        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+        //val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+        val regex = "([0-9]+)?".toRegex()
         if (!etCelular.text.toString().matches(regex)) {
             Toast.makeText(
                 this@CatastrarCliente,
@@ -806,6 +807,28 @@ class CatastrarCliente : Activity() {
             ).show()
             return false
         }
+
+        if (!etCI.text.toString().matches(regex)) {
+            Toast.makeText(
+                this@CatastrarCliente,
+                "El campo CI solo debe tener numeros",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+
+
+        if (!etRUC.text.toString().replace("-", "").matches(regex)) {
+            Toast.makeText(
+                this@CatastrarCliente,
+                "El campo RUC solo debe tener numeros y guion (-)",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+
+
+        //if (!validaCampo(etRUC, 15)) {return false}
 
         return true
     }

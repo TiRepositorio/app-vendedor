@@ -7,10 +7,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.database.Cursor
+import android.os.Build
+import android.os.StrictMode
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.database.getStringOrNull
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,17 +22,28 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.clases.Usuario
 import apolo.vendedores.com.ventas.ListaClientes
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.result.Result
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_configurar_usuario_2.*
 import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import kotlinx.android.synthetic.main.dialogo_contacto.*
+import org.json.JSONObject
+import org.threeten.bp.Instant
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.temporal.ChronoUnit
 
 class FuncionesUtiles {
 
@@ -854,11 +868,24 @@ class FuncionesUtiles {
             else -> "Valor no corresponde"
         }
     }
+
     fun getHoraActual(): String {
         val calendario = Calendar.getInstance()
-        val hora: Int = calendario[Calendar.HOUR_OF_DAY]
-        val minutos: Int = calendario[Calendar.MINUTE]
-        val segundos: Int = calendario[Calendar.SECOND]
+        var hora: Int = calendario[Calendar.HOUR_OF_DAY]
+        var minutos: Int = calendario[Calendar.MINUTE]
+        var segundos: Int = calendario[Calendar.SECOND]
+
+        var fechaOnline: LocalDateTime
+
+        try {
+            fechaOnline = obtenerHoraActualDeInternet()
+            hora = fechaOnline.hour
+            minutos = fechaOnline.minute
+            segundos = fechaOnline.second
+
+        } catch (e: Exception) {
+
+        }
 
         // GUARDAR LA HORA
         var horaTemp = ""
@@ -879,12 +906,79 @@ class FuncionesUtiles {
         }
         return horaTemp
     }
+
+
+    fun obtenerHoraActualDeInternet(): LocalDateTime {
+        /*val url = URL("http://worldtimeapi.org/api/timezone/Etc/UTC")
+        val conexion = url.openConnection()
+        val datos = conexion.getInputStream().bufferedReader().readText()
+
+        val jsonResponse = JSONObject(datos)
+        val dateTime = jsonResponse.getString("datetime")
+
+        val formatoFecha = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        formatoFecha.timeZone = TimeZone.getTimeZone("UTC")
+        val fecha = formatoFecha.parse(dateTime)
+
+        val formatoHora = SimpleDateFormat("HH:mm:ss")
+        formatoHora.timeZone = TimeZone.getTimeZone("America/Asuncion")
+        val horaActual = formatoHora.format(fecha)
+
+        return horaActual*/
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
+
+        FuelManager.instance.timeoutInMillisecond = 3000
+
+        val url = "http://worldtimeapi.org/api/timezone/Etc/UTC"
+
+        val (request, response, result) = Fuel.get(url).timeout(3000)
+            .responseString()
+
+        when (result) {
+            is Result.Success -> {
+                val jsonResponse = JSONObject(result.value)
+                val unixTime = jsonResponse.getString("unixtime")
+
+                val zoneId = "America/Asuncion"
+                val formattedDate = convertUnixTimeToDate(unixTime.toLong(), zoneId)
+
+                //val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                //val formattedDateTime = formattedDate.format(formatter)
+
+                return formattedDate
+            }
+            is Result.Failure -> {
+                val error = result.error.exception.message
+                throw Exception("Error al obtener la fecha y hora actual: $error")
+            }
+        }
+    }
+
+    fun convertUnixTimeToDate(unixTime: Long, zoneId: String): LocalDateTime {
+        val instant = Instant.ofEpochSecond(unixTime)
+        val zone = ZoneId.of(zoneId)
+        val localDateTime = LocalDateTime.ofInstant(instant, zone)
+
+
+        //var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        //formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return localDateTime
+    }
+
+
+
+
+
     @SuppressLint("SimpleDateFormat")
     fun getFechaActual():String{
         val dfDate = SimpleDateFormat("dd/MM/yyyy")
         val cal = Calendar.getInstance()
         return dfDate.format(cal.time) + ""
     }
+
     fun getFechaHoraActual():String{
         return getFechaActual() + " " + getHoraActual()
     }
@@ -1138,6 +1232,7 @@ class FuncionesUtiles {
         val sql = "SELECT RANGO from svm_vendedor_pedido  where COD_VENDEDOR = '${ListaClientes.codVendedor}'"
         return if (consultar(sql).count>0){
             datoEntero(consultar(sql), "RANGO")
+            //100000000
         } else {
             0
         }

@@ -3,6 +3,7 @@ package apolo.vendedores.com
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,9 +15,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
@@ -39,6 +43,7 @@ import kotlinx.android.synthetic.main.ven_pri_accesos.*
 import kotlinx.android.synthetic.main.ventana_principal.*
 import java.io.File
 import java.io.IOException
+
 
 class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -81,7 +86,8 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private var cerrar = false
     private lateinit var enviarMarcacion : EnviarMarcacion
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
@@ -90,7 +96,15 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         bd = utilidadesBD!!.writableDatabase
         inicializaElementosReporte()
         cargarUsuarioInicial()
+
+        dispositivo.getAppsForMockLocation(this)
+
     }
+
+
+
+
+
 
     override fun onBackPressed() {
         if (drawer_layout_aplicacion.isDrawerOpen(GravityCompat.START)) {
@@ -100,7 +114,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun inicializaElementosReporte(){
 
         crearTablas()
@@ -117,6 +131,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         telMgr = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
 
         subInforme1.cargarVentasPorMarcas()
         subInforme1.cargarDatosX("DESC_GTE_MARKETIN")

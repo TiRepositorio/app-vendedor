@@ -299,7 +299,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                 distanciaReal /= 1000.0
             }
             Toast.makeText(context, "No se encuentra en el cliente. Se encuentra a " + distanciaReal.roundToInt() + " m." , Toast.LENGTH_SHORT).show()
-            return false
+            return true
         }
         return true
     }

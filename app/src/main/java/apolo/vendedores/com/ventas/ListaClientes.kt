@@ -282,6 +282,7 @@ class ListaClientes : AppCompatActivity() {
                 if (et.text.toString().trim() == "vender") {
                     Pedidos.nuevo = true
                     Pedidos.codEmpresa = codEmpresa
+                    Pedidos.vent = "N"
                     startActivity(Intent(this@ListaClientes, Pedidos::class.java))
                     return
                 }
@@ -289,6 +290,7 @@ class ListaClientes : AppCompatActivity() {
                     Pedidos.nuevo = true
                     Pedidos.indPresencial = "N"
                     Pedidos.codEmpresa = codEmpresa
+                    Pedidos.vent = "N"
                     startActivity(Intent(this@ListaClientes, Pedidos::class.java))
                     return
                 }

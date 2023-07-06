@@ -1,14 +1,23 @@
 package apolo.vendedores.com.utilidades
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
+import android.os.StrictMode
 import android.provider.Settings.Global
 import android.provider.Settings.System
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.result.Result
+import org.json.JSONObject
+import java.net.URL
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -82,9 +91,13 @@ class FuncionesDispositivo(var context: Context) {
 
     @SuppressLint("SimpleDateFormat")
     fun getFechaActual():String{
+
         val dfDate = SimpleDateFormat("dd/MM/yyyy")
         val cal = Calendar.getInstance()
-        return dfDate.format(cal.time) + ""
+
+        var fecha = dfDate.format(cal.time) + ""
+
+        return fecha
     }
 
     fun tarjetaSim(telMgr:TelephonyManager): Boolean {
@@ -128,36 +141,86 @@ class FuncionesDispositivo(var context: Context) {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    /*fun validaEstadoSim(telMgr:TelephonyManager):Boolean{
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun validaEstadoSim(telMgr:TelephonyManager):Boolean{
         try {
 
             if (ActivityCompat.checkSelfPermission(context,
                     Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                funcion.mensaje(context,"Error!","Debe otorgar a la aplicacion los permisos para acceder al telefono.")
+                //funcion.mensaje(context,"Error!","Debe otorgar a la aplicacion los permisos para acceder al telefono.")
                 return false
             }
             if (telMgr.dataNetworkType==0){
-                funcion.mensaje(context,"Error!","Tarjeta sim fuera de servicio.")
+                //funcion.mensaje(context,"Error!","Tarjeta sim fuera de servicio.")
                 return false
             }
             val suscripcion = SubscriptionManager.from(context).activeSubscriptionInfoList
             for (subscriptionInfo in suscripcion){
                 if (subscriptionInfo.iccId.toString().substring(0,4) != "8959"){
-                    funcion.mensaje(context,"Tarjeta SIM extranjera", "Para continuar utilice una tarjeta sim de una operadora nacional.")
+                    //funcion.mensaje(context,"Tarjeta SIM extranjera", "Para continuar utilice una tarjeta sim de una operadora nacional.")
                     return false
                 }
-//                if (subscriptionInfo.countryIso.toString().toUpperCase() != "PY"){
-//                    funcion.mensaje(context,"Tarjeta SIM extranjera", "Para continuar utilice una tarjeta sim de una operadora nacional.")
-//                    return false
-//                }
+                if (subscriptionInfo.countryIso.toString().toUpperCase() != "PY"){
+                    //funcion.mensaje(context,"Tarjeta SIM extranjera", "Para continuar utilice una tarjeta sim de una operadora nacional.")
+                    return false
+                }
             }
         } catch (e : Exception){
             return false
         }
         return true
     }
-*/
+
+    //obtener aplicaciones con ubicacion simulada
+    fun getAppsForMockLocation(context: Context): String {
+        val appList: MutableList<String> = mutableListOf()
+
+        val packageManager: PackageManager = context.packageManager
+        val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        for (app in installedApps) {
+            try {
+                val appInfo = packageManager.getApplicationInfo(app.packageName, PackageManager.GET_META_DATA)
+                val appPermissions = packageManager.getPackageInfo(app.packageName, PackageManager.GET_PERMISSIONS)
+                val permissions = appPermissions.requestedPermissions
+
+
+
+                if (permissions != null) {
+                    for (permission in permissions) {
+                        if (permission == "android.permission.ACCESS_MOCK_LOCATION") {
+                            //appList.add(appInfo.loadLabel(packageManager).toString())
+                            if (appInfo.packageName.toString().indexOf("apolo") == -1) {
+                                appList.add(appInfo.packageName.toString())
+                            }
+                            break
+                        }
+                    }
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+        var paquetes = ""
+        appList.forEach {
+
+            if (paquetes == "") {
+                paquetes = "(Apps Instaladas: "
+            }
+            paquetes += "$it "
+
+        }
+
+        if (paquetes !== "") {
+            paquetes += ")"
+        }
+
+        return paquetes
+    }
 
     fun verificaRoot():Boolean{
         return try {
@@ -168,5 +231,11 @@ class FuncionesDispositivo(var context: Context) {
             false
         }
     }
+
+
+
+
+
+
 
 }
