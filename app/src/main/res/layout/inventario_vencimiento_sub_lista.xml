@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvs1"-->
+    <!--        android:text="Fec Inventario"-->
+    <!--        android:layout_width="95dp"-->
+    <!--        style="@style/textoSubTabla"/>-->
+
+    <TextView
+        android:id="@+id/tvs2"
+        android:text="fec. vencimiento"
+        android:layout_width="76dp"
+        style="@style/textoSubTabla"/>
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tvs3"-->
+    <!--        android:text="UM"-->
+    <!--        android:layout_width="50dp"-->
+    <!--        style="@style/textoSubTabla"/>-->
+
+    <TextView
+        android:id="@+id/tvs4"
+        android:text="Cant. Dep"
+        android:layout_width="75dp"
+        style="@style/textoSubTabla"/>
+
+    <TextView
+        android:id="@+id/tvs5"
+        android:text="Cant. Gond"
+        android:layout_width="75dp"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/tvs6"
+        android:text="Cant. Gond"
+        android:layout_width="75dp"
+        style="@style/textoSubTabla" />
+
+    <TextView
+        android:id="@+id/tvs7"
+        android:text="Cant. Gond"
+        android:layout_width="75dp"
+        style="@style/textoSubTabla" />
+
+</LinearLayout>

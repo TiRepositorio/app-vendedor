@@ -503,4 +503,39 @@ class ConexionWS {
         return resultado
     }
 
+
+
+    fun procesaEnviaInventarioVencimiento(codVendedor:String,detalle:String) : String{
+        val nameSpace   = "http://edsystem/servidor"
+        val url         = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
+        val methodName  = "ProcesaInventarioProm"
+        val soapAction  = "http://edsystem/servidor/ProcesaInventarioProm"
+
+        lateinit var solicitud : SoapObject
+        lateinit var resultado : String
+
+        try {
+            solicitud = SoapObject(nameSpace,methodName)
+            solicitud.addProperty("usuario", "edsystem")
+            solicitud.addProperty("password", "#edsystem@polo")
+            solicitud.addProperty("codEmpresa", FuncionesUtiles.usuario["COD_EMPRESA"])
+            solicitud.addProperty("codVendedor", codVendedor)
+            solicitud.addProperty("detalle", detalle)
+        } catch (e : Exception){
+            return e.message.toString()
+        }
+
+        val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
+        envelope.dotNet = false
+        envelope.setOutputSoapObject(solicitud)
+        val transporte = HttpTransportSE(url,240000)
+        try {
+            transporte.call(soapAction, envelope)
+            resultado = envelope.response.toString()
+        } catch (e : Exception){
+            return e.message.toString()
+        }
+        return resultado
+    }
+
 }

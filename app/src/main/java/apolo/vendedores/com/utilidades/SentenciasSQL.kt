@@ -1,5 +1,6 @@
 package apolo.vendedores.com.utilidades
 
+import apolo.vendedores.com.MainActivity
 import apolo.vendedores.com.clases.Usuario
 import java.util.*
 
@@ -500,6 +501,18 @@ class SentenciasSQL {
                     "       FOTO_FACHADA BLOB       " +
                     ");")
         }
+
+        fun createTableSvmInventarioArtCliente(): String {
+            sql = ("CREATE TABLE IF NOT EXISTS svm_inventario_art_cliente"
+                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT	            , COD_EMPRESA    TEXT   , FEC_INVENTARIO DATE 	                            ," //DEFAULT CAST('now' AS DATE)
+                    + " COD_CLIENTE     TEXT                                , COD_SUBCLIENTE TEXT   , COD_ARTICULO   TEXT                               ,"
+                    + " FEC_VENCIMIENTO DATE                                , COD_UNID_MED   TEXT   , CANT_DEP       NUMBER                             ,"
+                    + " CANT_GOND       NUMBER                              , ESTADO         TEXT   DEFAULT 'P'                                         )")
+            return sql
+        }
+
+
+
         fun listaSQLCreateTable(): ArrayList<String> {
             val lista : ArrayList<String> = ArrayList()
             lista.add(0, createTableSvmModificaCatastro())
@@ -511,6 +524,8 @@ class SentenciasSQL {
             lista.add(6, createTableSvmPedidosDet())
             lista.add(7, createTableSvmCatastroCliente())
             lista.add(8, createTableCcClientesBajaProv())
+            lista.add(9, createTableSvmInventarioArtCliente())
+
 //            lista.add(9, createTableSpmRetornoComentario())
 //            lista.add(10, createTableSvmDiasTomaFotoCliente())
 //            lista.add(11, )
@@ -683,6 +698,53 @@ class SentenciasSQL {
 //        fun createIndexIndSurtidoEficiente():String{
 //            return ("CREATE INDEX IF NOT EXISTS IND_SURTIDO_EFICIENTE ON svm_surtido_eficiente(COD_EMPRESA,COD_CLIENTE,COD_SUBCLIENTE,TIP_CLIENTE,COD_ARTICULO) ;")
 //        }
+
+
+        fun createViewInventarioVencimiento(): String {
+            sql = ("CREATE VIEW IF NOT EXISTS svm_inventario_vencimiento AS "
+                    + "  SELECT MAX( A.FEC_INVENTARIO ) FEC_INVENTARIO "    +
+                    "     , A.COD_EMPRESA     "                             +
+                    "     , A.FEC_VENCIMIENTO "                             +
+                    "     , A.COD_CLIENTE     "                             +
+                    "     , A.COD_SUBCLIENTE  "                             +
+                    "     , A.COD_ARTICULO    "                             +
+                    "     , SUM(CANT_DEP_ANT)  CANT_DEP_ANT  "              +
+                    "     , SUM(CANT_GOND_ANT) CANT_GOND_ANT "              +
+                    "     , SUM(CANT_DEP)      CANT_DEP      "              +
+                    "     , SUM(CANT_GOND)     CANT_GOND     "              +
+                    "  FROM (SELECT id                       "              +
+                    "       , A.COD_EMPRESA                  "              +
+                    "       , A.FEC_INVENTARIO               "              +
+                    "       , A.FEC_VENCIMIENTO" +
+                    "       , A.COD_CLIENTE" +
+                    "       , A.COD_SUBCLIENTE" +
+                    "       , A.COD_ARTICULO" +
+                    "       , CASE WHEN trim(A.FEC_INVENTARIO) < '${MainActivity.funcion.getFechaActual()}'" +
+                    "              THEN A.CANT_DEP" +
+                    "              ELSE NULL " +
+                    "              END  CANT_DEP_ANT" +
+                    "       , CASE WHEN trim(A.FEC_INVENTARIO) = '${MainActivity.funcion.getFechaActual()}'" +
+                    "              THEN A.CANT_DEP" +
+                    "              ELSE NULL " +
+                    "              END  CANT_DEP" +
+                    "       , CASE WHEN trim(A.FEC_INVENTARIO) < '${MainActivity.funcion.getFechaActual()}'" +
+                    "              THEN A.CANT_GOND" +
+                    "              ELSE NULL " +
+                    "              END  CANT_GOND_ANT" +
+                    "       , CASE WHEN trim(A.FEC_INVENTARIO) = '${MainActivity.funcion.getFechaActual()}'" +
+                    "              THEN A.CANT_GOND" +
+                    "              ELSE NULL " +
+                    "              END  CANT_GOND" +
+                    "  FROM svm_inventario_art_cliente A ) A " +
+                    " GROUP BY  A.COD_EMPRESA" +
+                    "         , A.FEC_VENCIMIENTO" +
+                    "         , A.COD_CLIENTE"     +
+                    "         , A.COD_SUBCLIENTE"  +
+                    "         , A.COD_ARTICULO	  ;" )
+            return sql
+        }
+
+
 
 
     }

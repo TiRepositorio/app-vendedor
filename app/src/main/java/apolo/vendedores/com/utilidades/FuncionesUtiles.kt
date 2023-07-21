@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_configurar_usuario_2.*
 import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import kotlinx.android.synthetic.main.dialogo_contacto.*
+import kotlinx.android.synthetic.main.pos_ven_campos_inventario.*
 import org.json.JSONObject
 import org.threeten.bp.Instant
 import java.text.DateFormat
@@ -325,6 +326,42 @@ class FuncionesUtiles {
         }
     }
 
+    //titulo y buscador separados con lector
+    constructor(context: Context,imgTitulo: ImageView?,tvTitulo: TextView?,spBuscar: Spinner,etBuscar: EditText,btBuscar:Button, etAccion: EditText){
+        this.context = context
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        this.imgTitulo = imgTitulo
+        this.tvTitulo = tvTitulo
+        this.spBuscar = spBuscar
+        this.etBuscar = etBuscar
+        this.btBuscar = btBuscar
+        //this.etAccion = etAccion
+        etBuscar.inputType = 2
+        spBuscar.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                return
+            }
+
+            @SuppressLint("SetTextI18n")
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> {
+                        etBuscar.inputType = 3 //NUMBER
+                    }
+                    2 -> {
+                        etBuscar.inputType = 1
+                        etAccion.setText("lector")
+                    }
+                    else -> {
+                        etBuscar.inputType = 1 //TEXTO
+                    }
+                }
+            }
+        }
+    }
+
     constructor(
         context: Context,
         imgTitulo: ImageView,
@@ -400,7 +437,7 @@ class FuncionesUtiles {
     var barraMenu: NavigationView? = null
     var context : Context? = null
     private var spinnerAdapter : ArrayAdapter<String>? = null
-    private var valoresSpinner: ArrayList<HashMap<String, String>> = ArrayList()
+    var valoresSpinner: ArrayList<HashMap<String, String>> = ArrayList()
     private var parametros : Array<String> = arrayOf()
     lateinit var vistas : IntArray
 //    lateinit var vistasCabecera : IntArray
@@ -467,6 +504,33 @@ class FuncionesUtiles {
             cursor.moveToNext()
         }
     }
+
+    fun cargarListaSubItem(listaCabecera: java.util.ArrayList<java.util.HashMap<String, String>>
+                           ,subLista: java.util.ArrayList<java.util.ArrayList<java.util.HashMap<String, String>>>
+                           ,tabla: String
+                           ,campo: String
+                           ,cursor:Cursor){
+        for (i in 0 until cursor.count){
+            val datos : java.util.HashMap<String, String> = java.util.HashMap()
+            for(j in 0 until cursor.columnCount){
+                datos[cursor.getColumnName(j)] = dato(cursor,cursor.getColumnName(j))
+            }
+            listaCabecera.add(datos)
+            val listaDetalle = java.util.ArrayList<java.util.HashMap<String, String>>()
+            var sql = "SELECT * FROM $tabla where ${campo.split("-")[0]} = '${datos[campo.split("-")[0]]}' "
+            var cont = 1
+//            while (cont < InventarioVencimiento.etCodClienteS.text.toString().split("-").size){
+            while (cont < campo.split("-").size){
+                sql += " and ${campo.split("-")[cont]} = '${datos[campo.split("-")[cont]]}' "
+                cont++
+            }
+            val cursorDetalle = consultar(sql)
+            cargarLista(listaDetalle,cursorDetalle)
+            subLista.add(listaDetalle)
+            cursor.moveToNext()
+        }
+    }
+
     fun ejecutar(sql: String, context: Context): Boolean {
         return try {
             MainActivity.bd!!.execSQL(sql)
@@ -1311,6 +1375,28 @@ class FuncionesUtiles {
         dialogo.setCancelable(false)
         dialogo.show()
     }
+
+    fun dialogoEntradaNumero(et:EditText, et2:EditText, context: Context, accion:String, etAccion:EditText){
+        val dialogo = Dialog(context)
+//        dialogo.setTitle("Cantidad")
+        dialogo.setContentView(R.layout.pos_ven_campos_inventario)
+        dialogo.btAceptar.setOnClickListener{
+            if (dialogo.etDeposito.text.trim() == "" || dialogo.etDeposito.text.trim() == "null" || dialogo.etDeposito.text.isEmpty()){
+                dialogo.etDeposito.setText("0")
+            }
+            et.setText(dialogo.etDeposito.text.toString().toInt().toString())
+            if (dialogo.etGondola.text.trim() == "" || dialogo.etGondola.text.trim() == "null" || dialogo.etGondola.text.isEmpty()){
+                dialogo.etGondola.setText("0")
+            }
+            et2.setText(dialogo.etGondola.text.toString().toInt().toString())
+            etAccion.setText(accion)
+            dialogo.dismiss()
+        }
+        dialogo.setCancelable(false)
+        dialogo.etDeposito.requestFocus()
+        dialogo.show()
+    }
+
     fun dialogoEntradaNumero(et: EditText, context: Context){
         val dialogo : AlertDialog.Builder = AlertDialog.Builder(context)
         val entrada = EditText(context)

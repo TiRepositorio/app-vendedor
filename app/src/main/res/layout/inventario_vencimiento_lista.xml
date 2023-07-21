@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TableRow
+        android:id="@+id/trLinea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="false">
+
+        <ImageView
+            android:id="@+id/imgAbrir"
+            android:src="@drawable/ic_desplegar"
+            android:layout_width="40dp"
+            style="@style/textoTablaDesplegable"
+            />
+
+        <ImageView
+            android:id="@+id/imgCerrar"
+            android:src="@drawable/ic_ocultar"
+            android:layout_width="40dp"
+            android:visibility="gone"
+            style="@style/textoTablaDesplegable"
+            />
+
+        <TextView
+            android:id="@+id/tv1"
+            style="@style/textoTablaDesplegable"
+            android:layout_weight="1.7"
+            android:gravity="start"
+            android:text="Repartidor"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/tv2"
+            style="@style/textoTablaDesplegable"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Tel.:"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/tv3"
+            style="@style/textoTablaDesplegable"
+            android:layout_weight="1.6"
+            android:gravity="end"
+            android:text="Tel.:"
+            android:textSize="8sp" />
+
+    </TableRow>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/llSubTabla"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:layout_weight="1">
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verdeApoloCabecera" >
+
+                <!--                <TextView-->
+                <!--                    android:text="Fec. Inventario"-->
+                <!--                    android:layout_width="95dp"-->
+                <!--                    style="@style/cabeceraSubTabla"/>-->
+
+                <TextView
+                    android:text="Fec. Vto."
+                    android:layout_width="76dp"
+                    style="@style/cabeceraSubTabla"/>
+
+                <!--                <TextView-->
+                <!--                    android:text="UM"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    style="@style/cabeceraSubTabla"/>-->
+
+                <TextView
+                    android:text="Dep. Ant."
+                    android:layout_width="75dp"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:text="Gond. Ant."
+                    android:layout_width="75dp"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:text="Cant. Dep."
+                    android:layout_width="75dp"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+                <TextView
+                    android:text="Cant. Gond"
+                    android:layout_width="75dp"
+                    android:gravity="end"
+                    style="@style/cabeceraSubTabla"/>
+
+
+            </TableRow>
+
+            <ListView
+                android:id="@+id/lvSubtabla"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:scrollbars="vertical"
+                android:nestedScrollingEnabled="true"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

@@ -77,4 +77,7 @@ dependencies {
     implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
 
     implementation 'org.threeten:threetenbp:1.4.0'
+
+
+    implementation 'me.dm7.barcodescanner:zxing:1.9.13'
 }

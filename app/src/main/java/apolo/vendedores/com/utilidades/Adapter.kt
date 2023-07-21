@@ -1304,4 +1304,110 @@ class Adapter{
 
     }
 
+
+
+    class ListaConSubitem(
+        private val context: Context,
+        private val dataSource: ArrayList<HashMap<String, String>>,
+        private val subDataSource: ArrayList<ArrayList<HashMap<String, String>>>,
+        private val molde: Int,
+        private val subMolde: Int,
+        private val vistas: IntArray,
+        private val valores: Array<String>,
+        private val subVistas: IntArray,
+        private val subValores: Array<String>,
+        private val idSubLista: Int,
+        private val lista: ListView,
+        private val etAccion: EditText?,
+        private val accion: String
+    ) : BaseAdapter() {
+
+        private val inflater: LayoutInflater
+                = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        override fun getCount(): Int {
+            return dataSource.size
+        }
+
+        override fun getItem(position: Int): Any {
+            return dataSource[position]
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        @SuppressLint("ViewHolder", "SetTextI18n")
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val rowView = inflater.inflate(molde, parent, false)
+            val adapterSubLista = SubLista(context,
+                subDataSource[position],subMolde, subVistas, subValores,position)
+            val subLista = rowView.findViewById<ListView>(idSubLista)
+            val lista = lista
+            subLista.visibility = View.GONE
+
+            // rowView.imgAbrir.visibility  = View.VISIBLE
+            // rowView.imgCerrar.visibility = View.GONE
+            for (i in vistas.indices){
+                rowView.findViewById<TextView>(vistas[i]).text = dataSource[position][valores[i]]
+//                rowView.findViewById<TextView>(vistas[i]).setBackgroundResource(R.drawable.border_textview)
+            }
+
+            rowView.setBackgroundResource(R.drawable.border_textview)
+            subLista.adapter = adapterSubLista
+            subLista.layoutParams.height = adapterSubLista.getSubTablaHeight(subLista)
+            subLista.layoutParams.height = subLista.layoutParams.height * subDataSource[position].size
+            subLista.setOnItemClickListener { _: ViewGroup, _: View, subPosition: Int, _: Long ->
+                FuncionesUtiles.posicionCabecera = position
+                lista.invalidateViews()
+                FuncionesUtiles.posicionDetalle = subPosition
+                etAccion!!.setText("detalleSublista")
+                // rowView.lvSubtabla.invalidateViews()
+            }
+
+            if (subDataSource[position].size>0){
+                rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.VISIBLE
+                subLista.visibility = View.VISIBLE
+            } else {
+                rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.GONE
+                subLista.visibility = View.GONE
+            }
+
+            if (position%2==0){
+                rowView.setBackgroundColor(Color.parseColor("#EEEEEE"))
+            } else {
+                rowView.setBackgroundColor(Color.parseColor("#CCCCCC"))
+            }
+
+            if (FuncionesUtiles.posicionCabecera == position){
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+            }
+            rowView.setOnClickListener {
+                rowView.setBackgroundColor(Color.parseColor("#aabbaa"))
+                rowView.invalidate()
+                FuncionesUtiles.posicionCabecera = position
+                FuncionesUtiles.posicionDetalle = 0
+                etAccion?.setText(accion)
+//                if (rowView.imgAbrir.visibility == View.VISIBLE){
+//                    if (layoutSubTabla != null){
+//                        rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.VISIBLE
+//                    }
+//                    rowView.imgAbrir.visibility  = View.GONE
+//                    rowView.imgCerrar.visibility = View.VISIBLE
+//                    subLista.visibility = View.VISIBLE
+//                } else {
+//                    if (layoutSubTabla != null){
+//                        rowView.findViewById<LinearLayout>(R.id.llSubTabla).visibility = View.GONE
+//                    }
+//                    rowView.imgAbrir.visibility  = View.VISIBLE
+//                    rowView.imgCerrar.visibility = View.GONE
+//                    subLista.visibility = View.GONE
+//                }
+            }
+
+            return rowView
+        }
+
+    }
+
 }

@@ -37,6 +37,7 @@ import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
+import apolo.vendedores.com.ventas.inventario_vencimiento.InventarioVencimiento
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.ven_pri_accesos.*
@@ -283,6 +284,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             R.id.vendInformes               -> menu.mostrarMenu(menuItem,R.layout.menu_cab_informes)
             R.id.vendConfigurar             -> menu.mostrarMenu(menuItem,R.layout.menu_cab_configurar)
 //            R.id.vendMarcaciones            -> enviarMarcacion.cargarDatosDelDia()
+
             R.id.vendMarcaciones            -> enviarMarcaciones()
             R.id.vendSalir                  -> finish()
         }
@@ -298,6 +300,12 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             startActivity(Intent(this@MainActivity2,AcercaDe::class.java))
             accion.setText("")
         }
+
+        if (menuItem.itemId == R.id.inventario_vencimiento){
+            startActivity(Intent(Intent(this, InventarioVencimiento::class.java)))
+            accion.setText("")
+        }
+
         if (menuItem.itemId == R.id.vendSincronizar){
             val dialogo = DialogoAutorizacion(this)
             dialogo.dialogoAccionOpcion("sincronizar","",accion
@@ -421,7 +429,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     private fun inicializaETAccion(etAccion: EditText){
         etAccion.addTextChangedListener(object : TextWatcher {
-            @RequiresApi(Build.VERSION_CODES.N)
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
                 if (etAccion.text.toString() == "DESCARGAR"){
                     descargarActualizacion()

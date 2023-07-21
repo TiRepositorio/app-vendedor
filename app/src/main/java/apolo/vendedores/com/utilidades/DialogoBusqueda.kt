@@ -46,8 +46,41 @@ class DialogoBusqueda {
         this.tvResultado2 = tvResultado2
     }
 
+    constructor(context: Context,tabla:String,codigo:String,subCodigo:String,descripcion:String,campos:String,order:String, condicion:String,tvResultado:TextView,tvResultado2:TextView?){
+        this.context = context
+        this.codigo = codigo
+        this.subCodigo = subCodigo
+        this.descripcion = descripcion
+        this.campos = campos
+        this.tabla = tabla
+        this.order = order
+        this.condicion = condicion
+        this.tvResultado = tvResultado
+        this.tvResultado2 = tvResultado2
+        this.codBarra = ""
+    }
+
+    constructor(context: Context,tabla:String,codigo:String,subCodigo:String,descripcion:String,codBarra : String,campos:String,order:String, condicion:String,tvResultado:TextView,tvResultado2:TextView?){
+        this.context = context
+        this.codigo = codigo
+        this.subCodigo = subCodigo
+        this.descripcion = descripcion
+        this.campos = campos
+        this.tabla = tabla
+        this.order = order
+        this.condicion = condicion
+        this.tvResultado = tvResultado
+        this.tvResultado2 = tvResultado2
+        this.codBarra = codBarra
+    }
+
     var context: Context
     var codigo: String
+
+
+    private lateinit var codBarra : String
+    private lateinit var subCodigo : String
+
     var descripcion: String
     var tabla: String
     var condicion: String

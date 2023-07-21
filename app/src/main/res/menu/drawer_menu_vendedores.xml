@@ -9,6 +9,12 @@
             android:id="@+id/vendVenta"
             android:icon="@drawable/ic_venta"
             android:title="Pre-Venta" />
+
+        <item android:id="@+id/inventario_vencimiento"
+            android:icon="@drawable/ic_visita"
+            android:title="Inventario de Vencimiento"/>
+
+
         <item
             android:id="@+id/vendReportes"
             android:icon="@drawable/ic_dolar"

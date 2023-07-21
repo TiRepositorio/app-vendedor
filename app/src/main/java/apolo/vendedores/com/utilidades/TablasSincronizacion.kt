@@ -50,6 +50,8 @@ class TablasSincronizacion {
         lista.add(39,SentenciasSQL.createTableFvvLiqCuotaXUndNegVend())
         lista.add(40,SentenciasSQL.createTableSvmCoberturaMensualVend())
         lista.add(41,SentenciasSQL.createTableFvvCobSemanalVend())
+        //FALTA AGREGAR EN EL WS
+        //lista.add(42,SentenciasSQL.createTableSvmInventarioArtCliente())
 //        lista.add(47,SentenciasSQL.)
 //        lista.add(48,SentenciasSQL.)
 //        lista.add(49,SentenciasSQL.)
