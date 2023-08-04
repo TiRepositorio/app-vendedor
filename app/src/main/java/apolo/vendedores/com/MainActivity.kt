@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
         const val version : String = "87"
-        const val fechaVersion : String = "20230615"
+        const val fechaVersion : String = "20230725"
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")

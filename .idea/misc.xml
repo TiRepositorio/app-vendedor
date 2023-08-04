@@ -55,13 +55,18 @@
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_modificar_cliente.xml" value="0.18541666666666667" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_pedidos.xml" value="0.17074275362318841" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_promotores.xml" value="0.33" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_promotores_catastro.xml" value="0.22" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_seguimiento_de_visitas.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/activity_sincronizacion.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/barra_vendedores.xml" value="0.19293478260869565" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/busqueda3.xml" value="0.19293478260869565" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/busqueda3_lista.xml" value="0.19293478260869565" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/dialogo_contacto.xml" value="0.25" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/inf_comision_detalle.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/inventario_vencimiento_lista.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/inventario_vencimiento_sub_lista.xml" value="0.16324786324786325" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/lista_usuario_detalle.xml" value="0.33" />
+        <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/menu_cab_visitas.xml" value="0.3625" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/pos_ven_campos_inventario.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/rep_seg_vis_lista_vendedores.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/ven_lista_sd_productos.xml" value="0.2" />

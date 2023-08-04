@@ -36,8 +36,8 @@ import apolo.vendedores.com.configurar.*
 import apolo.vendedores.com.menu.DialogoMenu
 import apolo.vendedores.com.reportes.*
 import apolo.vendedores.com.utilidades.*
+import apolo.vendedores.com.ventas.PromotoresInventario
 import apolo.vendedores.com.ventas.asistencia.EnviarMarcacion
-import apolo.vendedores.com.ventas.inventario_vencimiento.InventarioVencimiento
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.ven_pri_accesos.*
@@ -302,7 +302,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
 
         if (menuItem.itemId == R.id.inventario_vencimiento){
-            startActivity(Intent(Intent(this, InventarioVencimiento::class.java)))
+            startActivity(Intent(Intent(this, PromotoresInventario::class.java)))
             accion.setText("")
         }
 

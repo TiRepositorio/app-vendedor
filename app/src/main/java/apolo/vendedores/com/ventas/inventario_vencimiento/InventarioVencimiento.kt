@@ -41,9 +41,13 @@ class InventarioVencimiento : AppCompatActivity() {
         lateinit var etAccion : EditText
         private const val CODIGO_PERMISOS_CAMARA = 1
         private const val CODIGO_INTENT = 2
+
+
+        var codVendedor : String = ""
+        var codEmpresa = ""
     }
 
-    private lateinit var buscar : DialogoBusqueda
+    private lateinit var buscar : DialogoBusquedaInventario
     private var permisoCamaraConcedido = false
     private var permisoSolicitadoDesdeBoton = false
     private lateinit var thread : Thread
@@ -88,7 +92,7 @@ class InventarioVencimiento : AppCompatActivity() {
 
         verificarYPedirPermisosDeCamara()
 
-        buscar = DialogoBusqueda(this,
+        buscar = DialogoBusquedaInventario(this,
             "svm_cliente_vendedor",
             "COD_CLIENTE",
             "COD_SUBCLIENTE",
@@ -131,13 +135,13 @@ class InventarioVencimiento : AppCompatActivity() {
                 + " 		         a.COD_UNIDAD_REL	            ,a.REFERENCIA	,a.IND_BASICO		, "
                 + " 		         a.COD_BARRA                    ,'0' ORDEN      ,b.COD_CLIENTE      , "
                 + " 		         b.COD_SUBCLIENTE                                                     "
-                + "             FROM svm_st_articulos a, svm_inventario_art_cliente b "
+                + "             FROM svm_st_articulos_prom a, svm_inventario_art_cliente b "
                 + "            WHERE a.MEN_UN_VTA = 'S'"
                 + "              AND b.COD_EMPRESA    = a.COD_EMPRESA "
                 + "              AND b.COD_ARTICULO   = a.COD_ARTICULO "
                 + "              AND b.COD_CLIENTE    = '" + etCodCliente.text.toString().split('-')[0].trim()  + "' "
                 + "              AND b.COD_SUBCLIENTE = '" + etCodCliente.text.toString().split('-')[1].trim()  + "' "
-                + "              AND a.COD_EMPRESA    = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' "
+                + "              AND a.COD_EMPRESA    = '${codEmpresa}' "
                 + "         GROUP BY a.id,a.COD_EMPRESA	,a.COD_ARTICULO	,a.DESC_ARTICULO	, "
                 + " 		         a.COD_UNIDAD_REL	,a.REFERENCIA	,a.IND_BASICO		, "
                 + "			         a.COD_BARRA        ,b.COD_CLIENTE  ,b.COD_SUBCLIENTE     "
@@ -239,7 +243,7 @@ class InventarioVencimiento : AppCompatActivity() {
     }
 
     fun codUnidadRel(codArticulo:String){
-        val sql = "SELECT DISTINCT COD_UNIDAD_REL  FROM svm_st_articulos a " +
+        val sql = "SELECT DISTINCT COD_UNIDAD_REL  FROM svm_st_articulos_prom a " +
                 " WHERE a.MEN_UN_VTA = 'S' AND a.COD_ARTICULO = '$codArticulo' "
         codUnidadRelacion = funcion.dato(funcion.consultar(sql),"COD_UNIDAD_REL")
     }
@@ -291,7 +295,7 @@ class InventarioVencimiento : AppCompatActivity() {
         }else{
             // INSERT
             val sql2 = ("INSERT INTO svm_inventario_art_cliente (COD_EMPRESA,COD_CLIENTE,COD_SUBCLIENTE, COD_ARTICULO, FEC_VENCIMIENTO, COD_UNID_MED, CANT_DEP, CANT_GOND,FEC_INVENTARIO) VALUES (" +
-                    "'"   + FuncionesUtiles.usuario["COD_EMPRESA"] +
+                    "'"   + codEmpresa +
                     "','" + etCodCliente.text.toString().split('-')[0].trim() +
                     "','" + etCodCliente.text.toString().split('-')[1].trim() +
                     "','" + etDetCodArticulo.text.toString() +
@@ -316,14 +320,14 @@ class InventarioVencimiento : AppCompatActivity() {
         val sql : String = (" SELECT DISTINCT	a.id,a.COD_EMPRESA	,a.COD_ARTICULO	,a.DESC_ARTICULO	, "
                 + " 		                    a.COD_UNIDAD_REL	,a.REFERENCIA	,a.IND_BASICO		, "
                 + " 		                    a.COD_BARRA         ,b.COD_CLIENTE  ,b.COD_SUBCLIENTE     "
-                + "             FROM svm_st_articulos a, svm_inventario_art_cliente b "
+                + "             FROM svm_st_articulos_prom a, svm_inventario_art_cliente b "
                 + "            WHERE a.MEN_UN_VTA = 'S' "
                 + "              AND a.COD_ARTICULO   = b.COD_ARTICULO "
                 + "              AND a.COD_EMPRESA    = b.COD_EMPRESA "
                 + "              AND b.COD_CLIENTE    = '${etCodCliente.text.toString().split("-")[0]}' "
                 + "              AND b.COD_SUBCLIENTE = '${etCodCliente.text.toString().split("-")[1]}' "
                 + "              AND ${funcion.valoresSpinner[spBuscar!!.selectedItemPosition][spBuscar!!.selectedItem]} LIKE '%${etBuscar.text}%'   "
-                + "              AND a.COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}' "
+                + "              AND a.COD_EMPRESA = '${codEmpresa}' "
                 + "            GROUP BY a.id,a.COD_EMPRESA	,a.COD_ARTICULO	,a.DESC_ARTICULO	, "
                 + " 		            a.COD_UNIDAD_REL	,a.REFERENCIA	,a.IND_BASICO		, "
                 + "			            a.COD_BARRA         ,b.COD_CLIENTE  ,b.COD_SUBCLIENTE"
@@ -386,7 +390,7 @@ class InventarioVencimiento : AppCompatActivity() {
             runOnUiThread { progressDialog.cargarDialogo("Enviando inventario", false) }
             try {
                 EnviarInventarioVencimiento.respuesta = MainActivity.conexionWS.procesaEnviaInventarioVencimiento(
-                    FuncionesUtiles.usuario["LOGIN"].toString().trim(),
+                    codVendedor,
                     EnviarInventarioVencimiento.cadena2
                 )
             } catch (e: Exception) {
@@ -425,15 +429,15 @@ class InventarioVencimiento : AppCompatActivity() {
     }
 
     private fun buscarArticulo(){
-        val dialogo = DialogoBusqueda(this,
-            "svm_st_articulos",
+        val dialogo = DialogoBusquedaInventario(this,
+            "svm_st_articulos_prom",
             "COD_ARTICULO",
             "",
             "DESC_ARTICULO",
             "COD_BARRA",
             "",
             "DESC_ARTICULO",
-            " AND MEN_UN_VTA = 'S' AND COD_EMPRESA = '${FuncionesUtiles.usuario["COD_EMPRESA"]}'" +
+            " AND MEN_UN_VTA = 'S' AND COD_EMPRESA = '${codEmpresa}'" +
                     " AND UPPER(DESC_ARTICULO) NOT LIKE '%RRHH%'",
             accion,
             null)

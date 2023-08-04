@@ -193,6 +193,13 @@
             android:name=".ventas.inventario_vencimiento.InventarioVencimiento"
             android:windowSoftInputMode="adjustNothing" />
 
+        <activity android:name=".ventas.PromotoresInventario"
+            tools:ignore="Instantiatable"
+            android:windowSoftInputMode="adjustNothing"/>
+
+
+        <activity android:name=".utilidades.Escanear" />
+
         <!--Datos para abrir el mapa-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

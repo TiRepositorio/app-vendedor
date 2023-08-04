@@ -26,6 +26,7 @@ class ConexionWS {
         private const val NAMESPACE: String = "http://edsystem/servidor"
         private var METHOD_NAME = ""
         private const val URL = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
+        //private const val URL = "http://10.1.1.115:8180/edsystemWS/edsystemWS/edsystem"
         private var SOAP_ACTION = "${NAMESPACE}/${METHOD_NAME}"
     }
 
@@ -510,6 +511,7 @@ class ConexionWS {
         val url         = "http://sistmov.apolo.com.py:8280/edsystemWS/edsystemWS/edsystem"
         val methodName  = "ProcesaInventarioProm"
         val soapAction  = "http://edsystem/servidor/ProcesaInventarioProm"
+
 
         lateinit var solicitud : SoapObject
         lateinit var resultado : String

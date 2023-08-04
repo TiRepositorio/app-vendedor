@@ -513,6 +513,20 @@ class SentenciasSQL {
 
 
 
+        fun createTableSvmStArticulosProm(): String {
+            sql = ("CREATE TABLE IF NOT EXISTS svm_st_articulos_prom"
+                    + " (id INTEGER PRIMARY KEY AUTOINCREMENT, COD_EMPRESA  TEXT , COD_ARTICULO TEXT, DESC_ARTICULO TEXT,"
+                    + " COD_UNIDAD_REL TEXT                  , REFERENCIA TEXT   , MULT NUMBER      , DIV  NUMBER       ,"
+                    + " COD_IVA TEXT                         , PORC_IVA TEXT     , COD_LINEA TEXT   , COD_FAMILIA TEXT  ,"
+                    + " IND_BASICO TEXT                      , CANT_MINIMA NUMBER, CANT_EXIST TEXT  , COD_BARRA TEXT    , MEN_UN_VTA TEXT    );"
+                    + " CREATE INDEX IF NOT EXISTS IND_COD_ARTICULO ON svm_st_articulos_prom(COD_ARTICULO) ;"
+                    + " CREATE INDEX IF NOT EXISTS IND_DESC_ARTICULO ON svm_st_articulos_prom(DESC_ARTICULO) ;"
+                    + " CREATE INDEX IF NOT EXISTS IND_COD_BARRA ON svm_st_articulos_prom(COD_BARRA) ;")
+            return sql
+        }
+
+
+
         fun listaSQLCreateTable(): ArrayList<String> {
             val lista : ArrayList<String> = ArrayList()
             lista.add(0, createTableSvmModificaCatastro())

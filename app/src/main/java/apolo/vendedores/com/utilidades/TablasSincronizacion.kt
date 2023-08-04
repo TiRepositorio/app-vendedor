@@ -1,5 +1,8 @@
 package apolo.vendedores.com.utilidades
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 class TablasSincronizacion {
 
 //    var tablasReportes : TablasReportes = TablasReportes()
@@ -51,7 +54,8 @@ class TablasSincronizacion {
         lista.add(40,SentenciasSQL.createTableSvmCoberturaMensualVend())
         lista.add(41,SentenciasSQL.createTableFvvCobSemanalVend())
         //FALTA AGREGAR EN EL WS
-        //lista.add(42,SentenciasSQL.createTableSvmInventarioArtCliente())
+        lista.add(42,SentenciasSQL.createTableSvmInventarioArtCliente())
+        lista.add(43,SentenciasSQL.createTableSvmStArticulosProm())
 //        lista.add(47,SentenciasSQL.)
 //        lista.add(48,SentenciasSQL.)
 //        lista.add(49,SentenciasSQL.)
@@ -125,6 +129,9 @@ class TablasSincronizacion {
         lista.add(39,camposTablaFvvLiqCuotaXUndNegVend())
         lista.add(40,camposTablaSvmCoberturaMensualVend())
         lista.add(41,camposTablaFvvCobSemanalVend())
+        lista.add(42,camposTablaSvmInventarioArtCliente())
+        lista.add(43,camposTablaSvmStArticulosProm())
+
 
         return lista
     }
@@ -910,6 +917,41 @@ class TablasSincronizacion {
         lista.add(5,"PORC_COBERTURA")
         lista.add(6,"PERIODO")
         lista.add(7,"MONTO_A_COBRAR")
+        return lista
+    }
+
+    private fun camposTablaSvmInventarioArtCliente(): ArrayList<String> {
+        val lista : ArrayList<String> = ArrayList()
+        lista.add(0,"COD_EMPRESA")
+        lista.add(1,"FEC_INVENTARIO")
+        lista.add(2,"COD_CLIENTE")
+        lista.add(3,"COD_SUBCLIENTE")
+        lista.add(4,"COD_ARTICULO")
+        lista.add(5,"FEC_VENCIMIENTO")
+        lista.add(6,"COD_UNID_MED")
+        lista.add(7,"CANT_DEP")
+        lista.add(8,"CANT_GOND")
+        return lista
+    }
+
+    private fun camposTablaSvmStArticulosProm(): ArrayList<String> {
+        val lista : ArrayList<String> = ArrayList()
+        lista.add(0,"COD_EMPRESA")
+        lista.add(1,"COD_ARTICULO")
+        lista.add(2,"DESC_ARTICULO")
+        lista.add(3,"COD_UNIDAD_REL")
+        lista.add(4,"REFERENCIA")
+        lista.add(5,"MULT")
+        lista.add(6,"DIV")
+        lista.add(7,"COD_IVA")
+        lista.add(8,"PORC_IVA")
+        lista.add(9,"COD_LINEA")
+        lista.add(10,"COD_FAMILIA")
+        lista.add(11,"CANT_MINIMA")
+        lista.add(12,"CANT_EXIST")
+        lista.add(13,"COD_BARRA")
+        lista.add(14,"MEN_UN_VTA")
+        lista.add(15,"IND_BASICO")
         return lista
     }
 

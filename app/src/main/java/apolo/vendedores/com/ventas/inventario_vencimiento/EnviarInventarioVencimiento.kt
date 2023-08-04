@@ -82,8 +82,8 @@ class EnviarInventarioVencimiento {
                                                         + "fec_alta	        )"
                                                         + " VALUES(")
         for (i in 0 until cursor.count) {
-            val codEmpresa     : String = FuncionesUtiles.usuario["COD_EMPRESA"].toString()
-            val codVendedor    : String = FuncionesUtiles.usuario["LOGIN"].toString()
+            val codEmpresa     : String = InventarioVencimiento.codEmpresa.toString()
+            val codVendedor    : String = InventarioVencimiento.codVendedor
             val fecInventario  : String = funcion.dato(cursor,"FEC_INVENTARIO")
             val codCliente     : String = funcion.dato(cursor,"COD_CLIENTE")
             val codSubcliente  : String = funcion.dato(cursor,"COD_SUBCLIENTE")
@@ -105,7 +105,7 @@ class EnviarInventarioVencimiento {
     private fun procesaEnviarPendientes(){
         try {
             respuesta = MainActivity.conexionWS.procesaEnviaInventarioVencimiento(
-                FuncionesUtiles.usuario["LOGIN"].toString().trim(), cadena2)
+                InventarioVencimiento.codVendedor, cadena2)
 
             if (respuesta.split("*").size != 1) {    //==> Si cant de caracteres de "mensaje" no es = 1 o Si retorna mensaje
                 if (respuesta.split("*")[0] == "01") {

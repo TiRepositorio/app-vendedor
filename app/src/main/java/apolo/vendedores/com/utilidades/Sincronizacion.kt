@@ -226,7 +226,10 @@ class Sincronizacion : AppCompatActivity() {
                 }
             }
             if (Build.VERSION.SDK_INT >= 30){
-                progressDialog.setMessage("Generando Archivos")
+                runOnUiThread {
+                    progressDialog.setMessage("Generando Archivos")
+                }
+
             }
             if (tipoSinc == "T"){
 //                MainActivity.funcion.ejecutar("update svm_vendedor_pedido set ULTIMA_VEZ = '" + MainActivity.funcion.getFechaActual() + "'",this@Sincronizacion)
@@ -239,7 +242,10 @@ class Sincronizacion : AppCompatActivity() {
                     }
                 }
                 if (Build.VERSION.SDK_INT >= 30){
-                    progressDialog.setMessage("Obteniendo Archivos")
+                    runOnUiThread {
+                        progressDialog.setMessage("Obteniendo Archivos")
+                    }
+
                 }
                 if(!MainActivity.conexionWS.obtenerArchivos()){
                     runOnUiThread {
