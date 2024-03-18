@@ -89,7 +89,7 @@ class DialogoMenu(var context: Context) {
         lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por marca",Intent(context,apolo.vendedores.com.reportes.VentasPorMarca::class.java)))
         lista.add(item((R.drawable.ic_dolar).toString(),"Ventas por cliente",Intent(context,apolo.vendedores.com.reportes.VentasPorCliente::class.java)))
 //        lista.add(item((R.drawable.ic_check).toString(),"Ver anuncio",Intent(context,VentanaAuxiliar::class.java)))
-        lista.add(item((R.drawable.ic_lista).toString(),"Lista de precios",Intent(context,ListaDePrecios::class.java)))
+        //lista.add(item((R.drawable.ic_lista).toString(),"Lista de precios",Intent(context,ListaDePrecios::class.java)))
         lista.add(item((R.drawable.ic_mapa).toString(),"Ruteo semanal",Intent(context,RuteoSemanal::class.java)))
         return lista
     }

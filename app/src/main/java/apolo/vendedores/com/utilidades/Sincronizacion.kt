@@ -89,7 +89,7 @@ class Sincronizacion : AppCompatActivity() {
             btFinalizar.visibility = View.VISIBLE
             return
         }
-        if (!ubicacion.validaUbicacionSimulada(lm) || !ubicacion.validaUbicacionSimulada(lm)){
+        /*if (!ubicacion.validaUbicacionSimulada(lm) || !ubicacion.validaUbicacionSimulada(lm)){
             if (Build.VERSION.SDK_INT > 22){
                 tvImei.text = "Debe habilitar las ubicaciones simuladas para esta aplicacion"
             } else {
@@ -97,7 +97,7 @@ class Sincronizacion : AppCompatActivity() {
             }
             btFinalizar.visibility = View.VISIBLE
             return
-        }
+        }*/
 
         if (funcion.tiempoTranscurrido(funcion.fechaUltimaSincro(),funcion.getFechaHoraActual()) < 15){
             funcion.toast(this,"Debe esperar 15 minutos para sincronizar.")

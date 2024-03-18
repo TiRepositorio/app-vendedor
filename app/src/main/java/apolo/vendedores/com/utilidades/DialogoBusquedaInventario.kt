@@ -116,6 +116,48 @@ class DialogoBusquedaInventario {
         dialogo.show()
     }
 
+
+    fun cargarDialogo(cancelable:Boolean, codigo: String){
+        dialogo = Dialog(context)
+        if (campos == "" && codBarra == ""){
+            dialogo.setContentView(R.layout.busqueda)
+            dialogo.etBuscar.setText(codigo)
+            buscar(dialogo.etBuscar)
+            mostrar(dialogo.lvBuscar)
+        } else {
+            if (codBarra != ""){
+                dialogo.setContentView(R.layout.busqueda3)
+                dialogo.etBuscar.setText(codigo)
+                buscar(dialogo.etBuscar)
+                mostrarCampos3(dialogo.lvBuscar)
+            } else {
+                dialogo.setContentView(R.layout.busqueda4)
+                dialogo.etBuscar.setText(codigo)
+                buscar(dialogo.etBuscar)
+                mostrarCampos(dialogo.lvBuscar)
+            }
+        }
+        dialogo.imgBuscar.setOnClickListener{
+            buscar(dialogo.etBuscar)
+            if (campos == "" && codBarra == ""){
+                mostrar(dialogo.lvBuscar)
+            } else {
+                if (codBarra != ""){
+                    mostrarCampos3(dialogo.lvBuscar)
+                } else {
+                    mostrarCampos(dialogo.lvBuscar)
+                }
+            }
+        }
+        if (tvResultado2 == null){
+            seleccionar(dialogo.btSeleccionar,tvResultado)
+        } else {
+            seleccionar(dialogo.btSeleccionar,tvResultado,tvResultado2)
+        }
+        dialogo.setCancelable(cancelable)
+        dialogo.show()
+    }
+
     private fun buscar(etBuscar: EditText){
         var sql: String
         if (campos != ""){

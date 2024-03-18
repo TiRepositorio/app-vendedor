@@ -222,6 +222,72 @@ class FuncionesDispositivo(var context: Context) {
         return paquetes
     }
 
+
+    fun aplicacionBloqueada(): String {
+        var aplicacionBloqueadora = ""
+        val sql = "SELECT APLIC_BLOQ FROM svm_vendedor_pedido order by id desc"
+        val cursor:Cursor = funcion.consultar(sql)
+        var aplicBloq = ""
+        if (cursor.count > 0) {
+            aplicBloq = funcion.dato(cursor,"APLIC_BLOQ")
+        }
+
+
+        val appBloqList = aplicBloq.split(";")
+
+
+        val appList: MutableList<String> = mutableListOf()
+
+        val packageManager: PackageManager = context.packageManager
+        val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        for (app in installedApps) {
+            try {
+                val appInfo = packageManager.getApplicationInfo(app.packageName, PackageManager.GET_META_DATA)
+                val appPermissions = packageManager.getPackageInfo(app.packageName, PackageManager.GET_PERMISSIONS)
+                val permissions = appPermissions.requestedPermissions
+
+
+
+                if (permissions != null) {
+                    for (permission in permissions) {
+                        if (permission == "android.permission.ACCESS_MOCK_LOCATION") {
+                            //appList.add(appInfo.loadLabel(packageManager).toString())
+                            if (appInfo.packageName.toString().indexOf("apolo") == -1) {
+                                appList.add(appInfo.packageName.toString())
+                            }
+                            break
+                        }
+                    }
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+
+        appList.forEach { it2 ->
+
+
+            appBloqList.forEach {
+
+
+                if (it == it2) {
+                    aplicacionBloqueadora = it
+                    return aplicacionBloqueadora;
+                }
+
+            }
+
+        }
+
+
+        return "";
+    }
+
+
     fun verificaRoot():Boolean{
         return try {
             Runtime.getRuntime().exec("su")

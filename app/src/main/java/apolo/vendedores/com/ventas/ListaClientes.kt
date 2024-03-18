@@ -453,6 +453,15 @@ class ListaClientes : AppCompatActivity() {
         if (!ubicacion.validaUbicacionSimulada2(lm)){
             return
         }
+
+        var aplicacionBloqueador = dispositivo.aplicacionBloqueada()
+        if (aplicacionBloqueador != "") {
+            //funcion.toast(this, "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+            funcion.mensaje(this,"Atencion", "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+            return
+
+        }
+
         if (!ubicacion.ubicacionActivada(lm)){
             return
         }
@@ -460,6 +469,9 @@ class ListaClientes : AppCompatActivity() {
         if (!ubicacion.ubicacionEncontrada()){
             return
         }
+
+
+
         if (!dispositivo.horaAutomatica()) { return }
         if (!dispositivo.modoAvion()){ return }
         if (!dispositivo.zonaHoraria()){ return }

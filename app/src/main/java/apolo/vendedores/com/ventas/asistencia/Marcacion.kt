@@ -82,6 +82,15 @@ class Marcacion : AppCompatActivity() {
             EnviarMarcacion.anomalia = "\nAtención! La ubicación simulada fue utilizada en otra aplicación."
             return false
         }
+
+        var aplicacionBloqueador = dispositivo.aplicacionBloqueada()
+        if (aplicacionBloqueador != "") {
+            //funcion.toast(this, "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+            funcion.mensaje(this,"Atencion", "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+            return false
+
+        }
+
         if (!dispositivo.horaAutomatica()) { return false }
         if (!dispositivo.modoAvion()){ return false }
         if (!dispositivo.zonaHoraria()){ return false }
@@ -366,7 +375,10 @@ class Marcacion : AppCompatActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun marcar(cb: CheckBox){
+
+
 
         var estadoSim = false
 
@@ -377,11 +389,16 @@ class Marcacion : AppCompatActivity() {
             estadoSim = dispositivo.validaEstadoSim(telMgr);
         }
 
+
+
         var paquetesUbicacionSimulada = ""
         try{
             paquetesUbicacionSimulada = dispositivo.getAppsForMockLocation(this)
         } catch (e: Exception) {
         }
+
+
+
 
         val fecha: String = funcion.getFechaActual() + " " + funcion.getHoraActual()
         val tipo = if (cb.id == dialogMarcarPresenciaCliente.chkEntrada.id) { "E" } else { "S" }
@@ -440,6 +457,7 @@ class Marcacion : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun marcarEntrada(cb: CheckBox){
         if (cb.isChecked)
@@ -460,6 +478,7 @@ class Marcacion : AppCompatActivity() {
         cargarMarcaciones()
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun marcarSalida(cb: CheckBox){
         if (cb.isChecked) {
@@ -692,7 +711,7 @@ class Marcacion : AppCompatActivity() {
 
     private fun inicializaETAccion(et: EditText){
         et.addTextChangedListener(object : TextWatcher {
-            @SuppressLint("SetTextI18n")
+            @SuppressLint("SetTextI18n", "NewApi")
             override fun afterTextChanged(s: Editable?) {
                 if (s.toString() == "cargarMarcaciones") {
                     cargarMarcaciones()

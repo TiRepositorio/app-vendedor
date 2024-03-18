@@ -387,6 +387,7 @@ class ConexionWS {
         } catch (e: java.lang.Exception) {
             return false
         }
+
         val envelope = SoapSerializationEnvelope(SoapEnvelope.VER11)
         envelope.dotNet = false
         envelope.setOutputSoapObject(request)
@@ -394,6 +395,7 @@ class ConexionWS {
         try {
             transporte.call(SOAP_ACTION, envelope)
             val sp = envelope.response as SoapPrimitive
+            //val sp = envelope.bodyIn
             resultados = sp.toString()
             val fos: FileOutputStream?
 //            fos = FileOutputStream("/sdcard/apolo_02.apk")

@@ -349,6 +349,8 @@ class TablasSincronizacion {
         lista.add(24,"PER_MARC_ASIS")
         lista.add(25,"VENT_CON_MARC")
         lista.add(26,"VERSION")
+        lista.add(27,"APLIC_BLOQ")
+        lista.add(28,"IND_LIB_UBI_SIM")
 
 
 //        lista.add(28,"ULTIMA_VEZ")

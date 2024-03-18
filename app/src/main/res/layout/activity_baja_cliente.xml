@@ -8,32 +8,32 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/fondoOscuro">
+        android:background="@color/fondoOscuro"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/etAccion"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="gone"
-            android:editable="false"/>
+            android:editable="false"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/textoClaro"
-            android:text="FORMULARIO DE BAJA DE CLIENTES"
+            android:gravity="center"
             android:paddingLeft="40sp"
-            android:gravity="center"/>
+            android:text="FORMULARIO DE BAJA DE CLIENTES"
+            android:textColor="@color/textoClaro" />
 
         <Button
             android:id="@+id/btVolver"
             android:layout_width="40sp"
             android:layout_height="30sp"
-            android:textColor="@color/textoClaro"
             android:background="@color/fondoFooter"
-            android:text="X" />
+            android:text="X"
+            android:textColor="@color/textoClaro" />
     </LinearLayout>
 
     <ScrollView

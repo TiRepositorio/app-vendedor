@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -121,6 +122,11 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun validaUbicacionSimulada(lm:LocationManager): Boolean {
+
+        if (liberarUbicacionSimulada()) {
+            return true
+        }
+
         if (Build.VERSION.SDK_INT > 22) {
             var count = 0
             try {
@@ -214,6 +220,10 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun validaUbicacionSimulada2(lm:LocationManager): Boolean {
+        if (liberarUbicacionSimulada()) {
+            return true
+        }
+
         if (Build.VERSION.SDK_INT > 22) {
             var count = 0
             try {
@@ -286,6 +296,23 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
         return true
     }
 
+
+
+    fun liberarUbicacionSimulada(): Boolean {
+        val sql = "SELECT IND_LIB_UBI_SIM FROM svm_vendedor_pedido order by id desc"
+        val cursor: Cursor = funcion.consultar(sql)
+        var libUbiSim = ""
+        if (cursor.count > 0) {
+            libUbiSim = funcion.dato(cursor,"IND_LIB_UBI_SIM")
+        }
+
+        return libUbiSim == "S"
+
+    }
+
+
+
+
 //    fun obtenerUbicacion(latitud:String,longitud:String,tabla:String,where:String):String{
 //        val sql : String = "SELECT DISTINCT " + latitud + "," + longitud + " " +
 //                           "  FROM " + tabla + " " + where
@@ -299,7 +326,7 @@ class FuncionesUbicacion(var context: Context) : AppCompatActivity() {
                 distanciaReal /= 1000.0
             }
             Toast.makeText(context, "No se encuentra en el cliente. Se encuentra a " + distanciaReal.roundToInt() + " m." , Toast.LENGTH_SHORT).show()
-            return true
+            return false
         }
         return true
     }

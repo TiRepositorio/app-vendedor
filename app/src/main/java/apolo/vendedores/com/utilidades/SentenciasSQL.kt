@@ -92,7 +92,8 @@ class SentenciasSQL {
                     " VERSION_SISTEMA TEXT 				    , PER_ASISTENCIA TEXT   , FRECUENCIA_RASTREO TEXT   ,       " +
                     " HORA_INICIO TEXT					    , HORA_FIN TEXT         , TIEMPO_ASISTENCIA TEXT    ,       " +
                     " ULTIMA_VEZ TEXT 					    , IND_FOTO TEXT         , MIN_VENTA TEXT            ,       " +
-                    " VENT_CON_MARC TEXT 					, PER_MARC_ASIS TEXT    , DESC_VENDEDOR TEXT)       ;"
+                    " VENT_CON_MARC TEXT 					, PER_MARC_ASIS TEXT    , DESC_VENDEDOR TEXT        ,       " +
+                    " APLIC_BLOQ TEXT                       , IND_LIB_UBI_SIM TEXT  )       ;"
         }
 
         fun createTableSvmArticulosPrecios(): String {
@@ -624,6 +625,14 @@ class SentenciasSQL {
             return ("alter table svm_cliente_vendedor add column EMAIL TEXT;")
         }
 
+        private fun addAplicBloqSvmVendedorPedido():String{
+            return ("alter table svm_vendedor_pedido add column APLIC_BLOQ TEXT;")
+        }
+
+        private fun addIndLibUniSimSvmVendedorPedido():String{
+            return ("alter table svm_vendedor_pedido add column IND_LIB_UBI_SIM TEXT;")
+        }
+
 
         fun listaSQLAlterTable(): ArrayList<String> {
             val lista : ArrayList<String> = ArrayList()
@@ -641,6 +650,8 @@ class SentenciasSQL {
             lista.add(11, addPorcTotalVisitaSvmSegVisitasSemanal())
             lista.add(12, addEmailSvmModificaCatastro())
             lista.add(13, addEmailSvmClienteVendedor())
+            lista.add(14, addAplicBloqSvmVendedorPedido())
+            lista.add(15, addIndLibUniSimSvmVendedorPedido())
 
 
             return lista

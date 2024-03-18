@@ -112,7 +112,7 @@ class InventarioVencimiento : AppCompatActivity() {
         etDetCantidadGondola.setOnClickListener{funcion.dialogoEntradaNumero(etDetCantidadDeposito,etDetCantidadGondola, this,"guardar",etAccion)}
         etCodCliente.setOnClickListener{ buscar.cargarDialogo(false) }
         btEnviar.setOnClickListener{enviarInventarioVencimiento()}
-        etAddArticulo.setOnClickListener{buscarArticulo()}
+        etAddArticulo.setOnClickListener{buscarArticulo("")}
     }
 
     private fun etCodCliente(){
@@ -428,7 +428,7 @@ class InventarioVencimiento : AppCompatActivity() {
         thread.start()
     }
 
-    private fun buscarArticulo(){
+    private fun buscarArticulo(codigo: String){
         val dialogo = DialogoBusquedaInventario(this,
             "svm_st_articulos_prom",
             "COD_ARTICULO",
@@ -441,7 +441,7 @@ class InventarioVencimiento : AppCompatActivity() {
                     " AND UPPER(DESC_ARTICULO) NOT LIKE '%RRHH%'",
             accion,
             null)
-        dialogo.cargarDialogo(true)
+        dialogo.cargarDialogo(true, codigo)
     }
 
     private fun escanear() {
@@ -459,8 +459,8 @@ class InventarioVencimiento : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     val codigo = data.getStringExtra("codigo")
-                    etBuscar.setText(codigo)
-                    buscarArticulo()
+                    //etBuscar.setText(codigo)
+                    buscarArticulo(codigo!!)
                 }
             }
         }
