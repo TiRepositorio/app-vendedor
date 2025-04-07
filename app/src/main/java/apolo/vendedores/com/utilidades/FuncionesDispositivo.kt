@@ -65,6 +65,7 @@ class FuncionesDispositivo(var context: Context) {
         val sql = "SELECT distinct IFNULL(FECHA,'01/01/2020') AS ULTIMA_SINCRO FROM svm_vendedor_pedido order by id desc"
         val cursor:Cursor = funcion.consultar(sql)
         var fecUltimaSincro = ""
+        println("esta es la ultima sincronizacion: ${fecUltimaSincro}")
         if (cursor.count > 0) {
             fecUltimaSincro = funcion.dato(cursor,"ULTIMA_SINCRO")
         }
@@ -75,18 +76,29 @@ class FuncionesDispositivo(var context: Context) {
         val cal = Calendar.getInstance()
         try {
             d = dfDate.parse(fecUltimaSincro)
+            println("Este es el d: ${d}")
             d1 = dfDate.parse(dfDate.format(cal.time))
+            println("este es d1: +${d1}")
         } catch (e: ParseException) {
             e.printStackTrace()
             e.message
         }
-        val diffInDays = ((d1!!.time - d!!.time) / (1000 * 60 * 60 * 24)).toInt()
-        return if (diffInDays != 0) {
-            Toast.makeText(context, "La fecha actual del sistema no coincide con la fecha de sincronizacion", Toast.LENGTH_SHORT).show()
-            false
-        } else {
-            true
+        if (d != null && d1 != null){
+            val diffInDays = ((d1.time - d.time) / (1000 * 60 * 60 * 24)).toInt()
+            println("Este es el DIA: ${diffInDays}")
+//        return true
+            return if (diffInDays != 0) {
+                println("Este es el DIA: ${diffInDays}")
+                Toast.makeText(context, "La fecha actual del sistema: ${d} == ${d1} no coincide con la fecha de sincronizacion", Toast.LENGTH_SHORT).show()
+                false
+            } else {
+                true
+            }
+        }else{
+            Toast.makeText(context, "Las fechas no son válidas ${d} !== ${d1}", Toast.LENGTH_SHORT).show()
+            return false
         }
+
     }
 
     @SuppressLint("SimpleDateFormat")

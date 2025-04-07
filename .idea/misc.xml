@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -72,6 +71,49 @@
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/rep_seg_vis_lista_vendedores.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/layout/ven_lista_sd_productos.xml" value="0.2" />
         <entry key="..\:/Android/Vendedor/Vendedor/app/src/main/res/menu/drawer_menu_vendedores.xml" value="0.3625" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/drawable-xxhdpi/border_textview.xml" value="0.1245" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/drawable-xxhdpi/ic_mapa_ruteo.xml" value="0.1425" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/drawable-xxhdpi/ic_promocion.xml" value="0.1255" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_acerca_de.xml" value="0.24635416666666668" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_avance_de_comisiones.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_canasta_de_marcas2.xml" value="0.24635416666666668" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_catastrar_cliente.xml" value="0.24635416666666668" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_configurar_usuario.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_configurar_usuario_individual.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_consulta_pedidos.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_extracto_de_salarios.xml" value="0.17239583333333333" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_lista_clientes.xml" value="0.264" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_lista_de_precios.xml" value="0.24635416666666668" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_mapa.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_pedidos.xml" value="0.4" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_pedidos_en_reparto.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_promociones.xml" value="0.264" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_promotores.xml" value="0.22395833333333334" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/activity_promotores_catastro.xml" value="0.264" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/barra_ger_sup.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/barra_vendedores.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/dialogo_bonificacion_combo.xml" value="0.25" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/inf_reb_vend_lista_rebotes.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/list_clientes_catastrados5.xml" value="0.264" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/menu_supervisores.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/pos_ven_campos_inventario.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/progres_dialog.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/promocion_bonificacion_lista.xml" value="0.11458333333333333" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/promocion_descuento_lista.xml" value="0.11980749746707194" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_asis_dialogo_marcacion_cliente.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_cli_lista_clientes.xml" value="0.2" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_con_consulta_detalle.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_con_lista_consulta_clientes_no_positivados.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_con_lista_consulta_datos_de_clientes.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_con_lista_consulta_detalle.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_con_lista_consulta_pedidos.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_deu_cli_lista_deuda.xml" value="0.17980072463768115" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_ped_lista_pedidos_detalles.xml" value="0.4" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_ped_lista_pedidos_producto.xml" value="0.1" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_pro_lista_promociones.xml" value="0.25" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/layout/ven_pro_lista_promotores.xml" value="0.264" />
+        <entry key="..\:/Android/Vendedor/app/src/main/res/menu/drawer_menu_vendedores.xml" value="0.19692307692307692" />
+        <entry key="..\:/Android/bottomnavigationvar/.gradle/caches/transforms-2/files-2.1/278dd6b97f216a85f27b9fc7e50b1abb/appcompat-1.3.1/res/layout/support_simple_spinner_dropdown_item.xml" value="0.2" />
       </map>
     </option>
   </component>
@@ -80,7 +122,7 @@
       <item index="0" class="java.lang.String" itemvalue="android.annotation.SuppressLint" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

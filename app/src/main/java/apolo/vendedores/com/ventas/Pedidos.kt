@@ -720,32 +720,6 @@ class Pedidos : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun verificaCargado(position: Int):Boolean{
-        if (articulosDetalle.indexOf("|${listaProductos[position]["COD_ARTICULO"]}|") > -1){
-            funcion.toast(this, "El producto ya se ha cargado al pedido.")
-            return false
-        }
-        return true
-    }
-
-    @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun cargarDetalleProducto(){
-        tvdCod.text = listaProductos[posProducto]["COD_ARTICULO"]
-        btCodigo.text = "Cod.: ${listaProductos[posProducto]["COD_ARTICULO"]}"
-        tvdPrecioReferencia.text = funcion.numero(decimales,spReferencias.getDato("PRECIO"),false)
-        tvdDesc.setText(tvdPrecioReferencia.text)
-        btCantMinima.text = "Cant. Min.: " + spReferencias.getDato("CANT_MINIMA")
-        cantidadMinima = spReferencias.getDato("CANT_MINIMA").toInt()
-        if (spReferencias.getDato("CANT_MINIMA").trim() == "" || spReferencias.getDato("CANT_MINIMA").toInt() == 0) {
-            btCantMinima.text = "Cant. Min.: " + 1
-            cantidadMinima = 1
-        }
-        tvdCantidad.setText(cantidadMinima.toString())
-        calcularSubtotal()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
     private fun calcularSubtotal(){
         tvdTotal.text = funcion.entero(
             (tvdDesc.text.toString().replace(".", "").toInt()) * (tvdCantidad.text.toString()
@@ -753,8 +727,8 @@ class Pedidos : AppCompatActivity() {
                     ".",
                     ""
                 )).toInt()
-        )
-    }
+            )
+        }
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun inicializaET(et: EditText){
@@ -787,6 +761,32 @@ class Pedidos : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun verificaCargado(position: Int):Boolean{
+        if (articulosDetalle.indexOf("|${listaProductos[position]["COD_ARTICULO"]}|") > -1){
+            funcion.toast(this, "El producto ya se ha cargado al pedido.")
+            return false
+        }
+        return true
+    }
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun cargarDetalleProducto(){
+        tvdCod.text = listaProductos[posProducto]["COD_ARTICULO"]
+        btCodigo.text = "Cod.: ${listaProductos[posProducto]["COD_ARTICULO"]}"
+        tvdPrecioReferencia.text = funcion.numero(decimales,spReferencias.getDato("PRECIO"),false)
+        tvdDesc.setText(tvdPrecioReferencia.text)
+        btCantMinima.text = "Cant. Min.: " + spReferencias.getDato("CANT_MINIMA")
+        cantidadMinima = spReferencias.getDato("CANT_MINIMA").toInt()
+        if (spReferencias.getDato("CANT_MINIMA").trim() == "" || spReferencias.getDato("CANT_MINIMA").toInt() == 0) {
+            btCantMinima.text = "Cant. Min.: " + 1
+            cantidadMinima = 1
+        }
+        tvdCantidad.setText(cantidadMinima.toString())
+        calcularSubtotal()
     }
 
     @SuppressLint("Recycle")
@@ -862,17 +862,7 @@ class Pedidos : AppCompatActivity() {
                 `in` + ",'" + cursorProm.getString(cursorProm.getColumnIndex("COD_ARTICULO")) + "'"
             cursorProm.moveToNext()
         }
-
-        sql = "UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'N' AND COD_EMPRESA = '$codEmpresa' "
-
-        try {
-            MainActivity2.bd!!.execSQL(sql)
-        } catch (e: java.lang.Exception) {
-            funcion.mensaje(this, "Error", "No se pudo actualizar el campo${e.message}".trimIndent()
-            )
-        }
-
-        sql = ("UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE cod_articulo in ($`in`) AND COD_EMPRESA = '$codEmpresa' ")
+         sql = ("UPDATE svm_articulos_precios SET IND_PROMO_ACT = 'S' WHERE cod_articulo in ($`in`) AND COD_EMPRESA = '$codEmpresa' ")
 
         try {
             MainActivity2.bd!!.execSQL(sql)
@@ -1304,6 +1294,7 @@ class Pedidos : AppCompatActivity() {
                          +  "   AND b.COD_LISTA_PRECIO  = '${spListaPrecios.getDato("COD_LISTA_PRECIO")}'"
                          +  " ")
         listaDetalles = funcion.cargarDatos(funcion.consultar(sql))
+        println("sqls segunda"+sql)
         for (i in 0 until listaDetalles.size){
             depo = listaDetalles[i]["IND_DEPOSITO"].toString()
             if (listaDetalles[i]["IND_BLOQUEADO"].toString() == "S"){
@@ -2296,11 +2287,16 @@ class Pedidos : AppCompatActivity() {
                 posProducto = position
                 etAccion.setText("ventaRapida")
             }
+            //original
+             if (!dataSource[position]["IND_PROMO_ACT"].equals("N")){
+                 rowView.ibtn_tactico.visibility = View.VISIBLE
+                }
 
-            if (!dataSource[position]["IND_PROMO_ACT"].equals("N")){
+           /* if (dataSource[position]?.get("IND_PROMO_ACT")?.toString()!= "N" && dataSource[position]?.get("IND_PROMO_ACT")?.toIntOrNull()!= 0) {
+                println("Este es el índice: ${dataSource[position]["IND_PROMO_ACT"]}")
                 rowView.ibtn_tactico.visibility = View.VISIBLE
             }
-
+*/
             rowView.ibtn_tactico.setOnClickListener {
                 posProducto = position
                 etAccion.setText("promociones")

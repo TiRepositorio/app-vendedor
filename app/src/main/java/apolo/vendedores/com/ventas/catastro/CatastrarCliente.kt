@@ -28,7 +28,7 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_catastrar_cliente.*
-import kotlinx.android.synthetic.main.activity_catastrar_cliente.etCercaDe
+//import kotlinx.android.synthetic.main.activity_catastrar_cliente.etCercaDe
 import kotlinx.android.synthetic.main.activity_catastrar_cliente.ivFachada
 import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import java.io.File

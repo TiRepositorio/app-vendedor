@@ -189,7 +189,7 @@ class TablasSincronizacion {
         return lista
     }
 */
-    private fun camposTablaSvmArticulosPrecios(): ArrayList<String> {
+    private fun  camposTablaSvmArticulosPrecios(): ArrayList<String> {
         val lista : ArrayList<String> = ArrayList()
         lista.add(0,"COD_EMPRESA")
         lista.add(1,"COD_VENDEDOR")

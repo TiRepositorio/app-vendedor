@@ -166,20 +166,20 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
-                <TextView
-                    android:layout_width="120sp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textoClaro"
-                    android:text="Cerca de:" />
+<!--                <TextView-->
+<!--                    android:layout_width="120sp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/textoClaro"-->
+<!--                    android:text="Cerca de:" />-->
 
-                <EditText
-                    android:id="@+id/etCercaDe"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|left"
-                    android:background="#fffafa"
-                    android:inputType="textNoSuggestions"
-                    android:textColor="#000000" />
+<!--                <EditText-->
+<!--                    android:id="@+id/etCercaDe"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical|left"-->
+<!--                    android:background="#fffafa"-->
+<!--                    android:inputType="textNoSuggestions"-->
+<!--                    android:textColor="#000000" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -443,7 +443,7 @@
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
-            
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="3sp"
@@ -535,7 +535,7 @@
                     android:textColor="#000000" />
             </LinearLayout>
 
-            
+
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -567,68 +567,68 @@
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
-            
-            
+
+
             <LinearLayout
 				android:layout_width="fill_parent"
 				android:layout_height="3sp"
 				android:orientation="vertical" />
-            
-            
-            
-            
-            
-            
-	       <LinearLayout 
+
+
+
+
+
+
+	       <LinearLayout
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal">
-	            
-			    <TextView 
+
+			    <TextView
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_weight="1"
                     android:textColor="@color/textoClaro"
 			        android:text="Latitud:"/>
-			        
-	        	<TextView 
+
+	        	<TextView
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_weight="1"
                     android:textColor="@color/textoClaro"
 			        android:text="Longitud:"/>
-			    
+
 			</LinearLayout>
-			
-	
-			
-			<LinearLayout 
+
+
+
+			<LinearLayout
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal">
-	            
-			    <TextView 
+
+			    <TextView
 			        android:id="@+id/tvLatitud"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
                     android:textColor="@color/textoClaro"
 			        android:layout_weight="1" />
-			        
-	        	<TextView 
+
+	        	<TextView
 	        	    android:id="@+id/tvLongitud"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
                     android:textColor="@color/textoClaro"
 			        android:layout_weight="1" />
-			    
+
 			</LinearLayout>
-			
-			<Button 
+
+			<Button
 			    android:id="@+id/btBuscarEnMapa"
 			    android:layout_width="fill_parent"
 			    android:layout_height="wrap_content"
 			    android:text="Buscar en Mapa"/>
-            
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="3sp"
@@ -780,14 +780,14 @@
                     android:longClickable="false"
                     android:textColor="#000000" />
             </LinearLayout>
-            
-            
+
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="3sp"
                 android:orientation="vertical" />
-            
-            
+
+
              <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -805,19 +805,19 @@
             	<ImageButton
                     android:id="@+id/ibtFotoFachada"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" 
+                    android:layout_height="wrap_content"
                     android:scaleX="0.8"
                     android:scaleY="0.8"
                     android:src="@drawable/ic_camara" />
             </LinearLayout>
-            
-             
+
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="3sp"
                 android:orientation="vertical" />
-            
-            
+
+
              <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -827,15 +827,15 @@
                 <ImageView
                     android:id="@+id/ivFachada"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" 
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:gravity="center_horizontal|center_vertical"  />
- 
+
             </LinearLayout>
 
- 
-              
-              
+
+
+
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -876,8 +876,8 @@
                     android:lines="3"
                     android:textColor="#000000" />
             </LinearLayout>
-            
-          
+
+
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="3sp"

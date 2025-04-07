@@ -34,9 +34,9 @@ class DialogoAutorizacion(var context: Context) {
             } else {
                 if (contraClave.text.toString().trim() == claves.contraClave(claveTemp).trim()){
                     cargaAcion.setText(accion)
-                    funcion.mensaje(context,"Correcto","La clave fue aceptada")
+//                    funcion.mensaje(context,"Correcto","La clave fue aceptada")
                 } else {
-                    funcion.mensaje(context,"Error","La clave no es valida")
+ //                   funcion.mensaje(context,"Error","La clave no es valida")
                     cargaAcion.setText("no$accion")
                 }
             }

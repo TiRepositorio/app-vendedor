@@ -122,8 +122,45 @@ class ListaClientes : AppCompatActivity() {
 //        var where = " AND COD_VENDEDOR = '" + codVendedor +
         val where = " AND COD_VENDEDOR = '$codVendedor' $condicion AND COD_EMPRESA = '$codEmpresa'"
         cargarLista(funcion.buscar(tabla,campos,groupBy,orderBy,where))
+        println("Entro en la funcion buscar")
         mostrar()
     }
+//fun buscar(condicion: String) {
+//    val campos = " * "
+//    val groupBy = ""
+//    val orderBy = "COD_CLIENTE"
+//    val tabla = "svm_cliente_vendedor"
+//    val where = " AND COD_VENDEDOR = '$codVendedor' $condicion AND COD_EMPRESA = '$codEmpresa'"
+//
+//    val cursor = funcion.buscar(tabla, campos, groupBy, orderBy, where) // Retorna un Cursor
+//    println("Entro en la función buscar")
+//
+//    if (cursor != null) {
+//        try {
+//            if (cursor.moveToFirst()) { // Verifica si hay resultados
+//                do {
+//                    // Imprime cada fila del Cursor
+//                    val resultado = StringBuilder()
+//                    for (i in 0 until cursor.columnCount) {
+//                        val columnName = cursor.getColumnName(i)
+//                        val columnValue = cursor.getString(i) ?: "null"
+//                        resultado.append("$columnName: $columnValue, ")
+//                    }
+//                    println("Resultado: ${resultado.trimEnd(',',' ')}")
+//                } while (cursor.moveToNext())
+//            } else {
+//                println("No se encontraron resultados.")
+//            }
+//        } finally {
+//            cursor.close() // Asegúrate de cerrar el Cursor para liberar recursos
+//        }
+//    } else {
+//        println("El cursor es nulo, no se pudo realizar la consulta.")
+//    }
+//
+//    mostrar() // Llamada adicional a la función mostrar
+//}
+
 
     private fun buscarRuteo(){
         cbTodos.isChecked = false

@@ -658,6 +658,8 @@ class FuncionesUtiles {
 //        if (tvVendedor!! != null){
 //            tvVendedor!!.setText("Todos")
 //        }
+        println("Este es el sql $sql")
+
         return consultar(sql)
     }
     fun ultPedidoVenta(codVendedor: String):Int{

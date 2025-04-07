@@ -107,27 +107,28 @@ class NoVenta(private val codCliente: String, private val codSubcliente:String,
             Mapa.codVendedor = ListaClientes.codVendedor
             etAccion.setText("abrirMapa")
             return false
-        } else {
-            if (ubicacion.latitud.trim() == "" || ubicacion.longitud.trim() == "") {
-                funcion.toast(context,"No se encuentra la ubicacion GPS del telefono")
-                return false
-            }
-            val distanciaCliente : Double = ubicacion.calculaDistanciaCoordenadas(
-                ubicacion.latitud.toDouble(),
-                latitud.toDouble(),
-                ubicacion.longitud.toDouble(),
-                longitud.toDouble())
-            if (distanciaCliente > funcion.getRangoDistancia()) {
-                if(!verificaMarcacionCliente() && nuevo){
-                    funcion.toast(context,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
-                    val autorizacion = DialogoAutorizacion(context)
-                    autorizacion.dialogoAutorizacion(trigger, etAccion)
-                }else{
-                    funcion.toast(context, "No se encuentra en el cliente. Se encuentra a ${distanciaCliente.roundToInt()} m.")
-                }
-                return false
-            }
         }
+//        else {
+//            if (ubicacion.latitud.trim() == "" || ubicacion.longitud.trim() == "") {
+//                funcion.toast(context,"No se encuentra la ubicacion GPS del telefono")
+//                return false
+//            }
+//            val distanciaCliente : Double = ubicacion.calculaDistanciaCoordenadas(
+//                ubicacion.latitud.toDouble(),
+//                latitud.toDouble(),
+//                ubicacion.longitud.toDouble(),
+//                longitud.toDouble())
+//            if (distanciaCliente > funcion.getRangoDistancia()) {
+//                if(!verificaMarcacionCliente() && nuevo){
+//                    funcion.toast(context,"No se encuentra en el cliente. Se encuentra a " + distanciaCliente.roundToInt() + " m.")
+//                    val autorizacion = DialogoAutorizacion(context)
+//                    autorizacion.dialogoAutorizacion(trigger, etAccion)
+//                }else{
+//                    funcion.toast(context, "No se encuentra en el cliente. Se encuentra a ${distanciaCliente.roundToInt()} m.")
+//                }
+//                return false
+//            }
+//        }
         return true
     }
 

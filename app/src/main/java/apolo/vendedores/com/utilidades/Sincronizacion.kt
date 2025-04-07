@@ -118,6 +118,8 @@ class Sincronizacion : AppCompatActivity() {
             FuncionesUtiles.usuario["LOGIN"] = usuario.login
             FuncionesUtiles.usuario["COD_EMPRESA"] = usuario.cod_empresa
             FuncionesUtiles.usuario["VERSION"] = usuario.version
+            println("este es el usuario: ${usuario.login}")
+            println("esta es la empresa: $")
             preparaSincornizacion().execute()
         } catch(e: Exception){
             Log.println(Log.WARN, "Error",e.message!!)
@@ -341,9 +343,11 @@ class Sincronizacion : AppCompatActivity() {
 
                 //Leer el archivo desde la direccion asignada
                 var archivo     = File("/data/data/apolo.vendedores.com/" + listaSQLCreateTable[i].split(" ")[5] + ".txt")
+                println("ESTO ES EL ARCHIVO GENERADO:"+archivo)//+listaSQLCreateTable[i].split(" ")[5]+ ".txt"
                 var leeArchivo  = FileReader(archivo)
                 var buffer      = BufferedReader(leeArchivo)
                 val sql         : String            = listaSQLCreateTable[i]
+                println("estos son las tablas creadas ${listaSQLCreateTable[i]}")
 
                 try {
                     MainActivity.bd!!.execSQL(sql)
@@ -368,6 +372,7 @@ class Sincronizacion : AppCompatActivity() {
 
                 //Extrae valor de los campo e inserta a la BD
                 linea = buffer.readLine()
+
                 var cont = 0
                 runOnUiThread {
                     tvImei.text = tvImei.text.toString() + "\n${nf.format(i)} - " + listaSQLCreateTable[i].split(" ")[5]
@@ -535,7 +540,7 @@ class Sincronizacion : AppCompatActivity() {
         }
         if (versionSistema != MainActivity.version){
             runOnUiThread {
-                tvImei.text = "Debe actualizar su version para sincronizar."
+                tvImei.text = "Debe actualizar su version para sincronizar.$versionSistema"
             }
 
             return false
