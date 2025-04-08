@@ -3,6 +3,7 @@ package apolo.vendedores.com
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
+import android.provider.Settings
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.text.Editable
@@ -25,9 +27,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.GravityCompat
 import apolo.vendedores.com.clases.Usuario
@@ -70,6 +74,21 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     }
 
+
+    private val REQUEST_CODE_PERMISOS = 100
+
+    private val permisos = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        //Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_PHONE_STATE
+    )
+
+
+
+
     private val requestExternalStorage = 1
     private val permissionsStorage = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -100,10 +119,99 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         dispositivo.getAppsForMockLocation(this)
 
+        validarPermisos()
+
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        checkPermissionAlIniciar()
+    }
 
+
+    private fun checkPermissionAlIniciar() {
+        val permiso = Manifest.permission.READ_PHONE_STATE
+
+        if (ContextCompat.checkSelfPermission(this, permiso) != PackageManager.PERMISSION_GRANTED) {
+            // Si no tiene permiso
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permiso)) {
+                // Ya lo negó una vez, pero NO marcó "no volver a preguntar"
+                ActivityCompat.requestPermissions(this, arrayOf(permiso), REQUEST_CODE_PERMISOS)
+            } else {
+                // Si es la primera vez o marcó "no volver a preguntar"
+                ActivityCompat.requestPermissions(this, arrayOf(permiso), REQUEST_CODE_PERMISOS)
+            }
+        }
+    }
+
+
+    private fun validarPermisos() {
+
+        //Log.d("Permisos", "VALIDANDO PERMISOS")
+        val permisosDenegados = permisos.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (permisosDenegados.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permisosDenegados.toTypedArray(),
+                REQUEST_CODE_PERMISOS
+            )
+        } else {
+            //Log.d("Permisos", "Todos los permisos ya fueron concedidos")
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_CODE_PERMISOS) {
+            var algunoDenegadoPermanentemente = false
+
+            for (i in permissions.indices) {
+                val permiso = permissions[i]
+                val resultado = grantResults[i]
+
+                if (resultado == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permisos", "$permiso concedido")
+                } else {
+                    val showRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, permiso)
+
+                    if (!showRationale) {
+                        Log.d("Permisos", "$permiso denegado PERMANENTEMENTE")
+                        algunoDenegadoPermanentemente = true
+                    } else {
+                        Log.d("Permisos", "$permiso denegado")
+                        Toast.makeText(this, "Debés aceptar el permiso $permiso para continuar", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            if (algunoDenegadoPermanentemente) {
+                mostrarDialogoParaIrAConfiguracion()
+            }
+        }
+    }
+
+
+    private fun mostrarDialogoParaIrAConfiguracion() {
+        AlertDialog.Builder(this)
+            .setTitle("Permiso requerido")
+            .setMessage("Debés habilitar el permiso desde la configuración de la app para continuar.")
+            .setPositiveButton("Ir a configuración") { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
 
 
 
@@ -226,6 +334,7 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             FuncionesUtiles.usuario["VERSION"] = cursor.getString(cursor.getColumnIndex("VERSION"))
             FuncionesUtiles.usuario["COD_PERSONA"] = codPersona()
             FuncionesUtiles.usuario["CONF"] = "S"
+            zonaHoraria()
             return true
         } else {
             FuncionesUtiles.usuario["CONF"] = "N"
@@ -383,6 +492,23 @@ class MainActivity2 : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         } else {
             codPersona = funcion.dato(cursor,"COD_PERSONA")
             funcion.dato(cursor,"COD_PERSONA")
+        }
+    }
+
+    private fun zonaHoraria():String{
+        val sql = "SELECT DISTINCT ZONA_HORARIA FROM usuarios"
+        val cursor : Cursor = funcion.consultar(sql)
+        return if (cursor.count < 1){
+            AppGlobals.offsetGMT = -3
+            ""
+        } else {
+            try {
+                AppGlobals.offsetGMT = funcion.dato(cursor,"ZONA_HORARIA").toInt()
+            } catch (e: Exception) {
+                AppGlobals.offsetGMT = -3
+            }
+
+            funcion.dato(cursor,"ZONA_HORARIA")
         }
     }
 

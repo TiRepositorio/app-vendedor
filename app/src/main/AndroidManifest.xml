@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="apolo.vendedores.com">
 
-    <uses-permission android:name="andtoid.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="andtoid.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />

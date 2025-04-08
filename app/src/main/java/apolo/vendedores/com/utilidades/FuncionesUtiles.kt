@@ -22,12 +22,7 @@ import apolo.vendedores.com.MainActivity2
 import apolo.vendedores.com.R
 import apolo.vendedores.com.clases.Usuario
 import apolo.vendedores.com.ventas.ListaClientes
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.result.Result
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_configurar_usuario_2.*
-import kotlinx.android.synthetic.main.activity_modificar_cliente.*
 import kotlinx.android.synthetic.main.dialogo_contacto.*
 import kotlinx.android.synthetic.main.pos_ven_campos_inventario.*
 import org.json.JSONObject
@@ -951,6 +946,8 @@ class FuncionesUtiles {
 
         } catch (e: Exception) {
 
+            var err = e.message
+
         }
 
         // GUARDAR LA HORA
@@ -992,7 +989,11 @@ class FuncionesUtiles {
 
         return horaActual*/
 
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+
+
+
+        //API VIEJA DEJO DE FUNCIONAR
+        /*val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
 
@@ -1020,7 +1021,12 @@ class FuncionesUtiles {
                 val error = result.error.exception.message
                 throw Exception("Error al obtener la fecha y hora actual: $error")
             }
-        }
+        }*/
+
+
+        val hora = HoraInternetHelper.obtenerHoraConOffset(AppGlobals.offsetGMT)
+        return hora
+
     }
 
     fun convertUnixTimeToDate(unixTime: Long, zoneId: String): LocalDateTime {

@@ -15,7 +15,7 @@ class SentenciasSQL {
                     " ACTIVO TEXT                           , COD_EMPRESA TEXT  , " +
                     " VERSION TEXT                          , MIN_FOTOS   TEXT  , " +
                     " MAX_FOTOS TEXT                        , COD_PERSONA TEXT  , " +
-                    " PROG_PEDIDO TEXT);"
+                    " PROG_PEDIDO TEXT                      , ZONA_HORARIA TEXT );"
         }
         fun insertUsuario(usuario: HashMap<String, String>):String{
             return ("INSERT INTO usuarios (NOMBRE, LOGIN, TIPO, ACTIVO, COD_EMPRESA, VERSION,PROG_PEDIDO) VALUES " +
@@ -93,7 +93,7 @@ class SentenciasSQL {
                     " HORA_INICIO TEXT					    , HORA_FIN TEXT         , TIEMPO_ASISTENCIA TEXT    ,       " +
                     " ULTIMA_VEZ TEXT 					    , IND_FOTO TEXT         , MIN_VENTA TEXT            ,       " +
                     " VENT_CON_MARC TEXT 					, PER_MARC_ASIS TEXT    , DESC_VENDEDOR TEXT        ,       " +
-                    " APLIC_BLOQ TEXT                       , IND_LIB_UBI_SIM TEXT  )       ;"
+                    " APLIC_BLOQ TEXT                       , IND_LIB_UBI_SIM TEXT   )       ;"
         }
 
         fun createTableSvmArticulosPrecios(): String {
@@ -633,6 +633,10 @@ class SentenciasSQL {
             return ("alter table svm_vendedor_pedido add column IND_LIB_UBI_SIM TEXT;")
         }
 
+        private fun addZonaHorariaUsuario():String{
+            return ("alter table usuarios add column ZONA_HORARIA TEXT;")
+        }
+
 
         fun listaSQLAlterTable(): ArrayList<String> {
             val lista : ArrayList<String> = ArrayList()
@@ -652,6 +656,7 @@ class SentenciasSQL {
             lista.add(13, addEmailSvmClienteVendedor())
             lista.add(14, addAplicBloqSvmVendedorPedido())
             lista.add(15, addIndLibUniSimSvmVendedorPedido())
+            lista.add(16, addZonaHorariaUsuario())
 
 
             return lista

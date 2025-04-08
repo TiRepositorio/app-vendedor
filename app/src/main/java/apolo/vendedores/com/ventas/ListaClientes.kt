@@ -53,6 +53,7 @@ class ListaClientes : AppCompatActivity() {
         var indPresencial = "N"
         var claveAutorizacion = ""
         var codEmpresa = ""
+        var validando = 0
         @SuppressLint("StaticFieldLeak")
         lateinit var etAccion: EditText
     }
@@ -476,46 +477,65 @@ class ListaClientes : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private fun entradaSalida(){
-        Marcacion.latitud       = FuncionesUtiles.listaDetalle[posCliente]["LATITUD"].toString()
-        Marcacion.longitud      = FuncionesUtiles.listaDetalle[posCliente]["LONGITUD"].toString()
-        Marcacion.codCliente    = FuncionesUtiles.listaDetalle[posCliente]["COD_CLIENTE"].toString()
-        Marcacion.codSubcliente = FuncionesUtiles.listaDetalle[posCliente]["COD_SUBCLIENTE"].toString()
-        Marcacion.descCliente   = FuncionesUtiles.listaDetalle[posCliente]["DESC_CLIENTE"].toString()
-        Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MIN"].toString()
-        Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MAX"].toString()
-        Marcacion.codEmpresa    = codEmpresa
+
+        if (validando == 0) {
+
+            validando = 1
+
+            Marcacion.latitud       = FuncionesUtiles.listaDetalle[posCliente]["LATITUD"].toString()
+            Marcacion.longitud      = FuncionesUtiles.listaDetalle[posCliente]["LONGITUD"].toString()
+            Marcacion.codCliente    = FuncionesUtiles.listaDetalle[posCliente]["COD_CLIENTE"].toString()
+            Marcacion.codSubcliente = FuncionesUtiles.listaDetalle[posCliente]["COD_SUBCLIENTE"].toString()
+            Marcacion.descCliente   = FuncionesUtiles.listaDetalle[posCliente]["DESC_CLIENTE"].toString()
+            Marcacion.tiempoMin     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MIN"].toString()
+            Marcacion.tiempoMax     = FuncionesUtiles.listaDetalle[posCliente]["TIEMPO_MAX"].toString()
+            Marcacion.codEmpresa    = codEmpresa
 
 
-        val ubicacion = FuncionesUbicacion(this)
-        if (!ubicacion.validaUbicacionSimulada2(lm)){
-            return
+            val ubicacion = FuncionesUbicacion(this)
+            if (!ubicacion.validaUbicacionSimulada2(lm)){
+                validando = 0
+                return
+            }
+
+            var aplicacionBloqueador = dispositivo.aplicacionBloqueada()
+            if (aplicacionBloqueador != "") {
+                //funcion.toast(this, "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+                funcion.mensaje(this,"Atencion", "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
+                validando = 0
+                return
+
+            }
+
+            if (!ubicacion.ubicacionActivada(lm)){
+                validando = 0
+                return
+            }
+            ubicacion.obtenerUbicacion(lm)
+            if (!ubicacion.ubicacionEncontrada()){
+                validando = 0
+                return
+            }
+
+
+
+            if (!dispositivo.horaAutomatica()) {
+                validando = 0
+                return
+            }
+            if (!dispositivo.modoAvion()){
+                validando = 0
+                return
+            }
+            if (!dispositivo.zonaHoraria()){ validando = 0; return }
+            if (!dispositivo.fechaCorrecta()){ validando = 0; return }
+            if (!dispositivo.tarjetaSim(telMgr)){ validando = 0; return }
+            ubicacion.obtenerUbicacion(lm)
+            validando = 0
+            startActivity(Intent(this,Marcacion::class.java))
+
+
         }
-
-        var aplicacionBloqueador = dispositivo.aplicacionBloqueada()
-        if (aplicacionBloqueador != "") {
-            //funcion.toast(this, "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
-            funcion.mensaje(this,"Atencion", "La aplicacion $aplicacionBloqueador se encuentra en conflicto con la aplicacion de vendedor" )
-            return
-
-        }
-
-        if (!ubicacion.ubicacionActivada(lm)){
-            return
-        }
-        ubicacion.obtenerUbicacion(lm)
-        if (!ubicacion.ubicacionEncontrada()){
-            return
-        }
-
-
-
-        if (!dispositivo.horaAutomatica()) { return }
-        if (!dispositivo.modoAvion()){ return }
-        if (!dispositivo.zonaHoraria()){ return }
-        if (!dispositivo.fechaCorrecta()){ return }
-        if (!dispositivo.tarjetaSim(telMgr)){ return }
-        ubicacion.obtenerUbicacion(lm)
-        startActivity(Intent(this,Marcacion::class.java))
     }
 
     private fun abrirUbicacion(){

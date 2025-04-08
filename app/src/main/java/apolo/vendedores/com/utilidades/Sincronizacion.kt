@@ -207,6 +207,11 @@ class Sincronizacion : AppCompatActivity() {
                 }
                 funcion.ejecutar("update usuarios set PROG_PEDIDO = '${imeiBD.split("-")[3]}'",this@Sincronizacion)
 
+                var zhNormalizada = (imeiBD.split("-")[5])
+                zhNormalizada = zhNormalizada.replace("*","-")
+
+                funcion.ejecutar("update usuarios set ZONA_HORARIA = '${zhNormalizada}'",this@Sincronizacion)
+
                 if (!validaVersion(imeiBD.split("-")[0],imeiBD.split("-")[1],imeiBD.split("-")[2])){
                     return null
                 }

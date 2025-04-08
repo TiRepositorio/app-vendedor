@@ -1,16 +1,21 @@
 package apolo.vendedores.com
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import apolo.vendedores.com.configurar.ConfigurarUsuarioNuevo
 import apolo.vendedores.com.utilidades.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         @SuppressLint("StaticFieldLeak")
         lateinit var funcion : FuncionesUtiles
         const val version : String = "94"
-        const val fechaVersion : String = "20240507 "
+        const val fechaVersion : String = "20250412 "
         const val versionDelDia : String = "1"
         var nombre : String = ""
         @SuppressLint("StaticFieldLeak")
@@ -37,11 +42,20 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         inicializarElementos()
     }
+
+
+
+
 
     private fun inicializarElementos(){
         funcion = FuncionesUtiles(this)
